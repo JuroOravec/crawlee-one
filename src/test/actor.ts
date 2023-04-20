@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import type { vi } from 'vitest';
 import { Actor, RequestQueue } from 'apify';
 import { Dictionary, KeyValueStore } from 'crawlee';
 
@@ -13,31 +13,33 @@ export const setupMockApifyActor = async <
   TInput,
   TData extends MaybeArray<Dictionary> = MaybeArray<Dictionary>
 >({
+  vi: viInstance,
   actorInput,
   log,
   onPushData,
   onBatchAddRequests,
 }: {
+  vi: typeof vi;
   actorInput?: TInput;
   log?: (...args: any[]) => void;
   onPushData?: (data: TData) => MaybePromise<void>;
   onBatchAddRequests?: OnBatchAddRequests;
-} = {}) => {
+}) => {
   const mockStorageClient = createMockStorageClient({ log, onBatchAddRequests });
 
-  vi.spyOn(Actor, 'main').mockImplementation(async (fn) => fn());
-  vi.spyOn(Actor, 'getInput').mockImplementation(() => Promise.resolve(actorInput));
+  viInstance.spyOn(Actor, 'main').mockImplementation(async (fn) => fn());
+  viInstance.spyOn(Actor, 'getInput').mockImplementation(() => Promise.resolve(actorInput));
 
-  vi.spyOn(Actor, 'openDataset').mockImplementation(async (datasetIdOrName, options) => {
+  viInstance.spyOn(Actor, 'openDataset').mockImplementation(async (datasetIdOrName, options) => {
     console.log('Mock Actor.openDataset: ', datasetIdOrName);
     return createMockStorageDataset(datasetIdOrName, options, { log });
   });
-  vi.spyOn(Actor, 'pushData').mockImplementation(async (data) => {
+  viInstance.spyOn(Actor, 'pushData').mockImplementation(async (data) => {
     console.log('Mock Actor.pushData');
     if (onPushData) await onPushData(data as any);
   });
 
-  vi.spyOn(RequestQueue, 'open').mockImplementation(async () => {
+  viInstance.spyOn(RequestQueue, 'open').mockImplementation(async () => {
     const reqQueue = new RequestQueue({
       id: 'test',
       client: mockStorageClient,
@@ -45,14 +47,17 @@ export const setupMockApifyActor = async <
     return reqQueue;
   });
 
-  vi.spyOn(KeyValueStore, 'open').mockImplementation(
-    async () => new KeyValueStore({ id: 'keyvalstore', client: mockStorageClient })
-  );
+  viInstance
+    .spyOn(KeyValueStore, 'open')
+    .mockImplementation(
+      async () => new KeyValueStore({ id: 'keyvalstore', client: mockStorageClient })
+    );
 
   await Actor.init();
 };
 
 export const runActorTest = async <TData extends MaybeArray<Dictionary>, TInput>({
+  vi: viInstance,
   input,
   runActor,
   log,
@@ -60,6 +65,7 @@ export const runActorTest = async <TData extends MaybeArray<Dictionary>, TInput>
   onBatchAddRequests,
   onDone = (done) => done(),
 }: {
+  vi: typeof vi;
   input: TInput;
   runActor: () => MaybePromise<void>;
   log?: (...args: any[]) => void;
@@ -69,6 +75,7 @@ export const runActorTest = async <TData extends MaybeArray<Dictionary>, TInput>
 }) => {
   await new Promise<void>(async (done, rej) => {
     await setupMockApifyActor<TInput, TData>({
+      vi: viInstance,
       actorInput: { ...input },
       log,
       onPushData: (data) => onPushData?.(data, done),

@@ -1,6 +1,6 @@
 {
   "name": "apify-actor-utils",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": false,
   "description": "Apify Actor utilities",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
@@ -57,6 +57,7 @@
     "apify-client": "^2.7.x",
     "cheerio": "^1.0.0-rc.12",
     "crawlee": "^3.3.1",
-    "playwright": "^1.32.x"
+    "playwright": "^1.32.x",
+    "vitest": "^0.30.1"
   }
 }
