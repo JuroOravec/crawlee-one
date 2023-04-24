@@ -62,7 +62,7 @@ interface DOMLibParent<El> {
 
 interface DOMLibChildren<El> {
   (el: El | null): El[];
-  <TVal>(el: El | null, map: (el: El, index: number, arr: El[]) => TVal): TVal;
+  <TVal>(el: El | null, map: (el: El, index: number, arr: El[]) => TVal): TVal[];
 }
 
 interface DOMLibRoot<El> {
