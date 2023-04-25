@@ -46,10 +46,26 @@ export interface ErrorCaptureOptions {
  *
  * See https://docs.apify.com/academy/node-js/analyzing-pages-and-fixing-errors#error-reporting
  */
-export const captureErrorWrapper = async (
-  fn: (input: { captureError: CaptureError }) => MaybePromise<void>,
-  { allowScreenshot, reportingDatasetId, onErrorCapture }: ErrorCaptureOptions = {}
-) => {
+export const captureError = async ({
+  error,
+  page,
+  url: givenUrl,
+  log: parentLog,
+  allowScreenshot,
+  reportingDatasetId,
+  onErrorCapture,
+}: ErrorCaptureOptions & {
+  error: Error;
+  page?: Page;
+  /** URL where the error happened. If not given URL is taken from the Page object */
+  url?: string;
+  log?: Log;
+}) => {
+  const log = parentLog?.child({ prefix: '[Error capture] ' });
+
+  log?.error(`ERROR ${error.name}: ${error.message}`, error);
+  console.error(`ERROR ${error.name}: ${error.message}`, error);
+
   // Let's create reporting dataset
   // If you already have one, this will continue adding to it
   const reportingDataset = reportingDatasetId ? await Actor.openDataset(reportingDatasetId) : null;
@@ -62,78 +78,69 @@ export const captureErrorWrapper = async (
   const { actorId, actorRunId } = Actor.getEnv();
   const actorRunUrl = `https://console.apify.com/actors/${actorId}/runs/${actorRunId}`;
 
-  const captureError = async ({
-    error,
-    page,
-    url: givenUrl,
-    log: parentLog,
-  }: {
-    error: Error;
-    page?: Page;
-    /** URL where the error happened. If not given URL is taken from the Page object */
-    url?: string;
-    log?: Log;
-  }) => {
-    const log = parentLog?.child({ prefix: '[Error capture] ' });
+  const randomNumber = Math.random();
+  const key = `ERROR-${randomNumber}`;
 
-    log?.error(`ERROR ${error.name}: ${error.message}`, error);
-    console.error(`ERROR ${error.name}: ${error.message}`, error);
+  let pageScreenshot: string | null = null;
+  let pageHtmlSnapshot: string | null = null;
+  let pageUrl: string | null = givenUrl ?? null;
+  if (page && allowScreenshot) {
+    pageUrl = pageUrl || page.url();
+    log?.info('Capturing page snapshot');
+    await playwrightUtils.saveSnapshot(page, { key });
+    log?.info('DONE capturing page snapshot');
+    // You will have to adjust the keys if you save them in a non-standard way
+    pageScreenshot = `https://api.apify.com/v2/key-value-stores/${storeId}/records/${key}.jpg?disableRedirect=true`;
+    pageHtmlSnapshot = `https://api.apify.com/v2/key-value-stores/${storeId}/records/${key}.html?disableRedirect=true`;
+  }
 
-    const randomNumber = Math.random();
-    const key = `ERROR-${randomNumber}`;
+  // We create a report object
+  const report = {
+    actorId,
+    actorRunId,
+    actorRunUrl,
+    errorName: error.name,
+    errorMessage: error.toString(),
 
-    let pageScreenshot: string | null = null;
-    let pageHtmlSnapshot: string | null = null;
-    let pageUrl: string | null = givenUrl ?? null;
-    if (page && allowScreenshot) {
-      pageUrl = pageUrl || page.url();
-      log?.info('Capturing page snapshot');
-      await playwrightUtils.saveSnapshot(page, { key });
-      log?.info('DONE capturing page snapshot');
-      // You will have to adjust the keys if you save them in a non-standard way
-      pageScreenshot = `https://api.apify.com/v2/key-value-stores/${storeId}/records/${key}.jpg?disableRedirect=true`;
-      pageHtmlSnapshot = `https://api.apify.com/v2/key-value-stores/${storeId}/records/${key}.html?disableRedirect=true`;
-    }
+    pageUrl,
+    pageHtmlSnapshot,
+    pageScreenshot,
+  } satisfies ErrorReport;
 
-    // We create a report object
-    const report = {
-      actorId,
-      actorRunId,
-      actorRunUrl,
-      errorName: error.name,
-      errorMessage: error.toString(),
+  log?.error('[Error capture] Error captured', report);
 
-      pageUrl,
-      pageHtmlSnapshot,
-      pageScreenshot,
-    } satisfies ErrorReport;
+  // And we push the report
+  if (reportingDatasetId) {
+    log?.info(`[Error capture] Pushing error to dataset ${reportingDatasetId}`);
+    await reportingDataset?.pushData(report);
+    log?.info(`[Error capture] DONE pushing error to dataset ${reportingDatasetId}`);
+  }
 
-    log?.error('[Error capture] Error captured', report);
+  log?.error('[Error capture] Calling onErrorCapture');
+  await onErrorCapture?.({ error, report });
+  log?.error('[Error capture] Done calling onErrorCapture');
 
-    // And we push the report
-    if (reportingDatasetId) {
-      log?.info(`[Error capture] Pushing error to dataset ${reportingDatasetId}`);
-      await reportingDataset?.pushData(report);
-      log?.info(`[Error capture] DONE pushing error to dataset ${reportingDatasetId}`);
-    }
+  // @ts-expect-error Tag the error, so we don't capture it twice.
+  error._apifyActorErrorCaptured = true;
+  // Propagate the error
+  throw error;
+};
 
-    log?.error('[Error capture] Calling onErrorCapture');
-    await onErrorCapture?.({ error, report });
-    log?.error('[Error capture] Done calling onErrorCapture');
-
-    // @ts-expect-error Tag the error, so we don't capture it twice.
-    error._apifyActorErrorCaptured = true;
-    // Propagate the error
-    throw error;
-  };
+/** Error handling for Apify actors as a function wrapper */
+export const captureErrorWrapper = async (
+  fn: (input: { captureError: CaptureError }) => MaybePromise<void>,
+  defaults: ErrorCaptureOptions = {}
+) => {
+  const captureErrorWithArgs: typeof captureError = (options) =>
+    captureError({ ...defaults, ...options });
 
   try {
     // Pass the error capturing function to the wrapped function, so it can trigger it by itself
-    await fn({ captureError });
+    await fn({ captureError: captureErrorWithArgs });
   } catch (error: any) {
     if (!error._apifyActorErrorCaptured) {
       // And if the wrapped function fails, we capture error for them
-      await captureError({ error });
+      await captureErrorWithArgs({ error });
     }
   }
 };
