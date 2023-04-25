@@ -118,17 +118,18 @@ export const registerHandlers = async <
 >({
   router,
   handlers,
-  handlerWrapper,
+  handlerWrappers,
 }: {
   router: RouterHandler<Ctx>;
   handlers: Record<Labels, RouteHandler<Ctx>>;
-  handlerWrapper?: RouteHandlerWrapper<Ctx>;
+  handlerWrappers?: RouteHandlerWrapper<Ctx>[];
 }) => {
   await serialAsyncMap(Object.entries(handlers), async ([key, handler]) => {
-    await router.addHandler(
-      key,
-      handlerWrapper ? handlerWrapper(handler as any) : (handler as any)
+    const wrappedHandler = (handlerWrappers ?? []).reduceRight(
+      (fn, wrapper) => wrapper(fn),
+      handler as any
     );
+    await router.addHandler(key, wrappedHandler);
   });
 };
 
@@ -185,12 +186,12 @@ export const setupDefaultRoute = async <Ctx extends CrawlingContext, Labels exte
   router,
   routes,
   handlers,
-  handlerWrapper,
+  handlerWrappers,
 }: {
   router: RouterHandler<Ctx>;
   routes: RouteMatcher<Ctx, Labels>[];
   handlers: Record<Labels, RouteHandler<Ctx>>;
-  handlerWrapper?: RouteHandlerWrapper<Ctx>;
+  handlerWrappers?: RouteHandlerWrapper<Ctx>[];
 }) => {
   /** Redirect the URL to the labelled route identical to route's name */
   const defaultAction: RouteMatcher<Ctx, Labels>['action'] = async (url, ctx, route) => {
@@ -226,7 +227,9 @@ export const setupDefaultRoute = async <Ctx extends CrawlingContext, Labels exte
     await (route.action ?? defaultAction)(url, ctx as any, route as any, handlers);
   };
 
-  await router.addDefaultHandler<Ctx>(
-    handlerWrapper ? handlerWrapper(defaultHandler) : defaultHandler
+  const wrappedHandler = (handlerWrappers ?? []).reduceRight(
+    (fn, wrapper) => wrapper(fn),
+    defaultHandler
   );
+  await router.addDefaultHandler<Ctx>(wrappedHandler);
 };

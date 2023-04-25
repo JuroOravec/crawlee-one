@@ -80,9 +80,12 @@ export interface ActorDefinition<
   routeHandlers: MaybeAsyncFn<Record<Labels, RouteHandler<Ctx>>, [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
   /**
    * Provides the option to modify or extend all router handlers by wrapping
-   * them in this function.
+   * them in these functions.
+   *
+   * Wrappers are applied from right to left. That means that wrappers `[A, B, C]`
+   * will be applied like so `A( B( C( handler ) ) )`.
    */
-  handlerWrapper?: RouteHandlerWrapper<Ctx>;
+  handlerWrappers?: MaybeAsyncFn<RouteHandlerWrapper<Ctx>[], [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
 
   createCrawler: (actorCtx: ActorContext<Ctx, Labels, Input>) => MaybePromise<Ctx['crawler']>;
 }
@@ -149,11 +152,16 @@ export const createApifyActor = async <
     : await (config.router as any)(getConfig());
   const routes = isFunc(config.routes) ? await config.routes(getConfig()) : config.routes; // prettier-ignore
   const routeHandlers = isFunc(config.routeHandlers) ? await config.routeHandlers(getConfig()) : config.routeHandlers; // prettier-ignore
-  const handlerWrapper = config.handlerWrapper;
+  const handlerWrappers = isFunc(config.handlerWrappers) ? await config.handlerWrappers(getConfig()) : config.handlerWrappers; // prettier-ignore
 
   // Set up router
-  await setupDefaultRoute<Ctx, Labels>({ router, routes, handlers: routeHandlers, handlerWrapper });
-  await registerHandlers<Ctx, Labels>({ router, handlers: routeHandlers, handlerWrapper });
+  await setupDefaultRoute<Ctx, Labels>({
+    router,
+    routes,
+    handlers: routeHandlers,
+    handlerWrappers,
+  });
+  await registerHandlers<Ctx, Labels>({ router, handlers: routeHandlers, handlerWrappers });
 
   const getActorCtx = () => ({ router, routes, routeHandlers, config, input });
   const crawler = await config.createCrawler(getActorCtx());
