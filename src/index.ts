@@ -4,3 +4,5 @@ export * from './lib/dataset';
 export * from './lib/dom';
 export * from './lib/errorHandler';
 export * from './lib/router';
+export * from './lib/log';
+export * from './lib/scraper/scrapeListing';
