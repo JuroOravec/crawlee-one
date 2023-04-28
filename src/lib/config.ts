@@ -39,7 +39,7 @@ export interface ProxyActorInput {
 }
 
 /** Common input fields related to crawler setup */
-export const crawlerInput: Record<keyof CrawlerConfigActorInput, Field> = {
+export const crawlerInput = {
   maxRequestRetries: createIntegerField({
     title: 'maxRequestRetries',
     type: 'integer',
@@ -144,10 +144,10 @@ export const crawlerInput: Record<keyof CrawlerConfigActorInput, Field> = {
     editor: 'textfield',
     nullable: true,
   }),
-};
+} satisfies Record<keyof CrawlerConfigActorInput, Field>;
 
 /** Common input fields related to logging setup */
-export const loggingInput: Record<keyof LoggingActorInput, Field> = {
+export const loggingInput = {
   logLevel: createStringField<LogLevel>({
     title: 'Log Level',
     type: 'string',
@@ -168,10 +168,10 @@ export const loggingInput: Record<keyof LoggingActorInput, Field> = {
     sectionCaption: 'Logging (Advanced)',
     sectionDescription: 'Configure what should be displayed in the log console.',
   }),
-};
+} satisfies Record<keyof LoggingActorInput, Field>;
 
 /** Common input fields related to proxy setup */
-export const proxyInput: Record<keyof ProxyActorInput, Field> = {
+export const proxyInput = {
   proxy: createObjectField({
     title: 'Proxy configuration',
     type: 'object',
@@ -180,4 +180,4 @@ export const proxyInput: Record<keyof ProxyActorInput, Field> = {
     sectionCaption: 'Proxy',
     sectionDescription: 'Configure the proxy',
   }),
-};
+} satisfies Record<keyof ProxyActorInput, Field>;
