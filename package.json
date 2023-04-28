@@ -54,6 +54,7 @@
   },
   "peerDependencies": {
     "apify": "^3.1.x",
+    "apify-actor-config": "^1.0.0",
     "apify-client": "^2.7.x",
     "cheerio": "^1.0.0-rc.12",
     "crawlee": "^3.3.1",
