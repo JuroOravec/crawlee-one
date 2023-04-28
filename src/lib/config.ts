@@ -1,3 +1,4 @@
+import type { Actor } from 'apify';
 import type { CheerioCrawlerOptions } from 'crawlee';
 import {
   createBooleanField,
@@ -34,7 +35,7 @@ export interface LoggingActorInput {
 
 /** Common input fields related to proxy setup */
 export interface ProxyActorInput {
-  proxy?: any[];
+  proxy?: Parameters<Actor['createProxyConfiguration']>[0];
 }
 
 /** Common input fields related to crawler setup */
