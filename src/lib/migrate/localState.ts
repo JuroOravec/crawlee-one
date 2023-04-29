@@ -2,12 +2,7 @@ import fsp from 'fs/promises';
 import path from 'path';
 import type { Actor, ActorClient } from 'apify-client';
 
-export const createLocalMigrationState = ({
-  stateDir,
-}: {
-  stateDir: string;
-  migrationsDir: string;
-}) => {
+export const createLocalMigrationState = ({ stateDir }: { stateDir: string }) => {
   const genStateFilepath = (migrationFilename: string) => {
     const filenameNoExt = path.parse(migrationFilename).name;
     const stateFilename = `${filenameNoExt}.json`;
