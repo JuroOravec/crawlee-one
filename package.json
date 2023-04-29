@@ -1,6 +1,6 @@
 {
   "name": "apify-actor-utils",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": false,
   "description": "Apify Actor utilities",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
@@ -59,10 +59,10 @@
     "cheerio": "^1.0.0-rc.12",
     "crawlee": "^3.3.1",
     "playwright": "^1.32.x",
+    "@sentry/node": "^7.50.0",
     "vitest": "^0.30.1"
   },
   "dependencies": {
-    "@sentry/node": "^7.50.0",
     "commander": "^10.0.1",
     "pkginfo": "^0.4.1"
   }
