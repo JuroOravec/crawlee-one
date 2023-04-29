@@ -1,5 +1,5 @@
 import { Actor } from 'apify';
-import type { BasicCrawler, CrawlingContext, RouterHandler } from 'crawlee';
+import type { BasicCrawler, CrawlingContext, RouterHandler, ProxyConfiguration } from 'crawlee';
 
 import type { MaybePromise } from '../utils/types';
 import {
@@ -87,6 +87,10 @@ export interface ActorDefinition<
    */
   handlerWrappers?: MaybeAsyncFn<RouteHandlerWrapper<Ctx>[], [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
 
+  // Proxy setup
+  proxy?: MaybeAsyncFn<ProxyConfiguration, [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
+
+  // Crawler setup
   createCrawler: (actorCtx: ActorContext<Ctx, Labels, Input>) => MaybePromise<Ctx['crawler']>;
 }
 
@@ -102,6 +106,7 @@ export interface ActorContext<
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>
 > {
+  proxy?: ProxyConfiguration;
   router: RouterHandler<Ctx>;
   routes: RouteMatcher<Ctx, Labels>[];
   routeHandlers: Record<Labels, RouteHandler<Ctx>>;
@@ -147,6 +152,18 @@ export const createApifyActor = async <
 
   const getConfig = () => ({ ...config, input });
 
+  // Set up proxy
+  const defaultProxy =
+    config.proxy == null && process.env.APIFY_IS_AT_HOME
+      ? await Actor.createProxyConfiguration(input?.proxy)
+      : undefined;
+  const proxy =
+    config.proxy == null
+      ? defaultProxy
+      : isFunc(config.proxy)
+      ? await config.proxy(getConfig())
+      : config.proxy;
+
   const router: RouterHandler<Ctx> = isRouter(config.router)
     ? config.router
     : await (config.router as any)(getConfig());
@@ -163,7 +180,7 @@ export const createApifyActor = async <
   });
   await registerHandlers<Ctx, Labels>({ router, handlers: routeHandlers, handlerWrappers });
 
-  const getActorCtx = () => ({ router, routes, routeHandlers, config, input });
+  const getActorCtx = () => ({ router, routes, routeHandlers, proxy, config, input });
   const crawler = await config.createCrawler(getActorCtx());
 
   return { crawler, ...getActorCtx() };
