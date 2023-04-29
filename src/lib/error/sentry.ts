@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/node';
  * Sentry configuration common to all actors.
  *
  * By default, sentry is enabled only on Apify server
- * where process.env.APIFY_IS_AT_HOME is true
+ * where `process.env.APIFY_IS_AT_HOME` is true
  */
 export const setupSentry = (options: { enabled?: boolean; sentryOptions?: Sentry.NodeOptions }) => {
   // As default, enable sentry only on Apify server
