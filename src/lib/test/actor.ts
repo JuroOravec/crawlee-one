@@ -2,7 +2,7 @@ import type { vi } from 'vitest';
 import { Actor, RequestQueue } from 'apify';
 import { Dictionary, KeyValueStore } from 'crawlee';
 
-import type { MaybeArray, MaybePromise } from '../utils/types';
+import type { MaybeArray, MaybePromise } from '../../utils/types';
 import {
   OnBatchAddRequests,
   createMockStorageClient,

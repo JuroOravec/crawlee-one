@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Dataset, OpenStorageOptions } from 'apify';
 import {
   RequestQueue as ClientRequestQueue,
@@ -23,7 +22,7 @@ import {
 } from 'apify-client';
 import { StorageClient } from 'crawlee';
 
-import type { MaybePromise } from '../utils/types';
+import type { MaybePromise } from '../../utils/types';
 
 type BatchAddRequestsArgs = [
   requests: Omit<RequestQueueClientRequestSchema, 'id'>[],
