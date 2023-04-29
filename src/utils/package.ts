@@ -14,8 +14,11 @@ export const getPackageJsonInfo = <TFields extends string = string>(
     | NodeModule,
   fields: TFields[]
 ) => {
-  const obj = { filename: filenameOrModule?.filename, id: filenameOrModule?.id };
+  const obj = {
+    filename: filenameOrModule?.filename,
+    id: filenameOrModule?.id,
+    exports: {}, // This is where the fields will be written
+  };
   pkginfo(obj, { include: fields });
-  // @ts-expect-error This was set by pkginfo
   return obj.exports as Record<TFields, any>;
 };
