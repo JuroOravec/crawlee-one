@@ -11,8 +11,8 @@ import {
 } from 'crawlee';
 import type { Page } from 'playwright';
 
-import type { MaybePromise } from '../utils/types';
-import type { RouteHandler, RouteHandlerCtx } from './router';
+import type { MaybePromise } from '../../utils/types';
+import type { RouteHandler, RouteHandlerCtx } from '../router';
 
 export interface CaptureErrorInput {
   error: Error;
