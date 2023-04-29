@@ -1,6 +1,6 @@
 {
   "name": "apify-actor-utils",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": false,
   "description": "Apify Actor utilities",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
@@ -24,6 +24,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/cjs/index.d.js",
+  "bin": "dist/cjs/cli/index.js",
   "engines": {
     "node": ">=16.0.0"
   },
