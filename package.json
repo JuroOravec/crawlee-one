@@ -1,6 +1,6 @@
 {
   "name": "apify-actor-utils",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "private": false,
   "description": "Apify Actor utilities",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
@@ -66,6 +66,7 @@
   "dependencies": {
     "commander": "^10.0.1",
     "dotenv": "^16.0.3",
+    "glob": "^10.2.2",
     "pkginfo": "^0.4.1"
   }
 }
