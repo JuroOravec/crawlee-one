@@ -5,9 +5,20 @@ import { ApifyClient } from 'apify-client';
 
 import type { Migration } from './types';
 
-export const createLocalMigrator = ({ migrationsDir }: { migrationsDir: string }) => {
+export const createLocalMigrator = ({
+  migrationsDir,
+  extension = '.js',
+  delimeter = '_',
+}: {
+  migrationsDir: string;
+  /** Extension glob */
+  extension: string;
+  /** Delimeter between version and rest of file name */
+  delimeter: string;
+}) => {
   const findLocalMigrationFileByVersion = async (version: string): Promise<string> => {
-    const files = await glob(path.join(migrationsDir, `${version}_*`));
+    // Find files like "v1_bla_bla_bla.js" (by default)
+    const files = await glob(path.join(migrationsDir, `${version}${delimeter}*${extension}`));
     if (!files.length) {
       throw Error(`No migration file matched version "${version}"`);
     }

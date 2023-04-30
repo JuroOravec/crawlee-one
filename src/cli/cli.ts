@@ -16,17 +16,25 @@ program
   .description('Run a migration script specified by the version number')
   .requiredOption('-t --target <target-version>', 'migration version to execute, eg "v1"')
   .requiredOption('-d --dir <path>', 'path to the migrations directory')
+  .option(
+    '--delimeter [delimeter]',
+    'delimeter between version and rest of file name, eg "v1_filename"'
+  )
+  .option(
+    '--ext --extension [ext-glob]',
+    'glob pattern for valid extensions for migration files, eg ".js" or ".{js,ts}"'
+  )
   .addHelpText(
     'after',
     `
 
 Example call:
-  $ apify-actor-utils migrate v1`
+  $ apify-actor-utils migrate -d ./path/to/migrations-dir -t v1`
   )
-  .action(async (options) => {
-    const migrationsDir = path.resolve(process.cwd(), options.dir);
-    const { migrate } = createLocalMigrator({ migrationsDir });
-    await migrate(options.target);
+  .action(async ({ dir, target, extension, delimeter }) => {
+    const migrationsDir = path.resolve(process.cwd(), dir);
+    const { migrate } = createLocalMigrator({ migrationsDir, extension, delimeter });
+    await migrate(target);
   });
 
 program
@@ -34,17 +42,25 @@ program
   .description('Run an un-migration script specified by the version number')
   .requiredOption('-t --target <target-version>', 'migration version to execute, eg "v1"')
   .requiredOption('-d --dir <path>', 'path to the migrations directory')
+  .option(
+    '--delimeter [delimeter]',
+    'delimeter between version and rest of file name, eg "v1_filename"'
+  )
+  .option(
+    '--ext --extension [ext-glob]',
+    'glob pattern for valid extensions for migration files, eg ".js" or ".{js,ts}"'
+  )
   .addHelpText(
     'after',
     `
 
 Example call:
-  $ apify-actor-utils unmigrate v1`
+  $ apify-actor-utils unmigrate -d ./path/to/migrations-dir -t v1`
   )
-  .action(async (options) => {
-    const migrationsDir = path.resolve(process.cwd(), options.dir);
-    const { unmigrate } = createLocalMigrator({ migrationsDir });
-    await unmigrate(options.target);
+  .action(async ({ dir, target, extension, delimeter }) => {
+    const migrationsDir = path.resolve(process.cwd(), dir);
+    const { unmigrate } = createLocalMigrator({ migrationsDir, extension, delimeter });
+    await unmigrate(target);
   });
 
 export const cli = () => {
