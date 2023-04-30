@@ -201,7 +201,7 @@ export const createApifyActor = async <
  * - Supports defaults and overrides
  */
 export const createHttpCrawlerOptions = <
-  TOpts extends BasicCrawlerOptions = BasicCrawlerOptions,
+  TOpts extends BasicCrawlerOptions<any> = BasicCrawlerOptions,
   Input extends Record<string, any> = Record<string, any>
 >({
   input,
