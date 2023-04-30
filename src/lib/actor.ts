@@ -194,12 +194,7 @@ export const createApifyActor = async <
   return { crawler, ...getActorCtx() };
 };
 
-/**
- * Given the actor context, create common crawler options.
- *
- * - Respects crawler options set from actor input
- * - Supports defaults and overrides
- */
+/** Given the actor input, create common crawler options. */
 export const createHttpCrawlerOptions = <
   TOpts extends BasicCrawlerOptions<any> = BasicCrawlerOptions,
   Input extends Record<string, any> = Record<string, any>
