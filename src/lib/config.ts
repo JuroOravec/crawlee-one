@@ -8,8 +8,9 @@ import {
   createArrayField,
   Field,
 } from 'apify-actor-config';
+import Joi from 'joi';
 
-import type { LogLevel } from './log';
+import { LOG_LEVEL, LogLevel } from './log';
 
 /** Crawler config fields that can be overriden from the actor input */
 export type CrawlerConfigActorInput = Pick<
@@ -181,3 +182,26 @@ export const proxyInput = {
     sectionDescription: 'Configure the proxy',
   }),
 } satisfies Record<keyof ProxyActorInput, Field>;
+
+export const crawlerInputValidationFields = {
+  navigationTimeoutSecs: Joi.number().integer().min(0).optional(),
+  ignoreSslErrors: Joi.boolean().optional(),
+  additionalMimeTypes: Joi.array().items(Joi.string().min(1)).optional(),
+  suggestResponseEncoding: Joi.string().min(1).optional(),
+  forceResponseEncoding: Joi.string().min(1).optional(),
+  requestHandlerTimeoutSecs: Joi.number().integer().min(0).optional(),
+  maxRequestRetries: Joi.number().integer().min(0).optional(),
+  maxRequestsPerCrawl: Joi.number().integer().min(0).optional(),
+  maxRequestsPerMinute: Joi.number().integer().min(0).optional(),
+  minConcurrency: Joi.number().integer().min(0).optional(),
+  maxConcurrency: Joi.number().integer().min(0).optional(),
+  keepAlive: Joi.boolean().optional(),
+} satisfies Record<keyof CrawlerConfigActorInput, Joi.Schema>;
+
+export const loggingInputValidationFields = {
+  logLevel: Joi.string().valid(...LOG_LEVEL).optional(), // prettier-ignore
+} satisfies Record<keyof LoggingActorInput, Joi.Schema>;
+
+export const proxyInputValidationFields = {
+  proxy: Joi.object().optional(), // NOTE: Expand this type?
+} satisfies Record<keyof ProxyActorInput, Joi.Schema>;
