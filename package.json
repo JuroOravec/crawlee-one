@@ -60,6 +60,7 @@
     "apify-client": "^2.7.x",
     "cheerio": "^1.0.0-rc.12",
     "crawlee": "^3.3.1",
+    "joi": "^17.9.2",
     "playwright": "^1.32.x",
     "vitest": "^0.30.1"
   },
@@ -67,7 +68,7 @@
     "commander": "^10.0.1",
     "dotenv": "^16.0.3",
     "glob": "^10.2.2",
-    "joi": "^17.9.2",
+    "lodash": "^4.17.21",
     "pkginfo": "^0.4.1"
   }
 }
