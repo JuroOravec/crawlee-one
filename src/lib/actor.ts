@@ -1,9 +1,14 @@
 import { Actor } from 'apify';
-import type { BasicCrawler, CrawlingContext, RouterHandler, ProxyConfiguration } from 'crawlee';
+import type {
+  BasicCrawler,
+  CrawlingContext,
+  RouterHandler,
+  ProxyConfiguration,
+  BasicCrawlerOptions,
+} from 'crawlee';
 import { omitBy, pick } from 'lodash';
-import * as Sentry from '@sentry/node';
 
-import type { ConstructorArgs, MaybePromise } from '../utils/types';
+import type { MaybePromise } from '../utils/types';
 import {
   RouteHandler,
   RouteHandlerWrapper,
@@ -12,7 +17,6 @@ import {
   setupDefaultRoute,
 } from './router';
 import { CrawlerConfigActorInput, crawlerInput } from './config';
-import { captureError } from './error/errorHandler';
 
 type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<R>);
 
@@ -195,19 +199,17 @@ export const createApifyActor = async <
  *
  * - Respects crawler options set from actor input
  * - Supports defaults and overrides
- * - Optionally supports error capture on failed requests
- * (optionally also sent to Sentry)
  */
 export const createHttpCrawlerOptions = <
-  TCrawlerClass extends typeof BasicCrawler = typeof BasicCrawler,
-  TOpts extends ConstructorArgs<TCrawlerClass>[0] = ConstructorArgs<TCrawlerClass>[0]
+  TOpts extends BasicCrawlerOptions = BasicCrawlerOptions,
+  Input extends Record<string, any> = Record<string, any>
 >({
-  ctx,
+  input,
   defaults,
   overrides,
-  options,
 }: {
-  ctx: ActorContext<CrawlingContext<TCrawlerClass>>;
+  /** Actor input */
+  input: Input | null;
   /**
    * Default config options set by us. These may be overriden
    * by values from actor input (set by user).
@@ -218,54 +220,16 @@ export const createHttpCrawlerOptions = <
    * options. This is useful for hard-setting values e.g. in tests.
    */
   overrides?: TOpts;
-  options?: {
-    /** Whether failed request errors should be captured. */
-    errorCapture?: boolean;
-    /** ID of the Apify dataset that the error will be pushed to. */
-    errorCaptureReportingDatasetId?: string;
-    /** Whether to send the failed request errors to Sentry too. */
-    errorCaptureSentry?: boolean;
-  };
 }) => {
-  const {
-    errorCapture = true,
-    errorCaptureReportingDatasetId = 'REPORTING',
-    errorCaptureSentry = true,
-  } = options ?? {};
-
   const pickCrawlerInputFields = <T extends CrawlerConfigActorInput>(config: T) =>
     pick(config, Object.keys(crawlerInput));
 
   return {
     // ----- 1. DEFAULTS -----
     ...omitBy(defaults ?? {}, (field) => field === undefined),
-
     // ----- 2. CONFIG FROM INPUT -----
-    ...omitBy(pickCrawlerInputFields(ctx.input ?? {}), (field) => field === undefined),
-
-    // ----- 3. CONFIG THAT USER CANNOT CHANGE -----
-    proxyConfiguration: ctx.proxy,
-    requestHandler: ctx.router,
-    // Capture errors in a separate Apify/Actor dataset and pass errors to Sentry
-    failedRequestHandler: async ({ error, request, log }) => {
-      if (!errorCapture || !errorCaptureReportingDatasetId) return;
-
-      const url = request.loadedUrl || request.url;
-      captureError({
-        error: error as Error,
-        url,
-        log,
-        reportingDatasetId: errorCaptureReportingDatasetId,
-        allowScreenshot: true,
-        onErrorCapture: ({ error, report }) => {
-          if (!errorCaptureSentry) return;
-
-          Sentry.captureException(error, { extra: report as any });
-        },
-      });
-    },
-
-    // ----- 4. OVERRIDES - E.G. TEST CONFIG -----
+    ...omitBy(pickCrawlerInputFields(input ?? {}), (field) => field === undefined),
+    // ----- 3. OVERRIDES - E.G. TEST CONFIG -----
     ...omitBy(overrides ?? {}, (field) => field === undefined),
   } satisfies TOpts;
 };

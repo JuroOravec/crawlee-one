@@ -3,6 +3,7 @@ import {
   BasicCrawlingContext,
   CheerioCrawlingContext,
   CrawlingContext,
+  ErrorHandler,
   HttpCrawlingContext,
   JSDOMCrawlingContext,
   PlaywrightCrawlingContext,
@@ -10,6 +11,7 @@ import {
   playwrightUtils,
 } from 'crawlee';
 import type { Page } from 'playwright';
+import * as Sentry from '@sentry/node';
 
 import type { MaybePromise } from '../../utils/types';
 import type { RouteHandler, RouteHandlerCtx } from '../router';
@@ -182,3 +184,31 @@ export const jsdomCaptureErrorRouteHandler = <Ctx extends JSDOMCrawlingContext>(
 export const playwrightCaptureErrorRouteHandler = <Ctx extends PlaywrightCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
 export const cheerioCaptureErrorRouteHandler = <Ctx extends CheerioCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
 export const puppeteerCaptureErrorRouteHandler = <Ctx extends PuppeteerCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
+
+/**
+ * Create an `ErrorHandler` function that can be assigned to
+ * `failedRequestHandler` option of `BasicCrawlerOptions`.
+ *
+ * The function saves error to an Apify dataset, and optionally
+ * forwards it to Sentry.
+ */
+export const createErrorHandler = <Ctx extends CrawlingContext>(options: {
+  reportingDatasetId: string;
+  sendToSentry?: boolean;
+}): ErrorHandler<Ctx> => {
+  return async ({ error, request, log }) => {
+    const url = request.loadedUrl || request.url;
+    captureError({
+      error: error as Error,
+      url,
+      log,
+      reportingDatasetId: options.reportingDatasetId,
+      allowScreenshot: true,
+      onErrorCapture: ({ error, report }) => {
+        if (!options.sendToSentry) return;
+
+        Sentry.captureException(error, { extra: report as any });
+      },
+    });
+  };
+};
