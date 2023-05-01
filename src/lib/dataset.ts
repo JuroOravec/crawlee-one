@@ -140,15 +140,21 @@ const applyPrivacyMask = <T extends Record<any, any> = Record<any, any>>(
       customPrivateValue = val;
       setCustomPrivateValueCalled = true;
     };
+
     const privacyFilter = privacyMask[key] as PrivacyFilter<any, any, any> | undefined;
     const isPrivate = privacyFilter
       ? privacyFilter(val, key, item, { setCustomPrivateValue, privateValueGen })
       : false;
-    const privateValue = setCustomPrivateValueCalled
-      ? customPrivateValue
-      : isPrivate
-      ? privateValueGen(key, val, item)
-      : val;
+
+    // prettier-ignore
+    const privateValue = (
+      // Don't redact anything if we're asked to show private data
+      showPrivate ? val
+      // Otherwise, if custom value was given, use that
+      : setCustomPrivateValueCalled ? customPrivateValue
+      // Otherwise, decide based on filter truthiness
+      : isPrivate ? privateValueGen(key, val, item) : val
+    );
     return privateValue;
   };
 
