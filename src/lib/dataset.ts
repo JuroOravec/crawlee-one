@@ -154,13 +154,13 @@ const applyPrivacyMask = <T extends Record<any, any> = Record<any, any>>(
 
   const redactedObj = Object.entries(item).reduce((agg, [key, val]) => {
     const isNestedObj =
-      typeof val === 'object' && item != null && !(val instanceof Date) && !Array.isArray(val);
+      typeof val === 'object' && val != null && !(val instanceof Date) && !Array.isArray(val);
 
     if (isNestedObj) {
       // Recursively process nested objects
       const subObj = applyPrivacyMask(val, {
         showPrivate,
-        privacyMask: privacyMask[key] as any,
+        privacyMask: (privacyMask[key] ?? {}) as any,
         privateValueGen,
       });
       agg[key as keyof T] = subObj as any;
