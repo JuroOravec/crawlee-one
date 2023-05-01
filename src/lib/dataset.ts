@@ -52,7 +52,7 @@ export type PrivacyFilter<V, K, O> = (
  * Property is private if the function returns truthy value.
  */
 export type PrivacyMask<T extends object> = {
-  [Key in keyof T]: T[Key] extends Date
+  [Key in keyof T]?: T[Key] extends Date | any[] // Consider Data and Array as non-objects
     ? PrivacyFilter<T[Key], Key, T>
     : T[Key] extends object
     ? PrivacyMask<T[Key]>
