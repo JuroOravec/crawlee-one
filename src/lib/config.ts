@@ -193,7 +193,7 @@ export const privacyInput = {
   includePersonalData: createBooleanField({
     title: 'Include personal data',
     type: 'boolean',
-    description: `By default, fields that are potential personal data are censored. Toggle this option on to get the un-uncensored values.<br/><br/><strong>WARNING:</strong> Turn this on ONLY if you have consent, legal basis for using the data, or at your own risk`,
+    description: `By default, fields that are potential personal data are censored. Toggle this option on to get the un-uncensored values.<br/><br/><strong>WARNING:</strong> Turn this on ONLY if you have consent, legal basis for using the data, or at your own risk. <a href="https://gdpr.eu/eu-gdpr-personal-data/">Learn more</a>`,
     default: false,
     example: false,
     nullable: true,
