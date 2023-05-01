@@ -39,6 +39,11 @@ export interface ProxyActorInput {
   proxy?: Parameters<Actor['createProxyConfiguration']>[0];
 }
 
+/** Common input fields related to privacy setup */
+export interface PrivacyActorInput {
+  includePersonalData?: boolean;
+}
+
 /** Common input fields related to crawler setup */
 export const crawlerInput = {
   maxRequestRetries: createIntegerField({
@@ -183,6 +188,19 @@ export const proxyInput = {
   }),
 } satisfies Record<keyof ProxyActorInput, Field>;
 
+/** Common input fields related to proxy setup */
+export const privacyInput = {
+  includePersonalData: createBooleanField({
+    title: 'Include personal data',
+    type: 'boolean',
+    description: `By default, fields that are potential personal data are censored. Toggle this option on to get the un-uncensored values.<br/><br/><strong>WARNING:</strong> Turn this on ONLY if you have consent, legal basis for using the data, or at your own risk`,
+    default: false,
+    example: false,
+    nullable: true,
+    sectionCaption: 'Privacy & Data governance (GDPR)',
+  }),
+} satisfies Record<keyof PrivacyActorInput, Field>;
+
 export const crawlerInputValidationFields = {
   navigationTimeoutSecs: Joi.number().integer().min(0).optional(),
   ignoreSslErrors: Joi.boolean().optional(),
@@ -205,3 +223,7 @@ export const loggingInputValidationFields = {
 export const proxyInputValidationFields = {
   proxy: Joi.object().optional(), // NOTE: Expand this type?
 } satisfies Record<keyof ProxyActorInput, Joi.Schema>;
+
+export const privacyInputValidationFields = {
+  includePersonalData: Joi.boolean().optional(),
+} satisfies Record<keyof PrivacyActorInput, Joi.Schema>;
