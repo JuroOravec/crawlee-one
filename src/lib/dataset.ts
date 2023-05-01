@@ -140,10 +140,10 @@ const applyPrivacyMask = <T extends Record<any, any> = Record<any, any>>(
       customPrivateValue = val;
       setCustomPrivateValueCalled = true;
     };
-    const isPrivate = (privacyMask[key] as PrivacyFilter<any, any, any>)(val, key, item, {
-      setCustomPrivateValue,
-      privateValueGen,
-    });
+    const privacyFilter = privacyMask[key] as PrivacyFilter<any, any, any> | undefined;
+    const isPrivate = privacyFilter
+      ? privacyFilter(val, key, item, { setCustomPrivateValue, privateValueGen })
+      : false;
     const privateValue = setCustomPrivateValueCalled
       ? customPrivateValue
       : isPrivate
