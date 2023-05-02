@@ -160,16 +160,16 @@ export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
 
 /** The template for rendering README for Apify actor */
 const readmeTemplate = `
-<%~ it.a.actor.name %>
+<%~ it.a.actor.title %>
 ===============================
 
 <%~ it.a.actor.shortDesc %>
 
-## What is <%~ it.a.actor.name %> and how its work?
+## What is <%~ it.a.actor.title %> and how its work?
 
 <%~ include("hook.introActorLongDesc", it) %>
 
-With <%~ it.a.actor.name %>, you can extract:
+With <%~ it.a.actor.title %>, you can extract:
 
 <%- it.a.datasets.forEach((dataset) => { %>
 - [<%~ dataset.shortDesc %>]( <%~ dataset.url %> )
@@ -202,10 +202,10 @@ The data can be downloaded in JSON, JSONL, XML, CSV, Excel, or HTML formats.
 
 <%~ include("hook.useCases", it) %>
 
-## How to use <%~ it.a.actor.name %>
+## How to use <%~ it.a.actor.title %>
 
 1. Create a free Apify account using your email
-2. Open <%~ it.a.actor.name %>
+2. Open <%~ it.a.actor.title %>
 3. In Input, select the dataset to scrape, and filters to apply.
 4. Click "Start" and wait for the data to be extracted.
 5. Download your data in JSON, JSONL, XML, CSV, Excel, or HTML format.
@@ -263,7 +263,7 @@ For details and examples for all input fields, please visit the [Input tab](<%~ 
 
 ### Filter options
 
-You can run <%~ it.a.actor.name %> as is, with the default options, to get a sample of the 
+You can run <%~ it.a.actor.title %> as is, with the default options, to get a sample of the 
 <%~ it.a.datasets.find(d => d.isDefault).name %> entries
 (<%~ it.fn.collectModes(it).find(m => m.isDefault).name %> mode).
 
@@ -305,9 +305,9 @@ Once the actor is done, you can see the overview of results in the Output tab.
 
 To export the data, head over to the Storage tab.
 
-![<%~ it.a.actor.name %> dataset overview](<%~ it.a.actor.datasetOverviewImgUrl %>)
+![<%~ it.a.actor.title %> dataset overview](<%~ it.a.actor.datasetOverviewImgUrl %>)
 
-## Sample output from <%~ it.a.actor.name %>
+## Sample output from <%~ it.a.actor.title %>
 
 <%- it.a.datasets.forEach((dataset) => { %>
 ### <%~ it.fn.capitalize(dataset.name) %> output
@@ -325,7 +325,7 @@ To export the data, head over to the Storage tab.
 
 <%- }) %>
 
-## How to integrate <%~ it.a.actor.name %> with other services, APIs or Actors
+## How to integrate <%~ it.a.actor.title %> with other services, APIs or Actors
 
 You can connect the actor with many of the
 [integrations on the Apify platform](https://apify.com/integrations).
@@ -336,7 +336,7 @@ Or you can use
 to carry out an action whenever an event occurs, e.g. get a notification whenever
 Instagram API Scraper successfully finishes a run.
 
-## Use <%~ it.a.actor.name %> with Apify API
+## Use <%~ it.a.actor.title %> with Apify API
 
 The Apify API gives you programmatic access to the Apify platform.
 The API is organized around RESTful HTTP endpoints that enable you to manage,
