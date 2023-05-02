@@ -1,4 +1,5 @@
 import { ArrVal, enumFromArray } from '../../utils/types';
+import type { ApifyScraperActorSpec } from '../actorSpec';
 
 export const README_FEATURE_TYPE = ['datasets', 'modes', 'filters', 'noBrowser', 'proxy', 'crawlerConfig', 'tests', 'privacy', 'errorMonitoring'] as const; // prettier-ignore
 export const README_FEATURE_TYPE_ENUM = enumFromArray(README_FEATURE_TYPE);
@@ -21,7 +22,7 @@ export type ReadmeHookType = ArrVal<typeof README_HOOK_TYPE>;
  */
 export interface ReadmeFeature<TData extends any = any> {
   /** Feature is considered supported by this actor if truthy value is returned. */
-  supported: (it) => any;
+  supported: (it: RenderContext) => any;
   /**
    * Title template string for the feature. E.g.
    * ```js
@@ -174,4 +175,11 @@ export interface ApifyReadmeTemplates {
    * Just as other templates, the hooks receive the whole context (`it`)
    */
   hooks?: Partial<Record<ReadmeHookType, string>>;
+}
+
+/** Context available inside the rendering via `it` */
+export interface RenderContext {
+  fn: Record<string, any>;
+  t: ApifyReadmeTemplates;
+  a: ApifyScraperActorSpec;
 }

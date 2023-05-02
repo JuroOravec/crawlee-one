@@ -3,9 +3,15 @@ import fsp from 'fs/promises';
 import path from 'path';
 import millify from 'millify';
 import { capitalize, cloneDeep, defaults, round, uniqBy } from 'lodash';
-import type { DatasetPerfStat, ScraperActorSpec } from 'actor-spec';
+import type { DatasetPerfStat } from 'actor-spec';
 
-import type { ApifyReadmeTemplates, ReadmeFeature, ReadmeFeatureType } from './types';
+import type {
+  ApifyReadmeTemplates,
+  ReadmeFeature,
+  ReadmeFeatureType,
+  RenderContext,
+} from './types';
+import type { ApifyScraperActorSpec } from '../actorSpec';
 
 export interface ApifyReadmeTemplatesOverrides extends Omit<ApifyReadmeTemplates, 'features'> {
   features: Partial<Record<ReadmeFeatureType, Partial<ReadmeFeature>>>;
@@ -438,7 +444,7 @@ export const renderReadme = async (input: {
    * Inside the template during rendering, this object
    * can be accessed as `<%~ it.a.platform.actorId %>`
    */
-  actorSpec: ScraperActorSpec;
+  actorSpec: ApifyScraperActorSpec;
   /**
    * Custom eta template strings that plug into different
    * parts of the README template.
@@ -455,6 +461,28 @@ export const renderReadme = async (input: {
    */
   fn?: Record<string, (...args: any[]) => any>;
 }) => {
+  // Assign the default values to a clone
+  const templates = cloneDeep(input.templates) as ApifyReadmeTemplates;
+  Object.entries(defaultFeatureTexts).forEach(([key, feat]) => {
+    templates.features[key] = defaults(templates.features[key] || {}, feat);
+  });
+
+  // Define templates for 'include(...)'s for template hooks
+  Object.entries(templates.hooks || {}).forEach(([key, template]) =>
+    Eta.templates.define(`hook.${key}`, Eta.compile(template || ''))
+  );
+  // Define templates for 'include(...)'s for feature hooks
+  Object.entries(templates.features).forEach(([key, feat]) => {
+    const { title, mainText, afterBegin, beforeEnd } = feat;
+    Eta.templates.define(`feat.${key}.title`, Eta.compile(title));
+    Eta.templates.define(`feat.${key}.mainText`, Eta.compile(mainText));
+    Eta.templates.define(`feat.${key}.afterBegin`, Eta.compile(afterBegin ?? ''));
+    Eta.templates.define(`feat.${key}.beforeEnd`, Eta.compile(beforeEnd ?? ''));
+  });
+  // Define templates for 'include(...)'s for perf table hooks
+  templates.perfTable.rows.forEach((row) => Eta.templates.define(`perfTable.row.${row.rowId}`, Eta.compile(row.template))); // prettier-ignore
+  templates.perfTable.cols.forEach((col) => Eta.templates.define(`perfTable.col.${col.colId}`, Eta.compile(col.template))); // prettier-ignore
+
   const fn = {
     enumerate: renderList,
     perfStat: renderPerfStat,
@@ -469,32 +497,7 @@ export const renderReadme = async (input: {
     ...input.fn,
   };
 
-  const templatesWithDefaults = cloneDeep(input.templates);
-  Object.entries(templatesWithDefaults.features).forEach(([key, feat]) => {
-    templatesWithDefaults.features[key] = defaults(feat, defaultFeatureTexts[key]);
-  });
-
-  // Define templates for 'include(...)'s for template hooks
-  Object.entries(input.templates.hooks || {}).forEach(([key, template]) =>
-    Eta.templates.define(`hook.${key}`, Eta.compile(template || ''))
-  );
-  // Define templates for 'include(...)'s for feature hooks
-  Object.entries(input.templates.features).forEach(([key, feat]) => {
-    const { title, mainText, afterBegin, beforeEnd } = defaults(feat, defaultFeatureTexts[key as ReadmeFeatureType]); // prettier-ignore
-    Eta.templates.define(`feat.${key}.title`, Eta.compile(title));
-    Eta.templates.define(`feat.${key}.mainText`, Eta.compile(mainText));
-    Eta.templates.define(`feat.${key}.afterBegin`, Eta.compile(afterBegin ?? ''));
-    Eta.templates.define(`feat.${key}.beforeEnd`, Eta.compile(beforeEnd ?? ''));
-  });
-  // Define templates for 'include(...)'s for perf table hooks
-  input.templates.perfTable.rows.forEach((row) => Eta.templates.define(`perfTable.row.${row.rowId}`, Eta.compile(row.template))); // prettier-ignore
-  input.templates.perfTable.cols.forEach((col) => Eta.templates.define(`perfTable.col.${col.colId}`, Eta.compile(col.template))); // prettier-ignore
-
-  const data = {
-    fn,
-    t: input.templates,
-    a: input.actorSpec,
-  };
+  const data = { fn, t: templates, a: input.actorSpec } satisfies RenderContext;
   const readmeContent = Eta.render(readmeTemplate, data, {
     strict: true,
     rmWhitespace: false,
