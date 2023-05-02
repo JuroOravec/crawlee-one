@@ -401,6 +401,33 @@ email me at <%~ it.fn.email(it.fn.collectEmails(it)[0]) %>
  * Render a README.md file from a common template for a given Apify actor.
  *
  * See https://docs.apify.com/academy/get-most-of-actors/actor-readme
+ *
+ * The templates are rendered using ETA (https://eta.js.org/)
+ *
+ * Each template has access to `it` global variable. `it` has these props:
+ *
+ * - `it.fn` - The functions passed to this function + more (see below)
+ * - `it.t` - The templates object passed to this function
+ * - `it.a` - The actorSpec object passed to this function
+ *
+ * Example:
+ * ```eta
+ * ActorId: <%~ it.a.platform.actorId %>
+ * ```
+ *
+ * Following functions are available by default:
+ * - `it.fn.enumerate`
+ * - `it.fn.perfStat`
+ * - `it.fn.millify`
+ * - `it.fn.capitalize`
+ * - `it.fn.stringify`
+ * - `it.fn.email`
+ * - `it.fn.includesPersonalData`
+ * - `it.fn.collectFilters`
+ * - `it.fn.collectModes`
+ * - `it.fn.collectEmails`
+ *
+ * See their definitions for details
  */
 export const renderReadme = async (input: {
   /** Filepath (relative to CWD) where the generated README should be written. */
