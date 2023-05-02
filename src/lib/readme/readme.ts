@@ -426,7 +426,7 @@ export const renderReadme = async (input: {
    * Inside the template during rendering, these functions
    * can be accessed as `<%~ it.fn.funcName() %>`
    */
-  fn: Record<string, (...args: any[]) => any>;
+  fn?: Record<string, (...args: any[]) => any>;
 }) => {
   const fn = {
     enumerate: renderList,
