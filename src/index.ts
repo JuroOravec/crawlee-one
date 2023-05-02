@@ -1,4 +1,5 @@
 export * from './lib/actor';
+export * from './lib/actorSpec';
 export * from './lib/config';
 export * from './lib/dataset';
 export * from './lib/dom';
@@ -7,6 +8,8 @@ export * from './lib/error/sentry';
 export * from './lib/migrate/localMigrator';
 export * from './lib/migrate/localState';
 export * from './lib/migrate/types';
+export * from './lib/readme/readme';
+export * from './lib/readme/types';
 export * from './lib/router';
 export * from './lib/log';
 export * from './lib/scraper/scrapeListing';
