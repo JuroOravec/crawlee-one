@@ -128,7 +128,7 @@ export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
   noBrowser: {
     supported: (it) => it.a.datasets.some((d) => !d.features.usesBrowser),
     title: 'Blazing fast',
-    mainText: `- The actor doesn't use browser, which means it's fast and cheap.`,
+    mainText: `- The actor doesn't use a browser, which means it's fast and cheap.`,
   },
   proxy: {
     supported: (it) => it.a.datasets.some((d) => d.features.proxySupport),
@@ -142,7 +142,7 @@ export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
   },
   tests: {
     supported: (it) => it.a.datasets.some((d) => d.features.regularlyTested),
-    title: 'Tested daily for highly reliability',
+    title: 'Tested daily for high reliability',
     mainText: `- The actor is regularly tested end-to-end to minimize the risk of a broken integration.`,
   },
   privacy: {
@@ -171,7 +171,7 @@ const readmeTemplate = `
 
 <%~ it.a.actor.shortDesc %>
 
-## What is <%~ it.a.actor.title %> and how its work?
+## What is <%~ it.a.actor.title %> and how it works?
 
 <%~ include("hook.introActorLongDesc", it) %>
 
@@ -183,7 +183,7 @@ With <%~ it.a.actor.title %>, you can extract:
 
 <%-~ include("hook.introAfterDatasets", it) %>
 
-See [outputs section](#outputs) for detailed decription.
+See the [outputs section](#outputs) for a detailed description.
 
 The data can be downloaded in JSON, JSONL, XML, CSV, Excel, or HTML formats.
 
@@ -259,7 +259,7 @@ For details and examples for all input fields, please visit the [Input tab](<%~ 
 
 <%~ include("hook.costAfterPerfTables", it) %>
 
-Remember that with the [Apify Free plan](https://apify.com/pricing) you have $5 free usage per month.
+Remember that with the [Apify Free plan](https://apify.com/pricing), you have $5 free usage per month.
 
 <%~ include("hook.costBeforeEnd", it) %>
 
@@ -365,20 +365,20 @@ prices, or ratings. Read Apify's blog post on
 to learn more.
 
 <%- if (it.fn.includesPersonalData(it)) { %>
-However, following datasets include personal data:
+However, the following datasets include personal data:
 
 <%- it.a.datasets.filter((d) => d.privacy.personalDataFields.length).forEach((dataset) => { %>
 - <%~ it.fn.capitalize(dataset.name) %> dataset includes info about <%~ it.fn.enumerate(dataset.privacy.personalDataSubjects) %>.
   - Fields: <%~ dataset.privacy.personalDataFields.join(', ') %>
 <% if (dataset.privacy.isPersonalDataRedacted) { -%>
-  - By default, this personal data is redacted, and in such case it's safe to scrape the data.
+  - By default, this personal data is redacted, and in such case, it's safe to scrape the data.
 <%- } %>
 <%- }) %>
 
-To get the un-redacted data, toggle on the "<%~ it.t.input.privacyName %>" actor input.
+To get the unredacted data, toggle on the "<%~ it.t.input.privacyName %>" actor input.
 
 > **Warning:** Including personal data is done at your own risk. It is your
-responsiblity to make sure you have obtained a consent or have a legal basis
+responsibility to make sure you have obtained consent or have a legal basis
 for using the data.
 >
 > By using this actor, you agree not to hold the author of this actor liable for privacy
