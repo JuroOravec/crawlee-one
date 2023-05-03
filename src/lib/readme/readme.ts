@@ -197,6 +197,8 @@ The data can be downloaded in JSON, JSONL, XML, CSV, Excel, or HTML formats.
 
 <%~ include("hook.${H.featuresAfterBegin}", it) %>
 
+This actor is a robust production-grade solution suitable for businesses and those that need reliability.
+
 <%- Object.entries(it.t.features).forEach(([featName, feat]) => { %>
 <%- if (feat.supported(it)) { %>
 - **<%~ include("feat." + featName + ".title", it) %>**
