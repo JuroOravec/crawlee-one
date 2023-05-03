@@ -16,7 +16,7 @@ import {
 import type { ApifyScraperActorSpec } from '../actorSpec';
 
 export interface ApifyReadmeTemplatesOverrides extends Omit<ApifyReadmeTemplates, 'features'> {
-  features: Partial<Record<ReadmeFeatureType, Partial<ReadmeFeature>>>;
+  features?: Partial<Record<ReadmeFeatureType, Partial<ReadmeFeature>>>;
 }
 
 /**
