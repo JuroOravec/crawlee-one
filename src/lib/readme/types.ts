@@ -158,7 +158,7 @@ export interface ReadmeExampleInput<TData extends object = object> {
    * }
    * ```
    */
-  inputDataComments: Partial<Record<keyof TData, string>>;
+  inputDataComments?: Partial<Record<keyof TData, string>>;
 }
 
 /**
