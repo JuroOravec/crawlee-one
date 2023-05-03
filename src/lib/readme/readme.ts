@@ -323,7 +323,7 @@ To limit how many results you get, set \`<%~ it.t.input.maxCount %>\` to desired
 \`\`\`json
 {
 <%- Object.entries(example.inputData).forEach(([key, value]) => { -%>
-<%- if (example.inputDataComments[key]) { %>
+<%- if (example.inputDataComments && example.inputDataComments[key]) { %>
   // <%~ example.inputDataComments[key] %>
 <%- } %>
   "<%~ key %>": <% _%><%~ it.fn.stringify(value, { paddingLeft: 2, paddingStartLine: 1 }) %>,
@@ -357,7 +357,7 @@ To export the data, head over to the Storage tab.
 \`\`\`json
 {
 <%- Object.entries(dataset.output.exampleEntry).forEach(([key, value]) => { -%>
-<%- if (dataset.output.exampleEntryComments[key]) { %>
+<%- if (dataset.output.exampleEntryComments && dataset.output.exampleEntryComments[key]) { %>
   // <%~ dataset.output.exampleEntryComments[key] %>
 <%- } %>
   "<%~ key %>": <% _%><%~ it.fn.stringify(value, { paddingLeft: 2, paddingStartLine: 1 }) %>,
