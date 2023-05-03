@@ -6,7 +6,7 @@ import type { DatasetPerfStat, ScraperActorSpec, ScraperDataset } from 'actor-sp
  * See {@link ScraperActorSpec}
  */
 export interface ApifyScraperActorSpec extends ScraperActorSpec {
-  datasets: ScraperDataset[];
+  datasets: ApifyScraperDataset[];
 }
 
 /** Dataset with additional perf stats info for formatting in tables */
