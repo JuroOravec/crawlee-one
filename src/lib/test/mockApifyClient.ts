@@ -254,17 +254,26 @@ export const createMockStorageDataset = (
   ...args: [
     datasetIdOrName?: string | null,
     options?: OpenStorageOptions,
-    custom?: { log?: (...args: any) => void }
+    custom?: {
+      log?: (...args: any[]) => void;
+      onPushData: (...args: any[]) => MaybePromise<void>;
+      onGetInfo: (...args: any[]) => MaybePromise<void>;
+    }
   ]
 ): Promise<Dataset<any>> => {
   const origArgs = args.slice().slice(0, 2);
-  const [datasetIdOrName, __, custom = {}] = args;
-  const { log } = custom;
+  const [datasetIdOrName, __, custom] = args;
+  const { log, onPushData, onGetInfo } = custom || {};
   log?.(`Called MockStorageDataset with ${JSON.stringify(origArgs)}`);
 
   return Promise.resolve({
     pushData: async (...args) => {
       log?.(`Called MockStorageDataset.pushData (instance ${datasetIdOrName}) with ${JSON.stringify(args)}`); // prettier-ignore
+      await onPushData?.(...args);
+    },
+    getInfo: async (...args) => {
+      log?.(`Called MockStorageDataset.getInfo (instance ${datasetIdOrName}) with ${JSON.stringify(args)}`); // prettier-ignore
+      return onGetInfo ? onGetInfo(...args) : { itemCount: 10 };
     },
   } as Dataset);
 };
