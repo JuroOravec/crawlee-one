@@ -517,6 +517,7 @@ export const renderReadme = async (input: {
 }) => {
   // Assign the default values to a clone
   const templates = cloneDeep(input.templates) as ApifyReadmeTemplates;
+  templates.features = templates.features || {};
   Object.entries(defaultFeatureTexts).forEach(([key, feat]) => {
     templates.features[key] = defaults(templates.features[key] || {}, feat);
   });
