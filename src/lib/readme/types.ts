@@ -1,11 +1,53 @@
 import { ArrVal, enumFromArray } from '../../utils/types';
 import type { ApifyScraperActorSpec } from '../actorSpec';
 
-export const README_FEATURE_TYPE = ['datasets', 'modes', 'filters', 'noBrowser', 'proxy', 'crawlerConfig', 'tests', 'privacy', 'errorMonitoring'] as const; // prettier-ignore
+export const README_FEATURE_TYPE = [
+  'datasets',
+  'modes',
+  'filters',
+  'noBrowser',
+  'proxy',
+  'crawlerConfig',
+  'tests',
+  'privacy',
+  'errorMonitoring',
+] as const;
 export const README_FEATURE_TYPE_ENUM = enumFromArray(README_FEATURE_TYPE);
 export type ReadmeFeatureType = ArrVal<typeof README_FEATURE_TYPE>;
 
-export const README_HOOK_TYPE = ['introActorLongDesc', 'introAfterDatasets', 'useCases', 'costAfterPerfTables', 'costBeforeEnd', 'inputAfterLimit'] as const; // prettier-ignore
+export const README_HOOK_TYPE = [
+  'introAfterBegin',
+  'introAfterDatasets',
+  'introBeforeEnd',
+  'featuresAfterBegin',
+  'featuresBeforeEnd',
+  'useCases',
+  'usageAfterBegin',
+  'usageBeforeEnd',
+  'costAfterBegin',
+  'costAfterPerfTables',
+  'costBeforeEnd',
+  'inputAfterBegin',
+  'inputBeforeEnd',
+  'filterAfterBegin',
+  'filterBeforeEnd',
+  'limitAfterBegin',
+  'limitBeforeEnd',
+  'inputExampleAfterBegin',
+  'inputExampleBeforeEnd',
+  'outputAfterBegin',
+  'outputBeforeEnd',
+  'outputExampleAfterBegin',
+  'outputExampleBeforeEnd',
+  'integrationAfterBegin',
+  'integrationBeforeEnd',
+  'apifyAfterBegin',
+  'apifyBeforeEnd',
+  'legalityAfterBegin',
+  'legalityBeforeEnd',
+  'contactAfterBegin',
+  'contactBeforeEnd',
+] as const;
 export const README_HOOK_TYPE_ENUM = enumFromArray(README_HOOK_TYPE);
 export type ReadmeHookType = ArrVal<typeof README_HOOK_TYPE>;
 

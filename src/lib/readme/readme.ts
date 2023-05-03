@@ -5,8 +5,9 @@ import millify from 'millify';
 import { capitalize, cloneDeep, defaults, round, uniqBy } from 'lodash';
 import type { DatasetPerfStat } from 'actor-spec';
 
-import type {
+import {
   ApifyReadmeTemplates,
+  README_HOOK_TYPE_ENUM,
   ReadmeFeature,
   ReadmeFeatureType,
   RenderContext,
@@ -164,6 +165,8 @@ export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
   },
 };
 
+const H = README_HOOK_TYPE_ENUM;
+
 /** The template for rendering README for Apify actor */
 const readmeTemplate = `
 <%~ it.a.actor.title %>
@@ -173,7 +176,7 @@ const readmeTemplate = `
 
 ## What is <%~ it.a.actor.title %> and how it works?
 
-<%~ include("hook.introActorLongDesc", it) %>
+<%~ include("hook.${H.introAfterBegin}", it) %>
 
 With <%~ it.a.actor.title %>, you can extract:
 
@@ -181,13 +184,17 @@ With <%~ it.a.actor.title %>, you can extract:
 - [<%~ dataset.shortDesc %>]( <%~ dataset.url %> )
 <%- }) %>
 
-<%-~ include("hook.introAfterDatasets", it) %>
+<%-~ include("hook.${H.introAfterDatasets}", it) %>
 
 See the [outputs section](#outputs) for a detailed description.
 
 The data can be downloaded in JSON, JSONL, XML, CSV, Excel, or HTML formats.
 
+<%~ include("hook.${H.introBeforeEnd}", it) %>
+
 ## Features
+
+<%~ include("hook.${H.featuresAfterBegin}", it) %>
 
 <%- Object.entries(it.t.features).forEach(([featName, feat]) => { %>
 <%- if (feat.supported(it)) { %>
@@ -204,11 +211,15 @@ The data can be downloaded in JSON, JSONL, XML, CSV, Excel, or HTML formats.
 <%- } %>
 <%- }) %>
 
+<%~ include("hook.${H.featuresBeforeEnd}", it) %>
+
 ## How can you use the data scraped from <%~ it.a.websites[0].name %>? (Examples)
 
-<%~ include("hook.useCases", it) %>
+<%~ include("hook.${H.useCases}", it) %>
 
 ## How to use <%~ it.a.actor.title %>
+
+<%~ include("hook.${H.usageAfterBegin}", it) %>
 
 1. Create a free Apify account using your email
 2. Open <%~ it.a.actor.title %>
@@ -218,9 +229,11 @@ The data can be downloaded in JSON, JSONL, XML, CSV, Excel, or HTML formats.
 
 For details and examples for all input fields, please visit the [Input tab](<%~ it.a.actor.publicUrl %>/input-schema).
 
+<%~ include("hook.${H.usageBeforeEnd}", it) %>
+
 ## How much does it cost to scrape <%~ it.a.websites[0].name %>?
 
-<%- it.a.datasets.forEach((dataset) => { %>
+<%~ include("hook.${H.costAfterBegin}", it) %>
 ### <%~ it.fn.capitalize(dataset.name) %>
 
 <table>
@@ -257,17 +270,23 @@ For details and examples for all input fields, please visit the [Input tab](<%~ 
 
 <br/>
 
-<%~ include("hook.costAfterPerfTables", it) %>
+<%~ include("hook.${H.costAfterPerfTables}", it) %>
 
 Remember that with the [Apify Free plan](https://apify.com/pricing), you have $5 free usage per month.
 
-<%~ include("hook.costBeforeEnd", it) %>
+<%~ include("hook.${H.costBeforeEnd}", it) %>
 
 ## Input options
 
+<%~ include("hook.${H.inputAfterBegin}", it) %>
+
 For details and examples for all input fields, please visit the [Input tab](<%~ it.a.actor.publicUrl %>/input-schema).
 
+<%~ include("hook.${H.inputBeforeEnd}", it) %>
+
 ### Filter options
+
+<%~ include("hook.${H.filterAfterBegin}", it) %>
 
 You can run <%~ it.a.actor.title %> as is, with the default options, to get a sample of the 
 <%~ it.a.datasets.find(d => d.isDefault).name %> entries
@@ -281,13 +300,19 @@ Otherwise, you can filter by:
 <%- }) %>
 <%- } %>
 
+<%~ include("hook.${H.filterBeforeEnd}", it) %>
+
 ### Limit options
+
+<%~ include("hook.${H.limitAfterBegin}", it) %>
 
 To limit how many results you get, set \`<%~ it.t.input.maxCount %>\` to desired amount.
 
-<%~ include("hook.inputAfterLimit", it) %>
+<%~ include("hook.${H.limitBeforeEnd}", it) %>
 
 ### Input examples
+
+<%~ include("hook.${H.inputExampleAfterBegin}", it) %>
 
 <% it.t.exampleInputs.forEach((example, index) => { %>
 #### Example <%~ index + 1 %>: <%~ example.title %>
@@ -305,7 +330,11 @@ To limit how many results you get, set \`<%~ it.t.input.maxCount %>\` to desired
 
 <% }) %>
 
+<%~ include("hook.${H.inputExampleBeforeEnd}", it) %>
+
 ## Outputs
+
+<%~ include("hook.${H.outputAfterBegin}", it) %>
 
 Once the actor is done, you can see the overview of results in the Output tab.
 
@@ -313,7 +342,11 @@ To export the data, head over to the Storage tab.
 
 ![<%~ it.a.actor.title %> dataset overview](<%~ it.a.actor.datasetOverviewImgUrl %>)
 
+<%~ include("hook.${H.outputBeforeEnd}", it) %>
+
 ## Sample output from <%~ it.a.actor.title %>
+
+<%~ include("hook.${H.outputExampleAfterBegin}", it) %>
 
 <%- it.a.datasets.forEach((dataset) => { %>
 ### <%~ it.fn.capitalize(dataset.name) %> output
@@ -331,7 +364,11 @@ To export the data, head over to the Storage tab.
 
 <%- }) %>
 
+<%~ include("hook.${H.outputExampleBeforeEnd}", it) %>
+
 ## How to integrate <%~ it.a.actor.title %> with other services, APIs or Actors
+
+<%~ include("hook.${H.integrationAfterBegin}", it) %>
 
 You can connect the actor with many of the
 [integrations on the Apify platform](https://apify.com/integrations).
@@ -342,7 +379,11 @@ Or you can use
 to carry out an action whenever an event occurs, e.g. get a notification whenever
 Instagram API Scraper successfully finishes a run.
 
+<%~ include("hook.${H.integrationBeforeEnd}", it) %>
+
 ## Use <%~ it.a.actor.title %> with Apify API
+
+<%~ include("hook.${H.apifyAfterBegin}", it) %>
 
 The Apify API gives you programmatic access to the Apify platform.
 The API is organized around RESTful HTTP endpoints that enable you to manage,
@@ -357,7 +398,11 @@ for full details or click on the
 [API tab](<%~ it.a.actor.publicUrl %>/api)
 for code examples.
 
+<%~ include("hook.${H.apifyBeforeEnd}", it) %>
+
 ## Is it legal to scrape <%~ it.a.websites[0].name %>?
+
+<%~ include("hook.${H.legalityAfterBegin}", it) %>
 
 It is legal to scrape publicly available data such as product descriptions,
 prices, or ratings. Read Apify's blog post on
@@ -392,7 +437,11 @@ Redacted fields may show a message like this instead of the actual value:
 
 <%- } %>
 
+<%~ include("hook.${H.legalityBeforeEnd}", it) %>
+
 ## Who can I contact for issues with <%~ it.a.websites[0].name %> actor?
+
+<%~ include("hook.${H.contactAfterBegin}", it) %>
 
 To report issues and find help,
 <%- if (it.a.platform.socials.discord) { %>
@@ -401,6 +450,8 @@ head over to the
 <%- } %>
 <%_ if (it.a.platform.socials.discord && it.fn.collectEmails(it).length) { %>, or <% } _%>
 email me at <%~ it.fn.email(it.fn.collectEmails(it)[0]) %>
+
+<%~ include("hook.${H.contactBeforeEnd}", it) %>
 `;
 
 /**
