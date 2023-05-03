@@ -1,7 +1,7 @@
 import { ArrVal, enumFromArray } from '../../utils/types';
 import type { ApifyScraperActorSpec } from '../actorSpec';
 
-export const README_FEATURE_TYPE = [
+export const README_FEATURE = [
   'datasets',
   'modes',
   'filters',
@@ -12,10 +12,10 @@ export const README_FEATURE_TYPE = [
   'privacy',
   'errorMonitoring',
 ] as const;
-export const README_FEATURE_TYPE_ENUM = enumFromArray(README_FEATURE_TYPE);
-export type ReadmeFeatureType = ArrVal<typeof README_FEATURE_TYPE>;
+export const README_FEATURE_ENUM = enumFromArray(README_FEATURE);
+export type ReadmeFeatureType = ArrVal<typeof README_FEATURE>;
 
-export const README_HOOK_TYPE = [
+export const README_HOOK = [
   'introAfterBegin',
   'introAfterDatasets',
   'introBeforeEnd',
@@ -48,8 +48,8 @@ export const README_HOOK_TYPE = [
   'contactAfterBegin',
   'contactBeforeEnd',
 ] as const;
-export const README_HOOK_TYPE_ENUM = enumFromArray(README_HOOK_TYPE);
-export type ReadmeHookType = ArrVal<typeof README_HOOK_TYPE>;
+export const README_HOOK_ENUM = enumFromArray(README_HOOK);
+export type ReadmeHook = ArrVal<typeof README_HOOK>;
 
 /**
  * Defines how to render a feature block for Apify actor README.
@@ -253,7 +253,7 @@ export interface ApifyReadmeTemplates {
    *
    * Just as other templates, the hooks receive the whole context (`it`)
    */
-  hooks?: Partial<Record<ReadmeHookType, string>>;
+  hooks?: Partial<Record<ReadmeHook, string>>;
 }
 
 /** Context available inside the rendering via `it` */

@@ -7,7 +7,8 @@ import type { DatasetPerfStat } from 'actor-spec';
 
 import {
   ApifyReadmeTemplates,
-  README_HOOK_TYPE_ENUM,
+  README_HOOK,
+  README_HOOK_ENUM,
   ReadmeFeature,
   ReadmeFeatureType,
   RenderContext,
@@ -165,7 +166,7 @@ export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
   },
 };
 
-const H = README_HOOK_TYPE_ENUM;
+const H = README_HOOK_ENUM;
 
 /** The template for rendering README for Apify actor */
 const readmeTemplate = `
@@ -521,9 +522,10 @@ export const renderReadme = async (input: {
   });
 
   // Define templates for 'include(...)'s for template hooks
-  Object.entries(templates.hooks || {}).forEach(([key, template]) =>
-    Eta.templates.define(`hook.${key}`, Eta.compile(template || ''))
-  );
+  README_HOOK.forEach((key) => {
+    const template = templates.hooks?.[key];
+    Eta.templates.define(`hook.${key}`, Eta.compile(template || ''));
+  });
   // Define templates for 'include(...)'s for feature hooks
   Object.entries(templates.features).forEach(([key, feat]) => {
     const { title, mainText, afterBegin, beforeEnd } = feat;
