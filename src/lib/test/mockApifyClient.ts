@@ -256,8 +256,8 @@ export const createMockStorageDataset = (
     options?: OpenStorageOptions,
     custom?: {
       log?: (...args: any[]) => void;
-      onPushData: (...args: any[]) => MaybePromise<void>;
-      onGetInfo: (...args: any[]) => MaybePromise<void>;
+      onPushData?: (...args: any[]) => MaybePromise<void>;
+      onGetInfo?: (...args: any[]) => MaybePromise<void>;
     }
   ]
 ): Promise<Dataset<any>> => {
