@@ -293,7 +293,9 @@ For details and examples for all input fields, please visit the [Input tab](<%~ 
 
 You can run <%~ it.a.actor.title %> as is, with the default options, to get a sample of the 
 <%~ it.a.datasets.find(d => d.isDefault).name %> entries
-(<%~ it.fn.collectModes(it).find(m => m.isDefault).name %> mode).
+<%_ if (it.fn.collectModes(it).find(m => m.isDefault)) { _%>
+(<%_~ ' ' + it.fn.collectModes(it).find(m => m.isDefault).name %> mode)
+<%_ } _%>.
 
 <%- if (it.fn.collectFilters(it).length) { %>
 Otherwise, you can filter by:
