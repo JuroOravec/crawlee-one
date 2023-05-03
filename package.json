@@ -1,6 +1,6 @@
 {
   "name": "apify-actor-utils",
-  "version": "0.10.10",
+  "version": "0.10.11",
   "private": false,
   "description": "Apify Actor utilities",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
