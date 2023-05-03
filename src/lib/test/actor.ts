@@ -18,12 +18,14 @@ export const setupMockApifyActor = async <
   log,
   onPushData,
   onBatchAddRequests,
+  onGetInfo,
 }: {
   vi: typeof vi;
   actorInput?: TInput;
   log?: (...args: any[]) => void;
   onPushData?: (data: TData) => MaybePromise<void>;
   onBatchAddRequests?: OnBatchAddRequests;
+  onGetInfo?: (...args: any[]) => MaybePromise<void>;
 }) => {
   const mockStorageClient = createMockStorageClient({ log, onBatchAddRequests });
 
@@ -32,7 +34,7 @@ export const setupMockApifyActor = async <
 
   viInstance.spyOn(Actor, 'openDataset').mockImplementation(async (datasetIdOrName, options) => {
     console.log('Mock Actor.openDataset: ', datasetIdOrName);
-    return createMockStorageDataset(datasetIdOrName, options, { log });
+    return createMockStorageDataset(datasetIdOrName, options, { log, onPushData, onGetInfo });
   });
   viInstance.spyOn(Actor, 'pushData').mockImplementation(async (data) => {
     console.log('Mock Actor.pushData');
@@ -73,7 +75,7 @@ export const runActorTest = async <TData extends MaybeArray<Dictionary>, TInput>
   onBatchAddRequests?: OnBatchAddRequests;
   onDone?: (done: () => void) => MaybePromise<void>;
 }) => {
-  await new Promise<void>(async (done, rej) => {
+  await new Promise<void>(async (done) => {
     await setupMockApifyActor<TInput, TData>({
       vi: viInstance,
       actorInput: { ...input },
