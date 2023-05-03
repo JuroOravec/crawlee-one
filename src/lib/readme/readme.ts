@@ -242,21 +242,21 @@ For details and examples for all input fields, please visit the [Input tab](<%~ 
   <thead>
     <tr>
       <td></td>
-      <%- it.t.perfTable.cols.forEach((col) => { -%>
+      <%- it.t.perfTables[dataset.perfTable].cols.forEach((col) => { -%>
       <td><strong>
-        <%~ include("perfTable.col." + col.colId, { ...it, dataset }) %>
+        <%~ include("perfTable." + dataset.perfTable + ".col." + col.colId, { ...it, dataset }) %>
       </strong></td>
       <%- }) -%>
     </tr>
   </thead>
 
   <tbody>
-    <%- it.t.perfTable.rows.forEach((row) => { -%>
+    <%- it.t.perfTables[dataset.perfTable].rows.forEach((row) => { -%>
     <tr>
       <td>
-        <%~ include("perfTable.row." + row.rowId, { ...it, dataset }) %>
+        <%~ include("perfTable." + dataset.perfTable + ".row." + row.rowId, { ...it, dataset }) %>
       </td>
-      <%- it.t.perfTable.cols.forEach((col) => { -%>
+      <%- it.t.perfTables[dataset.perfTable].cols.forEach((col) => { -%>
       <td>
         <%~ it.fn.perfStat(
           dataset.perfStats.find(d => d.rowId === row.rowId && d.colId === col.colId)
@@ -533,8 +533,10 @@ export const renderReadme = async (input: {
     Eta.templates.define(`feat.${key}.beforeEnd`, Eta.compile(beforeEnd ?? ''));
   });
   // Define templates for 'include(...)'s for perf table hooks
-  templates.perfTable.rows.forEach((row) => Eta.templates.define(`perfTable.row.${row.rowId}`, Eta.compile(row.template))); // prettier-ignore
-  templates.perfTable.cols.forEach((col) => Eta.templates.define(`perfTable.col.${col.colId}`, Eta.compile(col.template))); // prettier-ignore
+  Object.entries(templates.perfTables || {}).forEach(([key, perfTable]) => {
+    perfTable.rows.forEach((row) => Eta.templates.define(`perfTable.${key}.row.${row.rowId}`, Eta.compile(row.template))); // prettier-ignore
+    perfTable.cols.forEach((col) => Eta.templates.define(`perfTable.${key}.col.${col.colId}`, Eta.compile(col.template))); // prettier-ignore
+  });
 
   const fn = {
     enumerate: renderList,

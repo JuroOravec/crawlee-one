@@ -161,6 +161,70 @@ export interface ReadmeExampleInput<TData extends object = object> {
   inputDataComments: Partial<Record<keyof TData, string>>;
 }
 
+/**
+ * Defines how to render a table block with data on performance
+ * for Apify actor README
+ *
+ * Example rendered output:
+ * ```markdown
+ * ### Organisations
+ *
+ * <table>
+ *   <thead>
+ *     <tr>
+ *       <td></td>
+ *       <td>
+ *         <strong>100 results</strong>
+ *       </td>
+ *       <td>
+ *         <strong>Full run (~ 2.6K results)</strong>
+ *       </td>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td>Fast run</td>
+ *       <td>$0.014 in 2m 0s</td>
+ *       <td>$0.289 in 42m 0s</td>
+ *     </tr>
+ *     <tr>
+ *       <td>Detailed run</td>
+ *       <td>$0.08 in 11m 37s</td>
+ *       <td>$2.008 in 4h 52m </td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ * ```
+ */
+export interface PerfTable {
+  /**
+   * Map rowIds to header text. E.g.
+   * ```ts
+   * [
+   *   { rowId: 'fast', template: 'Fast run' },
+   *   { rowId: 'detailed', template: 'Detailed run' },
+   * ]
+   * ```
+   */
+  rows: {
+    rowId: string;
+    template: string;
+  }[];
+  /**
+   * Map colIds to header text. E.g.
+   * ```ts
+   * [
+   *   { colId: '100items', template: '100 results' },
+   *   { colId: 'fullRun', template: 'Full run (~ <%~ it.fn.millify(it.dataset.size) %> results)' },
+   * ]
+   * ```
+   */
+  cols: {
+    colId: string;
+    template: string;
+  }[];
+}
+
 /** Defines how to render the Apify actor README. */
 export interface ApifyReadmeTemplates {
   input: {
@@ -178,34 +242,7 @@ export interface ApifyReadmeTemplates {
     privacyName: string;
   };
   /** Configure how to render the performance/cost tables */
-  perfTable: {
-    /**
-     * Map rowIds to header text. E.g.
-     * ```ts
-     * [
-     *   { rowId: 'fast', template: 'Fast run' },
-     *   { rowId: 'detailed', template: 'Detailed run' },
-     * ]
-     * ```
-     */
-    rows: {
-      rowId: string;
-      template: string;
-    }[];
-    /**
-     * Map colIds to header text. E.g.
-     * ```ts
-     * [
-     *   { colId: '100items', template: '100 results' },
-     *   { colId: 'fullRun', template: 'Full run (~ <%~ it.fn.millify(it.dataset.size) %> results)' },
-     * ]
-     * ```
-     */
-    cols: {
-      colId: string;
-      template: string;
-    }[];
-  };
+  perfTables: Record<string, PerfTable>;
   /** Configure how to render readme actor features */
   features: Record<ReadmeFeatureType, ReadmeFeature>;
   /** Configure how to render readme example inputs */

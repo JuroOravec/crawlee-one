@@ -12,6 +12,8 @@ export interface ApifyScraperActorSpec extends ScraperActorSpec {
 /** Dataset with additional perf stats info for formatting in tables */
 export interface ApifyScraperDataset extends ScraperDataset {
   perfStats: ApifyDatasetPerfStat[];
+  /** Specify which perfTable should render this data */
+  perfTable: string;
 }
 
 /** Dataset perf stats with additional info for formatting in tables */
