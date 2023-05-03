@@ -234,6 +234,8 @@ For details and examples for all input fields, please visit the [Input tab](<%~ 
 ## How much does it cost to scrape <%~ it.a.websites[0].name %>?
 
 <%~ include("hook.${H.costAfterBegin}", it) %>
+
+<%- it.a.datasets.filter((d) => d.perfStats && d.perfStats.length).forEach((dataset) => { %>
 ### <%~ it.fn.capitalize(dataset.name) %>
 
 <table>
