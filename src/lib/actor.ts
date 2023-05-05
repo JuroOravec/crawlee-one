@@ -20,6 +20,8 @@ import { CrawlerConfigActorInput, crawlerInput } from './config';
 
 type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<R>);
 
+type RunActor<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
+
 const isRouter = (r: any): r is RouterHandler<any> => {
   return !!((r as RouterHandler).addHandler && (r as RouterHandler).addDefaultHandler);
 };
@@ -100,7 +102,7 @@ export interface ActorDefinition<
 
   // Crawler setup
   createCrawler: (
-    actorCtx: Omit<ActorContext<Ctx, Labels, Input>, 'crawler'>
+    actorCtx: Omit<ActorContext<Ctx, Labels, Input>, 'crawler' | 'runActor'>
   ) => MaybePromise<Ctx['crawler']>;
 }
 
@@ -117,6 +119,12 @@ export interface ActorContext<
   Input extends Record<string, any> = Record<string, any>
 > {
   crawler: Ctx['crawler'];
+  /**
+   * This function that wraps `crawler.run(requests, runOtions)` with additional
+   * features like:
+   * - Automatically metamorph into another actor after the run finishes
+   */
+  runActor: RunActor<Ctx>;
   proxy?: ProxyConfiguration;
   router: RouterHandler<Ctx>;
   routes: RouteMatcher<Ctx, Labels>[];
@@ -194,7 +202,56 @@ export const createApifyActor = async <
   const getActorCtx = () => ({ router, routes, routeHandlers, proxy, config, input });
   const crawler = await config.createCrawler(getActorCtx());
 
-  return { crawler, ...getActorCtx() };
+  const actor = { crawler, ...getActorCtx() };
+  const runActor = createActorRunner<Ctx, Labels, Input>(actor);
+
+  return { crawler, ...getActorCtx(), runActor };
+};
+
+/**
+ * Create a function that wraps `crawler.run(requests, runOtions)` with additional
+ * features like:
+ * - Automatically metamorph into another actor after the run finishes
+ */
+const createActorRunner = <
+  Ctx extends CrawlingContext<any> = CrawlingContext<BasicCrawler>,
+  Labels extends string = string,
+  Input extends Record<string, any> = Record<string, any>
+>(
+  actor: Omit<ActorContext<Ctx, Labels, Input>, 'runActor'>
+) => {
+  const runActor = async (
+    requests?: Parameters<RunActor<Ctx>>[0],
+    options?: Parameters<RunActor<Ctx>>[1] & {
+      /** Override this if the metamorph actor ID is under different input field than 'metamorphActorId' */
+      actorMetamorphIdKey?: string;
+      /** Override this if the metamorph actor ID is under different input field than 'metamorphActorBuild' */
+      actorMetamorphBuildKey?: string;
+      /** Override this if the metamorph actor ID is under different input field than 'metamorphActorInput' */
+      actorMetamorphInputKey?: string;
+    }
+  ): ReturnType<RunActor<Ctx>> => {
+    const {
+      actorMetamorphIdKey = 'metamorphActorId',
+      actorMetamorphBuildKey = 'metamorphActorBuild',
+      actorMetamorphInputKey = 'metamorphActorInput',
+      ...runOtions
+    } = options || {};
+
+    const runRes = await actor.crawler.run(requests, runOtions);
+
+    // Trigger metamorph if it was set from the input
+    const targetActorId = actor.input?.[actorMetamorphIdKey];
+    const targetActorBuild = actor.input?.[actorMetamorphBuildKey];
+    const targetActorInput = actor.input?.[actorMetamorphInputKey];
+    if (targetActorId) {
+      await Actor.metamorph(targetActorId, targetActorInput, { build: targetActorBuild });
+    }
+
+    return runRes;
+  };
+
+  return runActor;
 };
 
 /** Given the actor input, create common crawler options. */
