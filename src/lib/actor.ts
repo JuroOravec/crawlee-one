@@ -99,7 +99,9 @@ export interface ActorDefinition<
   proxy?: MaybeAsyncFn<ProxyConfiguration, [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
 
   // Crawler setup
-  createCrawler: (actorCtx: ActorContext<Ctx, Labels, Input>) => MaybePromise<Ctx['crawler']>;
+  createCrawler: (
+    actorCtx: Omit<ActorContext<Ctx, Labels, Input>, 'crawler'>
+  ) => MaybePromise<Ctx['crawler']>;
 }
 
 export type ActorDefinitionWithInput<
@@ -114,6 +116,7 @@ export interface ActorContext<
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>
 > {
+  crawler: Ctx['crawler'];
   proxy?: ProxyConfiguration;
   router: RouterHandler<Ctx>;
   routes: RouteMatcher<Ctx, Labels>[];
@@ -148,7 +151,7 @@ export const createApifyActor = async <
   Input extends Record<string, any> = Record<string, any>
 >(
   config: ActorDefinition<Ctx, Labels, Input>
-) => {
+): Promise<ActorContext<Ctx, Labels, Input>> => {
   // Initialize config fields where we have initialization functions instead of the values themselves
   const input = config.input
     ? isFunc(config.input)
