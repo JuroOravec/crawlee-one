@@ -56,9 +56,16 @@ export interface OutputActorInput {
    */
   metamorphActorId?: string;
   /**
+   * Tag or number of the target actor build to metamorph into (e.g. `beta` or `1.2.345`).
+   *
+   * See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph
+   */
+  metamorphActorBuild?: string;
+  /**
    * Input passed to the follow-up (metamorph) actor.
    *
-   * See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph */
+   * See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph
+   */
   metamorphActorInput?: object;
 }
 
@@ -260,6 +267,14 @@ export const outputInput = {
     example: 'apify/web-scraper',
     nullable: true,
   }),
+  metamorphActorBuild: createStringField({
+    title: 'Metamorph actor build',
+    type: 'string',
+    description: `Tag or number of the target actor build to metamorph into (e.g. 'beta' or '1.2.345')`,
+    editor: 'textfield',
+    example: '1.2.345',
+    nullable: true,
+  }),
   metamorphActorInput: createObjectField({
     title: 'Metamorph actor input',
     type: 'object',
@@ -303,5 +318,6 @@ export const outputInputValidationFields = {
   // https://stackoverflow.com/a/49898360/9788634
   outputRenameFields: Joi.object().pattern(/./, Joi.string()).optional(),
   metamorphActorId: Joi.string().min(1).optional(),
+  metamorphActorBuild: Joi.string().min(1).optional(),
   metamorphActorInput: Joi.object().unknown(true).optional(),
 } satisfies Record<keyof OutputActorInput, Joi.Schema>;
