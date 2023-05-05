@@ -20,8 +20,6 @@ import { CrawlerConfigActorInput, crawlerInput } from './config';
 
 type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<R>);
 
-type RunActor<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
-
 const isRouter = (r: any): r is RouterHandler<any> => {
   return !!((r as RouterHandler).addHandler && (r as RouterHandler).addDefaultHandler);
 };
@@ -133,6 +131,23 @@ export interface ActorContext<
   input: Input | null;
 }
 
+type OrigRunActor<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
+
+interface MetamorphInputOverrides {
+  /** Override this if the metamorph actor ID is under different input field than 'metamorphActorId' */
+  actorMetamorphIdKey?: string;
+  /** Override this if the metamorph actor ID is under different input field than 'metamorphActorBuild' */
+  actorMetamorphBuildKey?: string;
+  /** Override this if the metamorph actor ID is under different input field than 'metamorphActorInput' */
+  actorMetamorphInputKey?: string;
+}
+
+/** Extended type of `crawler.run()` function */
+export type RunActor<Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>> = (
+  requests?: Parameters<OrigRunActor<Ctx>>[0],
+  options?: Parameters<OrigRunActor<Ctx>>[1] & MetamorphInputOverrides
+) => ReturnType<OrigRunActor<Ctx>>;
+
 /**
  * Create opinionated Apify crawler that uses router for handling requests.
  *
@@ -220,17 +235,7 @@ const createActorRunner = <
 >(
   actor: Omit<ActorContext<Ctx, Labels, Input>, 'runActor'>
 ) => {
-  const runActor = async (
-    requests?: Parameters<RunActor<Ctx>>[0],
-    options?: Parameters<RunActor<Ctx>>[1] & {
-      /** Override this if the metamorph actor ID is under different input field than 'metamorphActorId' */
-      actorMetamorphIdKey?: string;
-      /** Override this if the metamorph actor ID is under different input field than 'metamorphActorBuild' */
-      actorMetamorphBuildKey?: string;
-      /** Override this if the metamorph actor ID is under different input field than 'metamorphActorInput' */
-      actorMetamorphInputKey?: string;
-    }
-  ): ReturnType<RunActor<Ctx>> => {
+  const runActor: RunActor<Ctx> = async (requests, options) => {
     const {
       actorMetamorphIdKey = 'metamorphActorId',
       actorMetamorphBuildKey = 'metamorphActorBuild',
