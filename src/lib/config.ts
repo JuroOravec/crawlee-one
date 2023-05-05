@@ -39,6 +39,29 @@ export interface ProxyActorInput {
   proxy?: Parameters<Actor['createProxyConfiguration']>[0];
 }
 
+/** Common input fields related to actor output */
+export interface OutputActorInput {
+  /** ID of the dataset to which the data should be pushed */
+  outputDatasetId?: string;
+  /** Name of the dataset to which the data should be pushed */
+  outputDatasetName?: string;
+  /** Mapping of oldName:newName for the fields on the dataset entry */
+  outputRenameFields?: Record<string, string>;
+  /**
+   * If you want to run another actor with the same dataset after
+   * this actor has finished (AKA metamorph into another actor),
+   * then set the ID of the target actor.
+   *
+   * See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph
+   */
+  metamorphActorId?: string;
+  /**
+   * Input passed to the follow-up (metamorph) actor.
+   *
+   * See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph */
+  metamorphActorInput?: object;
+}
+
 /** Common input fields related to privacy setup */
 export interface PrivacyActorInput {
   includePersonalData?: boolean;
@@ -201,6 +224,52 @@ export const privacyInput = {
   }),
 } satisfies Record<keyof PrivacyActorInput, Field>;
 
+const outputDatasetDesc = `By default, data is written to Default dataset. Set this option if you want to write data to non-default dataset. <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a> <br/><br/><strong>NOTE:</strong> Set only either <strong>Dataset ID</strong> or <strong>Dataset Name</strong>, but not both.`;
+/** Common input fields related to proxy setup */
+export const outputInput = {
+  outputDatasetId: createStringField({
+    title: 'Dataset ID',
+    type: 'string',
+    description: outputDatasetDesc,
+    editor: 'textfield',
+    example: 'mIJVZsRQrDQf4rUAf',
+    nullable: true,
+    sectionCaption: 'Output & Dataset',
+  }),
+  outputDatasetName: createStringField({
+    title: 'Dataset name',
+    type: 'string',
+    description: outputDatasetDesc,
+    editor: 'textfield',
+    example: 'my-dataset',
+    nullable: true,
+  }),
+  outputRenameFields: createObjectField({
+    title: 'Rename dataset fields',
+    type: 'object',
+    description: `Use this option to rename fields (columns) of the output data. Value is an object of mapping of oldName:newName`,
+    editor: 'json',
+    example: { oldFieldName: 'newFieldName' },
+    nullable: true,
+  }),
+  metamorphActorId: createStringField({
+    title: 'Metamorph actor ID - metamorph to another actor at the end',
+    type: 'string',
+    description: `Use this option if you want to run another actor with the same dataset after this actor has finished (AKA metamorph into another actor). <ahref="https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph">Learn more</a> <br/><br/>New actor is identified by its ID, e.g. "apify/web-scraper".`,
+    editor: 'textfield',
+    example: 'apify/web-scraper',
+    nullable: true,
+  }),
+  metamorphActorInput: createObjectField({
+    title: 'Metamorph actor input',
+    type: 'object',
+    description: `Input object passed to the follow-up (metamorph) actor. <ahref="https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph">Learn more</a>`,
+    editor: 'json',
+    example: { uploadDatasetToGDrive: true },
+    nullable: true,
+  }),
+} satisfies Record<keyof OutputActorInput, Field>;
+
 export const crawlerInputValidationFields = {
   navigationTimeoutSecs: Joi.number().integer().min(0).optional(),
   ignoreSslErrors: Joi.boolean().optional(),
@@ -227,3 +296,12 @@ export const proxyInputValidationFields = {
 export const privacyInputValidationFields = {
   includePersonalData: Joi.boolean().optional(),
 } satisfies Record<keyof PrivacyActorInput, Joi.Schema>;
+
+export const outputInputValidationFields = {
+  outputDatasetId: Joi.string().min(1).optional(),
+  outputDatasetName: Joi.string().min(1).optional(),
+  // https://stackoverflow.com/a/49898360/9788634
+  outputRenameFields: Joi.object().pattern(/./, Joi.string()).optional(),
+  metamorphActorId: Joi.string().min(1).optional(),
+  metamorphActorInput: Joi.object().unknown(true).optional(),
+} satisfies Record<keyof OutputActorInput, Joi.Schema>;
