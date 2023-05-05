@@ -241,7 +241,7 @@ export const outputInput = {
     editor: 'textfield',
     example: 'mIJVZsRQrDQf4rUAf',
     nullable: true,
-    sectionCaption: 'Output & Dataset',
+    sectionCaption: 'Output, Dataset & Integrations',
   }),
   outputDatasetName: createStringField({
     title: 'Dataset name',
