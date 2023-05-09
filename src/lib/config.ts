@@ -41,11 +41,26 @@ export interface ProxyActorInput {
 
 /** Common input fields related to actor output */
 export interface OutputActorInput {
-  /** ID of the dataset to which the data should be pushed */
-  outputDatasetId?: string;
-  /** Name of the dataset to which the data should be pushed */
-  outputDatasetName?: string;
-  /** Mapping of oldName:newName for the fields on the dataset entry */
+  /** ID or name of the dataset to which the data should be pushed */
+  outputDatasetIdOrName?: string;
+  /**
+   * Option to select a subset of keys/fields of an entry that
+   * will be pushed to the dataset.
+   *
+   * If not set, all fields on an entry will be pushed to the dataset.
+   *
+   * This is done before `outputRenameFields`.
+   *
+   * Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
+   * resolved using Lodash.get().
+   */
+  outputPickFields?: string[];
+  /**
+   * Option to remap the keys before pushing the entries to the dataset.
+   *
+   * Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
+   * resolved using Lodash.get().
+   */
   outputRenameFields?: Record<string, string>;
   /**
    * If you want to run another actor with the same dataset after
@@ -231,30 +246,39 @@ export const privacyInput = {
   }),
 } satisfies Record<keyof PrivacyActorInput, Field>;
 
-const outputDatasetDesc = `By default, data is written to Default dataset. Set this option if you want to write data to non-default dataset. <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a> <br/><br/><strong>NOTE:</strong> Set only either <strong>Dataset ID</strong> or <strong>Dataset Name</strong>, but not both.`;
 /** Common input fields related to proxy setup */
 export const outputInput = {
-  outputDatasetId: createStringField({
-    title: 'Dataset ID',
+  outputDatasetIdOrName: createStringField({
+    title: 'Dataset ID or name',
     type: 'string',
-    description: outputDatasetDesc,
+    description: `By default, data is written to Default dataset.
+    Set this option if you want to write data to non-default dataset.
+    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a>`,
     editor: 'textfield',
     example: 'mIJVZsRQrDQf4rUAf',
     nullable: true,
     sectionCaption: 'Output, Dataset & Integrations',
   }),
-  outputDatasetName: createStringField({
-    title: 'Dataset name',
-    type: 'string',
-    description: outputDatasetDesc,
-    editor: 'textfield',
-    example: 'my-dataset',
+  outputPickFields: createArrayField({
+    title: 'Rename dataset fields',
+    type: 'array',
+    description: `Select a subset of fields of an entry that will be pushed to the dataset.<br/><br/>
+    If not set, all fields on an entry will be pushed to the dataset.<br/><br/>
+    This is done before \`outputRenameFields\`.<br/><br/>
+    Keys can be nested, e.g. \`"someProp.value[0]"\`.
+    Nested path is resolved using <a href="https://lodash.com/docs/4.17.15#get">Lodash.get()</a>.`,
+    editor: 'stringList',
+    example: ['fieldName', 'another.nested[0].field'],
     nullable: true,
   }),
   outputRenameFields: createObjectField({
     title: 'Rename dataset fields',
     type: 'object',
-    description: `Use this option to rename fields (columns) of the output data. Value is an object of mapping of oldName:newName`,
+    description: `Rename fields (columns) of the output data.<br/><br/>
+    If not set, all fields will have their original names.<br/><br/>
+    This is done after \`outputPickFields\`.<br/><br/>
+    Keys can be nested, e.g. \`"someProp.value[0]"\`.
+    Nested path is resolved using <a href="https://lodash.com/docs/4.17.15#get">Lodash.get()</a>.`,
     editor: 'json',
     example: { oldFieldName: 'newFieldName' },
     nullable: true,
@@ -313,10 +337,10 @@ export const privacyInputValidationFields = {
 } satisfies Record<keyof PrivacyActorInput, Joi.Schema>;
 
 export const outputInputValidationFields = {
-  outputDatasetId: Joi.string().min(1).optional(),
-  outputDatasetName: Joi.string().min(1).optional(),
+  outputDatasetIdOrName: Joi.string().min(1).optional(),
+  outputPickFields: Joi.array().items(Joi.string().min(1)).optional(),
   // https://stackoverflow.com/a/49898360/9788634
-  outputRenameFields: Joi.object().pattern(/./, Joi.string()).optional(),
+  outputRenameFields: Joi.object().pattern(/./, Joi.string().min(1)).optional(),
   metamorphActorId: Joi.string().min(1).optional(),
   metamorphActorBuild: Joi.string().min(1).optional(),
   metamorphActorInput: Joi.object().unknown(true).optional(),
