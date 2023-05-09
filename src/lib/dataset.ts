@@ -102,6 +102,8 @@ export interface PushDataOptions<T extends object> {
    * resolved using Lodash.get().
    */
   remapKeys?: Record<string, string>;
+  /** ID or name of the dataset to which the data should be pushed */
+  datasetIdOrName?: string;
 }
 
 const createMetadataMapper = <Ctx extends CrawlingContext>(ctx: Ctx) => {
@@ -221,7 +223,8 @@ export const pushData = async <
   ctx: Ctx,
   options: PushDataOptions<T>
 ) => {
-  const { includeMetadata, showPrivate, privacyMask, remapKeys, pickKeys } = options;
+  const { includeMetadata, showPrivate, privacyMask, remapKeys, pickKeys, datasetIdOrName } =
+    options;
 
   const items = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
 
@@ -242,9 +245,10 @@ export const pushData = async <
     return renamedItem;
   });
 
-  ctx.log.info(`Pushing ${items.length} entries to dataset`);
-  await Actor.pushData(privacyAdjustedItems);
-  ctx.log.info(`Done pushing ${items.length} entries to dataset`);
+  ctx.log.info(`Pushing ${adjustedItems.length} entries to dataset`);
+  const dataset = datasetIdOrName ? await Actor.openDataset(datasetIdOrName) : Actor;
+  await dataset.pushData(adjustedItems);
+  ctx.log.info(`Done pushing ${adjustedItems.length} entries to dataset`);
 
-  return items;
+  return adjustedItems;
 };
