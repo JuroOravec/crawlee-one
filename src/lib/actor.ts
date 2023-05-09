@@ -1,13 +1,21 @@
 import { Actor } from 'apify';
-import type {
+import {
   BasicCrawler,
   CrawlingContext,
   RouterHandler,
   ProxyConfiguration,
   BasicCrawlerOptions,
+  CheerioCrawler,
+  Router,
+  HttpCrawler,
+  JSDOMCrawler,
+  PlaywrightCrawler,
+  PuppeteerCrawler,
 } from 'crawlee';
 import { omitBy, pick } from 'lodash';
+import * as Sentry from '@sentry/node';
 
+import type { CrawlerMeta, CrawlerType } from '../types';
 import type { MaybePromise } from '../utils/types';
 import {
   RouteHandler,
@@ -16,7 +24,17 @@ import {
   registerHandlers,
   setupDefaultRoute,
 } from './router';
-import { CrawlerConfigActorInput, crawlerInput } from './config';
+import {
+  CrawlerConfigActorInput,
+  LoggingActorInput,
+  OutputActorInput,
+  PrivacyActorInput,
+  ProxyActorInput,
+  crawlerInput,
+} from './config';
+import { createErrorHandler } from './error/errorHandler';
+import { setupSentry } from './error/sentry';
+import { logLevelHandlerWrapper } from './log';
 
 type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<R>);
 
@@ -257,6 +275,97 @@ const createActorRunner = <
   };
 
   return runActor;
+};
+
+const actorClassByType = {
+  basic: BasicCrawler,
+  http: HttpCrawler,
+  cheerio: CheerioCrawler,
+  jsdom: JSDOMCrawler,
+  playwright: PlaywrightCrawler,
+  puppeteer: PuppeteerCrawler,
+} satisfies Record<CrawlerType, { new (options: Record<string, any>): any }>;
+
+type AllInputs = CrawlerConfigActorInput &
+  LoggingActorInput &
+  ProxyActorInput &
+  PrivacyActorInput &
+  OutputActorInput;
+
+/**
+ * Create default configuration for an Apify actor
+ * and run the actor within the `Actor.main()` context.
+ */
+export const createAndRunApifyActor = async <
+  TCrawlerType extends CrawlerType,
+  Ctx extends CrawlerMeta<TCrawlerType, any>['context'] = CrawlingContext<BasicCrawler>,
+  Labels extends string = string,
+  Input extends Record<string, any> = Record<string, any>
+>({
+  actorType,
+  actorName,
+  actorConfig,
+  crawlerConfigDefaults,
+  crawlerConfigOverrides,
+  sentryOptions,
+  onActorReady,
+}: {
+  actorType: TCrawlerType;
+  actorName: string;
+  actorConfig: Omit<ActorDefinition<Ctx, Labels, Input>, 'router' | 'createCrawler'> &
+    Partial<Pick<ActorDefinition<Ctx, Labels, Input>, 'router' | 'createCrawler'>>;
+  crawlerConfigDefaults?: CrawlerMeta<TCrawlerType, any>['options'];
+  crawlerConfigOverrides?: CrawlerMeta<TCrawlerType, any>['options'];
+  sentryOptions?: Sentry.NodeOptions;
+  onActorReady?: (actor: ActorContext<Ctx, Labels, Input>) => MaybePromise<void>;
+}): Promise<void> => {
+  setupSentry({ ...sentryOptions, serverName: actorName });
+
+  // See docs:
+  // - https://docs.apify.com/sdk/js/
+  // - https://docs.apify.com/academy/deploying-your-code/inputs-outputs#accepting-input-with-the-apify-sdk
+  // - https://docs.apify.com/sdk/js/docs/upgrading/upgrading-to-v3#apify-sdk
+  await Actor.main(
+    async () => {
+      const actorDefaults: ActorDefinition<Ctx, Labels, Input & AllInputs> = {
+        router: Router.create<Ctx>(),
+        handlerWrappers: ({ input }) => [logLevelHandlerWrapper<Ctx>(input?.logLevel ?? 'info')],
+        createCrawler: ({ router, proxy, input }) => {
+          const options = createHttpCrawlerOptions<
+            CrawlerMeta<TCrawlerType, any>['options'],
+            Input
+          >({
+            input,
+            defaults: crawlerConfigDefaults,
+            overrides: {
+              requestHandler: router,
+              proxyConfiguration: proxy,
+              // Capture errors as a separate Apify/Actor dataset and pass errors to Sentry
+              failedRequestHandler: createErrorHandler({
+                reportingDatasetId: input?.errorReportingDatasetId ?? 'REPORTING',
+                sendToSentry: input?.errorSendToSentry ?? true,
+              }),
+              ...crawlerConfigOverrides,
+            },
+          });
+          const CrawlerClass = actorClassByType[actorType] as any;
+          return new CrawlerClass(options);
+        },
+        routes: [],
+        routeHandlers: {} as any,
+      };
+
+      const actor = await createApifyActor<Ctx, Labels, Input>({
+        ...actorConfig,
+        router: actorConfig.router ?? actorDefaults.router,
+        handlerWrappers: actorConfig.handlerWrappers ?? actorDefaults.handlerWrappers,
+        createCrawler: actorConfig.createCrawler ?? actorDefaults.createCrawler,
+      });
+
+      await onActorReady?.(actor);
+    },
+    { statusMessage: 'Crawling finished!' }
+  );
 };
 
 /** Given the actor input, create common crawler options. */
