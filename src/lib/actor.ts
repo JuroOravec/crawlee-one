@@ -286,10 +286,10 @@ export const createHttpCrawlerOptions = <
 
   return {
     // ----- 1. DEFAULTS -----
-    ...omitBy(defaults ?? {}, (field) => field === undefined),
+    ...omitBy(defaults ?? ({} as TOpts), (field) => field === undefined),
     // ----- 2. CONFIG FROM INPUT -----
     ...omitBy(pickCrawlerInputFields(input ?? {}), (field) => field === undefined),
     // ----- 3. OVERRIDES - E.G. TEST CONFIG -----
-    ...omitBy(overrides ?? {}, (field) => field === undefined),
-  } satisfies TOpts;
+    ...omitBy(overrides ?? ({} as TOpts), (field) => field === undefined),
+  } satisfies Partial<TOpts>;
 };
