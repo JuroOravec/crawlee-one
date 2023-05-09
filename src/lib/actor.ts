@@ -122,6 +122,7 @@ export interface ActorDefinition<
   ) => MaybePromise<Ctx['crawler']>;
 }
 
+/** ActorDefinition object where the input is already resolved */
 export type ActorDefinitionWithInput<
   Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>,
   Labels extends string = string,
