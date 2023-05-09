@@ -136,8 +136,8 @@ export interface ActorContext<
 > {
   crawler: Ctx['crawler'];
   /**
-   * This function that wraps `crawler.run(requests, runOtions)` with additional
-   * features like:
+   * This function wraps `crawler.run(requests, runOtions)` with additional
+   * features:
    * - Automatically metamorph into another actor after the run finishes
    */
   runActor: RunActor<Ctx>;
