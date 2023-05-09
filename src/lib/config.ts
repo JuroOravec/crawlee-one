@@ -322,7 +322,7 @@ export const outputInput = {
   metamorphActorId: createStringField({
     title: 'Metamorph actor ID - metamorph to another actor at the end',
     type: 'string',
-    description: `Use this option if you want to run another actor with the same dataset after this actor has finished (AKA metamorph into another actor). <ahref="https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph">Learn more</a> <br/><br/>New actor is identified by its ID, e.g. "apify/web-scraper".`,
+    description: `Use this option if you want to run another actor with the same dataset after this actor has finished (AKA metamorph into another actor). <a href="https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph">Learn more</a> <br/><br/>New actor is identified by its ID, e.g. "apify/web-scraper".`,
     editor: 'textfield',
     example: 'apify/web-scraper',
     nullable: true,
@@ -338,7 +338,7 @@ export const outputInput = {
   metamorphActorInput: createObjectField({
     title: 'Metamorph actor input',
     type: 'object',
-    description: `Input object passed to the follow-up (metamorph) actor. <ahref="https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph">Learn more</a>`,
+    description: `Input object passed to the follow-up (metamorph) actor. <a href="https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph">Learn more</a>`,
     editor: 'json',
     example: { uploadDatasetToGDrive: true },
     nullable: true,
