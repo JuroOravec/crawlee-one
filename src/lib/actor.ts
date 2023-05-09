@@ -336,7 +336,7 @@ export const createAndRunApifyActor = async <
    */
   sentryOptions?: Sentry.NodeOptions;
   /**
-   * Calback with the created actor. The callback is called within
+   * Callback with the created actor. The callback is called within
    * the `Actor.main()` context.
    */
   onActorReady?: (actor: ActorContext<Ctx, Labels, Input>) => MaybePromise<void>;
