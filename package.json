@@ -1,6 +1,6 @@
 {
   "name": "apify-actor-utils",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "private": false,
   "description": "Apify Actor utilities",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
@@ -56,7 +56,7 @@
   },
   "peerDependencies": {
     "@sentry/node": "^7.50.0",
-    "actor-spec": "^0.2.1",
+    "actor-spec": "^0.3.0",
     "apify": "^3.1.x",
     "apify-actor-config": "^1.0.0",
     "apify-client": "^2.7.x",
