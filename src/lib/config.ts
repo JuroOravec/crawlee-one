@@ -32,6 +32,19 @@ export type CrawlerConfigActorInput = Pick<
 /** Common input fields related to logging setup */
 export interface LoggingActorInput {
   logLevel?: LogLevel;
+  /**
+   * Whether to send actor error reports to <a href="https://sentry.io/">Sentry</a>.
+   *
+   * This info is used by the author of this actor to identify broken integrations,
+   * and track down and fix issues.
+   */
+  errorSendToSentry?: boolean;
+  /**
+   * Apify dataset ID or name to which errors should be captured.
+   *
+   * Default: `'REPORTING'`.
+   */
+  errorReportingDatasetId?: string;
 }
 
 /** Common input fields related to proxy setup */
@@ -216,8 +229,31 @@ export const loggingInput = {
     prefill: 'info',
     default: 'info',
     nullable: true,
-    sectionCaption: 'Logging (Advanced)',
-    sectionDescription: 'Configure what should be displayed in the log console.',
+    sectionCaption: 'Logging & Error handling (Advanced)',
+    sectionDescription:
+      'Configure how to handle errors or what should be displayed in the log console.',
+  }),
+  errorReportingDatasetId: createStringField({
+    title: 'Error reporting dataset ID',
+    type: 'string',
+    editor: 'textfield',
+    description: `Apify dataset ID or name to which errors should be captured.<br/><br/>
+    Default: \`'REPORTING'\`.`,
+    example: 'REPORTING',
+    prefill: 'REPORTING',
+    default: 'REPORTING',
+    nullable: true,
+  }),
+  errorSendToSentry: createBooleanField({
+    title: 'Send errors to Sentry',
+    type: 'boolean',
+    editor: 'checkbox',
+    description: `Whether to send actor error reports to <a href="https://sentry.io/">Sentry</a>.<br/><br/>
+    This info is used by the author of this actor to identify broken integrations,
+    and track down and fix issues.`,
+    example: true,
+    default: true,
+    nullable: true,
   }),
 } satisfies Record<keyof LoggingActorInput, Field>;
 
@@ -326,6 +362,8 @@ export const crawlerInputValidationFields = {
 
 export const loggingInputValidationFields = {
   logLevel: Joi.string().valid(...LOG_LEVEL).optional(), // prettier-ignore
+  errorReportingDatasetId: Joi.string().min(1).optional(),
+  errorSendToSentry: Joi.boolean().optional(),
 } satisfies Record<keyof LoggingActorInput, Joi.Schema>;
 
 export const proxyInputValidationFields = {
