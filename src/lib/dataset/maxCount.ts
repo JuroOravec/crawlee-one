@@ -15,17 +15,17 @@ export const checkEntriesCount = async (
     /** Number of entries in the current batch */
     currBatchCount: number;
     /** Max number of entries allowed to extract. */
-    maxCount: number;
+    maxCount?: number | null;
     /**
      * If given, maxCount will be ALSO compared against
      * the amount of entries already in the dataset.
      */
-    datasetNameOrId: string | null;
+    datasetNameOrId?: string | null;
     /**
      * If given, maxCount will be ALSO compared against
      * this amount.
      */
-    customItemCount: number | null;
+    customItemCount?: number | null;
   },
   { log }: { log?: Log } = {}
 ) => {
@@ -59,6 +59,10 @@ export const getDatasetCount = async (datasetNameOrId?: string, { log }: { log?:
   log?.debug('Obtaining dataset entries count');
   const datasetInfo = await dataset.getInfo();
   const count = datasetInfo?.itemCount ?? null;
-  log?.debug(`Done obtaining dataset entries count (${count})`);
+  if (typeof count !== 'number') {
+    log?.warning('Failed to get count of entries in dataset. We use this info to know how many items were scraped. More entries might be scraped than was set.'); // prettier-ignore
+  } else {
+    log?.debug(`Done obtaining dataset entries count (${count})`);
+  }
   return count;
 };
