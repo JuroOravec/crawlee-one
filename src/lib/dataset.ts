@@ -1,5 +1,6 @@
 import { Actor } from 'apify';
 import type { CrawlingContext } from 'crawlee';
+import { get, pick, set, unset } from 'lodash';
 
 export interface ActorEntryMetadata {
   actorId: string | null;
@@ -80,15 +81,30 @@ export interface PushDataOptions<T extends object> {
    * See {@link PrivacyMask}.
    **/
   privacyMask: PrivacyMask<T>;
+  /**
+   * Option to select which keys (fields) of an entry to keep (discarding the rest)
+   * before pushing the entries to the dataset.
+   *
+   * This serves mainly to allow users to select the keys from actor input UI.
+   *
+   * This is done before `remapKeys`.
+   *
+   * Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
+   * resolved using Lodash.get().
+   */
+  pickKeys?: string[];
+  /**
+   * Option to remap the keys before pushing the entries to the dataset.
+   *
+   * This serves mainly to allow users to remap the keys from actor input UI.
+   *
+   * Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
+   * resolved using Lodash.get().
+   */
+  remapKeys?: Record<string, string>;
 }
 
-const addMetadataToData = <
-  Ctx extends CrawlingContext,
-  T extends Record<any, any> = Record<any, any>
->(
-  items: T[],
-  ctx: Ctx
-) => {
+const createMetadataMapper = <Ctx extends CrawlingContext>(ctx: Ctx) => {
   const { actorId, actorRunId } = Actor.getEnv();
   const actorRunUrl =
     actorId != null && actorRunId != null
@@ -96,25 +112,25 @@ const addMetadataToData = <
       : null;
   const handledAt = new Date().toISOString();
 
-  const itemsWithMetadata = items.map(
-    (item): WithActorEntryMetadata<T> => ({
-      ...item,
-      metadata: {
-        actorId,
-        actorRunId,
-        actorRunUrl,
-        contextId: ctx.id,
-        requestId: ctx.request.id ?? null,
+  const addMetadataToData = <T extends Record<any, any> = Record<any, any>>(
+    item
+  ): WithActorEntryMetadata<T> => ({
+    ...item,
+    metadata: {
+      actorId,
+      actorRunId,
+      actorRunUrl,
+      contextId: ctx.id,
+      requestId: ctx.request.id ?? null,
 
-        originalUrl: ctx.request.url ?? null,
-        loadedUrl: ctx.request.loadedUrl ?? null,
+      originalUrl: ctx.request.url ?? null,
+      loadedUrl: ctx.request.loadedUrl ?? null,
 
-        dateHandled: ctx.request.handledAt || handledAt,
-        numberOfRetries: ctx.request.retryCount,
-      },
-    })
-  );
-  return itemsWithMetadata;
+      dateHandled: ctx.request.handledAt || handledAt,
+      numberOfRetries: ctx.request.retryCount,
+    },
+  });
+  return addMetadataToData;
 };
 
 const applyPrivacyMask = <T extends Record<any, any> = Record<any, any>>(
@@ -179,6 +195,17 @@ const applyPrivacyMask = <T extends Record<any, any> = Record<any, any>>(
   return redactedObj;
 };
 
+/** Rename object properties in place */
+const renameKeys = <T extends object>(item: T, keyNameMap: Partial<Record<keyof T, string>>) => {
+  Object.entries(keyNameMap || {}).forEach(([oldPath, newPath]) => {
+    if (oldPath === newPath) return;
+    const val = get(item, oldPath);
+    set(item, newPath as string, val);
+    unset(item, oldPath);
+  });
+  return item;
+};
+
 /**
  * `Actor.pushData` with extra features:
  *
@@ -194,22 +221,26 @@ export const pushData = async <
   ctx: Ctx,
   options: PushDataOptions<T>
 ) => {
-  const { includeMetadata, showPrivate, privacyMask } = options;
+  const { includeMetadata, showPrivate, privacyMask, remapKeys, pickKeys } = options;
 
   const items = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
 
-  ctx.log.debug(`Adding metadata to ${items.length} entries before pushing them to dataset`);
-  const itemsWithMetadata = includeMetadata ? addMetadataToData(items, ctx) : items;
-
-  ctx.log.debug(`Redacting properties with personal data before pushing ${items.length} items to dataset`); // prettier-ignore
-  const privacyAdjustedItems = itemsWithMetadata.map((item) =>
-    applyPrivacyMask(item, {
+  ctx.log.debug(`Preparing entries before pushing ${items.length} items to dataset`); // prettier-ignore
+  const addMetadataToData = createMetadataMapper(ctx);
+  const adjustedItems = items.map((item) => {
+    const itemWithMetadata = includeMetadata ? addMetadataToData(item) : item;
+    const maskedItem = applyPrivacyMask(itemWithMetadata, {
       showPrivate,
       privacyMask,
       privateValueGen: (val, key) =>
         `<Redacted property "${key}". To include the actual value, toggle ON the Actor input option "Include personal data">`,
-    })
-  );
+    });
+
+    const pickedItem = pickKeys ? pick(maskedItem, pickKeys) : maskedItem;
+    const renamedItem = remapKeys ? renameKeys(pickedItem, remapKeys) : pickedItem;
+
+    return renamedItem;
+  });
 
   ctx.log.info(`Pushing ${items.length} entries to dataset`);
   await Actor.pushData(privacyAdjustedItems);
