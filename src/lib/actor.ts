@@ -310,13 +310,35 @@ export const createAndRunApifyActor = async <
   sentryOptions,
   onActorReady,
 }: {
+  /** String idetifying the actor class, e.g. `'cheerio'` */
   actorType: TCrawlerType;
   actorName: string;
+  /** Config passed to the {@link createApifyActor} */
   actorConfig: Omit<ActorDefinition<Ctx, Labels, Input>, 'router' | 'createCrawler'> &
     Partial<Pick<ActorDefinition<Ctx, Labels, Input>, 'router' | 'createCrawler'>>;
+  /**
+   * If using default `createCrawler` implementation, these are crawler options
+   * that may be overriden by user input.
+   */
   crawlerConfigDefaults?: CrawlerMeta<TCrawlerType, any>['options'];
+  /**
+   * If using default `createCrawler` implementation, these are crawler options
+   * that will override user input.
+   *
+   * This is useful for testing env.
+   */
   crawlerConfigOverrides?: CrawlerMeta<TCrawlerType, any>['options'];
+  /**
+   * Sentry configuration. If using default `createCrawler` implementation,
+   * failed requests are optionally reported to Sentry.
+   *
+   * To disable Sentry, set `"enabled": false`.
+   */
   sentryOptions?: Sentry.NodeOptions;
+  /**
+   * Calback with the created actor. The callback is called within
+   * the `Actor.main()` context.
+   */
   onActorReady?: (actor: ActorContext<Ctx, Labels, Input>) => MaybePromise<void>;
 }): Promise<void> => {
   setupSentry({ ...sentryOptions, serverName: actorName });
