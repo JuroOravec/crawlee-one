@@ -102,6 +102,8 @@ export interface PrivacyActorInput {
   includePersonalData?: boolean;
 }
 
+const datasetIdPattern = '^[a-zA-Z0-9][a-zA-Z0-9-]*$';
+
 /** Common input fields related to crawler setup */
 export const crawlerInput = {
   maxRequestRetries: createIntegerField({
@@ -238,10 +240,12 @@ export const loggingInput = {
     type: 'string',
     editor: 'textfield',
     description: `Apify dataset ID or name to which errors should be captured.<br/><br/>
-    Default: \`'REPORTING'\`.`,
+    Default: \`'REPORTING'\`.<br/><br/>
+    <strong>NOTE:<strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
     example: 'REPORTING',
     prefill: 'REPORTING',
     default: 'REPORTING',
+    pattern: datasetIdPattern,
     nullable: true,
   }),
   errorSendToSentry: createBooleanField({
@@ -289,9 +293,11 @@ export const outputInput = {
     type: 'string',
     description: `By default, data is written to Default dataset.
     Set this option if you want to write data to non-default dataset.
-    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a>`,
+    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a><br/><br/>
+    <strong>NOTE:<strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
     editor: 'textfield',
     example: 'mIJVZsRQrDQf4rUAf',
+    pattern: datasetIdPattern,
     nullable: true,
     sectionCaption: 'Output, Dataset & Integrations',
   }),
@@ -362,7 +368,7 @@ export const crawlerInputValidationFields = {
 
 export const loggingInputValidationFields = {
   logLevel: Joi.string().valid(...LOG_LEVEL).optional(), // prettier-ignore
-  errorReportingDatasetId: Joi.string().min(1).optional(),
+  errorReportingDatasetId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
   errorSendToSentry: Joi.boolean().optional(),
 } satisfies Record<keyof LoggingActorInput, Joi.Schema>;
 
@@ -375,7 +381,7 @@ export const privacyInputValidationFields = {
 } satisfies Record<keyof PrivacyActorInput, Joi.Schema>;
 
 export const outputInputValidationFields = {
-  outputDatasetIdOrName: Joi.string().min(1).optional(),
+  outputDatasetIdOrName: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
   outputPickFields: Joi.array().items(Joi.string().min(1)).optional(),
   // https://stackoverflow.com/a/49898360/9788634
   outputRenameFields: Joi.object().pattern(/./, Joi.string().min(1)).optional(),
