@@ -13,6 +13,7 @@ export const README_FEATURE = [
   'integratedETL',
   'integratedCache',
   'errorMonitoring',
+  'metamorph',
 ] as const;
 export const README_FEATURE_ENUM = enumFromArray(README_FEATURE);
 export type ReadmeFeatureType = ArrVal<typeof README_FEATURE>;

@@ -164,6 +164,14 @@ export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
     title: 'Privacy-compliant (GDPR)',
     mainText: `- By default, personal data is redacted to avoid privacy issues. You can opt-in to include un-censored data.`,
   },
+  metamorph: {
+    supported: () => true,
+    title: 'Pass scraped dataset to other actors',
+    mainText:
+      `- Automatically trigger another actor when this one is done to process the scraped dataset.\n` +
+      `  - Metamorphing means that the dataset and key-value store is passed to another actor.\n` +
+      `  - Actor metamorph can be configure via actor input. No need to define custom actors just for that.`,
+  },
   errorMonitoring: {
     supported: (it) => it.a.datasets.some((d) => d.features.errorMonitoring),
     data: {
