@@ -1,6 +1,8 @@
 import { Actor } from 'apify';
 import type { CrawlingContext } from 'crawlee';
-import { get, pick, set, unset } from 'lodash';
+import { get, pick, set, unset, uniq, sortBy, isPlainObject, fromPairs } from 'lodash';
+
+import { serialAsyncMap } from '../../utils/async';
 
 export interface ActorEntryMetadata {
   actorId: string | null;
@@ -102,8 +104,26 @@ export interface PushDataOptions<T extends object> {
    * resolved using Lodash.get().
    */
   remapKeys?: Record<string, string>;
+  /**
+   * Option to freely transform an entry before pushing it to the dataset.
+   *
+   * This serves mainly to allow users to transform the entries from actor input UI.
+   */
+  transform?: (item: any) => any;
+  /**
+   * Option to filter an entry before pushing it to the dataset.
+   *
+   * This serves mainly to allow users to filter the entries from actor input UI.
+   */
+  filter?: (item: any) => any;
   /** ID or name of the dataset to which the data should be pushed */
   datasetIdOrName?: string;
+  /** ID or name of the key-value store used as cache */
+  cacheStoreIdOrName?: string;
+  /** Define fields that uniquely identify entries for caching */
+  cachePrimaryKeys?: string[];
+  /** Define whether we want to add, remove, or overwrite cached entries with results from the actor run */
+  cacheActionOnResult?: 'add' | 'remove' | 'overwrite' | null;
 }
 
 const createMetadataMapper = <Ctx extends CrawlingContext>(ctx: Ctx) => {
@@ -208,6 +228,51 @@ const renameKeys = <T extends object>(item: T, keyNameMap: Partial<Record<keyof 
   return item;
 };
 
+const sortObjectKeys = <T extends object>(obj: T) =>
+  fromPairs(sortBy(Object.keys(obj)).map((key) => [key, obj[key]]));
+
+/**
+ * Serialize dataset item to fixed-length hash.
+ *
+ * NOTE: Apify allows the key-value store key to be max 256 char long.
+ *       https://docs.apify.com/sdk/js/reference/class/KeyValueStore#setValue
+ */
+export const itemCacheKey = (item: any, primaryKeys?: string[]) => {
+  const thePrimaryKeys = primaryKeys
+    ? sortBy(uniq(primaryKeys.map((s) => s?.trim()).filter(Boolean)))
+    : null;
+
+  const serializedItem = thePrimaryKeys
+    ? thePrimaryKeys.map((k) => item?.[k]).join(':')
+    : item && isPlainObject(item)
+    ? JSON.stringify(sortObjectKeys(item)) // If possible sort the object's keys
+    : JSON.stringify(item);
+
+  const cacheId = cyrb53(serializedItem);
+  return cacheId.toString();
+};
+
+/**
+ * Hashing function used when calculating cache ID hash from entries.
+ *
+ * See https://stackoverflow.com/a/52171480/9788634.
+ */
+const cyrb53 = (str, seed = 0) => {
+  let h1 = 0xdeadbeef ^ seed,
+    h2 = 0x41c6ce57 ^ seed;
+  for (let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+  h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+  h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+};
+
 /**
  * `Actor.pushData` with extra features:
  *
@@ -223,14 +288,28 @@ export const pushData = async <
   ctx: Ctx,
   options: PushDataOptions<T>
 ) => {
-  const { includeMetadata, showPrivate, privacyMask, remapKeys, pickKeys, datasetIdOrName } =
-    options;
+  const {
+    includeMetadata,
+    showPrivate,
+    privacyMask,
+    remapKeys,
+    pickKeys,
+    transform,
+    filter,
+    datasetIdOrName,
+    cacheStoreIdOrName,
+    cachePrimaryKeys,
+    cacheActionOnResult,
+  } = options;
 
   const items = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
 
   ctx.log.debug(`Preparing entries before pushing ${items.length} items to dataset`); // prettier-ignore
   const addMetadataToData = createMetadataMapper(ctx);
-  const adjustedItems = items.map((item) => {
+
+  const adjustedItems = await items.reduce(async (aggPromise, item) => {
+    const agg = await aggPromise;
+
     const itemWithMetadata = includeMetadata ? addMetadataToData(item) : item;
     const maskedItem = applyPrivacyMask(itemWithMetadata, {
       showPrivate,
@@ -241,14 +320,35 @@ export const pushData = async <
 
     const pickedItem = pickKeys ? pick(maskedItem, pickKeys) : maskedItem;
     const renamedItem = remapKeys ? renameKeys(pickedItem, remapKeys) : pickedItem;
+    const transformedItem = transform ? await transform(renamedItem) : renamedItem;
+    const passedFilter = filter ? await filter(transformedItem) : true;
 
-    return renamedItem;
-  });
+    if (passedFilter) agg.push(transformedItem);
 
+    return agg;
+  }, Promise.resolve([] as unknown[]));
+
+  // Push entries to primary dataset
   ctx.log.info(`Pushing ${adjustedItems.length} entries to dataset`);
   const dataset = datasetIdOrName ? await Actor.openDataset(datasetIdOrName) : Actor;
   await dataset.pushData(adjustedItems);
   ctx.log.info(`Done pushing ${adjustedItems.length} entries to dataset`);
+
+  // Update entries in cache
+  if (cacheStoreIdOrName && cacheActionOnResult) {
+    ctx.log.info(`Update ${adjustedItems.length} entries in cache`);
+    const store = await Actor.openKeyValueStore(cacheStoreIdOrName);
+    await serialAsyncMap(adjustedItems, async (item: any) => {
+      const cacheId = itemCacheKey(item, cachePrimaryKeys);
+
+      if (['add', 'overwrite'].includes(cacheActionOnResult)) {
+        await store.setValue(cacheId, item);
+      } else if (cacheActionOnResult === 'remove') {
+        await store.setValue(cacheId, null);
+      }
+    });
+    ctx.log.info(`Done updating ${adjustedItems.length} entries in cache`);
+  }
 
   return adjustedItems;
 };

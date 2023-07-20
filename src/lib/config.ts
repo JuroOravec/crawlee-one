@@ -54,8 +54,6 @@ export interface ProxyActorInput {
 
 /** Common input fields related to actor output */
 export interface OutputActorInput {
-  /** ID or name of the dataset to which the data should be pushed */
-  outputDatasetIdOrName?: string;
   /**
    * Option to select a subset of keys/fields of an entry that
    * will be pushed to the dataset.
@@ -75,6 +73,75 @@ export interface OutputActorInput {
    * resolved using Lodash.get().
    */
   outputRenameFields?: Record<string, string>;
+
+  /**
+   * Option to freely transform the output data object using a custom function before pushing it to the dataset.
+   *
+   * If not set, the data will remain as is.
+   *
+   * This is done after `outputPickFields` and `outputRenameFields`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.
+   *
+   * `async (entry, { Actor, input, state, itemCacheKey }) => { ... }`
+   */
+  outputTransform?: string;
+  /**
+   * Use this if you need to run one-time initialization code before `outputTransform`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   *
+   * `async ({ Actor, input, state, itemCacheKey }) => { ... }`
+   */
+  outputTransformBefore?: string;
+  /**
+   * Use this if you need to run one-time teardown code after `outputTransform`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   *
+   * `async ({ Actor, input, state, itemCacheKey }) => { ... }`
+   */
+  outputTransformAfter?: string;
+
+  /**
+   * Option to filter out the data using a custom function before pushing it to the dataset.
+   *
+   * If not set, all entries will be included.
+   *
+   * This is done after `outputPickFields`, `outputRenameFields`, and `outputFilter`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.
+   *
+   * `async (entry, { Apify, input, state, itemCacheKey }) => boolean`
+   */
+  outputFilter?: string;
+  /**
+   * Use this if you need to run one-time initialization code before `outputFilter`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   *
+   * `async ({ Apify, input, state, itemCacheKey }) => boolean`
+   */
+  outputFilterBefore?: string;
+  /**
+   * Use this if you need to run one-time initialization code after `outputFilter`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   *
+   * `async ({ Actor, input, state, itemCacheKey }) => boolean`
+   */
+  outputFilterAfter?: string;
+
+  /** ID or name of the dataset to which the data should be pushed */
+  outputDatasetIdOrName?: string;
+
+  /** ID or name of the key-value store used as cache */
+  outputCacheStoreIdOrName?: string;
+  /** Define fields that will be used for cache key */
+  outputCachePrimaryKeys?: string[];
+  /** Define whether we want to add, remove, or overwrite cached entries with results from the actor run */
+  outputCacheActionOnResult?: 'add' | 'remove' | 'overwrite' | null;
+
   /**
    * If you want to run another actor with the same dataset after
    * this actor has finished (AKA metamorph into another actor),
@@ -288,21 +355,8 @@ export const privacyInput = {
 
 /** Common input fields related to proxy setup */
 export const outputInput = {
-  outputDatasetIdOrName: createStringField({
-    title: 'Dataset ID or name',
-    type: 'string',
-    description: `By default, data is written to Default dataset.
-    Set this option if you want to write data to non-default dataset.
-    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a><br/><br/>
-    <strong>NOTE:<strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
-    editor: 'textfield',
-    example: 'mIJVZsRQrDQf4rUAf',
-    pattern: datasetIdPattern,
-    nullable: true,
-    sectionCaption: 'Output, Dataset & Integrations',
-  }),
   outputPickFields: createArrayField({
-    title: 'Rename dataset fields',
+    title: 'Pick dataset fields',
     type: 'array',
     description: `Select a subset of fields of an entry that will be pushed to the dataset.<br/><br/>
     If not set, all fields on an entry will be pushed to the dataset.<br/><br/>
@@ -312,6 +366,7 @@ export const outputInput = {
     editor: 'stringList',
     example: ['fieldName', 'another.nested[0].field'],
     nullable: true,
+    sectionCaption: 'Output Transformation & Filtering (T in ETL)',
   }),
   outputRenameFields: createObjectField({
     title: 'Rename dataset fields',
@@ -325,6 +380,130 @@ export const outputInput = {
     example: { oldFieldName: 'newFieldName' },
     nullable: true,
   }),
+
+  outputTransform: createStringField({
+    title: 'Transform entries',
+    type: 'string',
+    description: `Freely transform the output data object using a custom function.<br/><br/>
+    If not set, the data will remain as is.<br/><br/>
+    This is done after \`outputPickFields\` and \`outputRenameFields\`.<br/><br/>
+    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>
+    \`async (entry, { Actor, input, state, itemCacheKey }) => { ... }\`
+    `,
+    editor: 'javascript',
+    example: 'async (entry, { Actor, input, state, itemCacheKey }) => { ... }',
+    nullable: true,
+  }),
+  outputTransformBefore: createStringField({
+    title: 'Transform entries - Setup',
+    type: 'string',
+    description: `Use this if you need to run one-time initialization code before \`outputTransform\`.<br/><br/>
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
+    \`async ({ Actor, input, state, itemCacheKey }) => { ... }\`
+    `,
+    editor: 'javascript',
+    example: 'async ({ Actor, input, state, itemCacheKey }) => { ... }',
+    nullable: true,
+  }),
+  outputTransformAfter: createStringField({
+    title: 'Transform entries - Teardown',
+    type: 'string',
+    description: `Use this if you need to run one-time teardown code after \`outputTransform\`.<br/><br/>
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
+    \`async ({ Actor, input, state, itemCacheKey }) => { ... }\`
+    `,
+    editor: 'javascript',
+    example: 'async ({ Actor, input, state, itemCacheKey }) => { ... }',
+    nullable: true,
+  }),
+
+  outputFilter: createStringField({
+    title: 'Filter entries',
+    type: 'string',
+    description: `Decide which scraped entries should be included in the output by using a custom function.<br/><br/>
+    If not set, all scraped entries will be included.<br/><br/>
+    This is done after \`outputPickFields\`, \`outputRenameFields\`, and \`outputTransform\`.<br/><br/>
+    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>
+    \`async (entry, { Actor, input, state, itemCacheKey }) => boolean\`
+    `,
+    editor: 'javascript',
+    example: 'async (entry, { Actor, input, state, itemCacheKey }) => boolean',
+    nullable: true,
+  }),
+  outputFilterBefore: createStringField({
+    title: 'Filter entries - Setup',
+    type: 'string',
+    description: `Use this if you need to run one-time initialization code before \`outputFilter\`.<br/><br/>
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
+    \`async (entry, { Actor, input, state, itemCacheKey }) => boolean\`
+    `,
+    editor: 'javascript',
+    example: 'async ({ Actor, input, state, itemCacheKey }) => boolean',
+    nullable: true,
+  }),
+  outputFilterAfter: createStringField({
+    title: 'Filter entries - Teardown',
+    type: 'string',
+    description: `Use this if you need to run one-time teardown code after \`outputFilter\`.<br/><br/>
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
+    \`async ({ Actor, input, state, itemCacheKey }) => boolean\`
+    `,
+    editor: 'javascript',
+    example: 'async ({ Actor, input, state, itemCacheKey }) => boolean',
+    nullable: true,
+  }),
+
+  outputDatasetIdOrName: createStringField({
+    title: 'Dataset ID or name',
+    type: 'string',
+    description: `By default, data is written to Default dataset.
+    Set this option if you want to write data to non-default dataset.
+    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a><br/><br/>
+    <strong>NOTE:<strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
+    editor: 'textfield',
+    example: 'mIJVZsRQrDQf4rUAf',
+    pattern: datasetIdPattern,
+    nullable: true,
+    sectionCaption: 'Output Dataset & Caching (L in ETL)',
+  }),
+
+  outputCacheStoreIdOrName: createStringField({
+    title: 'Cache ID or name',
+    type: 'string',
+    description: `Set this option if you want to cache scraped entries in <a href="https://docs.apify.com/sdk/js/docs/guides/result-storage#key-value-store">Apify's Key-value store</a>.<br/><br/>
+    This is useful for example when you want to scrape only NEW entries. In such case, you can use the \`outputFilter\` option to define a custom function to filter out entries already found in the cache.
+    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#working-with-key-value-stores">Learn more</a><br/><br/>
+    <strong>NOTE:<strong> Cache name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
+    editor: 'textfield',
+    example: 'mIJVZsRQrDQf4rUAf',
+    pattern: datasetIdPattern,
+    nullable: true,
+  }),
+  outputCachePrimaryKeys: createArrayField<string[]>({
+    title: 'Cache primary keys',
+    type: 'array',
+    description: `Specify fields that uniquely identify entries (primary keys), so entries can be compared against the cache.<br/><br/>
+    <strong>NOTE:<strong> If not set, the entries are hashed based all fields`,
+    editor: 'stringList',
+    example: ['name', 'city'],
+    nullable: true,
+  }),
+  outputCacheActionOnResult: createStringField<
+    NonNullable<OutputActorInput['outputCacheActionOnResult']>
+  >({
+    title: 'Cache action on result',
+    type: 'string',
+    description: `Specify whether scraped results should be added to, removed from, or overwrite the cache.<br/><br/>
+    - <strong>add<strong> - Adds scraped results to the cache<br/><br/>
+    - <strong>remove<strong> - Removes scraped results from the cache<br/><br/>
+    - <strong>set<strong> - First clears all entries from the cache, then adds scraped results to the cache<br/><br/>
+    <strong>NOTE:<strong> No action happens when this field is empty.`,
+    editor: 'select',
+    enum: ['add', 'remove', 'overwrite'],
+    example: 'add',
+    nullable: true,
+  }),
+
   metamorphActorId: createStringField({
     title: 'Metamorph actor ID - metamorph to another actor at the end',
     type: 'string',
@@ -332,6 +511,7 @@ export const outputInput = {
     editor: 'textfield',
     example: 'apify/web-scraper',
     nullable: true,
+    sectionCaption: 'Integrations (Metamorphing)',
   }),
   metamorphActorBuild: createStringField({
     title: 'Metamorph actor build',
@@ -381,10 +561,23 @@ export const privacyInputValidationFields = {
 } satisfies Record<keyof PrivacyActorInput, Joi.Schema>;
 
 export const outputInputValidationFields = {
-  outputDatasetIdOrName: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
   outputPickFields: Joi.array().items(Joi.string().min(1)).optional(),
   // https://stackoverflow.com/a/49898360/9788634
   outputRenameFields: Joi.object().pattern(/./, Joi.string().min(1)).optional(),
+
+  outputTransform: Joi.string().min(1).optional(),
+  outputTransformBefore: Joi.string().min(1).optional(),
+  outputTransformAfter: Joi.string().min(1).optional(),
+  outputFilter: Joi.string().min(1).optional(),
+  outputFilterBefore: Joi.string().min(1).optional(),
+  outputFilterAfter: Joi.string().min(1).optional(),
+
+  outputCacheStoreIdOrName: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
+  outputCachePrimaryKeys: Joi.array().items(Joi.string().min(1)).optional(),
+  outputCacheActionOnResult: Joi.string().min(1).allow('add', 'remove', 'overwrite').optional(), // prettier-ignore
+
+  outputDatasetIdOrName: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
+
   metamorphActorId: Joi.string().min(1).optional(),
   metamorphActorBuild: Joi.string().min(1).optional(),
   metamorphActorInput: Joi.object().unknown(true).optional(),

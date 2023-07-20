@@ -10,6 +10,8 @@ export const README_FEATURE = [
   'crawlerConfig',
   'tests',
   'privacy',
+  'integratedETL',
+  'integratedCache',
   'errorMonitoring',
 ] as const;
 export const README_FEATURE_ENUM = enumFromArray(README_FEATURE);

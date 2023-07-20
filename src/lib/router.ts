@@ -7,7 +7,7 @@ import {
   JSDOMCrawlingContext,
   PlaywrightCrawlingContext,
   PuppeteerCrawlingContext,
-  RouterHandler,
+  RouterHandler as CrawlerRouter,
 } from 'crawlee';
 import type { CommonPage } from '@crawlee/browser-pool';
 
@@ -16,12 +16,24 @@ import { serialAsyncMap } from '../utils/async';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
 
-/** Function that's passed to `router.addHandler(label, handler)`  */
-export type RouteHandler<Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>> = Parameters<RouterHandler<Ctx>['addHandler']>[1]; // prettier-ignore
-export type RouteHandlerCtx<Ctx extends CrawlingContext> = Parameters<RouteHandler<Ctx>>[0]; // prettier-ignore
-export type RouteHandlerWrapper<Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>> = (
-  handler: (ctx: RouteHandlerCtx<Ctx>) => Promise<void>
-) => (ctx: RouteHandlerCtx<Ctx>) => Promise<void>;
+/** Context object provided in CrawlerRouter */
+export type RouterHandlerCtx<CrawlerCtx extends CrawlingContext> = Parameters<
+  Parameters<CrawlerRouter<CrawlerCtx>['addHandler']>[1]
+>[0];
+
+/** Function that's passed to `router.addHandler(label, handler)` */
+export type RouteHandler<
+  CrawlerCtx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  RouterCtx extends Record<string, any> = Record<string, any>,
+> = Parameters<CrawlerRouter<RouterHandlerCtx<CrawlerCtx & RouterCtx>>['addHandler']>[1]; // prettier-ignore
+
+/** Wrapper that modifies behavior of RouteHandler */
+export type CrawlerRouterWrapper<
+  CrawlerCtx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  RouterCtx extends Record<string, any> = Record<string, any>
+> = (
+  handler: (ctx: RouterHandlerCtx<CrawlerCtx & RouterCtx>) => Promise<void>
+) => (ctx: RouterHandlerCtx<CrawlerCtx & RouterCtx>) => Promise<void>;
 
 /**
  * Criteria that un-labelled requests are matched against.
@@ -30,7 +42,8 @@ export type RouteHandlerWrapper<Ctx extends CrawlingContext = CrawlingContext<Ba
  * the request is passed to the `action` function for processing.
  */
 export interface RouteMatcher<
-  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  CrawlerCtx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  RouterCtx extends Record<string, any> = Record<string, any>,
   Labels extends string = string
 > {
   /** Human readable name */
@@ -57,9 +70,9 @@ export interface RouteMatcher<
    */
   match: (
     url: string,
-    ctx: Ctx,
-    route: RouteMatcher<Ctx, Labels>,
-    handlers: Record<Labels, RouteHandler<Ctx>>
+    ctx: RouterHandlerCtx<CrawlerCtx & RouterCtx>,
+    route: RouteMatcher<CrawlerCtx, RouterCtx, Labels>,
+    handlers: Record<Labels, RouteHandler<CrawlerCtx, RouterCtx>>
   ) => unknown;
   /**
    * Request is passed to this function if `match` returned truthy value.
@@ -75,61 +88,73 @@ export interface RouteMatcher<
    */
   action?: (
     url: string,
-    ctx: Ctx,
-    route: RouteMatcher<Ctx, Labels>,
-    handlers: Record<Labels, RouteHandler<Ctx>>
+    ctx: RouterHandlerCtx<CrawlerCtx>,
+    route: RouteMatcher<CrawlerCtx, RouterCtx, Labels>,
+    handlers: Record<Labels, RouteHandler<CrawlerCtx, RouterCtx>>
   ) => MaybePromise<void>;
 }
 
 export const createRouteMatchers = <
-  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  CrawlerCtx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  RouterCtx extends Record<string, any> = Record<string, any>,
   Labels extends string = string
->(matchers: RouteMatcher<Ctx, Labels>[]) => matchers; // prettier-ignore
+>(matchers: RouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
 
 // Context-specific variants
 export const createBasicRouteMatchers = <
-  Ctx extends BasicCrawlingContext = BasicCrawlingContext,
+  CrawlerCtx extends BasicCrawlingContext = BasicCrawlingContext,
+  RouterCtx extends Record<string, any> = Record<string, any>,
   Labels extends string = string
->(matchers: RouteMatcher<Ctx, Labels>[]) => matchers; // prettier-ignore
+>(matchers: RouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
 export const createHttpRouteMatchers = <
-  Ctx extends HttpCrawlingContext = HttpCrawlingContext,
+  CrawlerCtx extends HttpCrawlingContext = HttpCrawlingContext,
+  RouterCtx extends Record<string, any> = Record<string, any>,
   Labels extends string = string
->(matchers: RouteMatcher<Ctx, Labels>[]) => matchers; // prettier-ignore
+>(matchers: RouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
 export const createJsdomRouteMatchers = <
-  Labels extends string,
-  Ctx extends JSDOMCrawlingContext = JSDOMCrawlingContext
->(matchers: RouteMatcher<Ctx, Labels>[]) => matchers; // prettier-ignore
+  CrawlerCtx extends JSDOMCrawlingContext = JSDOMCrawlingContext,
+  RouterCtx extends Record<string, any> = Record<string, any>,
+  Labels extends string = string
+>(matchers: RouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
 export const createCheerioRouteMatchers = <
-  Ctx extends CheerioCrawlingContext = CheerioCrawlingContext,
-  Labels extends string = string,
->(matchers: RouteMatcher<Ctx, Labels>[]) => matchers; // prettier-ignore
+CrawlerCtx extends CheerioCrawlingContext = CheerioCrawlingContext,
+  RouterCtx extends Record<string, any> = Record<string, any>,
+  Labels extends string = string
+>(matchers: RouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
 export const createPlaywrightRouteMatchers = <
-  Ctx extends PlaywrightCrawlingContext = PlaywrightCrawlingContext,
-  Labels extends string = string,
->(matchers: RouteMatcher<Ctx, Labels>[]) => matchers; // prettier-ignore
+  CrawlerCtx extends PlaywrightCrawlingContext = PlaywrightCrawlingContext,
+  RouterCtx extends Record<string, any> = Record<string, any>,
+  Labels extends string = string
+>(matchers: RouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
 export const createPuppeteerRouteMatchers = <
-  Ctx extends PuppeteerCrawlingContext = PuppeteerCrawlingContext,
-  Labels extends string = string,
->(matchers: RouteMatcher<Ctx, Labels>[]) => matchers; // prettier-ignore
+  CrawlerCtx extends PuppeteerCrawlingContext = PuppeteerCrawlingContext,
+  RouterCtx extends Record<string, any> = Record<string, any>,
+  Labels extends string = string
+>(matchers: RouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
 
 export const registerHandlers = async <
-  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  CrawlerCtx extends CrawlingContext,
+  RouterCtx extends Record<string, any> = Record<string, any>,
   Labels extends string = string
 >({
   router,
-  handlers,
-  handlerWrappers,
+  routerWrappers,
+  routerContext,
+  routeHandlers,
 }: {
-  router: RouterHandler<Ctx>;
-  handlers: Record<Labels, RouteHandler<Ctx>>;
-  handlerWrappers?: RouteHandlerWrapper<Ctx>[];
+  router: CrawlerRouter<CrawlerCtx>;
+  routerWrappers?: CrawlerRouterWrapper<CrawlerCtx, RouterCtx>[];
+  routerContext?: RouterCtx;
+  routeHandlers: Record<Labels, RouteHandler<CrawlerCtx, RouterCtx>>;
 }) => {
-  await serialAsyncMap(Object.entries(handlers), async ([key, handler]) => {
-    const wrappedHandler = (handlerWrappers ?? []).reduceRight(
-      (fn, wrapper) => wrapper(fn),
-      handler as any
+  await serialAsyncMap(Object.entries(routeHandlers), async ([key, handler]) => {
+    const wrappedHandler = (routerWrappers ?? []).reduceRight(
+      (fn, wrapper) => wrapper((ctx) => fn(ctx)),
+      handler as (ctx: RouterHandlerCtx<CrawlerCtx & RouterCtx>) => Promise<void>
     );
-    await router.addHandler(key, wrappedHandler);
+    await router.addHandler<CrawlerCtx>(key, async (ctx) =>
+      wrappedHandler({ ...routerContext, ...ctx } as any)
+    );
   });
 };
 
@@ -182,38 +207,45 @@ export const registerHandlers = async <
  * // Now set up the labelled routes
  * await router.addHandler(routeLabels.JOB_LISTING, async (ctx) => { ... }
  */
-export const setupDefaultRoute = async <Ctx extends CrawlingContext, Labels extends string>({
+export const setupDefaultRoute = async <
+  CrawlerCtx extends CrawlingContext,
+  RouterCtx extends Record<string, any> = Record<string, any>,
+  Labels extends string = string
+>({
   router,
+  routerWrappers,
+  routerContext,
   routes,
-  handlers,
-  handlerWrappers,
+  routeHandlers,
 }: {
-  router: RouterHandler<Ctx>;
-  routes: RouteMatcher<Ctx, Labels>[];
-  handlers: Record<Labels, RouteHandler<Ctx>>;
-  handlerWrappers?: RouteHandlerWrapper<Ctx>[];
+  router: CrawlerRouter<CrawlerCtx>;
+  routerWrappers?: CrawlerRouterWrapper<CrawlerCtx, RouterCtx>[];
+  routerContext?: RouterCtx;
+  routes: RouteMatcher<CrawlerCtx, RouterCtx, Labels>[];
+  routeHandlers: Record<Labels, RouteHandler<CrawlerCtx, RouterCtx>>;
 }) => {
   /** Redirect the URL to the labelled route identical to route's name */
-  const defaultAction: RouteMatcher<Ctx, Labels>['action'] = async (url, ctx, route) => {
-    const handler = route.handlerLabel != null && handlers[route.handlerLabel];
+  // prettier-ignore
+  const defaultAction: RouteMatcher<CrawlerCtx, RouterCtx, Labels>['action'] = async (url, ctx, route) => {
+    const handler = route.handlerLabel != null && routeHandlers[route.handlerLabel];
     if (!handler) {
       ctx.log.error(`No handler found for route ${route.name} (${route.handlerLabel}). URL will not be processed. URL: ${url}`); // prettier-ignore
       return;
     }
     ctx.log.info(`Passing URL to handler ${route.handlerLabel}. URL: ${url}`);
-    await handler(ctx);
+    await handler(ctx as any);
   };
 
-  const defaultHandler = async (ctx: RouteHandlerCtx<Ctx>): Promise<void> => {
+  const defaultHandler = async (ctx: RouterHandlerCtx<CrawlerCtx & RouterCtx>): Promise<void> => {
     const { page, log: parentLog } = ctx;
     const log = parentLog.child({ prefix: '[Router] ' });
     const url = page
       ? await (page as any as CommonPage).url()
       : ctx.request.loadedUrl || ctx.request.url;
 
-    let route: RouteMatcher<Ctx, Labels>;
+    let route: RouteMatcher<CrawlerCtx, RouterCtx, Labels>;
     for (const currRoute of routes) {
-      if (await currRoute.match(url, ctx as any, currRoute as any, handlers)) {
+      if (await currRoute.match(url, ctx, currRoute, routeHandlers)) {
         route = currRoute;
         break;
       }
@@ -224,12 +256,14 @@ export const setupDefaultRoute = async <Ctx extends CrawlingContext, Labels exte
       return;
     }
     log.info(`URL matched route ${route.name} (handlerLabel: ${route.handlerLabel}). URL: ${url}`);
-    await (route.action ?? defaultAction)(url, ctx as any, route as any, handlers);
+    await (route.action ?? defaultAction)(url, ctx, route, routeHandlers);
   };
 
-  const wrappedHandler = (handlerWrappers ?? []).reduceRight(
-    (fn, wrapper) => wrapper(fn),
+  const wrappedHandler = (routerWrappers ?? []).reduceRight(
+    (fn, wrapper) => wrapper((ctx) => fn(ctx)),
     defaultHandler
   );
-  await router.addDefaultHandler<Ctx>(wrappedHandler);
+  await router.addDefaultHandler<CrawlerCtx>((ctx) =>
+    wrappedHandler({ ...routerContext, ...ctx } as any)
+  );
 };

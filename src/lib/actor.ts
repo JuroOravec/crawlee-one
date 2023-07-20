@@ -19,7 +19,7 @@ import type { CrawlerMeta, CrawlerType } from '../types';
 import type { MaybePromise } from '../utils/types';
 import {
   RouteHandler,
-  RouteHandlerWrapper,
+  CrawlerRouterWrapper,
   RouteMatcher,
   registerHandlers,
   setupDefaultRoute,
@@ -35,6 +35,7 @@ import {
 import { createErrorHandler } from './error/errorHandler';
 import { setupSentry } from './error/sentry';
 import { logLevelHandlerWrapper } from './log';
+import { itemCacheKey, pushData } from './dataset/pushData';
 
 type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<R>);
 
@@ -43,6 +44,29 @@ const isRouter = (r: any): r is RouterHandler<any> => {
 };
 const isFunc = (f: any): f is (...args: any[]) => any => {
   return typeof f === 'function';
+};
+
+/** Run a function that was defined as a string via Actor input */
+const evalInputHook = async <
+  Ctx extends CrawlingContext<any> = CrawlingContext<BasicCrawler>,
+  Labels extends string = string,
+  Input extends Record<string, any> = Record<string, any>
+>(
+  actor: Pick<ActorContext<Ctx, Labels, Input>, 'input' | 'state'>,
+  fnStr?: string,
+  args: any[] = []
+) => {
+  if (!fnStr) return;
+
+  const hookCtx = {
+    Actor,
+    input: actor.input,
+    state: actor.state,
+    itemCacheKey,
+  } satisfies ActorHookContext;
+
+  const hookFn = eval(fnStr);
+  await hookFn(...args, hookCtx);
 };
 
 export interface ActorDefinition<
@@ -101,9 +125,12 @@ export interface ActorDefinition<
    *   }],
    * })
    */
-  routes: MaybeAsyncFn<RouteMatcher<Ctx, Labels>[], [ActorDefinitionWithInput<Ctx, Labels, Input>]>;
+  routes: MaybeAsyncFn<
+    RouteMatcher<Ctx, ActorRouterContext<Ctx, Labels, Input>, Labels>[],
+    [ActorDefinitionWithInput<Ctx, Labels, Input>]
+  >;
   /** Handlers for the labelled requests. The object keys are the labels. */
-  routeHandlers: MaybeAsyncFn<Record<Labels, RouteHandler<Ctx>>, [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
+  routeHandlers: MaybeAsyncFn<Record<Labels, RouteHandler<Ctx, ActorRouterContext<Ctx, Labels, Input>>>, [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
   /**
    * Provides the option to modify or extend all router handlers by wrapping
    * them in these functions.
@@ -111,7 +138,7 @@ export interface ActorDefinition<
    * Wrappers are applied from right to left. That means that wrappers `[A, B, C]`
    * will be applied like so `A( B( C( handler ) ) )`.
    */
-  handlerWrappers?: MaybeAsyncFn<RouteHandlerWrapper<Ctx>[], [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
+  routerWrappers?: MaybeAsyncFn<CrawlerRouterWrapper<Ctx, ActorRouterContext<Ctx, Labels, Input>>[], [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
 
   // Proxy setup
   proxy?: MaybeAsyncFn<ProxyConfiguration, [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
@@ -127,7 +154,10 @@ export type ActorDefinitionWithInput<
   Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>,
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>
-> = Omit<ActorDefinition<Ctx, Labels, Input>, 'input'> & { input: Input | null };
+> = Omit<ActorDefinition<Ctx, Labels, Input>, 'input'> & {
+  input: Input | null;
+  state: Record<string, unknown>;
+};
 
 /** Context available while creating an Apify/Crawlee crawler */
 export interface ActorContext<
@@ -144,28 +174,39 @@ export interface ActorContext<
   runActor: RunActor<Ctx>;
   proxy?: ProxyConfiguration;
   router: RouterHandler<Ctx>;
-  routes: RouteMatcher<Ctx, Labels>[];
-  routeHandlers: Record<Labels, RouteHandler<Ctx>>;
+  routes: RouteMatcher<Ctx, ActorRouterContext<Ctx, Labels, Input>, Labels>[];
+  routeHandlers: Record<Labels, RouteHandler<Ctx, ActorRouterContext<Ctx, Labels, Input>>>;
+  /** Original config from which this actor context was created */
   config: ActorDefinition<Ctx, Labels, Input>;
+  /** Read-only inputs passed to the actor */
   input: Input | null;
+  /** Mutable state that is shared across setup and teardown hooks */
+  state: Record<string, unknown>;
 }
 
 type OrigRunActor<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
 
-interface MetamorphInputOverrides {
-  /** Override this if the metamorph actor ID is under different input field than 'metamorphActorId' */
-  actorMetamorphIdKey?: string;
-  /** Override this if the metamorph actor ID is under different input field than 'metamorphActorBuild' */
-  actorMetamorphBuildKey?: string;
-  /** Override this if the metamorph actor ID is under different input field than 'metamorphActorInput' */
-  actorMetamorphInputKey?: string;
-}
-
 /** Extended type of `crawler.run()` function */
 export type RunActor<Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>> = (
   requests?: Parameters<OrigRunActor<Ctx>>[0],
-  options?: Parameters<OrigRunActor<Ctx>>[1] & MetamorphInputOverrides
+  options?: Parameters<OrigRunActor<Ctx>>[1]
 ) => ReturnType<OrigRunActor<Ctx>>;
+
+/** Context passed to user-defined functions passed from input */
+export type ActorHookContext = Pick<ActorContext, 'input' | 'state'> & {
+  Actor: typeof Actor;
+  itemCacheKey: typeof itemCacheKey;
+};
+
+/** Context passed to route handlers */
+export type ActorRouterContext<
+  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  Labels extends string = string,
+  Input extends Record<string, any> = Record<string, any>
+> = {
+  actor: ActorContext<Ctx, Labels, Input>;
+  pushData: typeof pushData;
+};
 
 /**
  * Create opinionated Apify crawler that uses router for handling requests.
@@ -194,16 +235,22 @@ export const createApifyActor = async <
 >(
   config: ActorDefinition<Ctx, Labels, Input>
 ): Promise<ActorContext<Ctx, Labels, Input>> => {
-  // Initialize config fields where we have initialization functions instead of the values themselves
-  const input = config.input
-    ? isFunc(config.input)
-      ? await config.input({ ...config })
-      : config.input
-    : await Actor.getInput<Input>();
+  // Initialize actor inputs
+  const input = Object.freeze(
+    config.input
+      ? isFunc(config.input)
+        ? await config.input({ ...config })
+        : config.input
+      : await Actor.getInput<Input>()
+  );
 
   if (config.validateInput) await config.validateInput(input);
 
-  const getConfig = () => ({ ...config, input });
+  // Mutable state that is available to the actor hooks
+  const state = {};
+
+  // This is context that is available to options that use initialization function
+  const getConfig = () => ({ ...config, input, state });
 
   // Set up proxy
   const defaultProxy =
@@ -217,29 +264,61 @@ export const createApifyActor = async <
       ? await config.proxy(getConfig())
       : config.proxy;
 
+  // Run initialization functions
   const router: RouterHandler<Ctx> = isRouter(config.router)
     ? config.router
     : await (config.router as any)(getConfig());
   const routes = isFunc(config.routes) ? await config.routes(getConfig()) : config.routes; // prettier-ignore
   const routeHandlers = isFunc(config.routeHandlers) ? await config.routeHandlers(getConfig()) : config.routeHandlers; // prettier-ignore
-  const handlerWrappers = isFunc(config.handlerWrappers) ? await config.handlerWrappers(getConfig()) : config.handlerWrappers; // prettier-ignore
+  const routerWrappers = isFunc(config.routerWrappers) ? await config.routerWrappers(getConfig()) : config.routerWrappers; // prettier-ignore
 
-  // Set up router
-  await setupDefaultRoute<Ctx, Labels>({
-    router,
-    routes,
-    handlers: routeHandlers,
-    handlerWrappers,
-  });
-  await registerHandlers<Ctx, Labels>({ router, handlers: routeHandlers, handlerWrappers });
-
-  const getActorCtx = () => ({ router, routes, routeHandlers, proxy, config, input });
+  // Create Crawlee crawler
+  const getActorCtx = () => ({ router, routes, routeHandlers, proxy, config, input, state });
   const crawler = await config.createCrawler(getActorCtx());
 
-  const actor = { crawler, ...getActorCtx() };
-  const runActor = createActorRunner<Ctx, Labels, Input>(actor);
+  // Create actor (our custom entity)
+  const preActor = { crawler, ...getActorCtx() };
+  const runActor = createActorRunner<Ctx, Labels, Input>({ ...preActor });
+  const actor = { ...preActor, runActor, crawler } satisfies ActorContext<Ctx, Labels, Input>;
 
-  return { crawler, ...getActorCtx(), runActor };
+  /** pushData wrapper that pre-populates options based on actor input */
+  const scopedPushData: typeof pushData = (entries, ctx, options) => {
+    const { outputTransform, outputFilter } = (actor.input ?? {}) as OutputActorInput;
+
+    const mergedOptions = {
+      showPrivate: input?.includePersonalData,
+      pickKeys: input?.outputPickFields,
+      remapKeys: input?.outputRenameFields,
+      transform: outputTransform ? ((item) => evalInputHook(actor, outputTransform, [item])) : undefined, // prettier-ignore
+      filter: outputFilter ? ((item) => evalInputHook(actor, outputFilter, [item])) : undefined, // prettier-ignore
+      datasetIdOrName: input?.outputDatasetIdOrName,
+      cacheStoreIdOrName: input?.outputCacheStoreIdOrName,
+      cachePrimaryKeys: input?.outputCachePrimaryKeys,
+      cacheActionOnResult: input?.outputCacheActionOnResult,
+      ...options,
+    };
+    return pushData(entries, ctx, mergedOptions);
+  };
+
+  // Extra data that we make available to the route handlers
+  const routerContext = { actor, pushData: scopedPushData };
+
+  // Set up router
+  await setupDefaultRoute<Ctx, ActorRouterContext<Ctx, Labels, Input>, Labels>({
+    router,
+    routerWrappers,
+    routerContext,
+    routes,
+    routeHandlers,
+  });
+  await registerHandlers<Ctx, ActorRouterContext<Ctx, Labels, Input>, Labels>({
+    router,
+    routerWrappers,
+    routerContext,
+    routeHandlers,
+  });
+
+  return actor;
 };
 
 /**
@@ -254,20 +333,37 @@ const createActorRunner = <
 >(
   actor: Omit<ActorContext<Ctx, Labels, Input>, 'runActor'>
 ) => {
-  const runActor: RunActor<Ctx> = async (requests, options) => {
-    const {
-      actorMetamorphIdKey = 'metamorphActorId',
-      actorMetamorphBuildKey = 'metamorphActorBuild',
-      actorMetamorphInputKey = 'metamorphActorInput',
-      ...runOtions
-    } = options || {};
+  const {
+    outputTransformBefore,
+    outputTransformAfter,
+    outputFilterBefore,
+    outputFilterAfter,
+    outputCacheStoreIdOrName,
+    outputCacheActionOnResult,
+    metamorphActorId,
+    metamorphActorBuild,
+    metamorphActorInput,
+  } = (actor.input ?? {}) as OutputActorInput;
 
-    const runRes = await actor.crawler.run(requests, runOtions);
+  const runActor: RunActor<Ctx> = async (requests, options) => {
+    // Clear cache if it was set from the input
+    if (outputCacheStoreIdOrName && outputCacheActionOnResult === 'overwrite') {
+      const store = await Actor.openKeyValueStore(outputCacheStoreIdOrName);
+      await store.drop();
+    }
+
+    await evalInputHook(actor, outputTransformBefore);
+    await evalInputHook(actor, outputFilterBefore);
+
+    const runRes = await actor.crawler.run(requests, options);
+
+    await evalInputHook(actor, outputTransformAfter);
+    await evalInputHook(actor, outputFilterAfter);
 
     // Trigger metamorph if it was set from the input
-    const targetActorId = actor.input?.[actorMetamorphIdKey];
-    const targetActorBuild = actor.input?.[actorMetamorphBuildKey];
-    const targetActorInput = actor.input?.[actorMetamorphInputKey];
+    const targetActorId = metamorphActorId;
+    const targetActorBuild = metamorphActorBuild;
+    const targetActorInput = metamorphActorInput;
     if (targetActorId) {
       await Actor.metamorph(targetActorId, targetActorInput, { build: targetActorBuild });
     }
@@ -352,7 +448,9 @@ export const createAndRunApifyActor = async <
     async () => {
       const actorDefaults: ActorDefinition<Ctx, Labels, Input & AllInputs> = {
         router: Router.create<Ctx>(),
-        handlerWrappers: ({ input }) => [logLevelHandlerWrapper<Ctx>(input?.logLevel ?? 'info')],
+        routerWrappers: ({ input }) => [
+          logLevelHandlerWrapper<Ctx, any>(input?.logLevel ?? 'info'),
+        ],
         createCrawler: ({ router, proxy, input }) => {
           const options = createHttpCrawlerOptions<
             CrawlerMeta<TCrawlerType, any>['options'],
@@ -380,8 +478,8 @@ export const createAndRunApifyActor = async <
 
       const actor = await createApifyActor<Ctx, Labels, Input>({
         ...actorConfig,
-        router: actorConfig.router ?? actorDefaults.router,
-        handlerWrappers: actorConfig.handlerWrappers ?? actorDefaults.handlerWrappers,
+        router: actorConfig.router ?? (actorDefaults.router as any),
+        routerWrappers: actorConfig.routerWrappers ?? (actorDefaults.routerWrappers as any),
         createCrawler: actorConfig.createCrawler ?? actorDefaults.createCrawler,
       });
 

@@ -14,7 +14,7 @@ import type { Page } from 'playwright';
 import * as Sentry from '@sentry/node';
 
 import type { MaybePromise } from '../../utils/types';
-import type { RouteHandler, RouteHandlerCtx } from '../router';
+import type { RouteHandler, RouterHandlerCtx } from '../router';
 
 export interface CaptureErrorInput {
   error: Error;
@@ -162,14 +162,14 @@ export const captureErrorWrapper = async (
  * );
  */
 export const captureErrorRouteHandler = <Ctx extends CrawlingContext>(
-  handler: (ctx: RouteHandlerCtx<Ctx> & { captureError: CaptureError }) => MaybePromise<void>,
+  handler: (ctx: RouterHandlerCtx<Ctx> & { captureError: CaptureError }) => MaybePromise<void>,
   options?: ErrorCaptureOptions
 ) => {
   // Wrap the original handler, so we can additionally pass it the captureError function
   const wrapperHandler = (ctx: Parameters<RouteHandler<Ctx>>[0]) => {
     return captureErrorWrapper(({ captureError }) => {
       return handler({
-        ...ctx,
+        ...(ctx as any),
         // And automatically feed contextual args (page, url, log) to captureError
         captureError: (input) => captureError({ ...input, ...ctx, url: ctx.request.url }),
       });

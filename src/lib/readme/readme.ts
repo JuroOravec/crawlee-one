@@ -137,6 +137,18 @@ export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
     title: 'Proxy support',
     mainText: `- You can use Apify's proxy, or your own, via Input.`,
   },
+  integratedETL: {
+    supported: (it) => it.a.datasets.some((d) => d.features.integratedETL),
+    title: 'Integrated data filtering and transformation',
+    mainText: `- Filter and modify scraped entries out of the box from within Apify UI, without needing other tools.`,
+  },
+  integratedCache: {
+    supported: (it) => it.a.datasets.some((d) => d.features.integratedCache),
+    title: 'Integrated cache',
+    mainText:
+      `- You can use cache together with custom filtering to e.g. save only NEW entries to the dataset. Save time and reduce cost.\n` +
+      `  - Cache automatically stores which entries were already scraped. Cache can persist between different scraper runs.`,
+  },
   crawlerConfig: {
     supported: (it) => it.a.datasets.some((d) => d.features.configurable),
     title: 'Custom crawler configuration',
