@@ -191,7 +191,7 @@ const applyPrivacyMask = <T extends Record<any, any> = Record<any, any>>(
       // Otherwise, if custom value was given, use that
       : setCustomPrivateValueCalled ? customPrivateValue
       // Otherwise, decide based on filter truthiness
-      : isPrivate ? privateValueGen(key, val, item) : val
+      : isPrivate ? privateValueGen(val, key, item) : val
     );
     return privateValue;
   };
