@@ -141,7 +141,10 @@ export interface OutputActorInput {
   outputCachePrimaryKeys?: string[];
   /** Define whether we want to add, remove, or overwrite cached entries with results from the actor run */
   outputCacheActionOnResult?: 'add' | 'remove' | 'overwrite' | null;
+}
 
+/** Common input fields related to actor metamorphing */
+export interface MetamorphActorInput {
   /**
    * If you want to run another actor with the same dataset after
    * this actor has finished (AKA metamorph into another actor),
@@ -353,7 +356,7 @@ export const privacyInput = {
   }),
 } satisfies Record<keyof PrivacyActorInput, Field>;
 
-/** Common input fields related to proxy setup */
+/** Common input fields related to actor output */
 export const outputInput = {
   outputPickFields: createArrayField({
     title: 'Pick dataset fields',
@@ -483,7 +486,7 @@ export const outputInput = {
     title: 'Cache primary keys',
     type: 'array',
     description: `Specify fields that uniquely identify entries (primary keys), so entries can be compared against the cache.<br/><br/>
-    <strong>NOTE:<strong> If not set, the entries are hashed based all fields`,
+    <strong>NOTE:<strong> If not set, the entries are hashed based on all fields`,
     editor: 'stringList',
     example: ['name', 'city'],
     nullable: true,
@@ -503,7 +506,10 @@ export const outputInput = {
     example: 'add',
     nullable: true,
   }),
+};
 
+/** Common input fields related to actor metamorphing */
+export const metamorphInput = {
   metamorphActorId: createStringField({
     title: 'Metamorph actor ID - metamorph to another actor at the end',
     type: 'string',
@@ -529,7 +535,7 @@ export const outputInput = {
     example: { uploadDatasetToGDrive: true },
     nullable: true,
   }),
-} satisfies Record<keyof OutputActorInput, Field>;
+} satisfies Record<keyof MetamorphActorInput, Field>;
 
 export const crawlerInputValidationFields = {
   navigationTimeoutSecs: Joi.number().integer().min(0).optional(),
@@ -577,8 +583,10 @@ export const outputInputValidationFields = {
   outputCacheActionOnResult: Joi.string().min(1).allow('add', 'remove', 'overwrite').optional(), // prettier-ignore
 
   outputDatasetIdOrName: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
+} satisfies Record<keyof OutputActorInput, Joi.Schema>;
 
+export const metamorphInputValidationFields = {
   metamorphActorId: Joi.string().min(1).optional(),
   metamorphActorBuild: Joi.string().min(1).optional(),
   metamorphActorInput: Joi.object().unknown(true).optional(),
-} satisfies Record<keyof OutputActorInput, Joi.Schema>;
+} satisfies Record<keyof MetamorphActorInput, Joi.Schema>;

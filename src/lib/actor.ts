@@ -28,6 +28,7 @@ import {
   CrawlerConfigActorInput,
   LoggingActorInput,
   OutputActorInput,
+  MetamorphActorInput,
   PrivacyActorInput,
   ProxyActorInput,
   crawlerInput,
@@ -387,7 +388,8 @@ type AllInputs = CrawlerConfigActorInput &
   LoggingActorInput &
   ProxyActorInput &
   PrivacyActorInput &
-  OutputActorInput;
+  OutputActorInput &
+  MetamorphActorInput;
 
 /**
  * Create default configuration for an Apify actor
