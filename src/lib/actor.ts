@@ -12,7 +12,7 @@ import {
   PlaywrightCrawler,
   PuppeteerCrawler,
 } from 'crawlee';
-import { omitBy, pick } from 'lodash';
+import { omitBy, pick, defaults } from 'lodash';
 import * as Sentry from '@sentry/node';
 
 import type { CrawlerMeta, CrawlerType } from '../types';
@@ -146,7 +146,10 @@ export interface ActorDefinition<
 
   // Crawler setup
   createCrawler: (
-    actorCtx: Omit<ActorContext<Ctx, Labels, Input>, 'crawler' | 'runActor'>
+    actorCtx: Omit<
+      ActorContext<Ctx, Labels, Input>,
+      'crawler' | 'runCrawler' | 'metamorph' | 'pushData'
+    >
   ) => MaybePromise<Ctx['crawler']>;
 }
 
@@ -172,7 +175,10 @@ export interface ActorContext<
    * features:
    * - Automatically metamorph into another actor after the run finishes
    */
-  runActor: RunActor<Ctx>;
+  runCrawler: RunCrawler<Ctx>;
+  /** Trigger actor metamorph, using actor's inputs as defaults. */
+  metamorph: Metamorph;
+  pushData: typeof pushData;
   proxy?: ProxyConfiguration;
   router: RouterHandler<Ctx>;
   routes: RouteMatcher<Ctx, ActorRouterContext<Ctx, Labels, Input>, Labels>[];
@@ -185,13 +191,16 @@ export interface ActorContext<
   state: Record<string, unknown>;
 }
 
-type OrigRunActor<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
+type OrigRunCrawler<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
 
 /** Extended type of `crawler.run()` function */
-export type RunActor<Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>> = (
-  requests?: Parameters<OrigRunActor<Ctx>>[0],
-  options?: Parameters<OrigRunActor<Ctx>>[1]
-) => ReturnType<OrigRunActor<Ctx>>;
+export type RunCrawler<Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>> = (
+  requests?: Parameters<OrigRunCrawler<Ctx>>[0],
+  options?: Parameters<OrigRunCrawler<Ctx>>[1]
+) => ReturnType<OrigRunCrawler<Ctx>>;
+
+/** Trigger actor metamorph, using actor's inputs as defaults. */
+export type Metamorph = (overrides?: MetamorphActorInput) => Promise<void>;
 
 /** Context passed to user-defined functions passed from input */
 export type ActorHookContext = Pick<ActorContext, 'input' | 'state'> & {
@@ -206,7 +215,6 @@ export type ActorRouterContext<
   Input extends Record<string, any> = Record<string, any>
 > = {
   actor: ActorContext<Ctx, Labels, Input>;
-  pushData: typeof pushData;
 };
 
 /**
@@ -279,27 +287,17 @@ export const createApifyActor = async <
 
   // Create actor (our custom entity)
   const preActor = { crawler, ...getActorCtx() };
-  const runActor = createActorRunner<Ctx, Labels, Input>({ ...preActor });
-  const actor = { ...preActor, runActor, crawler } satisfies ActorContext<Ctx, Labels, Input>;
+  const runCrawler = createScopedCrawlerRun(preActor);
+  const metamorph = createScopedMetamorph(preActor);
+  const scopedPushData = createScopedPushData(preActor);
 
-  /** pushData wrapper that pre-populates options based on actor input */
-  const scopedPushData: typeof pushData = (entries, ctx, options) => {
-    const { outputTransform, outputFilter } = (actor.input ?? {}) as OutputActorInput;
-
-    const mergedOptions = {
-      showPrivate: input?.includePersonalData,
-      pickKeys: input?.outputPickFields,
-      remapKeys: input?.outputRenameFields,
-      transform: outputTransform ? ((item) => evalInputHook(actor, outputTransform, [item])) : undefined, // prettier-ignore
-      filter: outputFilter ? ((item) => evalInputHook(actor, outputFilter, [item])) : undefined, // prettier-ignore
-      datasetIdOrName: input?.outputDatasetIdOrName,
-      cacheStoreIdOrName: input?.outputCacheStoreIdOrName,
-      cachePrimaryKeys: input?.outputCachePrimaryKeys,
-      cacheActionOnResult: input?.outputCacheActionOnResult,
-      ...options,
-    };
-    return pushData(entries, ctx, mergedOptions);
-  };
+  const actor = {
+    ...preActor,
+    crawler,
+    runCrawler,
+    metamorph,
+    pushData: scopedPushData,
+  } satisfies ActorContext<Ctx, Labels, Input>;
 
   // Extra data that we make available to the route handlers
   const routerContext = { actor, pushData: scopedPushData };
@@ -322,17 +320,69 @@ export const createApifyActor = async <
   return actor;
 };
 
+/** Create a function that triggers metamorph, using Actor's inputs as defaults. */
+const createScopedMetamorph = (actor: Pick<ActorContext, 'input'>) => {
+  // Trigger metamorph if it was set from the input
+  const metamorph: Metamorph = async (overrides?: MetamorphActorInput) => {
+    const {
+      metamorphActorId,
+      metamorphActorBuild,
+      metamorphActorInput,
+    } = defaults({}, overrides, actor.input ?? {}); // prettier-ignore
+
+    if (!metamorphActorId) return;
+
+    await Actor.metamorph(metamorphActorId, metamorphActorInput, { build: metamorphActorBuild });
+  };
+
+  return metamorph;
+};
+
+/** pushData wrapper that pre-populates options based on actor input */
+const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
+  const scopedPushData: typeof pushData = (entries, ctx, options) => {
+    const {
+      includePersonalData,
+      outputTransform,
+      outputFilter,
+      outputDatasetIdOrName,
+      outputPickFields,
+      outputRenameFields,
+      outputCacheStoreIdOrName,
+      outputCachePrimaryKeys,
+      outputCacheActionOnResult,
+    } = (actor.input ?? {}) as OutputActorInput & PrivacyActorInput;
+
+    const mergedOptions = {
+      showPrivate: includePersonalData,
+      pickKeys: outputPickFields,
+      remapKeys: outputRenameFields,
+      transform: outputTransform ? ((item) => evalInputHook(actor, outputTransform, [item])) : undefined, // prettier-ignore
+      filter: outputFilter ? ((item) => evalInputHook(actor, outputFilter, [item])) : undefined, // prettier-ignore
+      datasetIdOrName: outputDatasetIdOrName,
+      cacheStoreIdOrName: outputCacheStoreIdOrName,
+      cachePrimaryKeys: outputCachePrimaryKeys,
+      cacheActionOnResult: outputCacheActionOnResult,
+      ...options,
+    };
+
+    return pushData(entries, ctx, mergedOptions);
+  };
+
+  return scopedPushData;
+};
+
 /**
  * Create a function that wraps `crawler.run(requests, runOtions)` with additional
  * features like:
  * - Automatically metamorph into another actor after the run finishes
  */
-const createActorRunner = <
+const createScopedCrawlerRun = <
   Ctx extends CrawlingContext<any> = CrawlingContext<BasicCrawler>,
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>
 >(
-  actor: Omit<ActorContext<Ctx, Labels, Input>, 'runActor'>
+  actor: Omit<ActorContext<Ctx, Labels, Input>, 'runCrawler' | 'metamorph' | 'pushData'>
 ) => {
   const {
     outputTransformBefore,
@@ -341,12 +391,11 @@ const createActorRunner = <
     outputFilterAfter,
     outputCacheStoreIdOrName,
     outputCacheActionOnResult,
-    metamorphActorId,
-    metamorphActorBuild,
-    metamorphActorInput,
   } = (actor.input ?? {}) as OutputActorInput;
 
-  const runActor: RunActor<Ctx> = async (requests, options) => {
+  const metamorph = createScopedMetamorph(actor);
+
+  const runCrawler: RunCrawler<Ctx> = async (requests, options) => {
     // Clear cache if it was set from the input
     if (outputCacheStoreIdOrName && outputCacheActionOnResult === 'overwrite') {
       const store = await Actor.openKeyValueStore(outputCacheStoreIdOrName);
@@ -362,17 +411,12 @@ const createActorRunner = <
     await evalInputHook(actor, outputFilterAfter);
 
     // Trigger metamorph if it was set from the input
-    const targetActorId = metamorphActorId;
-    const targetActorBuild = metamorphActorBuild;
-    const targetActorInput = metamorphActorInput;
-    if (targetActorId) {
-      await Actor.metamorph(targetActorId, targetActorInput, { build: targetActorBuild });
-    }
+    await metamorph();
 
     return runRes;
   };
 
-  return runActor;
+  return runCrawler;
 };
 
 const actorClassByType = {
@@ -482,7 +526,7 @@ export const createAndRunApifyActor = async <
         ...actorConfig,
         router: actorConfig.router ?? (actorDefaults.router as any),
         routerWrappers: actorConfig.routerWrappers ?? (actorDefaults.routerWrappers as any),
-        createCrawler: actorConfig.createCrawler ?? actorDefaults.createCrawler,
+        createCrawler: actorConfig.createCrawler ?? (actorDefaults.createCrawler as any),
       });
 
       await onActorReady?.(actor);

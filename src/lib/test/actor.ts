@@ -58,10 +58,10 @@ export const setupMockApifyActor = async <
   await Actor.init();
 };
 
-export const runActorTest = async <TData extends MaybeArray<Dictionary>, TInput>({
+export const runCrawlerTest = async <TData extends MaybeArray<Dictionary>, TInput>({
   vi: viInstance,
   input,
-  runActor,
+  runCrawler,
   log,
   onPushData,
   onBatchAddRequests,
@@ -69,7 +69,7 @@ export const runActorTest = async <TData extends MaybeArray<Dictionary>, TInput>
 }: {
   vi: typeof vi;
   input: TInput;
-  runActor: () => MaybePromise<void>;
+  runCrawler: () => MaybePromise<void>;
   log?: (...args: any[]) => void;
   onPushData?: (data: any, done: () => void) => MaybePromise<void>;
   onBatchAddRequests?: OnBatchAddRequests;
@@ -84,7 +84,7 @@ export const runActorTest = async <TData extends MaybeArray<Dictionary>, TInput>
       onBatchAddRequests,
     });
 
-    await runActor();
+    await runCrawler();
     await onDone?.(done);
   });
 };
