@@ -44,3 +44,8 @@ export type CrawlerMeta<
   : T extends 'puppeteer'
   ? { crawler: PuppeteerCrawler, context: PuppeteerCrawlingContext<TData>, options: PuppeteerCrawlerOptions } // prettier-ignore
   : never;
+
+type OrigRunCrawler<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
+
+/** URL string or object passed to Crawler.run */
+export type CrawlerUrl = NonNullable<Parameters<OrigRunCrawler<any>>[0]>[0];

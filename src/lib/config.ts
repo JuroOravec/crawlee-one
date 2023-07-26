@@ -10,6 +10,7 @@ import {
 } from 'apify-actor-config';
 import Joi from 'joi';
 
+import type { CrawlerUrl } from '../types';
 import { LOG_LEVEL, LogLevel } from './log';
 
 /** Crawler config fields that can be overriden from the actor input */
@@ -28,6 +29,34 @@ export type CrawlerConfigActorInput = Pick<
   | 'maxConcurrency'
   | 'keepAlive'
 >;
+
+/** Common input fields for defining URLs to scrape */
+export type StartUrlsActorInput = {
+  /** URLs to start with, defined manually as a list of strings or crawler requests */
+  startUrls?: CrawlerUrl[];
+  /**
+   * Import starting URLs from an existing Apify Dataset.
+   *
+   * String is in the format `datasetID#field` (e.g. `datasetid123#url`).
+   */
+  startUrlsFromDataset?: string;
+  /**
+   * Import or generate starting URLs using a custom function.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   *
+   * ```js
+   * // Example: Create and load URLs from an Apify Dataset by combining multiple fields
+   * async ({ Actor, input, state, itemCacheKey }) => {
+   *   const dataset = await Actor.openDataset(datasetNameOrId);
+   *   const data = await dataset.getData();
+   *   const urls = data.items.map((item) => `https://example.com/u/${item.userId}/list/${item.listId}`);
+   *   return urls;
+   * }
+   * ```
+   */
+  startUrlsFromFunction?: string;
+};
 
 /** Common input fields related to logging setup */
 export interface LoggingActorInput {
@@ -173,6 +202,7 @@ export interface PrivacyActorInput {
 }
 
 const datasetIdPattern = '^[a-zA-Z0-9][a-zA-Z0-9-]*$';
+const datasetIdWithFieldPattern = `${datasetIdPattern.slice(0, -1)}#.+$`;
 
 /** Common input fields related to crawler setup */
 export const crawlerInput = {
@@ -281,6 +311,54 @@ export const crawlerInput = {
     nullable: true,
   }),
 } satisfies Record<keyof CrawlerConfigActorInput, Field>;
+
+/** Common input fields for defining URLs to scrape */
+export const startUrlsInput = {
+  startUrls: createArrayField({
+    title: 'Start URLs',
+    type: 'array',
+    description: `List of URLs to scrape.`,
+    editor: 'requestListSources',
+    sectionCaption: 'Starting URLs',
+  }),
+  startUrlsFromDataset: createStringField({
+    title: 'Start URLs from Dataset',
+    type: 'string',
+    editor: 'textfield',
+    description: `Import URLs to scrape from an existing Apify Dataset.<br/><br/>
+    Write the dataset and the field to import in the format \`{datasetID}#{field}\`.<br/><br/>
+    Example: \`datasetid123#url\` will take URLs from dataset \`datasetid123\` from field \`url\`.`,
+    pattern: datasetIdWithFieldPattern,
+    example: 'datasetid123#url',
+    nullable: true,
+  }),
+  startUrlsFromFunction: createStringField({
+    title: 'Start URLs from custom function',
+    type: 'string',
+    description: `Import or generate URLs to scrape using a custom function.<br/><br/>
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
+    \`
+    // Example: Create and load URLs from an Apify Dataset by combining multiple fields
+    async ({ Actor, input, state, itemCacheKey }) => {
+      const dataset = await Actor.openDataset(datasetNameOrId);
+      const data = await dataset.getData();
+      const urls = data.items.map((item) => \`https://example.com/u/\${item.userId}/list/\${item.listId}\`);
+      return urls;
+    }
+    \`
+    `,
+    editor: 'javascript',
+    example: `
+    // Example: Create and load URLs from an Apify Dataset by combining multiple fields
+    async ({ Actor, input, state, itemCacheKey }) => {
+      const dataset = await Actor.openDataset(datasetNameOrId);
+      const data = await dataset.getData();
+      const urls = data.items.map((item) => \`https://example.com/u/\${item.userId}/list/\${item.listId}\`);
+      return urls;
+    }`,
+    nullable: true,
+  }),
+} satisfies Record<keyof StartUrlsActorInput, Field>;
 
 /** Common input fields related to logging setup */
 export const loggingInput = {
@@ -551,6 +629,12 @@ export const crawlerInputValidationFields = {
   maxConcurrency: Joi.number().integer().min(0).optional(),
   keepAlive: Joi.boolean().optional(),
 } satisfies Record<keyof CrawlerConfigActorInput, Joi.Schema>;
+
+export const startUrlsInputValidationFields = {
+  startUrls: Joi.array().items(Joi.string().min(1), Joi.object()).optional(),
+  startUrlsFromDataset: Joi.string().min(1).pattern(new RegExp(datasetIdWithFieldPattern)).optional(), // prettier-ignore
+  startUrlsFromFunction: Joi.string().min(1).optional(),
+} satisfies Record<keyof StartUrlsActorInput, Joi.Schema>;
 
 export const loggingInputValidationFields = {
   logLevel: Joi.string().valid(...LOG_LEVEL).optional(), // prettier-ignore
