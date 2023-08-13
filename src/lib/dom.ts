@@ -1,4 +1,4 @@
-import type { AnyNode, Cheerio, CheerioAPI } from 'cheerio';
+import { load as loadCheerio, AnyNode, Cheerio } from 'cheerio';
 
 import { StrAsNumOptions, strAsNumber, strOrNull } from '../utils/format';
 import { FormatUrlOptions, formatUrl } from '../utils/url';
@@ -12,282 +12,324 @@ import { FormatUrlOptions, formatUrl } from '../utils/url';
  *
  * This common interfaces makes the scraping code more portable between the two.
  */
-export interface DOMLib<El> {
+export interface DOMLib<El extends BaseEl, BaseEl> {
+  node: El | null;
+
+  ///////////////////////
+  // SCALAR OPERATIONS
+  ///////////////////////
+
   /** Get element's text (trimmed) */
-  text: (el: El | null, options?: { allowEmpty?: boolean }) => string | null;
+  text: (options?: { allowEmpty?: boolean }) => string | null;
   /** Get element's text as uppercase (trimmed) */
-  textAsUpper: (el: El | null, options?: { allowEmpty?: boolean }) => string | null;
+  textAsUpper: (options?: { allowEmpty?: boolean }) => string | null;
   /** Get element's text as lowercase (trimmed) */
-  textAsLower: (el: El | null, options?: { allowEmpty?: boolean }) => string | null;
+  textAsLower: (options?: { allowEmpty?: boolean }) => string | null;
   /** Get element's text and convert it to number */
-  textAsNumber: (el: El | null, options?: StrAsNumOptions) => number | null;
+  textAsNumber: (options?: StrAsNumOptions) => number | null;
+  /** Get element's attribute */
+  attr: (attrName: string, options?: { allowEmpty?: boolean }) => string | null;
   /** Get element's property */
-  prop: (el: El | null, propName: string, options?: { allowEmpty?: boolean }) => string | null;
+  prop: (propName: string, options?: { allowEmpty?: boolean }) => string | null;
   /** Get element's href */
-  href: (el: El | null, options?: { allowEmpty?: boolean } & FormatUrlOptions) => string | null;
+  href: (options?: { allowEmpty?: boolean } & FormatUrlOptions) => string | null;
   /** Get element's src */
-  src: (el: El | null, options?: { allowEmpty?: boolean } & FormatUrlOptions) => string | null;
+  src: (options?: { allowEmpty?: boolean } & FormatUrlOptions) => string | null;
   /** Get element's nodeName */
-  nodeName: (el: El | null) => string | null;
-  /** Get a single descendant matching the selector */
-  findOne: DOMLibFindOne<El>;
-  /** Get all descendants matching the selector */
-  findMany: DOMLibFindMany<El>;
-  /** Get element's parent */
-  parent: DOMLibParent<El>;
-  /** Get element's children */
-  children: DOMLibChildren<El>;
-  /** Get remove the element */
-  remove: (el: El | null) => void;
-  /** Get root element */
-  root: DOMLibRoot<El>;
+  nodeName: () => string | null;
   /** Get URL of website associated with the DOM */
   url: () => string | null;
+  /** Freely modify the underlying DOM node */
+  map: <TVal>(map: (node: El | null) => TVal) => TVal;
+
+  ///////////////////////
+  // NODE OPERATIONS
+  ///////////////////////
+
+  /** Get a single descendant matching the selector */
+  findOne: <TNewEl extends BaseEl = El>(selector: string) => DOMLib<TNewEl, BaseEl> | null;
+  /** Get all descendants matching the selector */
+  findMany: <TNewEl extends BaseEl = El>(selector: string) => DOMLib<TNewEl, BaseEl>[];
+  /** Get element's parent */
+  parent: <TNewEl extends BaseEl = El>() => DOMLib<TNewEl, BaseEl> | null;
+  /** Get element's children */
+  children: <TNewEl extends BaseEl = El>() => DOMLib<TNewEl, BaseEl>[];
+  /** Get remove the element */
+  remove: () => void;
+  /** Get root element */
+  root: <TNewEl extends BaseEl = El>() => DOMLib<TNewEl, BaseEl> | null;
 }
 
-interface DOMLibFindOne<El> {
-  (el: El | null, selector: string): El | null;
-  <TVal>(el: El | null, selector: string, map: (el: El | null) => TVal): TVal | null;
-}
-
-interface DOMLibFindMany<El> {
-  (el: El | null, selector: string): El[];
-  <TVal>(el: El | null, selector: string, map: (el: El, index: number, arr: El[]) => TVal): TVal[];
-}
-
-interface DOMLibParent<El> {
-  (el: El | null): El | null;
-  <TVal>(el: El | null, map: (el: El | null) => TVal): TVal;
-}
-
-interface DOMLibChildren<El> {
-  (el: El | null): El[];
-  <TVal>(el: El | null, map: (el: El, index: number, arr: El[]) => TVal): TVal[];
-}
-
-interface DOMLibRoot<El> {
-  (): El | null;
-  <TVal>(map: (el: El | null) => TVal): TVal;
-}
-
-export type BrowserDOMLib<T extends Node = Node> = DOMLib<T>;
+export type BrowserDOMLib<T extends Element = Element> = DOMLib<T, Element>;
 
 /** Implementation of DOMLib in browser (using Browser API) */
-export const browserDOMLib = <T extends Node>(doc: Document): BrowserDOMLib<T> => {
-  const text: BrowserDOMLib<T>['text'] = (el, { allowEmpty } = {}) => {
-    const txt = el?.textContent?.trim() ?? null;
+export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
+  ///////////////////////
+  // SCALAR OPERATIONS
+  ///////////////////////
+
+  const text: BrowserDOMLib<T>['text'] = ({ allowEmpty } = {}) => {
+    const txt = node.textContent?.trim() ?? null;
     return strOrNull(txt, allowEmpty);
   };
 
-  const textAsUpper: BrowserDOMLib<T>['textAsUpper'] = (el, options) => {
-    const txt = text(el, options);
+  const textAsUpper: BrowserDOMLib<T>['textAsUpper'] = (options) => {
+    const txt = text(options);
     return txt ? txt.toLocaleUpperCase() : txt;
   };
 
-  const textAsLower: BrowserDOMLib<T>['textAsLower'] = (el, options) => {
-    const txt = text(el, options);
+  const textAsLower: BrowserDOMLib<T>['textAsLower'] = (options) => {
+    const txt = text(options);
     return txt ? txt.toLocaleLowerCase() : txt;
   };
 
-  const textAsNumber: BrowserDOMLib<T>['textAsNumber'] = (el, options) => {
-    const txt = text(el, options);
+  const textAsNumber: BrowserDOMLib<T>['textAsNumber'] = (options) => {
+    const txt = text(options);
     return strAsNumber(txt, options);
   };
 
-  const prop: BrowserDOMLib<T>['prop'] = (el, propName, { allowEmpty } = {}) => {
-    let propVal = (el as any)?.[propName] ?? null;
+  const prop: BrowserDOMLib<T>['prop'] = (propName, { allowEmpty } = {}) => {
+    let propVal = node[propName] ?? null;
     propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
     return strOrNull(propVal, allowEmpty);
   };
 
-  const href: BrowserDOMLib<T>['href'] = (el, { allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = prop(el, 'href', { allowEmpty });
+  const attr: BrowserDOMLib<T>['attr'] = (propName, { allowEmpty } = {}) => {
+    let attrVal = node.getAttribute(propName) ?? null;
+    attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
+    return strOrNull(attrVal, allowEmpty);
+  };
+
+  const href: BrowserDOMLib<T>['href'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+    const val = prop('href', { allowEmpty });
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const src: BrowserDOMLib<T>['src'] = (el, { allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = prop(el, 'src', { allowEmpty });
+  const src: BrowserDOMLib<T>['src'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+    const val = prop('src', { allowEmpty });
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const nodeName: BrowserDOMLib<T>['nodeName'] = (el) => {
+  const nodeName: BrowserDOMLib<T>['nodeName'] = () => {
     // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
-    const val = prop(el, 'nodeName');
+    const val = prop('nodeName');
     return typeof val === 'string' ? val.toLocaleUpperCase() : val;
   };
 
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const findOne: BrowserDOMLib<T>['findOne'] = (el, selector, mapFn) => {
-    if (!el) return null;
-    if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return null;
-    // prettier-ignore
-    const resultEl = ((el as any as Element | Document).querySelector(selector) ?? null) as T | null;
-    return mapFn ? mapFn(resultEl) : resultEl;
-  };
-
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const findMany: BrowserDOMLib<T>['findMany'] = (el, selector, mapFn) => {
-    if (!el) return [];
-    if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return [];
-    const resultEls = [...(el as any as Element | Document)?.querySelectorAll(selector)] as any as T[]; // prettier-ignore
-    return mapFn ? resultEls.map(mapFn) : resultEls;
-  };
-
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const parent: BrowserDOMLib<T>['parent'] = (el, mapFn) => {
-    const parentEl = el?.parentNode || null;
-    return mapFn ? mapFn(parentEl as any) : parentEl;
-  };
-
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const children: BrowserDOMLib<T>['children'] = (el, mapFn) => {
-    if (!el) return [];
-    const childEls = [...el?.childNodes] as any as T[];
-    return mapFn ? childEls.map(mapFn) : childEls;
-  };
-
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const root: BrowserDOMLib<T>['root'] = (mapFn) => {
-    const rootEl = doc.documentElement || null;
-    return mapFn ? mapFn(rootEl as any) : rootEl;
-  };
-
-  const remove: BrowserDOMLib<T>['remove'] = (el) => {
-    if (!el) return;
-    const parentEl = parent(el);
-    parentEl?.removeChild(el);
-  };
-
   const url: BrowserDOMLib<T>['url'] = () => {
-    const urlVal = globalThis?.location?.href || null;
+    const doc = node.ownerDocument;
+    // See https://stackoverflow.com/a/16010322/9788634
+    const urlVal = doc.defaultView?.location?.href || null;
     return urlVal;
   };
 
+  const map: BrowserDOMLib<T>['map'] = <TVal>(mapFn: (node: T) => TVal) => {
+    return mapFn(node);
+  };
+
+  ///////////////////////
+  // NODE OPERATIONS
+  ///////////////////////
+
+  const findOne: BrowserDOMLib<T>['findOne'] = <TNewEl extends Element = T>(selector) => {
+    if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(node.nodeType as any)) return null;
+    const resultEl = (node.querySelector(selector) ?? null) as TNewEl | null;
+    return resultEl ? browserDOMLib(resultEl) : null;
+  };
+
+  const findMany: BrowserDOMLib<T>['findMany'] = <TNewEl extends Element = T>(selector) => {
+    if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(node.nodeType as any)) return [];
+    const resultEls = [...node.querySelectorAll(selector)] as TNewEl[]; // prettier-ignore
+    return resultEls.map((el) => browserDOMLib(el));
+  };
+
+  const parent: BrowserDOMLib<T>['parent'] = <TNewEl extends Element = T>() => {
+    const parentEl = (node.parentNode || null) as TNewEl | null;
+    return parentEl ? browserDOMLib(parentEl) : null;
+  };
+
+  const children: BrowserDOMLib<T>['children'] = <TNewEl extends Element = T>() => {
+    const childEls = [...node.childNodes] as TNewEl[];
+    return childEls.map((el) => browserDOMLib(el));
+  };
+
+  const root: BrowserDOMLib<T>['root'] = <TNewEl extends Element = T>() => {
+    const rootEl = ((node.ownerDocument?.documentElement as any) || null) as TNewEl | null;
+    return rootEl ? browserDOMLib(rootEl) : null;
+  };
+
+  const remove: BrowserDOMLib<T>['remove'] = () => {
+    const parentEl = parent();
+    parentEl?.node?.removeChild(node);
+  };
+
   return {
+    node,
+
     text,
     textAsLower,
     textAsUpper,
     textAsNumber,
+    attr,
     prop,
     href,
     src,
     nodeName,
+    url,
+    map,
+
     findOne,
     findMany,
     parent,
     children,
     root,
     remove,
-    url,
-  };
+  } satisfies DOMLib<T, Element>;
 };
 
-export type CheerioDOMLib<T extends AnyNode = AnyNode> = DOMLib<Cheerio<T>>;
+export type CheerioDOMLib<T extends Cheerio<AnyNode> = Cheerio<AnyNode>> = DOMLib<
+  T,
+  Cheerio<AnyNode>
+>;
+
+/**
+ * Given a Cheerio selection, split it into an array of Cheerio selections,
+ * where each has only one element.
+ *
+ * From `Cheerio[el, el, el, el]`
+ *
+ * To `[Cheerio[el], Cheerio[el], Cheerio[el], Cheerio[el]]`
+ */
+const splitCheerioSelection = (cheerioSel: Cheerio<AnyNode>) => {
+  return cheerioSel.toArray().map((el) => {
+    const cheerioInst = loadCheerio(el);
+    return cheerioInst(el);
+  });
+};
 
 /** Implementation of DOMLib in Cheerio */
-export const cheerioDOMLib = <T extends AnyNode>(
-  cheerioDom: CheerioAPI,
+export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
+  cheerioNode: T,
   srcUrl: string | null
 ): CheerioDOMLib<T> => {
-  const text: CheerioDOMLib<T>['text'] = (el, { allowEmpty } = {}) => {
-    const txt = el ? cheerioDom(el).text()?.trim() ?? null : null;
+  ///////////////////////
+  // SCALAR OPERATIONS
+  ///////////////////////
+
+  const text: CheerioDOMLib<T>['text'] = ({ allowEmpty } = {}) => {
+    const txt = cheerioNode.text()?.trim() ?? null;
     return strOrNull(txt, allowEmpty);
   };
 
-  const textAsUpper: CheerioDOMLib<T>['textAsUpper'] = (el, options) => {
-    const txt = text(el, options);
+  const textAsUpper: CheerioDOMLib<T>['textAsUpper'] = (options) => {
+    const txt = text(options);
     return txt ? txt.toLocaleUpperCase() : txt;
   };
 
-  const textAsLower: CheerioDOMLib<T>['textAsLower'] = (el, options) => {
-    const txt = text(el, options);
+  const textAsLower: CheerioDOMLib<T>['textAsLower'] = (options) => {
+    const txt = text(options);
     return txt ? txt.toLocaleLowerCase() : txt;
   };
 
-  const textAsNumber: CheerioDOMLib<T>['textAsNumber'] = (el, options) => {
-    const txt = text(el, options);
+  const textAsNumber: CheerioDOMLib<T>['textAsNumber'] = (options) => {
+    const txt = text(options);
     return strAsNumber(txt, options);
   };
 
-  const prop: CheerioDOMLib<T>['prop'] = (el, propName, { allowEmpty } = {}) => {
-    let propVal = el ? cheerioDom(el).prop(propName) ?? null : null;
+  const attr: CheerioDOMLib<T>['attr'] = (attrName, { allowEmpty } = {}) => {
+    let attrVal = cheerioNode.attr(attrName) ?? null;
+    attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
+    return strOrNull(attrVal, allowEmpty);
+  };
+
+  const prop: CheerioDOMLib<T>['prop'] = (propName, { allowEmpty } = {}) => {
+    let propVal = cheerioNode.prop(propName) ?? null;
     propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
     return strOrNull(propVal, allowEmpty);
   };
 
-  const href: CheerioDOMLib<T>['href'] = (el, { allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = prop(el, 'href', { allowEmpty });
+  const href: CheerioDOMLib<T>['href'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+    const val = prop('href', { allowEmpty });
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const src: CheerioDOMLib<T>['src'] = (el, { allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = prop(el, 'src', { allowEmpty });
+  const src: CheerioDOMLib<T>['src'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+    const val = prop('src', { allowEmpty });
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const nodeName: CheerioDOMLib<T>['nodeName'] = (el) => {
+  const nodeName: CheerioDOMLib<T>['nodeName'] = () => {
     // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
-    const val = prop(el, 'nodeName');
+    const val = prop('nodeName');
     return typeof val === 'string' ? val.toLocaleUpperCase() : val;
-  };
-
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const findOne: CheerioDOMLib<T>['findOne'] = (el, selector, mapFn) => {
-    const resultEl = el ? cheerioDom(el).find(selector).get(0) ?? null : null;
-    const normResultEl = resultEl ? cheerioDom(resultEl) : null;
-    return mapFn ? mapFn(normResultEl as any) : normResultEl;
-  };
-
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const findMany: CheerioDOMLib<T>['findMany'] = (el, selector, mapFn) => {
-    if (!el) return [];
-    const resultEls = cheerioDom(el).find(selector).toArray().map((resEl) => cheerioDom(resEl) as Cheerio<T>); // prettier-ignore
-    return mapFn ? resultEls.map(mapFn) : resultEls;
-  };
-
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const parent: CheerioDOMLib<T>['parent'] = (el, mapFn) => {
-    const parentEl = el ? cheerioDom(el).parent() : null;
-    const normParentEl = parentEl?.length ? parentEl : null;
-    return mapFn ? mapFn(normParentEl as any) : normParentEl;
-  };
-
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const children: CheerioDOMLib<T>['children'] = (el, mapFn) => {
-    if (!el) return [];
-    const childEls = el?.children().toArray().map((resEl) => cheerioDom(resEl)) as any as Cheerio<T>[]; // prettier-ignore
-    return mapFn ? childEls.map(mapFn) : childEls;
-  };
-
-  // @ts-expect-error Ignore - interface type is the source of truth
-  const root: CheerioDOMLib<T>['root'] = (mapFn) => {
-    const rootEl = cheerioDom.root() ?? null;
-    return mapFn ? mapFn(rootEl as any) : rootEl;
-  };
-
-  const remove: CheerioDOMLib<T>['remove'] = (el) => {
-    el ? cheerioDom(el).remove() : null;
   };
 
   const url: CheerioDOMLib<T>['url'] = () => {
     return srcUrl ?? null;
   };
 
+  const map: CheerioDOMLib<T>['map'] = <TVal>(mapFn: (node: T) => TVal) => {
+    return mapFn(cheerioNode);
+  };
+
+  ///////////////////////
+  // NODE OPERATIONS
+  ///////////////////////
+
+  const findOne: CheerioDOMLib<T>['findOne'] = <TNewEl extends Cheerio<AnyNode> = T>(selector) => {
+    const resultEl = cheerioNode.find(selector).first() as TNewEl;
+    if (!resultEl.get(0)) return null;
+    return cheerioDOMLib(resultEl, srcUrl);
+  };
+
+  const findMany: CheerioDOMLib<T>['findMany'] = <TNewEl extends Cheerio<AnyNode> = T>(
+    selector
+  ) => {
+    const resultEls = splitCheerioSelection(cheerioNode.find(selector)) as TNewEl[];
+    return resultEls.map((ch) => cheerioDOMLib(ch, srcUrl));
+  };
+
+  const parent: CheerioDOMLib<T>['parent'] = <TNewEl extends Cheerio<AnyNode> = T>() => {
+    const parentEl = cheerioNode.parent().first() as TNewEl;
+    if (!parentEl.get(0)) return null;
+    return cheerioDOMLib(parentEl, srcUrl);
+  };
+
+  const children: CheerioDOMLib<T>['children'] = <TNewEl extends Cheerio<AnyNode> = T>() => {
+    const childEls = splitCheerioSelection(cheerioNode.children()) as TNewEl[];
+    return childEls.map((ch) => cheerioDOMLib(ch, srcUrl));
+  };
+
+  const root: CheerioDOMLib<T>['root'] = <TNewEl extends Cheerio<AnyNode> = T>() => {
+    const rootEl = cheerioNode._root?.first() as TNewEl | null;
+    if (!rootEl?.get(0)) return null;
+    return cheerioDOMLib(rootEl, srcUrl);
+  };
+
+  const remove: CheerioDOMLib<T>['remove'] = () => {
+    cheerioNode.remove();
+  };
+
   return {
+    node: cheerioNode,
+
     text,
     textAsLower,
     textAsUpper,
     textAsNumber,
+    attr,
     prop,
     href,
     src,
     nodeName,
+    url,
+    map,
+
     findOne,
     findMany,
     parent,
     children,
     root,
     remove,
-    url,
-  };
+  } satisfies CheerioDOMLib<T>;
 };
