@@ -200,7 +200,7 @@ export type CheerioDOMLib<T extends Cheerio<AnyNode> = Cheerio<AnyNode>> = DOMLi
  *
  * To `[Cheerio[el], Cheerio[el], Cheerio[el], Cheerio[el]]`
  */
-const splitCheerioSelection = (cheerioSel: Cheerio<AnyNode>) => {
+export const splitCheerioSelection = (cheerioSel: Cheerio<AnyNode>) => {
   return cheerioSel.toArray().map((el) => {
     const cheerioInst = loadCheerio(el);
     return cheerioInst(el);
