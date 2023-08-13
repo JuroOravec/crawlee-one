@@ -1,7 +1,7 @@
 import { load as loadCheerio, AnyNode, Cheerio } from 'cheerio';
 
-import { StrAsNumOptions, strAsNumber, strOrNull } from '../utils/format';
-import { FormatUrlOptions, formatUrl } from '../utils/url';
+import { StrAsNumOptions, strAsNumber, strOrNull } from '../../utils/format';
+import { FormatUrlOptions, formatUrl } from '../../utils/url';
 
 /**
  * Common interface for work working with DOM despite different environments.
