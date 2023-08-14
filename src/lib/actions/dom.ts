@@ -53,6 +53,8 @@ export interface DOMLib<El extends BaseEl, BaseEl> {
   findOne: <TNewEl extends BaseEl = El>(selector: string) => MaybePromise<DOMLib<TNewEl, BaseEl> | null>; // prettier-ignore
   /** Get all descendants matching the selector */
   findMany: <TNewEl extends BaseEl = El>(selector: string) => MaybePromise<DOMLib<TNewEl, BaseEl>[]>; // prettier-ignore
+  /** Get a single ancestor (or itself) matching the selector */
+  closest: <TNewEl extends BaseEl = El>(selector: string) => MaybePromise<DOMLib<TNewEl, BaseEl> | null>; // prettier-ignore
   /** Get element's parent */
   parent: <TNewEl extends BaseEl = El>() => MaybePromise<DOMLib<TNewEl, BaseEl> | null>;
   /** Get element's children */
@@ -162,6 +164,12 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     return resultEls.map((el) => browserDOMLib(el));
   };
 
+  const closest: BrowserDOMLib<T>['closest'] = <TNewEl extends Element = T>(selector) => {
+    if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(node.nodeType as any)) return null;
+    const resultEl = (node.closest(selector) ?? null) as TNewEl | null;
+    return resultEl ? browserDOMLib(resultEl) : null;
+  };
+
   const parent: BrowserDOMLib<T>['parent'] = <TNewEl extends Element = T>() => {
     const parentEl = (node.parentNode || null) as TNewEl | null;
     return parentEl ? browserDOMLib(parentEl) : null;
@@ -245,6 +253,7 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
 
     findOne,
     findMany,
+    closest,
     parent,
     children,
     root,
@@ -341,6 +350,12 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     return resultEls.map((ch) => cheerioDOMLib(ch, srcUrl));
   };
 
+  const closest: CheerioDOMLib<T>['closest'] = <TNewEl extends Cheerio<AnyNode> = T>(selector) => {
+    const resultEl = cheerioNode.closest(selector).first() as TNewEl;
+    if (!resultEl.get(0)) return null;
+    return cheerioDOMLib(resultEl, srcUrl);
+  };
+
   const parent: CheerioDOMLib<T>['parent'] = <TNewEl extends Cheerio<AnyNode> = T>() => {
     const parentEl = cheerioNode.parent().first() as TNewEl;
     if (!parentEl.get(0)) return null;
@@ -422,6 +437,7 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
 
     findOne,
     findMany,
+    closest,
     parent,
     children,
     root,
@@ -529,6 +545,19 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     }, selector);
     const resultEls = await splitPlaywrightSelection<any>(elsHandle);
     return resultEls.map((el) => playwrightDOMLib(el as TNewEl, page));
+  };
+
+  const closest: PlaywrightDOMLib<T>['closest'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = T
+  >(
+    selector
+  ) => {
+    const resultEl = await node.evaluateHandle((el, s) => {
+      if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return null;
+      return (el as Element).closest(s) || null;
+    }, selector);
+    const hasResult = await resultEl.evaluate((el) => !!el);
+    return hasResult ? playwrightDOMLib(resultEl as TNewEl, page) : null;
   };
 
   const parent: PlaywrightDOMLib<T>['parent'] = async <
@@ -649,6 +678,7 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
 
     findOne,
     findMany,
+    closest,
     parent,
     children,
     root,
