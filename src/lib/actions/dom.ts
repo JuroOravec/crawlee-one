@@ -66,13 +66,17 @@ export interface DOMLib<El extends BaseEl, BaseEl> {
    * Given two elements, return closest ancestor element that encompases them both,
    * or `null` if none such found.
    */
-  getCommonAncestor: (otherEl: El) => MaybePromise<El | null>;
+  getCommonAncestor: <TNewEl extends BaseEl = El>(
+    otherEl: El
+  ) => MaybePromise<DOMLib<TNewEl, BaseEl> | null>;
   /**
    * Given a selector, find all DOM elements that match the selector,
    * and return closest ancestor element that encompases them all,
    * or `null` if none such found.
    */
-  getCommonAncestorFromSelector: (selector: string) => MaybePromise<El | null>;
+  getCommonAncestorFromSelector: <TNewEl extends BaseEl = El>(
+    selector: string
+  ) => MaybePromise<DOMLib<TNewEl, BaseEl> | null>;
 }
 
 export type BrowserDOMLib<T extends Element = Element> = DOMLib<T, Element>;
@@ -199,11 +203,14 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     return containerEl as T | null;
   };
 
-  const getCommonAncestor: BrowserDOMLib<T>['getCommonAncestor'] = (otherEl) => {
-    return _getCommonAncestor(node, otherEl) as T | null;
+  const getCommonAncestor: BrowserDOMLib<T>['getCommonAncestor'] = <TNewEl extends Element = T>(
+    otherEl
+  ) => {
+    const ancestor = _getCommonAncestor(node, otherEl);
+    return ancestor ? browserDOMLib<TNewEl>(ancestor) : null;
   };
 
-  const getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
+  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
     querySelectorAll: (selector) => node.querySelectorAll(selector) as Iterable<T>,
     getParent: (el) => el.parentElement as T | null,
     isAncestor: (el1, el2) => {
@@ -211,6 +218,15 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     },
     getCommonAncestor: (el1, el2) => _getCommonAncestor(el1, el2),
   });
+
+  const getCommonAncestorFromSelector: BrowserDOMLib<T>['getCommonAncestorFromSelector'] = async <
+    TNewEl extends Element = T
+  >(
+    selector
+  ) => {
+    const ancestor = (await _getCommonAncestorFromSelector(selector)) as TNewEl | null;
+    return ancestor ? browserDOMLib(ancestor) : null;
+  };
 
   return {
     node,
@@ -362,16 +378,32 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     return commonAncestor;
   };
 
-  const getCommonAncestor: CheerioDOMLib<T>['getCommonAncestor'] = (otherEl) => {
-    return _getCommonAncestor(cheerioNode, otherEl);
+  const getCommonAncestor: CheerioDOMLib<T>['getCommonAncestor'] = async <
+    TNewEl extends Cheerio<AnyNode> = T
+  >(
+    otherEl
+  ) => {
+    const ancestor = (await _getCommonAncestor(cheerioNode, otherEl)) as TNewEl | null;
+    if (!ancestor?.get(0)) return null;
+    return cheerioDOMLib<TNewEl>(ancestor, srcUrl);
   };
 
-  const getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
+  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
     querySelectorAll: (selector) => splitCheerioSelection(cheerioNode.find(selector)) as T[],
     getParent: (el) => el.parent() as T | null,
     isAncestor: (el1, el2) => el1.is(el2.parents()),
     getCommonAncestor: (el1, el2) => _getCommonAncestor(el1, el2),
   });
+
+  const getCommonAncestorFromSelector: CheerioDOMLib<T>['getCommonAncestorFromSelector'] = async <
+    TNewEl extends Cheerio<AnyNode> = T
+  >(
+    selector
+  ) => {
+    const ancestor = (await _getCommonAncestorFromSelector(selector)) as TNewEl | null;
+    if (!ancestor?.get(0)) return null;
+    return cheerioDOMLib<TNewEl>(ancestor, srcUrl);
+  };
 
   return {
     node: cheerioNode,
@@ -558,11 +590,17 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     return hasResult ? (ancestor as T) : null;
   };
 
-  const getCommonAncestor: PlaywrightDOMLib<T>['getCommonAncestor'] = async (otherEl) => {
-    return _getCommonAncestor(node, otherEl);
+  const getCommonAncestor: PlaywrightDOMLib<T>['getCommonAncestor'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = T
+  >(
+    otherEl
+  ) => {
+    const ancestor = (await _getCommonAncestor(node, otherEl)) as TNewEl | null;
+    const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el);
+    return ancestor && hasResult ? playwrightDOMLib(ancestor, page) : null;
   };
 
-  const getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
+  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
     querySelectorAll: async (selector) => {
       const elsHandle = await (node as Locator).evaluateHandle(
         (el, s) => [...el.querySelectorAll(s)],
@@ -586,6 +624,13 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     },
     getCommonAncestor: _getCommonAncestor,
   });
+
+  const getCommonAncestorFromSelector: PlaywrightDOMLib<T>['getCommonAncestorFromSelector'] =
+    async <TNewEl extends Locator | ElementHandle<Node> = T>(selector) => {
+      const ancestor = (await _getCommonAncestorFromSelector(selector)) as TNewEl | null;
+      const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el);
+      return ancestor && hasResult ? playwrightDOMLib(ancestor, page) : null;
+    };
 
   return {
     node,
