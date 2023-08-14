@@ -1,9 +1,10 @@
 import { AnyNode, Cheerio } from 'cheerio';
 import type { ElementHandle, JSHandle, Locator, Page } from 'playwright';
+import get from 'lodash/get';
 
 import { StrAsNumOptions, strAsNumber, strOrNull } from '../../utils/format';
 import { FormatUrlOptions, formatUrl } from '../../utils/url';
-import type { MaybePromise } from '../../utils/types';
+import type { MaybeArray, MaybePromise } from '../../utils/types';
 import { mergeHandles, splitCheerioSelection, splitPlaywrightSelection } from './domUtils';
 
 /**
@@ -38,10 +39,15 @@ export interface DOMLib<El extends BaseEl, BaseEl> {
     options?: { allowEmpty?: boolean }
   ) => MaybePromise<Record<T, string | null>>;
   /** Get element's property */
-  prop: <R = unknown>(propName: string, options?: { allowEmpty?: boolean }) => MaybePromise<R>;
+  prop: <R = unknown>(
+    /** Single or nested prop path */
+    propName: MaybeArray<string>,
+    options?: { allowEmpty?: boolean }
+  ) => MaybePromise<R>;
   /** Get element's properties */
-  props: <T extends string, R extends Record<T, any> = Record<T, unknown>>(
-    propName: T[],
+  props: <R extends any[]>(
+    /** List of single or nested prop paths */
+    propName: MaybeArray<string>[],
     options?: { allowEmpty?: boolean }
   ) => MaybePromise<R>;
   /** Get element's href */
@@ -94,58 +100,57 @@ export interface DOMLib<El extends BaseEl, BaseEl> {
 export type BrowserDOMLib<T extends Element = Element> = DOMLib<T, Element>;
 
 /** Implementation of DOMLib in browser (using Browser API) */
-export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
+export const browserDOMLib = <El extends Element>(node: El): BrowserDOMLib<El> => {
   ///////////////////////
   // SCALAR OPERATIONS
   ///////////////////////
 
-  const text: BrowserDOMLib<T>['text'] = ({ allowEmpty } = {}) => {
+  const text: BrowserDOMLib<El>['text'] = ({ allowEmpty } = {}) => {
     const txt = node.textContent?.trim() ?? null;
     return strOrNull(txt, allowEmpty);
   };
 
-  const textAsUpper: BrowserDOMLib<T>['textAsUpper'] = (options) => {
+  const textAsUpper: BrowserDOMLib<El>['textAsUpper'] = (options) => {
     const txt = text(options);
     return txt ? (txt as string).toLocaleUpperCase() : txt;
   };
 
-  const textAsLower: BrowserDOMLib<T>['textAsLower'] = (options) => {
+  const textAsLower: BrowserDOMLib<El>['textAsLower'] = (options) => {
     const txt = text(options);
     return txt ? (txt as string).toLocaleLowerCase() : txt;
   };
 
-  const textAsNumber: BrowserDOMLib<T>['textAsNumber'] = (options) => {
+  const textAsNumber: BrowserDOMLib<El>['textAsNumber'] = (options) => {
     const txt = text(options);
     return strAsNumber(txt as string, options);
   };
 
-  const prop: BrowserDOMLib<T>['prop'] = <R = unknown>(propName, { allowEmpty = false } = {}) => {
-    let propVal = node[propName] ?? null;
+  const prop: BrowserDOMLib<El>['prop'] = <R = unknown>(
+    propOrPath: MaybeArray<string>,
+    { allowEmpty = false } = {}
+  ) => {
+    const propPath = Array.isArray(propOrPath) ? propOrPath : [propOrPath];
+    let propVal = get(node, propPath) ?? null;
     propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
     return strOrNull(propVal, allowEmpty) as R;
   };
 
-  const props: BrowserDOMLib<T>['props'] = <
-    T extends string,
-    R extends Record<T, any> = Record<T, unknown>
-  >(
-    propNames: T[],
+  const props: BrowserDOMLib<El>['props'] = <R extends any[]>(
+    propsOrPaths: MaybeArray<string>[],
     options = {}
   ) => {
-    const propData = propNames.reduce<R>((agg, name) => {
-      agg[name] = prop(name, options) as any;
-      return agg;
-    }, {} as any);
+    const propPaths = propsOrPaths.map((p) => (Array.isArray(p) ? p : [p]));
+    const propData = propPaths.map((path) => prop(path, options));
     return propData as MaybePromise<R>;
   };
 
-  const attr: BrowserDOMLib<T>['attr'] = (propName, { allowEmpty } = {}) => {
+  const attr: BrowserDOMLib<El>['attr'] = (propName, { allowEmpty } = {}) => {
     let attrVal = node.getAttribute(propName) ?? null;
     attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
     return strOrNull(attrVal, allowEmpty);
   };
 
-  const attrs: BrowserDOMLib<T>['attrs'] = <T extends string>(attrNames: T[], options = {}) => {
+  const attrs: BrowserDOMLib<El>['attrs'] = <T extends string>(attrNames: T[], options = {}) => {
     const attrData = attrNames.reduce<Record<T, string | null>>((agg, name) => {
       agg[name] = attr(name, options) as string | null;
       return agg;
@@ -153,30 +158,30 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     return attrData;
   };
 
-  const href: BrowserDOMLib<T>['href'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+  const href: BrowserDOMLib<El>['href'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
     const val = prop('href', { allowEmpty }) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const src: BrowserDOMLib<T>['src'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+  const src: BrowserDOMLib<El>['src'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
     const val = prop('src', { allowEmpty }) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const nodeName: BrowserDOMLib<T>['nodeName'] = () => {
+  const nodeName: BrowserDOMLib<El>['nodeName'] = () => {
     // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
     const val = prop('nodeName') as string | null;
     return typeof val === 'string' ? val.toLocaleUpperCase() : val;
   };
 
-  const url: BrowserDOMLib<T>['url'] = () => {
+  const url: BrowserDOMLib<El>['url'] = () => {
     const doc = node.ownerDocument;
     // See https://stackoverflow.com/a/16010322/9788634
     const urlVal = doc.defaultView?.location?.href || null;
     return urlVal;
   };
 
-  const map: BrowserDOMLib<T>['map'] = <TVal>(mapFn: (node: T) => TVal) => {
+  const map: BrowserDOMLib<El>['map'] = <TVal>(mapFn: (node: El) => TVal) => {
     return mapFn(node);
   };
 
@@ -184,47 +189,47 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
   // NODE OPERATIONS
   ///////////////////////
 
-  const findOne: BrowserDOMLib<T>['findOne'] = <TNewEl extends Element = T>(selector) => {
+  const findOne: BrowserDOMLib<El>['findOne'] = <TNewEl extends Element = El>(selector) => {
     if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(node.nodeType as any)) return null;
     const resultEl = (node.querySelector(selector) ?? null) as TNewEl | null;
     return resultEl ? browserDOMLib(resultEl) : null;
   };
 
-  const findMany: BrowserDOMLib<T>['findMany'] = <TNewEl extends Element = T>(selector) => {
+  const findMany: BrowserDOMLib<El>['findMany'] = <TNewEl extends Element = El>(selector) => {
     if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(node.nodeType as any)) return [];
     const resultEls = [...node.querySelectorAll(selector)] as TNewEl[]; // prettier-ignore
     return resultEls.map((el) => browserDOMLib(el));
   };
 
-  const closest: BrowserDOMLib<T>['closest'] = <TNewEl extends Element = T>(selector) => {
+  const closest: BrowserDOMLib<El>['closest'] = <TNewEl extends Element = El>(selector) => {
     if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(node.nodeType as any)) return null;
     const resultEl = (node.closest(selector) ?? null) as TNewEl | null;
     return resultEl ? browserDOMLib(resultEl) : null;
   };
 
-  const parent: BrowserDOMLib<T>['parent'] = <TNewEl extends Element = T>() => {
+  const parent: BrowserDOMLib<El>['parent'] = <TNewEl extends Element = El>() => {
     const parentEl = (node.parentNode || null) as TNewEl | null;
     return parentEl ? browserDOMLib(parentEl) : null;
   };
 
-  const children: BrowserDOMLib<T>['children'] = <TNewEl extends Element = T>() => {
+  const children: BrowserDOMLib<El>['children'] = <TNewEl extends Element = El>() => {
     const childEls = [...node.children] as TNewEl[];
     return childEls.map((el) => browserDOMLib(el));
   };
 
-  const root: BrowserDOMLib<T>['root'] = <TNewEl extends Element = T>() => {
+  const root: BrowserDOMLib<El>['root'] = <TNewEl extends Element = El>() => {
     const rootEl = ((node.ownerDocument?.documentElement as any) || null) as TNewEl | null;
     return rootEl ? browserDOMLib(rootEl) : null;
   };
 
-  const remove: BrowserDOMLib<T>['remove'] = () => {
+  const remove: BrowserDOMLib<El>['remove'] = () => {
     node.remove();
   };
 
-  const _getCommonAncestor = <T extends Node>(el1: T, el2: T) => {
+  const _getCommonAncestor = <El extends Node>(el1: El, el2: El) => {
     // https://stackoverflow.com/a/25154092
     // https://developer.mozilla.org/en-US/docs/Web/API/Range/commonAncestorContainer
-    const _getCommonAncestorFromRange = (el1: T, el2: T) => {
+    const _getCommonAncestorFromRange = (el1: El, el2: El) => {
       const range = new Range();
       range.setStartBefore(el1);
       range.setEndAfter(el2);
@@ -240,27 +245,27 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
       : { firstEl: el2, lastEl: el1 };
 
     const containerEl = _getCommonAncestorFromRange(firstEl, lastEl);
-    return containerEl as T | null;
+    return containerEl as El | null;
   };
 
-  const getCommonAncestor: BrowserDOMLib<T>['getCommonAncestor'] = <TNewEl extends Element = T>(
+  const getCommonAncestor: BrowserDOMLib<El>['getCommonAncestor'] = <TNewEl extends Element = El>(
     otherEl
   ) => {
     const ancestor = _getCommonAncestor(node, otherEl);
     return ancestor ? browserDOMLib<TNewEl>(ancestor) : null;
   };
 
-  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
-    querySelectorAll: (selector) => node.querySelectorAll(selector) as Iterable<T>,
-    getParent: (el) => el.parentElement as T | null,
+  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<El>({
+    querySelectorAll: (selector) => node.querySelectorAll(selector) as Iterable<El>,
+    getParent: (el) => el.parentElement as El | null,
     isAncestor: (el1, el2) => {
       return !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_CONTAINED_BY);
     },
     getCommonAncestor: (el1, el2) => _getCommonAncestor(el1, el2),
   });
 
-  const getCommonAncestorFromSelector: BrowserDOMLib<T>['getCommonAncestorFromSelector'] = async <
-    TNewEl extends Element = T
+  const getCommonAncestorFromSelector: BrowserDOMLib<El>['getCommonAncestorFromSelector'] = async <
+    TNewEl extends Element = El
   >(
     selector
   ) => {
@@ -294,50 +299,50 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     remove,
     getCommonAncestor,
     getCommonAncestorFromSelector,
-  } satisfies DOMLib<T, Element>;
+  } satisfies DOMLib<El, Element>;
 };
 
-export type CheerioDOMLib<T extends Cheerio<AnyNode> = Cheerio<AnyNode>> = DOMLib<
-  T,
+export type CheerioDOMLib<El extends Cheerio<AnyNode> = Cheerio<AnyNode>> = DOMLib<
+  El,
   Cheerio<AnyNode>
 >;
 
 /** Implementation of DOMLib in Cheerio */
-export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
-  cheerioNode: T,
+export const cheerioDOMLib = <El extends Cheerio<AnyNode>>(
+  cheerioNode: El,
   srcUrl: string | null
-): CheerioDOMLib<T> => {
+): CheerioDOMLib<El> => {
   ///////////////////////
   // SCALAR OPERATIONS
   ///////////////////////
 
-  const text: CheerioDOMLib<T>['text'] = ({ allowEmpty } = {}) => {
+  const text: CheerioDOMLib<El>['text'] = ({ allowEmpty } = {}) => {
     const txt = cheerioNode.text()?.trim() ?? null;
     return strOrNull(txt, allowEmpty);
   };
 
-  const textAsUpper: CheerioDOMLib<T>['textAsUpper'] = (options) => {
+  const textAsUpper: CheerioDOMLib<El>['textAsUpper'] = (options) => {
     const txt = text(options);
     return txt ? (txt as string).toLocaleUpperCase() : txt;
   };
 
-  const textAsLower: CheerioDOMLib<T>['textAsLower'] = (options) => {
+  const textAsLower: CheerioDOMLib<El>['textAsLower'] = (options) => {
     const txt = text(options);
     return txt ? (txt as string).toLocaleLowerCase() : txt;
   };
 
-  const textAsNumber: CheerioDOMLib<T>['textAsNumber'] = (options) => {
+  const textAsNumber: CheerioDOMLib<El>['textAsNumber'] = (options) => {
     const txt = text(options);
     return strAsNumber(txt as string, options);
   };
 
-  const attr: CheerioDOMLib<T>['attr'] = (attrName, { allowEmpty } = {}) => {
+  const attr: CheerioDOMLib<El>['attr'] = (attrName, { allowEmpty } = {}) => {
     let attrVal = cheerioNode.attr(attrName) ?? null;
     attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
     return strOrNull(attrVal, allowEmpty);
   };
 
-  const attrs: CheerioDOMLib<T>['attrs'] = <T extends string>(attrNames: T[], options = {}) => {
+  const attrs: CheerioDOMLib<El>['attrs'] = <T extends string>(attrNames: T[], options = {}) => {
     const attrData = attrNames.reduce<Record<T, string | null>>((agg, name) => {
       agg[name] = attr(name, options) as string | null;
       return agg;
@@ -345,47 +350,47 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     return attrData;
   };
 
-  const prop: CheerioDOMLib<T>['prop'] = <R = unknown>(propName, { allowEmpty = false } = {}) => {
-    let propVal = cheerioNode.prop(propName) ?? null;
+  const prop: CheerioDOMLib<El>['prop'] = <R = unknown>(
+    propOrPath: MaybeArray<string>,
+    { allowEmpty = false } = {}
+  ) => {
+    const propPath = Array.isArray(propOrPath) ? propOrPath : [propOrPath];
+    let propVal = cheerioNode.prop(propPath[0]) ?? null;
+    if (propPath.length > 1) propVal = get(propVal, propPath.slice(1));
     propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
     return strOrNull(propVal, allowEmpty) as R;
   };
 
-  const props: CheerioDOMLib<T>['props'] = <
-    T extends string,
-    R extends Record<T, any> = Record<T, unknown>
-  >(
-    propNames: T[],
+  const props: CheerioDOMLib<El>['props'] = <R extends any[]>(
+    propsOrPaths: MaybeArray<string>[],
     options = {}
   ) => {
-    const propData = propNames.reduce<R>((agg, name) => {
-      agg[name] = prop(name, options) as any;
-      return agg;
-    }, {} as any);
+    const propPaths = propsOrPaths.map((p) => (Array.isArray(p) ? p : [p]));
+    const propData = propPaths.map((path) => prop(path, options));
     return propData as MaybePromise<R>;
   };
 
-  const href: CheerioDOMLib<T>['href'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+  const href: CheerioDOMLib<El>['href'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
     const val = prop('href', { allowEmpty }) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const src: CheerioDOMLib<T>['src'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+  const src: CheerioDOMLib<El>['src'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
     const val = prop('src', { allowEmpty }) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const nodeName: CheerioDOMLib<T>['nodeName'] = () => {
+  const nodeName: CheerioDOMLib<El>['nodeName'] = () => {
     // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
     const val = prop('nodeName') as string | null;
     return typeof val === 'string' ? val.toLocaleUpperCase() : val;
   };
 
-  const url: CheerioDOMLib<T>['url'] = () => {
+  const url: CheerioDOMLib<El>['url'] = () => {
     return srcUrl ?? null;
   };
 
-  const map: CheerioDOMLib<T>['map'] = <TVal>(mapFn: (node: T) => TVal) => {
+  const map: CheerioDOMLib<El>['map'] = <TVal>(mapFn: (node: El) => TVal) => {
     return mapFn(cheerioNode);
   };
 
@@ -393,52 +398,56 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
   // NODE OPERATIONS
   ///////////////////////
 
-  const findOne: CheerioDOMLib<T>['findOne'] = <TNewEl extends Cheerio<AnyNode> = T>(selector) => {
+  const findOne: CheerioDOMLib<El>['findOne'] = <TNewEl extends Cheerio<AnyNode> = El>(
+    selector
+  ) => {
     const resultEl = cheerioNode.find(selector).first() as TNewEl;
     if (!resultEl.get(0)) return null;
     return cheerioDOMLib(resultEl, srcUrl);
   };
 
-  const findMany: CheerioDOMLib<T>['findMany'] = <TNewEl extends Cheerio<AnyNode> = T>(
+  const findMany: CheerioDOMLib<El>['findMany'] = <TNewEl extends Cheerio<AnyNode> = El>(
     selector
   ) => {
     const resultEls = splitCheerioSelection(cheerioNode.find(selector)) as TNewEl[];
     return resultEls.map((ch) => cheerioDOMLib(ch, srcUrl));
   };
 
-  const closest: CheerioDOMLib<T>['closest'] = <TNewEl extends Cheerio<AnyNode> = T>(selector) => {
+  const closest: CheerioDOMLib<El>['closest'] = <TNewEl extends Cheerio<AnyNode> = El>(
+    selector
+  ) => {
     const resultEl = cheerioNode.closest(selector).first() as TNewEl;
     if (!resultEl.get(0)) return null;
     return cheerioDOMLib(resultEl, srcUrl);
   };
 
-  const parent: CheerioDOMLib<T>['parent'] = <TNewEl extends Cheerio<AnyNode> = T>() => {
+  const parent: CheerioDOMLib<El>['parent'] = <TNewEl extends Cheerio<AnyNode> = El>() => {
     const parentEl = cheerioNode.parent().first() as TNewEl;
     if (!parentEl.get(0)) return null;
     return cheerioDOMLib(parentEl, srcUrl);
   };
 
-  const children: CheerioDOMLib<T>['children'] = <TNewEl extends Cheerio<AnyNode> = T>() => {
+  const children: CheerioDOMLib<El>['children'] = <TNewEl extends Cheerio<AnyNode> = El>() => {
     const childEls = splitCheerioSelection(cheerioNode.children()) as TNewEl[];
     return childEls.map((ch) => cheerioDOMLib(ch, srcUrl));
   };
 
-  const root: CheerioDOMLib<T>['root'] = <TNewEl extends Cheerio<AnyNode> = T>() => {
+  const root: CheerioDOMLib<El>['root'] = <TNewEl extends Cheerio<AnyNode> = El>() => {
     const rootEl = cheerioNode._root?.first() as TNewEl | null;
     if (!rootEl?.get(0)) return null;
     return cheerioDOMLib(rootEl, srcUrl);
   };
 
-  const remove: CheerioDOMLib<T>['remove'] = () => {
+  const remove: CheerioDOMLib<El>['remove'] = () => {
     cheerioNode.remove();
   };
 
   /** Function that finds the closest common ancestor for `el1` and `el2`. */
-  const _getCommonAncestor = async (el1: T, el2: T) => {
-    const ch1Parents = splitCheerioSelection(el1.parents()) as T[];
-    const ch2Parents = splitCheerioSelection(el2.parents()) as T[];
+  const _getCommonAncestor = async (el1: El, el2: El) => {
+    const ch1Parents = splitCheerioSelection(el1.parents()) as El[];
+    const ch2Parents = splitCheerioSelection(el2.parents()) as El[];
 
-    let commonAncestor: T | null = null;
+    let commonAncestor: El | null = null;
     for (const comparerParent of ch1Parents) {
       for (const compareeParent of ch2Parents) {
         if (!comparerParent.is(compareeParent)) continue;
@@ -449,8 +458,8 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     return commonAncestor;
   };
 
-  const getCommonAncestor: CheerioDOMLib<T>['getCommonAncestor'] = async <
-    TNewEl extends Cheerio<AnyNode> = T
+  const getCommonAncestor: CheerioDOMLib<El>['getCommonAncestor'] = async <
+    TNewEl extends Cheerio<AnyNode> = El
   >(
     otherEl
   ) => {
@@ -459,15 +468,15 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     return cheerioDOMLib<TNewEl>(ancestor, srcUrl);
   };
 
-  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
-    querySelectorAll: (selector) => splitCheerioSelection(cheerioNode.find(selector)) as T[],
-    getParent: (el) => el.parent() as T | null,
+  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<El>({
+    querySelectorAll: (selector) => splitCheerioSelection(cheerioNode.find(selector)) as El[],
+    getParent: (el) => el.parent() as El | null,
     isAncestor: (el1, el2) => el1.is(el2.parents()),
     getCommonAncestor: (el1, el2) => _getCommonAncestor(el1, el2),
   });
 
-  const getCommonAncestorFromSelector: CheerioDOMLib<T>['getCommonAncestorFromSelector'] = async <
-    TNewEl extends Cheerio<AnyNode> = T
+  const getCommonAncestorFromSelector: CheerioDOMLib<El>['getCommonAncestorFromSelector'] = async <
+    TNewEl extends Cheerio<AnyNode> = El
   >(
     selector
   ) => {
@@ -502,87 +511,85 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     remove,
     getCommonAncestor,
     getCommonAncestorFromSelector,
-  } satisfies CheerioDOMLib<T>;
+  } satisfies CheerioDOMLib<El>;
 };
 
 export type PlaywrightDOMLib<
-  T extends Locator | ElementHandle<Node> = Locator | ElementHandle<Node>
-> = DOMLib<T, Locator | ElementHandle<Node>>;
+  El extends Locator | ElementHandle<Node> = Locator | ElementHandle<Node>
+> = DOMLib<El, Locator | ElementHandle<Node>>;
 
 /** Implementation of DOMLib in Playwright */
-export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
-  node: T,
+export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
+  node: El,
   page: Page
-): PlaywrightDOMLib<T> => {
+): PlaywrightDOMLib<El> => {
   ///////////////////////
   // SCALAR OPERATIONS
   ///////////////////////
 
-  const text: PlaywrightDOMLib<T>['text'] = async ({ allowEmpty } = {}) => {
+  const text: PlaywrightDOMLib<El>['text'] = async ({ allowEmpty } = {}) => {
     const txt = (await node.textContent())?.trim() ?? null;
     return strOrNull(txt, allowEmpty);
   };
 
-  const textAsUpper: PlaywrightDOMLib<T>['textAsUpper'] = async (options) => {
+  const textAsUpper: PlaywrightDOMLib<El>['textAsUpper'] = async (options) => {
     const txt = await text(options);
     return txt ? txt.toLocaleUpperCase() : txt;
   };
 
-  const textAsLower: PlaywrightDOMLib<T>['textAsLower'] = async (options) => {
+  const textAsLower: PlaywrightDOMLib<El>['textAsLower'] = async (options) => {
     const txt = await text(options);
     return txt ? txt.toLocaleLowerCase() : txt;
   };
 
-  const textAsNumber: PlaywrightDOMLib<T>['textAsNumber'] = async (options) => {
+  const textAsNumber: PlaywrightDOMLib<El>['textAsNumber'] = async (options) => {
     const txt = await text(options);
     return strAsNumber(txt, options);
   };
 
-  const prop: PlaywrightDOMLib<T>['prop'] = async <R = unknown>(
-    propName,
-    { allowEmpty = false } = {}
+  const prop: PlaywrightDOMLib<El>['prop'] = async <R = unknown>(
+    propOrPath: MaybeArray<string>,
+    options = {}
   ) => {
-    let propVal =
-      (await (node as Locator).evaluate((el, propName) => el[propName], propName)) ?? null;
-    propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
-    return strOrNull(propVal, allowEmpty) as R;
+    const [resProp] = await props([propOrPath], options);
+    return resProp;
   };
 
-  const props: PlaywrightDOMLib<T>['props'] = async <
-    T extends string,
-    R extends Record<T, any> = Record<T, unknown>
-  >(
-    propNames: T[],
+  const props: PlaywrightDOMLib<El>['props'] = async <R extends any[]>(
+    propsOrPaths: MaybeArray<string>[],
     { allowEmpty = false } = {}
   ) => {
+    const propPaths = propsOrPaths.map((p) => (Array.isArray(p) ? p : [p]));
     const data = await (node as Locator).evaluate(
-      (el, { propNames, allowEmpty }) => {
-        const propsData = (propNames as T[]).reduce<R>((agg, name) => {
-          let attrVal = el[name as any] ?? null;
-          attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
-          agg[name] = strOrNull(attrVal, allowEmpty) as any;
-          return agg;
-        }, {} as any);
-        return propsData;
+      (el, { propPaths, allowEmpty }) => {
+        return propPaths.map((propPath) => {
+          let val: any = el;
+          for (const prop of propPath) {
+            if (el == null) break;
+            val = val[prop];
+          }
+          val = typeof val === 'string' ? val.trim() : val;
+          return strOrNull(val, allowEmpty) as any;
+        });
       },
-      { propNames, allowEmpty }
+      { propPaths, allowEmpty }
     );
-    return data;
+    return data as R;
   };
 
-  const attr: PlaywrightDOMLib<T>['attr'] = async (attrName, { allowEmpty } = {}) => {
+  const attr: PlaywrightDOMLib<El>['attr'] = async (attrName, { allowEmpty } = {}) => {
     let attrVal = (await node.getAttribute(attrName)) ?? null;
     attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
     return strOrNull(attrVal, allowEmpty);
   };
 
-  const attrs: PlaywrightDOMLib<T>['attrs'] = <T extends string>(
-    attrNames: T[],
+  const attrs: PlaywrightDOMLib<El>['attrs'] = <El extends string>(
+    attrNames: El[],
     { allowEmpty = false } = {}
   ) => {
     const data = (node as Locator).evaluate(
       (el, { attrNames, allowEmpty }) => {
-        const attrData = (attrNames as T[]).reduce<Record<T, string | null>>((agg, name) => {
+        const attrData = (attrNames as El[]).reduce<Record<El, string | null>>((agg, name) => {
           let attrVal = el.getAttribute(name) ?? null;
           attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
           agg[name] = strOrNull(attrVal, allowEmpty);
@@ -595,27 +602,31 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     return data;
   };
 
-  const href: PlaywrightDOMLib<T>['href'] = async ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+  const href: PlaywrightDOMLib<El>['href'] = async ({
+    allowEmpty,
+    allowRelative,
+    baseUrl,
+  } = {}) => {
     const val = (await prop('href', { allowEmpty })) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const src: PlaywrightDOMLib<T>['src'] = async ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+  const src: PlaywrightDOMLib<El>['src'] = async ({ allowEmpty, allowRelative, baseUrl } = {}) => {
     const val = (await prop('src', { allowEmpty })) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const nodeName: PlaywrightDOMLib<T>['nodeName'] = async () => {
+  const nodeName: PlaywrightDOMLib<El>['nodeName'] = async () => {
     // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
     const val = (await prop('nodeName')) as string | null;
     return typeof val === 'string' ? val.toLocaleUpperCase() : val;
   };
 
-  const url: PlaywrightDOMLib<T>['url'] = async () => {
+  const url: PlaywrightDOMLib<El>['url'] = async () => {
     return page.url() || null;
   };
 
-  const map: PlaywrightDOMLib<T>['map'] = <TVal>(mapFn: (node: T) => TVal) => {
+  const map: PlaywrightDOMLib<El>['map'] = <TVal>(mapFn: (node: El) => TVal) => {
     return mapFn(node);
   };
 
@@ -623,8 +634,8 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
   // NODE OPERATIONS
   ///////////////////////
 
-  const findOne: PlaywrightDOMLib<T>['findOne'] = async <
-    TNewEl extends Locator | ElementHandle<Node> = T
+  const findOne: PlaywrightDOMLib<El>['findOne'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = El
   >(
     selector
   ) => {
@@ -636,8 +647,8 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     return hasResult ? playwrightDOMLib(resultEl as TNewEl, page) : null;
   };
 
-  const findMany: PlaywrightDOMLib<T>['findMany'] = async <
-    TNewEl extends Locator | ElementHandle<Node> = T
+  const findMany: PlaywrightDOMLib<El>['findMany'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = El
   >(
     selector
   ) => {
@@ -649,8 +660,8 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     return resultEls.map((el) => playwrightDOMLib(el as TNewEl, page));
   };
 
-  const closest: PlaywrightDOMLib<T>['closest'] = async <
-    TNewEl extends Locator | ElementHandle<Node> = T
+  const closest: PlaywrightDOMLib<El>['closest'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = El
   >(
     selector
   ) => {
@@ -662,35 +673,35 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     return hasResult ? playwrightDOMLib(resultEl as TNewEl, page) : null;
   };
 
-  const parent: PlaywrightDOMLib<T>['parent'] = async <
-    TNewEl extends Locator | ElementHandle<Node> = T
+  const parent: PlaywrightDOMLib<El>['parent'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = El
   >() => {
     const parentEl = await node.evaluateHandle((el) => el.parentElement || null);
     const hasResult = await parentEl.evaluate((el) => !!el);
     return hasResult ? playwrightDOMLib(parentEl as TNewEl, page) : null;
   };
 
-  const children: PlaywrightDOMLib<T>['children'] = async <
-    TNewEl extends Locator | ElementHandle<Node> = T
+  const children: PlaywrightDOMLib<El>['children'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = El
   >() => {
     const elsHandle = await node.evaluateHandle((el) => [...(el as Element).children]);
     const resultEls = await splitPlaywrightSelection<any>(elsHandle);
     return resultEls.map((el) => playwrightDOMLib(el as TNewEl, page));
   };
 
-  const root: PlaywrightDOMLib<T>['root'] = async <
-    TNewEl extends Locator | ElementHandle<Node> = T
+  const root: PlaywrightDOMLib<El>['root'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = El
   >() => {
     const rootEl = await node.evaluateHandle((el) => el.ownerDocument?.documentElement || null);
     const hasResult = await rootEl.evaluate((el) => !!el);
     return hasResult ? playwrightDOMLib(rootEl as TNewEl, page) : null;
   };
 
-  const remove: PlaywrightDOMLib<T>['remove'] = async () => {
+  const remove: PlaywrightDOMLib<El>['remove'] = async () => {
     await (node as Locator).evaluate((el) => el.remove());
   };
 
-  const _getCommonAncestor = async (loc1: T, loc2: T) => {
+  const _getCommonAncestor = async (loc1: El, loc2: El) => {
     const isEl1BeforeEl2 = await (
       await mergeHandles([loc1, loc2])
     ).evaluate(([el1, el2]) => {
@@ -718,11 +729,11 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     });
 
     const hasResult = await (ancestor as JSHandle).evaluate((el) => !!el);
-    return hasResult ? (ancestor as T) : null;
+    return hasResult ? (ancestor as El) : null;
   };
 
-  const getCommonAncestor: PlaywrightDOMLib<T>['getCommonAncestor'] = async <
-    TNewEl extends Locator | ElementHandle<Node> = T
+  const getCommonAncestor: PlaywrightDOMLib<El>['getCommonAncestor'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = El
   >(
     otherEl
   ) => {
@@ -731,19 +742,19 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     return ancestor && hasResult ? playwrightDOMLib(ancestor, page) : null;
   };
 
-  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
+  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<El>({
     querySelectorAll: async (selector) => {
       const elsHandle = await (node as Locator).evaluateHandle(
         (el, s) => [...el.querySelectorAll(s)],
         selector
       );
       const resultEls = await splitPlaywrightSelection<any>(elsHandle);
-      return resultEls as T[];
+      return resultEls as El[];
     },
     getParent: async (el) => {
       const parentEl = await el.evaluateHandle((el) => el.parentElement || null);
       const hasResult = await parentEl.evaluate((el) => !!el);
-      return hasResult ? (parentEl as T) : null;
+      return hasResult ? (parentEl as El) : null;
     },
     isAncestor: async (el1, el2) => {
       return (await mergeHandles([el1, el2])).evaluate(([el1, el2]) => {
@@ -756,8 +767,8 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     getCommonAncestor: _getCommonAncestor,
   });
 
-  const getCommonAncestorFromSelector: PlaywrightDOMLib<T>['getCommonAncestorFromSelector'] =
-    async <TNewEl extends Locator | ElementHandle<Node> = T>(selector) => {
+  const getCommonAncestorFromSelector: PlaywrightDOMLib<El>['getCommonAncestorFromSelector'] =
+    async <TNewEl extends Locator | ElementHandle<Node> = El>(selector) => {
       const ancestor = (await _getCommonAncestorFromSelector(selector)) as TNewEl | null;
       const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el);
       return ancestor && hasResult ? playwrightDOMLib(ancestor, page) : null;
@@ -789,24 +800,24 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     remove,
     getCommonAncestor,
     getCommonAncestorFromSelector,
-  } satisfies PlaywrightDOMLib<T>;
+  } satisfies PlaywrightDOMLib<El>;
 };
 
-const _createCommonAncestorFromSelectorFn = <T>(input: {
-  querySelectorAll: (selector: string) => MaybePromise<Iterable<T> | T[]>;
-  getParent: (el: T) => MaybePromise<T | null>;
+const _createCommonAncestorFromSelectorFn = <El>(input: {
+  querySelectorAll: (selector: string) => MaybePromise<Iterable<El> | El[]>;
+  getParent: (el: El) => MaybePromise<El | null>;
   /** Function that returns `true` if `el1` is ancestor of `el2`. */
-  isAncestor: (el1: T, el2: T) => MaybePromise<boolean>;
+  isAncestor: (el1: El, el2: El) => MaybePromise<boolean>;
   /** Function that finds the closest common ancestor for `el1` and `el2`. */
-  getCommonAncestor: (el1: T, el2: T) => MaybePromise<T | null>;
+  getCommonAncestor: (el1: El, el2: El) => MaybePromise<El | null>;
 }) => {
-  const getCommonAncestorFromSelector = async (selector: string): Promise<T | null> => {
+  const getCommonAncestorFromSelector = async (selector: string): Promise<El | null> => {
     const els = [...(await input.querySelectorAll(selector))];
     if (!els.length) return null;
     if (els.length === 1) return input.getParent(els[0]);
 
     const comparerEl = els.shift();
-    let ancestorEl: T | null = null;
+    let ancestorEl: El | null = null;
     for (const el of els) {
       const currAncestorEl = comparerEl ? await input.getCommonAncestor(comparerEl, el) : null;
       const newAncestorEl = !ancestorEl
@@ -817,7 +828,7 @@ const _createCommonAncestorFromSelectorFn = <T>(input: {
       ancestorEl = newAncestorEl;
     }
 
-    return ancestorEl as T;
+    return ancestorEl as El;
   };
 
   return getCommonAncestorFromSelector;
