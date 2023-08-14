@@ -32,8 +32,21 @@ export interface DOMLib<El extends BaseEl, BaseEl> {
   textAsNumber: (options?: StrAsNumOptions) => MaybePromise<number | null>;
   /** Get element's attribute */
   attr: (attrName: string, options?: { allowEmpty?: boolean }) => MaybePromise<string | null>;
+  /** Get element's attributes */
+  attrs: <T extends string>(
+    attrNames: T[],
+    options?: { allowEmpty?: boolean }
+  ) => MaybePromise<Record<T, string | null>>;
   /** Get element's property */
-  prop: (propName: string, options?: { allowEmpty?: boolean }) => MaybePromise<string | null>;
+  prop: (
+    propName: string,
+    options?: { allowEmpty?: boolean }
+  ) => MaybePromise<unknown | string | null>;
+  /** Get element's properties */
+  props: <T extends string>(
+    propName: T[],
+    options?: { allowEmpty?: boolean }
+  ) => MaybePromise<Record<T, unknown | string | null>>;
   /** Get element's href */
   href: (options?: { allowEmpty?: boolean } & FormatUrlOptions) => MaybePromise<string | null>;
   /** Get element's src */
@@ -112,7 +125,15 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
   const prop: BrowserDOMLib<T>['prop'] = (propName, { allowEmpty } = {}) => {
     let propVal = node[propName] ?? null;
     propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
-    return strOrNull(propVal, allowEmpty);
+    return strOrNull(propVal, allowEmpty) as unknown | string | null;
+  };
+
+  const props: BrowserDOMLib<T>['props'] = <T extends string>(propNames: T[], options = {}) => {
+    const propData = propNames.reduce<Record<T, unknown | string | null>>((agg, name) => {
+      agg[name] = prop(name, options) as unknown | string | null;
+      return agg;
+    }, {} as any);
+    return propData;
   };
 
   const attr: BrowserDOMLib<T>['attr'] = (propName, { allowEmpty } = {}) => {
@@ -121,19 +142,27 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     return strOrNull(attrVal, allowEmpty);
   };
 
+  const attrs: BrowserDOMLib<T>['attrs'] = <T extends string>(attrNames: T[], options = {}) => {
+    const attrData = attrNames.reduce<Record<T, string | null>>((agg, name) => {
+      agg[name] = attr(name, options) as string | null;
+      return agg;
+    }, {} as any);
+    return attrData;
+  };
+
   const href: BrowserDOMLib<T>['href'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = prop('href', { allowEmpty });
+    const val = prop('href', { allowEmpty }) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
   const src: BrowserDOMLib<T>['src'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = prop('src', { allowEmpty });
+    const val = prop('src', { allowEmpty }) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
   const nodeName: BrowserDOMLib<T>['nodeName'] = () => {
     // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
-    const val = prop('nodeName');
+    const val = prop('nodeName') as string | null;
     return typeof val === 'string' ? val.toLocaleUpperCase() : val;
   };
 
@@ -244,7 +273,9 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     textAsUpper,
     textAsNumber,
     attr,
+    attrs,
     prop,
+    props,
     href,
     src,
     nodeName,
@@ -303,25 +334,41 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     return strOrNull(attrVal, allowEmpty);
   };
 
+  const attrs: CheerioDOMLib<T>['attrs'] = <T extends string>(attrNames: T[], options = {}) => {
+    const attrData = attrNames.reduce<Record<T, string | null>>((agg, name) => {
+      agg[name] = attr(name, options) as string | null;
+      return agg;
+    }, {} as any);
+    return attrData;
+  };
+
   const prop: CheerioDOMLib<T>['prop'] = (propName, { allowEmpty } = {}) => {
     let propVal = cheerioNode.prop(propName) ?? null;
     propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
     return strOrNull(propVal, allowEmpty);
   };
 
+  const props: CheerioDOMLib<T>['props'] = <T extends string>(propNames: T[], options = {}) => {
+    const propData = propNames.reduce<Record<T, unknown | string | null>>((agg, name) => {
+      agg[name] = prop(name, options) as unknown | string | null;
+      return agg;
+    }, {} as any);
+    return propData;
+  };
+
   const href: CheerioDOMLib<T>['href'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = prop('href', { allowEmpty });
+    const val = prop('href', { allowEmpty }) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
   const src: CheerioDOMLib<T>['src'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = prop('src', { allowEmpty });
+    const val = prop('src', { allowEmpty }) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
   const nodeName: CheerioDOMLib<T>['nodeName'] = () => {
     // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
-    const val = prop('nodeName');
+    const val = prop('nodeName') as string | null;
     return typeof val === 'string' ? val.toLocaleUpperCase() : val;
   };
 
@@ -428,7 +475,9 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     textAsUpper,
     textAsNumber,
     attr,
+    attrs,
     prop,
+    props,
     href,
     src,
     nodeName,
@@ -487,25 +536,63 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     return strOrNull(propVal, allowEmpty);
   };
 
+  const props: PlaywrightDOMLib<T>['props'] = <T extends string>(
+    propNames: T[],
+    { allowEmpty = false } = {}
+  ) => {
+    const data = (node as Locator).evaluate(
+      (el, { propNames, allowEmpty }) => {
+        const propsData = (propNames as T[]).reduce<Record<T, any>>((agg, name) => {
+          let attrVal = el[name as any] ?? null;
+          attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
+          agg[name] = strOrNull(attrVal, allowEmpty);
+          return agg;
+        }, {} as any);
+        return propsData;
+      },
+      { propNames, allowEmpty }
+    );
+    return data;
+  };
+
   const attr: PlaywrightDOMLib<T>['attr'] = async (attrName, { allowEmpty } = {}) => {
     let attrVal = (await node.getAttribute(attrName)) ?? null;
     attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
     return strOrNull(attrVal, allowEmpty);
   };
 
+  const attrs: PlaywrightDOMLib<T>['attrs'] = <T extends string>(
+    attrNames: T[],
+    { allowEmpty = false } = {}
+  ) => {
+    const data = (node as Locator).evaluate(
+      (el, { attrNames, allowEmpty }) => {
+        const attrData = (attrNames as T[]).reduce<Record<T, string | null>>((agg, name) => {
+          let attrVal = el.getAttribute(name) ?? null;
+          attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
+          agg[name] = strOrNull(attrVal, allowEmpty);
+          return agg;
+        }, {} as any);
+        return attrData;
+      },
+      { attrNames, allowEmpty }
+    );
+    return data;
+  };
+
   const href: PlaywrightDOMLib<T>['href'] = async ({ allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = await prop('href', { allowEmpty });
+    const val = (await prop('href', { allowEmpty })) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
   const src: PlaywrightDOMLib<T>['src'] = async ({ allowEmpty, allowRelative, baseUrl } = {}) => {
-    const val = await prop('src', { allowEmpty });
+    const val = (await prop('src', { allowEmpty })) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
   const nodeName: PlaywrightDOMLib<T>['nodeName'] = async () => {
     // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
-    const val = await prop('nodeName');
+    const val = (await prop('nodeName')) as string | null;
     return typeof val === 'string' ? val.toLocaleUpperCase() : val;
   };
 
@@ -669,7 +756,9 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     textAsUpper,
     textAsNumber,
     attr,
+    attrs,
     prop,
+    props,
     href,
     src,
     nodeName,
