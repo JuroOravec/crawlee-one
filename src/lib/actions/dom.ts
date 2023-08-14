@@ -38,15 +38,12 @@ export interface DOMLib<El extends BaseEl, BaseEl> {
     options?: { allowEmpty?: boolean }
   ) => MaybePromise<Record<T, string | null>>;
   /** Get element's property */
-  prop: (
-    propName: string,
-    options?: { allowEmpty?: boolean }
-  ) => MaybePromise<unknown | string | null>;
+  prop: <R = unknown>(propName: string, options?: { allowEmpty?: boolean }) => MaybePromise<R>;
   /** Get element's properties */
-  props: <T extends string>(
+  props: <T extends string, R extends Record<T, any> = Record<T, unknown>>(
     propName: T[],
     options?: { allowEmpty?: boolean }
-  ) => MaybePromise<Record<T, unknown | string | null>>;
+  ) => MaybePromise<R>;
   /** Get element's href */
   href: (options?: { allowEmpty?: boolean } & FormatUrlOptions) => MaybePromise<string | null>;
   /** Get element's src */
@@ -122,18 +119,24 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     return strAsNumber(txt as string, options);
   };
 
-  const prop: BrowserDOMLib<T>['prop'] = (propName, { allowEmpty } = {}) => {
+  const prop: BrowserDOMLib<T>['prop'] = <R = unknown>(propName, { allowEmpty = false } = {}) => {
     let propVal = node[propName] ?? null;
     propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
-    return strOrNull(propVal, allowEmpty) as unknown | string | null;
+    return strOrNull(propVal, allowEmpty) as R;
   };
 
-  const props: BrowserDOMLib<T>['props'] = <T extends string>(propNames: T[], options = {}) => {
-    const propData = propNames.reduce<Record<T, unknown | string | null>>((agg, name) => {
-      agg[name] = prop(name, options) as unknown | string | null;
+  const props: BrowserDOMLib<T>['props'] = <
+    T extends string,
+    R extends Record<T, any> = Record<T, unknown>
+  >(
+    propNames: T[],
+    options = {}
+  ) => {
+    const propData = propNames.reduce<R>((agg, name) => {
+      agg[name] = prop(name, options) as any;
       return agg;
     }, {} as any);
-    return propData;
+    return propData as MaybePromise<R>;
   };
 
   const attr: BrowserDOMLib<T>['attr'] = (propName, { allowEmpty } = {}) => {
@@ -342,18 +345,24 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     return attrData;
   };
 
-  const prop: CheerioDOMLib<T>['prop'] = (propName, { allowEmpty } = {}) => {
+  const prop: CheerioDOMLib<T>['prop'] = <R = unknown>(propName, { allowEmpty = false } = {}) => {
     let propVal = cheerioNode.prop(propName) ?? null;
     propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
-    return strOrNull(propVal, allowEmpty);
+    return strOrNull(propVal, allowEmpty) as R;
   };
 
-  const props: CheerioDOMLib<T>['props'] = <T extends string>(propNames: T[], options = {}) => {
-    const propData = propNames.reduce<Record<T, unknown | string | null>>((agg, name) => {
-      agg[name] = prop(name, options) as unknown | string | null;
+  const props: CheerioDOMLib<T>['props'] = <
+    T extends string,
+    R extends Record<T, any> = Record<T, unknown>
+  >(
+    propNames: T[],
+    options = {}
+  ) => {
+    const propData = propNames.reduce<R>((agg, name) => {
+      agg[name] = prop(name, options) as any;
       return agg;
     }, {} as any);
-    return propData;
+    return propData as MaybePromise<R>;
   };
 
   const href: CheerioDOMLib<T>['href'] = ({ allowEmpty, allowRelative, baseUrl } = {}) => {
@@ -529,23 +538,29 @@ export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
     return strAsNumber(txt, options);
   };
 
-  const prop: PlaywrightDOMLib<T>['prop'] = async (propName, { allowEmpty } = {}) => {
+  const prop: PlaywrightDOMLib<T>['prop'] = async <R = unknown>(
+    propName,
+    { allowEmpty = false } = {}
+  ) => {
     let propVal =
       (await (node as Locator).evaluate((el, propName) => el[propName], propName)) ?? null;
     propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
-    return strOrNull(propVal, allowEmpty);
+    return strOrNull(propVal, allowEmpty) as R;
   };
 
-  const props: PlaywrightDOMLib<T>['props'] = <T extends string>(
+  const props: PlaywrightDOMLib<T>['props'] = async <
+    T extends string,
+    R extends Record<T, any> = Record<T, unknown>
+  >(
     propNames: T[],
     { allowEmpty = false } = {}
   ) => {
-    const data = (node as Locator).evaluate(
+    const data = await (node as Locator).evaluate(
       (el, { propNames, allowEmpty }) => {
-        const propsData = (propNames as T[]).reduce<Record<T, any>>((agg, name) => {
+        const propsData = (propNames as T[]).reduce<R>((agg, name) => {
           let attrVal = el[name as any] ?? null;
           attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
-          agg[name] = strOrNull(attrVal, allowEmpty);
+          agg[name] = strOrNull(attrVal, allowEmpty) as any;
           return agg;
         }, {} as any);
         return propsData;
