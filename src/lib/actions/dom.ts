@@ -20,44 +20,44 @@ export interface DOMLib<El extends BaseEl, BaseEl> {
   ///////////////////////
 
   /** Get element's text (trimmed) */
-  text: (options?: { allowEmpty?: boolean }) => string | null;
+  text: (options?: { allowEmpty?: boolean }) => MaybePromise<string | null>;
   /** Get element's text as uppercase (trimmed) */
-  textAsUpper: (options?: { allowEmpty?: boolean }) => string | null;
+  textAsUpper: (options?: { allowEmpty?: boolean }) => MaybePromise<string | null>;
   /** Get element's text as lowercase (trimmed) */
-  textAsLower: (options?: { allowEmpty?: boolean }) => string | null;
+  textAsLower: (options?: { allowEmpty?: boolean }) => MaybePromise<string | null>;
   /** Get element's text and convert it to number */
-  textAsNumber: (options?: StrAsNumOptions) => number | null;
+  textAsNumber: (options?: StrAsNumOptions) => MaybePromise<number | null>;
   /** Get element's attribute */
-  attr: (attrName: string, options?: { allowEmpty?: boolean }) => string | null;
+  attr: (attrName: string, options?: { allowEmpty?: boolean }) => MaybePromise<string | null>;
   /** Get element's property */
-  prop: (propName: string, options?: { allowEmpty?: boolean }) => string | null;
+  prop: (propName: string, options?: { allowEmpty?: boolean }) => MaybePromise<string | null>;
   /** Get element's href */
-  href: (options?: { allowEmpty?: boolean } & FormatUrlOptions) => string | null;
+  href: (options?: { allowEmpty?: boolean } & FormatUrlOptions) => MaybePromise<string | null>;
   /** Get element's src */
-  src: (options?: { allowEmpty?: boolean } & FormatUrlOptions) => string | null;
+  src: (options?: { allowEmpty?: boolean } & FormatUrlOptions) => MaybePromise<string | null>;
   /** Get element's nodeName */
-  nodeName: () => string | null;
+  nodeName: () => MaybePromise<string | null>;
   /** Get URL of website associated with the DOM */
-  url: () => string | null;
+  url: () => MaybePromise<string | null>;
   /** Freely modify the underlying DOM node */
-  map: <TVal>(map: (node: El | null) => TVal) => TVal;
+  map: <TVal>(map: (node: El | null) => TVal) => MaybePromise<TVal>;
 
   ///////////////////////
   // NODE OPERATIONS
   ///////////////////////
 
   /** Get a single descendant matching the selector */
-  findOne: <TNewEl extends BaseEl = El>(selector: string) => DOMLib<TNewEl, BaseEl> | null;
+  findOne: <TNewEl extends BaseEl = El>(selector: string) => MaybePromise<DOMLib<TNewEl, BaseEl> | null>; // prettier-ignore
   /** Get all descendants matching the selector */
-  findMany: <TNewEl extends BaseEl = El>(selector: string) => DOMLib<TNewEl, BaseEl>[];
+  findMany: <TNewEl extends BaseEl = El>(selector: string) => MaybePromise<DOMLib<TNewEl, BaseEl>[]>; // prettier-ignore
   /** Get element's parent */
-  parent: <TNewEl extends BaseEl = El>() => DOMLib<TNewEl, BaseEl> | null;
+  parent: <TNewEl extends BaseEl = El>() => MaybePromise<DOMLib<TNewEl, BaseEl> | null>;
   /** Get element's children */
-  children: <TNewEl extends BaseEl = El>() => DOMLib<TNewEl, BaseEl>[];
+  children: <TNewEl extends BaseEl = El>() => MaybePromise<DOMLib<TNewEl, BaseEl>[]>;
   /** Get remove the element */
-  remove: () => void;
+  remove: () => MaybePromise<void>;
   /** Get root element */
-  root: <TNewEl extends BaseEl = El>() => DOMLib<TNewEl, BaseEl> | null;
+  root: <TNewEl extends BaseEl = El>() => MaybePromise<DOMLib<TNewEl, BaseEl> | null>;
 }
 
 export type BrowserDOMLib<T extends Element = Element> = DOMLib<T, Element>;
@@ -222,17 +222,17 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
 
   const textAsUpper: CheerioDOMLib<T>['textAsUpper'] = (options) => {
     const txt = text(options);
-    return txt ? txt.toLocaleUpperCase() : txt;
+    return txt ? (txt as string).toLocaleUpperCase() : txt;
   };
 
   const textAsLower: CheerioDOMLib<T>['textAsLower'] = (options) => {
     const txt = text(options);
-    return txt ? txt.toLocaleLowerCase() : txt;
+    return txt ? (txt as string).toLocaleLowerCase() : txt;
   };
 
   const textAsNumber: CheerioDOMLib<T>['textAsNumber'] = (options) => {
     const txt = text(options);
-    return strAsNumber(txt, options);
+    return strAsNumber(txt as string, options);
   };
 
   const attr: CheerioDOMLib<T>['attr'] = (attrName, { allowEmpty } = {}) => {
