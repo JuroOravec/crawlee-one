@@ -5,6 +5,7 @@ export * from './lib/config';
 export * from './lib/io/maxCount';
 export * from './lib/io/pushData';
 export * from './lib/actions/dom';
+export * from './lib/actions/domUtils';
 export * from './lib/actions/scrapeListing';
 export * from './lib/error/errorHandler';
 export * from './lib/error/sentry';

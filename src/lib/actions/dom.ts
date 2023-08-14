@@ -1,7 +1,9 @@
-import { load as loadCheerio, AnyNode, Cheerio } from 'cheerio';
+import { AnyNode, Cheerio } from 'cheerio';
 
 import { StrAsNumOptions, strAsNumber, strOrNull } from '../../utils/format';
 import { FormatUrlOptions, formatUrl } from '../../utils/url';
+import type { MaybePromise } from '../../utils/types';
+import { splitCheerioSelection } from './domUtils';
 
 /**
  * Common interface for working with DOM despite different environments.
@@ -58,6 +60,18 @@ export interface DOMLib<El extends BaseEl, BaseEl> {
   remove: () => MaybePromise<void>;
   /** Get root element */
   root: <TNewEl extends BaseEl = El>() => MaybePromise<DOMLib<TNewEl, BaseEl> | null>;
+
+  /**
+   * Given two elements, return closest ancestor element that encompases them both,
+   * or `null` if none such found.
+   */
+  getCommonAncestor: (otherEl: El) => MaybePromise<El | null>;
+  /**
+   * Given a selector, find all DOM elements that match the selector,
+   * and return closest ancestor element that encompases them all,
+   * or `null` if none such found.
+   */
+  getCommonAncestorFromSelector: (selector: string) => MaybePromise<El | null>;
 }
 
 export type BrowserDOMLib<T extends Element = Element> = DOMLib<T, Element>;
@@ -75,17 +89,17 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
 
   const textAsUpper: BrowserDOMLib<T>['textAsUpper'] = (options) => {
     const txt = text(options);
-    return txt ? txt.toLocaleUpperCase() : txt;
+    return txt ? (txt as string).toLocaleUpperCase() : txt;
   };
 
   const textAsLower: BrowserDOMLib<T>['textAsLower'] = (options) => {
     const txt = text(options);
-    return txt ? txt.toLocaleLowerCase() : txt;
+    return txt ? (txt as string).toLocaleLowerCase() : txt;
   };
 
   const textAsNumber: BrowserDOMLib<T>['textAsNumber'] = (options) => {
     const txt = text(options);
-    return strAsNumber(txt, options);
+    return strAsNumber(txt as string, options);
   };
 
   const prop: BrowserDOMLib<T>['prop'] = (propName, { allowEmpty } = {}) => {
@@ -162,6 +176,41 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     node.remove();
   };
 
+  const _getCommonAncestor = <T extends Node>(el1: T, el2: T) => {
+    // https://stackoverflow.com/a/25154092
+    // https://developer.mozilla.org/en-US/docs/Web/API/Range/commonAncestorContainer
+    const _getCommonAncestorFromRange = (el1: T, el2: T) => {
+      const range = new Range();
+      range.setStartBefore(el1);
+      range.setEndAfter(el2);
+      const containerEl = range.commonAncestorContainer;
+      return containerEl;
+    };
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
+    const isEl1BeforeEl2 = !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_FOLLOWING);
+
+    const { firstEl, lastEl } = isEl1BeforeEl2
+      ? { firstEl: el1, lastEl: el2 }
+      : { firstEl: el2, lastEl: el1 };
+
+    const containerEl = _getCommonAncestorFromRange(firstEl, lastEl);
+    return containerEl as T | null;
+  };
+
+  const getCommonAncestor: BrowserDOMLib<T>['getCommonAncestor'] = (otherEl) => {
+    return _getCommonAncestor(node, otherEl) as T | null;
+  };
+
+  const getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
+    querySelectorAll: (selector) => node.querySelectorAll(selector) as Iterable<T>,
+    getParent: (el) => el.parentElement as T | null,
+    isAncestor: (el1, el2) => {
+      return !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_CONTAINED_BY);
+    },
+    getCommonAncestor: (el1, el2) => _getCommonAncestor(el1, el2),
+  });
+
   return {
     node,
 
@@ -183,6 +232,8 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
     children,
     root,
     remove,
+    getCommonAncestor,
+    getCommonAncestorFromSelector,
   } satisfies DOMLib<T, Element>;
 };
 
@@ -190,21 +241,6 @@ export type CheerioDOMLib<T extends Cheerio<AnyNode> = Cheerio<AnyNode>> = DOMLi
   T,
   Cheerio<AnyNode>
 >;
-
-/**
- * Given a Cheerio selection, split it into an array of Cheerio selections,
- * where each has only one element.
- *
- * From `Cheerio[el, el, el, el]`
- *
- * To `[Cheerio[el], Cheerio[el], Cheerio[el], Cheerio[el]]`
- */
-export const splitCheerioSelection = (cheerioSel: Cheerio<AnyNode>) => {
-  return cheerioSel.toArray().map((el) => {
-    const cheerioInst = loadCheerio(el);
-    return cheerioInst(el);
-  });
-};
 
 /** Implementation of DOMLib in Cheerio */
 export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
@@ -309,6 +345,33 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     cheerioNode.remove();
   };
 
+  /** Function that finds the closest common ancestor for `el1` and `el2`. */
+  const _getCommonAncestor = async (el1: T, el2: T) => {
+    const ch1Parents = splitCheerioSelection(el1.parents()) as T[];
+    const ch2Parents = splitCheerioSelection(el2.parents()) as T[];
+
+    let commonAncestor: T | null = null;
+    for (const comparerParent of ch1Parents) {
+      for (const compareeParent of ch2Parents) {
+        if (!comparerParent.is(compareeParent)) continue;
+        commonAncestor = comparerParent;
+        break;
+      }
+    }
+    return commonAncestor;
+  };
+
+  const getCommonAncestor: CheerioDOMLib<T>['getCommonAncestor'] = (otherEl) => {
+    return _getCommonAncestor(cheerioNode, otherEl);
+  };
+
+  const getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
+    querySelectorAll: (selector) => splitCheerioSelection(cheerioNode.find(selector)) as T[],
+    getParent: (el) => el.parent() as T | null,
+    isAncestor: (el1, el2) => el1.is(el2.parents()),
+    getCommonAncestor: (el1, el2) => _getCommonAncestor(el1, el2),
+  });
+
   return {
     node: cheerioNode,
 
@@ -330,5 +393,7 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     children,
     root,
     remove,
+    getCommonAncestor,
+    getCommonAncestorFromSelector,
   } satisfies CheerioDOMLib<T>;
 };
