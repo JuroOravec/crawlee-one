@@ -1,9 +1,10 @@
 import { AnyNode, Cheerio } from 'cheerio';
+import type { ElementHandle, JSHandle, Locator, Page } from 'playwright';
 
 import { StrAsNumOptions, strAsNumber, strOrNull } from '../../utils/format';
 import { FormatUrlOptions, formatUrl } from '../../utils/url';
 import type { MaybePromise } from '../../utils/types';
-import { splitCheerioSelection } from './domUtils';
+import { mergeHandles, splitCheerioSelection, splitPlaywrightSelection } from './domUtils';
 
 /**
  * Common interface for working with DOM despite different environments.
@@ -396,4 +397,249 @@ export const cheerioDOMLib = <T extends Cheerio<AnyNode>>(
     getCommonAncestor,
     getCommonAncestorFromSelector,
   } satisfies CheerioDOMLib<T>;
+};
+
+export type PlaywrightDOMLib<
+  T extends Locator | ElementHandle<Node> = Locator | ElementHandle<Node>
+> = DOMLib<T, Locator | ElementHandle<Node>>;
+
+/** Implementation of DOMLib in Playwright */
+export const playwrightDOMLib = <T extends Locator | ElementHandle<Node>>(
+  node: T,
+  page: Page
+): PlaywrightDOMLib<T> => {
+  ///////////////////////
+  // SCALAR OPERATIONS
+  ///////////////////////
+
+  const text: PlaywrightDOMLib<T>['text'] = async ({ allowEmpty } = {}) => {
+    const txt = (await node.textContent())?.trim() ?? null;
+    return strOrNull(txt, allowEmpty);
+  };
+
+  const textAsUpper: PlaywrightDOMLib<T>['textAsUpper'] = async (options) => {
+    const txt = await text(options);
+    return txt ? txt.toLocaleUpperCase() : txt;
+  };
+
+  const textAsLower: PlaywrightDOMLib<T>['textAsLower'] = async (options) => {
+    const txt = await text(options);
+    return txt ? txt.toLocaleLowerCase() : txt;
+  };
+
+  const textAsNumber: PlaywrightDOMLib<T>['textAsNumber'] = async (options) => {
+    const txt = await text(options);
+    return strAsNumber(txt, options);
+  };
+
+  const prop: PlaywrightDOMLib<T>['prop'] = async (propName, { allowEmpty } = {}) => {
+    let propVal =
+      (await (node as Locator).evaluate((el, propName) => el[propName], propName)) ?? null;
+    propVal = typeof propVal === 'string' ? propVal.trim() : propVal;
+    return strOrNull(propVal, allowEmpty);
+  };
+
+  const attr: PlaywrightDOMLib<T>['attr'] = async (attrName, { allowEmpty } = {}) => {
+    let attrVal = (await node.getAttribute(attrName)) ?? null;
+    attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
+    return strOrNull(attrVal, allowEmpty);
+  };
+
+  const href: PlaywrightDOMLib<T>['href'] = async ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+    const val = await prop('href', { allowEmpty });
+    return formatUrl(val, { allowRelative, baseUrl });
+  };
+
+  const src: PlaywrightDOMLib<T>['src'] = async ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+    const val = await prop('src', { allowEmpty });
+    return formatUrl(val, { allowRelative, baseUrl });
+  };
+
+  const nodeName: PlaywrightDOMLib<T>['nodeName'] = async () => {
+    // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
+    const val = await prop('nodeName');
+    return typeof val === 'string' ? val.toLocaleUpperCase() : val;
+  };
+
+  const url: PlaywrightDOMLib<T>['url'] = async () => {
+    return page.url() || null;
+  };
+
+  const map: PlaywrightDOMLib<T>['map'] = <TVal>(mapFn: (node: T) => TVal) => {
+    return mapFn(node);
+  };
+
+  ///////////////////////
+  // NODE OPERATIONS
+  ///////////////////////
+
+  const findOne: PlaywrightDOMLib<T>['findOne'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = T
+  >(
+    selector
+  ) => {
+    const resultEl = await node.evaluateHandle((el, s) => {
+      if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return null;
+      return (el as Element).querySelector(s) || null;
+    }, selector);
+    const hasResult = await resultEl.evaluate((el) => !!el);
+    return hasResult ? playwrightDOMLib(resultEl as TNewEl, page) : null;
+  };
+
+  const findMany: PlaywrightDOMLib<T>['findMany'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = T
+  >(
+    selector
+  ) => {
+    const elsHandle = await node.evaluateHandle((el, s) => {
+      if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return [];
+      return [...(el as Element).querySelectorAll<Element>(s)];
+    }, selector);
+    const resultEls = await splitPlaywrightSelection<any>(elsHandle);
+    return resultEls.map((el) => playwrightDOMLib(el as TNewEl, page));
+  };
+
+  const parent: PlaywrightDOMLib<T>['parent'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = T
+  >() => {
+    const parentEl = await node.evaluateHandle((el) => el.parentElement || null);
+    const hasResult = await parentEl.evaluate((el) => !!el);
+    return hasResult ? playwrightDOMLib(parentEl as TNewEl, page) : null;
+  };
+
+  const children: PlaywrightDOMLib<T>['children'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = T
+  >() => {
+    const elsHandle = await node.evaluateHandle((el) => [...(el as Element).children]);
+    const resultEls = await splitPlaywrightSelection<any>(elsHandle);
+    return resultEls.map((el) => playwrightDOMLib(el as TNewEl, page));
+  };
+
+  const root: PlaywrightDOMLib<T>['root'] = async <
+    TNewEl extends Locator | ElementHandle<Node> = T
+  >() => {
+    const rootEl = await node.evaluateHandle((el) => el.ownerDocument?.documentElement || null);
+    const hasResult = await rootEl.evaluate((el) => !!el);
+    return hasResult ? playwrightDOMLib(rootEl as TNewEl, page) : null;
+  };
+
+  const remove: PlaywrightDOMLib<T>['remove'] = async () => {
+    await (node as Locator).evaluate((el) => el.remove());
+  };
+
+  const _getCommonAncestor = async (loc1: T, loc2: T) => {
+    const isEl1BeforeEl2 = await (
+      await mergeHandles([loc1, loc2])
+    ).evaluate(([el1, el2]) => {
+      if (!el1 || !el2) return false;
+      // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
+      const result = !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_FOLLOWING);
+      return result;
+    });
+
+    const { firstEl, lastEl } = isEl1BeforeEl2
+      ? { firstEl: loc1, lastEl: loc2 }
+      : { firstEl: loc2, lastEl: loc1 };
+
+    const ancestor = await (
+      await mergeHandles([firstEl, lastEl])
+    ).evaluateHandle(([el1, el2]) => {
+      if (!el1 || !el2) return null;
+      // https://stackoverflow.com/a/25154092
+      // https://developer.mozilla.org/en-US/docs/Web/API/Range/commonAncestorContainer
+      const range = new Range();
+      range.setStartBefore(el1);
+      range.setEndAfter(el2);
+      const containerEl = range.commonAncestorContainer;
+      return containerEl;
+    });
+
+    const hasResult = await (ancestor as JSHandle).evaluate((el) => !!el);
+    return hasResult ? (ancestor as T) : null;
+  };
+
+  const getCommonAncestor: PlaywrightDOMLib<T>['getCommonAncestor'] = async (otherEl) => {
+    return _getCommonAncestor(node, otherEl);
+  };
+
+  const getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<T>({
+    querySelectorAll: async (selector) => {
+      const elsHandle = await (node as Locator).evaluateHandle(
+        (el, s) => [...el.querySelectorAll(s)],
+        selector
+      );
+      const resultEls = await splitPlaywrightSelection<any>(elsHandle);
+      return resultEls as T[];
+    },
+    getParent: async (el) => {
+      const parentEl = await el.evaluateHandle((el) => el.parentElement || null);
+      const hasResult = await parentEl.evaluate((el) => !!el);
+      return hasResult ? (parentEl as T) : null;
+    },
+    isAncestor: async (el1, el2) => {
+      return (await mergeHandles([el1, el2])).evaluate(([el1, el2]) => {
+        if (!el1 || !el2) return false;
+        // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
+        const result = !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_CONTAINED_BY);
+        return result;
+      });
+    },
+    getCommonAncestor: _getCommonAncestor,
+  });
+
+  return {
+    node,
+
+    text,
+    textAsLower,
+    textAsUpper,
+    textAsNumber,
+    attr,
+    prop,
+    href,
+    src,
+    nodeName,
+    url,
+    map,
+
+    findOne,
+    findMany,
+    parent,
+    children,
+    root,
+    remove,
+    getCommonAncestor,
+    getCommonAncestorFromSelector,
+  } satisfies PlaywrightDOMLib<T>;
+};
+
+const _createCommonAncestorFromSelectorFn = <T>(input: {
+  querySelectorAll: (selector: string) => MaybePromise<Iterable<T> | T[]>;
+  getParent: (el: T) => MaybePromise<T | null>;
+  /** Function that returns `true` if `el1` is ancestor of `el2`. */
+  isAncestor: (el1: T, el2: T) => MaybePromise<boolean>;
+  /** Function that finds the closest common ancestor for `el1` and `el2`. */
+  getCommonAncestor: (el1: T, el2: T) => MaybePromise<T | null>;
+}) => {
+  const getCommonAncestorFromSelector = async (selector: string): Promise<T | null> => {
+    const els = [...(await input.querySelectorAll(selector))];
+    if (!els.length) return null;
+    if (els.length === 1) return input.getParent(els[0]);
+
+    const comparerEl = els.shift();
+    let ancestorEl: T | null = null;
+    for (const el of els) {
+      const currAncestorEl = comparerEl ? await input.getCommonAncestor(comparerEl, el) : null;
+      const newAncestorEl = !ancestorEl
+        ? currAncestorEl
+        : currAncestorEl && (await input.isAncestor(currAncestorEl, ancestorEl))
+        ? currAncestorEl
+        : ancestorEl;
+      ancestorEl = newAncestorEl;
+    }
+
+    return ancestorEl as T;
+  };
+
+  return getCommonAncestorFromSelector;
 };
