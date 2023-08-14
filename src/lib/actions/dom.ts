@@ -4,7 +4,7 @@ import { StrAsNumOptions, strAsNumber, strOrNull } from '../../utils/format';
 import { FormatUrlOptions, formatUrl } from '../../utils/url';
 
 /**
- * Common interface for work working with DOM despite different environments.
+ * Common interface for working with DOM despite different environments.
  *
  * Consider these environments:
  * 1) Browser (via Playwright & Chromium) - uses Browser API to work with DOM
@@ -149,7 +149,7 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
   };
 
   const children: BrowserDOMLib<T>['children'] = <TNewEl extends Element = T>() => {
-    const childEls = [...node.childNodes] as TNewEl[];
+    const childEls = [...node.children] as TNewEl[];
     return childEls.map((el) => browserDOMLib(el));
   };
 
@@ -159,8 +159,7 @@ export const browserDOMLib = <T extends Element>(node: T): BrowserDOMLib<T> => {
   };
 
   const remove: BrowserDOMLib<T>['remove'] = () => {
-    const parentEl = parent();
-    parentEl?.node?.removeChild(node);
+    node.remove();
   };
 
   return {
