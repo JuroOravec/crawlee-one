@@ -1,4 +1,4 @@
-import { load as loadCheerio, AnyNode, Cheerio } from 'cheerio';
+import type { AnyNode, Cheerio } from 'cheerio';
 import type { ElementHandle, JSHandle, Locator, Page } from 'playwright';
 
 import { serialAsyncMap } from '../../utils/async';
@@ -13,10 +13,10 @@ import type { MaybeArray, MaybePromise } from '../../utils/types';
  * To `[Cheerio[el], Cheerio[el], Cheerio[el], Cheerio[el]]`
  */
 export const splitCheerioSelection = (cheerioSel: Cheerio<AnyNode>) => {
-  return cheerioSel.toArray().map((el) => {
-    const cheerioInst = loadCheerio(el);
-    return cheerioInst(el);
-  });
+  const arrSize = cheerioSel.length;
+  return Array(arrSize)
+    .fill(null)
+    .map((_, index) => cheerioSel.slice(index, index + 1));
 };
 
 /**
