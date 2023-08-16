@@ -455,6 +455,7 @@ export const cheerioDOMLib = <El extends Cheerio<AnyNode>>(
         commonAncestor = comparerParent;
         break;
       }
+      if (commonAncestor) break;
     }
     return commonAncestor;
   };
