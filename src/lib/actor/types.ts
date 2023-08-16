@@ -119,6 +119,16 @@ export interface ActorDefinition<
    *
    * Wrappers are applied from right to left. That means that wrappers `[A, B, C]`
    * will be applied like so `A( B( C( handler ) ) )`.
+   *
+   * Default `routerWrappers`:
+   * ```js
+   * {
+   *   ...
+   *   routerWrappers: ({ input }) => [
+   *     logLevelHandlerWrapper<Ctx, any>(input?.logLevel ?? 'info'),
+   *   ],
+   * }
+   * ```
    */
   routerWrappers?: MaybeAsyncFn<CrawlerRouterWrapper<Ctx, ActorRouterContext<Ctx, Labels, Input>>[], [ActorDefinitionWithInput<Ctx, Labels, Input>]>; // prettier-ignore
 
