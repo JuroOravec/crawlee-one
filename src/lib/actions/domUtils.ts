@@ -3,6 +3,7 @@ import type { ElementHandle, JSHandle, Locator, Page } from 'playwright';
 
 import { serialAsyncMap } from '../../utils/async';
 import type { MaybeArray, MaybePromise } from '../../utils/types';
+import { logAndRethrow } from '../../utils/error';
 
 /**
  * Given a Cheerio selection, split it into an array of Cheerio selections,
@@ -28,9 +29,9 @@ export const splitCheerioSelection = (cheerioSel: Cheerio<AnyNode>) => {
  * To `ElHandle(el), ElHandle(el), ElHandle(el)`
  */
 export const splitPlaywrightSelection = async <T>(handle: JSHandle<T[]>) => {
-  const arrSize = await handle.evaluate((arr) => arr.length);
+  const arrSize = await handle.evaluate((arr) => arr.length).catch(logAndRethrow);
   return serialAsyncMap(Array(arrSize).fill(null), (_, index) => {
-    return handle.evaluateHandle((arr, i) => arr[i], index);
+    return handle.evaluateHandle((arr, i) => arr[i], index).catch(logAndRethrow);
   });
 };
 
@@ -115,13 +116,17 @@ export const mergeHandles = async <T = any>(
   const baseHandle = resolvedHandles[0];
 
   // 1. Plant the prompt
-  await baseHandle.evaluate((_, prompt) => {
-    globalThis[prompt.key] = prompt.value;
-  }, prompt);
+  await baseHandle
+    .evaluate((_, prompt) => {
+      globalThis[prompt.key] = prompt.value;
+    }, prompt)
+    .catch(logAndRethrow);
 
   // 2. Check that all handles see the prompt
   await serialAsyncMap(resolvedHandles, async (handle, index) => {
-    const response = await handle.evaluate((_, prompt) => globalThis[prompt.key], prompt);
+    const response = await handle
+      .evaluate((_, prompt) => globalThis[prompt.key], prompt)
+      .catch(logAndRethrow);
     if (response !== prompt.value) {
       throw Error(
         `Handle context mismatch! Either Page context changed or JSHandle at index ${index} ` +
@@ -131,11 +136,15 @@ export const mergeHandles = async <T = any>(
   });
 
   // 3. Clean up
-  await baseHandle.evaluate((_, prompt) => {
-    delete globalThis[prompt.key];
-  }, prompt);
+  await baseHandle
+    .evaluate((_, prompt) => {
+      delete globalThis[prompt.key];
+    }, prompt)
+    .catch(logAndRethrow);
 
   // Now that all handles are sound, pass them to the given function
-  const mergedHandle = await baseHandle.evaluateHandle((_, handles) => handles, resolvedHandles);
+  const mergedHandle = await baseHandle
+    .evaluateHandle((_, handles) => handles, resolvedHandles)
+    .catch(logAndRethrow);
   return mergedHandle as JSHandle<T[]>;
 };

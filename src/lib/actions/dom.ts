@@ -6,6 +6,7 @@ import { StrAsNumOptions, strAsNumber, strOrNull } from '../../utils/format';
 import { FormatUrlOptions, formatUrl } from '../../utils/url';
 import type { MaybeArray, MaybePromise } from '../../utils/types';
 import { mergeHandles, splitCheerioSelection, splitPlaywrightSelection } from './domUtils';
+import { logAndRethrow } from '../../utils/error';
 
 /**
  * Common interface for working with DOM despite different environments.
@@ -560,20 +561,22 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     { allowEmpty = false } = {}
   ) => {
     const propPaths = propsOrPaths.map((p) => (Array.isArray(p) ? p : [p]));
-    const data = await (node as Locator).evaluate(
-      (el, { propPaths, allowEmpty }) => {
-        return propPaths.map((propPath) => {
-          let val: any = el;
-          for (const prop of propPath) {
-            if (el == null) break;
-            val = val[prop];
-          }
-          val = typeof val === 'string' ? val.trim() : val;
-          return strOrNull(val, allowEmpty) as any;
-        });
-      },
-      { propPaths, allowEmpty }
-    );
+    const data = await (node as Locator)
+      .evaluate(
+        (el, { propPaths, allowEmpty }) => {
+          return propPaths.map((propPath) => {
+            let val: any = el;
+            for (const prop of propPath) {
+              if (el == null) break;
+              val = val[prop];
+            }
+            val = typeof val === 'string' ? val.trim() : val;
+            return strOrNull(val, allowEmpty) as any;
+          });
+        },
+        { propPaths, allowEmpty }
+      )
+      .catch(logAndRethrow);
     return data as R;
   };
 
@@ -587,18 +590,20 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     attrNames: El[],
     { allowEmpty = false } = {}
   ) => {
-    const data = (node as Locator).evaluate(
-      (el, { attrNames, allowEmpty }) => {
-        const attrData = (attrNames as El[]).reduce<Record<El, string | null>>((agg, name) => {
-          let attrVal = el.getAttribute(name) ?? null;
-          attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
-          agg[name] = strOrNull(attrVal, allowEmpty);
-          return agg;
-        }, {} as any);
-        return attrData;
-      },
-      { attrNames, allowEmpty }
-    );
+    const data = (node as Locator)
+      .evaluate(
+        (el, { attrNames, allowEmpty }) => {
+          const attrData = (attrNames as El[]).reduce<Record<El, string | null>>((agg, name) => {
+            let attrVal = el.getAttribute(name) ?? null;
+            attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
+            agg[name] = strOrNull(attrVal, allowEmpty);
+            return agg;
+          }, {} as any);
+          return attrData;
+        },
+        { attrNames, allowEmpty }
+      )
+      .catch(logAndRethrow);
     return data;
   };
 
@@ -639,11 +644,13 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
   >(
     selector
   ) => {
-    const resultEl = await node.evaluateHandle((el, s) => {
-      if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return null;
-      return (el as Element).querySelector(s) || null;
-    }, selector);
-    const hasResult = await resultEl.evaluate((el) => !!el);
+    const resultEl = await node
+      .evaluateHandle((el, s) => {
+        if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return null;
+        return (el as Element).querySelector(s) || null;
+      }, selector)
+      .catch(logAndRethrow);
+    const hasResult = await resultEl.evaluate((el) => !!el).catch(logAndRethrow);
     return hasResult ? playwrightDOMLib(resultEl as TNewEl, page) : null;
   };
 
@@ -652,10 +659,12 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
   >(
     selector
   ) => {
-    const elsHandle = await node.evaluateHandle((el, s) => {
-      if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return [];
-      return [...(el as Element).querySelectorAll<Element>(s)];
-    }, selector);
+    const elsHandle = await node
+      .evaluateHandle((el, s) => {
+        if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return [];
+        return [...(el as Element).querySelectorAll<Element>(s)];
+      }, selector)
+      .catch(logAndRethrow);
     const resultEls = await splitPlaywrightSelection<any>(elsHandle);
     return resultEls.map((el) => playwrightDOMLib(el as TNewEl, page));
   };
@@ -665,26 +674,32 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
   >(
     selector
   ) => {
-    const resultEl = await node.evaluateHandle((el, s) => {
-      if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return null;
-      return (el as Element).closest(s) || null;
-    }, selector);
-    const hasResult = await resultEl.evaluate((el) => !!el);
+    const resultEl = await node
+      .evaluateHandle((el, s) => {
+        if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return null;
+        return (el as Element).closest(s) || null;
+      }, selector)
+      .catch(logAndRethrow);
+    const hasResult = await resultEl.evaluate((el) => !!el).catch(logAndRethrow);
     return hasResult ? playwrightDOMLib(resultEl as TNewEl, page) : null;
   };
 
   const parent: PlaywrightDOMLib<El>['parent'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >() => {
-    const parentEl = await node.evaluateHandle((el) => el.parentElement || null);
-    const hasResult = await parentEl.evaluate((el) => !!el);
+    const parentEl = await node
+      .evaluateHandle((el) => el.parentElement || null)
+      .catch(logAndRethrow);
+    const hasResult = await parentEl.evaluate((el) => !!el).catch(logAndRethrow);
     return hasResult ? playwrightDOMLib(parentEl as TNewEl, page) : null;
   };
 
   const children: PlaywrightDOMLib<El>['children'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >() => {
-    const elsHandle = await node.evaluateHandle((el) => [...(el as Element).children]);
+    const elsHandle = await node
+      .evaluateHandle((el) => [...(el as Element).children])
+      .catch(logAndRethrow);
     const resultEls = await splitPlaywrightSelection<any>(elsHandle);
     return resultEls.map((el) => playwrightDOMLib(el as TNewEl, page));
   };
@@ -692,24 +707,28 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
   const root: PlaywrightDOMLib<El>['root'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >() => {
-    const rootEl = await node.evaluateHandle((el) => el.ownerDocument?.documentElement || null);
-    const hasResult = await rootEl.evaluate((el) => !!el);
+    const rootEl = await node
+      .evaluateHandle((el) => el.ownerDocument?.documentElement || null)
+      .catch(logAndRethrow);
+    const hasResult = await rootEl.evaluate((el) => !!el).catch(logAndRethrow);
     return hasResult ? playwrightDOMLib(rootEl as TNewEl, page) : null;
   };
 
   const remove: PlaywrightDOMLib<El>['remove'] = async () => {
-    await (node as Locator).evaluate((el) => el.remove());
+    await (node as Locator).evaluate((el) => el.remove()).catch(logAndRethrow);
   };
 
   const _getCommonAncestor = async (loc1: El, loc2: El) => {
     const isEl1BeforeEl2 = await (
       await mergeHandles([loc1, loc2])
-    ).evaluate(([el1, el2]) => {
-      if (!el1 || !el2) return false;
-      // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
-      const result = !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_FOLLOWING);
-      return result;
-    });
+    )
+      .evaluate(([el1, el2]) => {
+        if (!el1 || !el2) return false;
+        // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
+        const result = !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_FOLLOWING);
+        return result;
+      })
+      .catch(logAndRethrow);
 
     const { firstEl, lastEl } = isEl1BeforeEl2
       ? { firstEl: loc1, lastEl: loc2 }
@@ -717,18 +736,20 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
 
     const ancestor = await (
       await mergeHandles([firstEl, lastEl])
-    ).evaluateHandle(([el1, el2]) => {
-      if (!el1 || !el2) return null;
-      // https://stackoverflow.com/a/25154092
-      // https://developer.mozilla.org/en-US/docs/Web/API/Range/commonAncestorContainer
-      const range = new Range();
-      range.setStartBefore(el1);
-      range.setEndAfter(el2);
-      const containerEl = range.commonAncestorContainer;
-      return containerEl;
-    });
+    )
+      .evaluateHandle(([el1, el2]) => {
+        if (!el1 || !el2) return null;
+        // https://stackoverflow.com/a/25154092
+        // https://developer.mozilla.org/en-US/docs/Web/API/Range/commonAncestorContainer
+        const range = new Range();
+        range.setStartBefore(el1);
+        range.setEndAfter(el2);
+        const containerEl = range.commonAncestorContainer;
+        return containerEl;
+      })
+      .catch(logAndRethrow);
 
-    const hasResult = await (ancestor as JSHandle).evaluate((el) => !!el);
+    const hasResult = await (ancestor as JSHandle).evaluate((el) => !!el).catch(logAndRethrow);
     return hasResult ? (ancestor as El) : null;
   };
 
@@ -738,31 +759,34 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     otherEl
   ) => {
     const ancestor = (await _getCommonAncestor(node, otherEl)) as TNewEl | null;
-    const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el);
+    const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el).catch(logAndRethrow);
     return ancestor && hasResult ? playwrightDOMLib(ancestor, page) : null;
   };
 
   const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<El>({
     querySelectorAll: async (selector) => {
-      const elsHandle = await (node as Locator).evaluateHandle(
-        (el, s) => [...el.querySelectorAll(s)],
-        selector
-      );
+      const elsHandle = await (node as Locator)
+        .evaluateHandle((el, s) => [...el.querySelectorAll(s)], selector)
+        .catch(logAndRethrow);
       const resultEls = await splitPlaywrightSelection<any>(elsHandle);
       return resultEls as El[];
     },
     getParent: async (el) => {
-      const parentEl = await el.evaluateHandle((el) => el.parentElement || null);
-      const hasResult = await parentEl.evaluate((el) => !!el);
+      const parentEl = await el
+        .evaluateHandle((el) => el.parentElement || null)
+        .catch(logAndRethrow);
+      const hasResult = await parentEl.evaluate((el) => !!el).catch(logAndRethrow);
       return hasResult ? (parentEl as El) : null;
     },
     isAncestor: async (el1, el2) => {
-      return (await mergeHandles([el1, el2])).evaluate(([el1, el2]) => {
-        if (!el1 || !el2) return false;
-        // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
-        const result = !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_CONTAINED_BY);
-        return result;
-      });
+      return (await mergeHandles([el1, el2]))
+        .evaluate(([el1, el2]) => {
+          if (!el1 || !el2) return false;
+          // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
+          const result = !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_CONTAINED_BY);
+          return result;
+        })
+        .catch(logAndRethrow);
     },
     getCommonAncestor: _getCommonAncestor,
   });
@@ -770,7 +794,7 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
   const getCommonAncestorFromSelector: PlaywrightDOMLib<El>['getCommonAncestorFromSelector'] =
     async <TNewEl extends Locator | ElementHandle<Node> = El>(selector) => {
       const ancestor = (await _getCommonAncestorFromSelector(selector)) as TNewEl | null;
-      const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el);
+      const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el).catch(logAndRethrow);
       return ancestor && hasResult ? playwrightDOMLib(ancestor, page) : null;
     };
 

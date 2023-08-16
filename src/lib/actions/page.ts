@@ -2,6 +2,7 @@ import type { Page, Locator, ElementHandle, JSHandle } from 'playwright';
 
 import type { MaybePromise } from '../../utils/types';
 import { wait } from '../../utils/async';
+import { logAndRethrow } from '../../utils/error';
 import { handleIsLocator } from './domUtils';
 
 type InfiScrollTypes<TContainer, TChild, TChildren, TCB> = {
@@ -62,9 +63,9 @@ export const playwrightPageLib = async <T extends Page>(page: T): Promise<Playwr
     onNewChildren?: (elsHandle: PWIST['callbackArg']) => MaybePromise<void>,
     options?: InfiniteScrollLoaderOptions<PWIST>
   ) => {
-    const childrenCounter = options?.childrenCounter ?? ((h) => (h as ElementHandle).evaluate((el) => el ? (el as Element).childElementCount : 0)); // prettier-ignore
-    const childrenGetter = options?.childrenGetter ?? ((h) => h.evaluateHandle((el) => el ? (el as Element).children : [])); // prettier-ignore
-    const scrollIntoView = options?.scrollIntoView ?? ((h) => h.evaluate((el) => { el && el.scrollIntoView() })); // prettier-ignore
+    const childrenCounter = options?.childrenCounter ?? ((h) => (h as ElementHandle).evaluate((el) => el ? (el as Element).childElementCount : 0).catch(logAndRethrow)); // prettier-ignore
+    const childrenGetter = options?.childrenGetter ?? ((h) => h.evaluateHandle((el) => el ? (el as Element).children : []).catch(logAndRethrow)); // prettier-ignore
+    const scrollIntoView = options?.scrollIntoView ?? ((h) => h.evaluate((el) => { el && el.scrollIntoView() }).catch(logAndRethrow)); // prettier-ignore
     const waitAfterScroll = options?.waitAfterScroll ?? (() => wait()); // prettier-ignore
 
     const handleOrLocator = typeof container === 'string' ? page.locator(container) : container;
@@ -183,18 +184,20 @@ const _createPlaywrightElementSerializer = async <T extends Page>(page: T) => {
   const mapKey = `${prefix}${operationId}`;
 
   // Prepare a function in-page that creates the cache to store and retrieve the elements.
-  await page.evaluate(
-    ({ mapKey, helperKey }) => {
-      // Create mapping between IDs and HTMLElements, so we can pass the IDs as a serializable
-      // reference to the in-page DOM elements
-      globalThis[helperKey] = () => {
-        const elMap = (globalThis[mapKey] = globalThis[mapKey] || new Map());
-        const elMapRev = (globalThis[`${mapKey}_rev`] = globalThis[`${mapKey}_rev`] || new Map());
-        return { elMap, elMapRev } satisfies PlaywrightElementSerializerHelperResult;
-      };
-    },
-    { mapKey, helperKey }
-  );
+  await page
+    .evaluate(
+      ({ mapKey, helperKey }) => {
+        // Create mapping between IDs and HTMLElements, so we can pass the IDs as a serializable
+        // reference to the in-page DOM elements
+        globalThis[helperKey] = () => {
+          const elMap = (globalThis[mapKey] = globalThis[mapKey] || new Map());
+          const elMapRev = (globalThis[`${mapKey}_rev`] = globalThis[`${mapKey}_rev`] || new Map());
+          return { elMap, elMapRev } satisfies PlaywrightElementSerializerHelperResult;
+        };
+      },
+      { mapKey, helperKey }
+    )
+    .catch(logAndRethrow);
 
   /**
    * Given a Playwright JSHandle holding an array of Elements, cache the Elements
@@ -211,27 +214,29 @@ const _createPlaywrightElementSerializer = async <T extends Page>(page: T) => {
    * cache the IDs outside of Playwright in Sets or Maps.
    */
   const serializeEls = async (elsHandle: PWIST['children']) => {
-    const ids = await page.evaluate(
-      ({ els, helperKey }) => {
-        if (!els) return [] as string[];
+    const ids = await page
+      .evaluate(
+        ({ els, helperKey }) => {
+          if (!els) return [] as string[];
 
-        const { elMap, elMapRev } = globalThis[helperKey]() as PlaywrightElementSerializerHelperResult; // prettier-ignore
+          const { elMap, elMapRev } = globalThis[helperKey]() as PlaywrightElementSerializerHelperResult; // prettier-ignore
 
-        const innerIds = [...els].map((el) => {
-          if (!elMap.has(el)) {
-            const elId = Math.floor(Math.random() * 10 ** 9)
-              .toString()
-              .padStart(9, '0');
-            elMap.set(el, elId);
-            elMapRev.set(elId, el);
-            return elId;
-          }
-          return elMap.get(el)!;
-        });
-        return innerIds;
-      },
-      { els: elsHandle, helperKey }
-    );
+          const innerIds = [...els].map((el) => {
+            if (!elMap.has(el)) {
+              const elId = Math.floor(Math.random() * 10 ** 9)
+                .toString()
+                .padStart(9, '0');
+              elMap.set(el, elId);
+              elMapRev.set(elId, el);
+              return elId;
+            }
+            return elMap.get(el)!;
+          });
+          return innerIds;
+        },
+        { els: elsHandle, helperKey }
+      )
+      .catch(logAndRethrow);
 
     return ids;
   };
@@ -251,22 +256,24 @@ const _createPlaywrightElementSerializer = async <T extends Page>(page: T) => {
    */
   const resolveIds = async (ids: string[]) => {
     // Resolve serializable IDs to an element on the page
-    const elsHandle = await page.evaluateHandle(
-      ({ ids, helperKey }) => {
-        const { elMapRev } = globalThis[helperKey]() as PlaywrightElementSerializerHelperResult; // prettier-ignore
+    const elsHandle = await page
+      .evaluateHandle(
+        ({ ids, helperKey }) => {
+          const { elMapRev } = globalThis[helperKey]() as PlaywrightElementSerializerHelperResult; // prettier-ignore
 
-        const els = ids.map((id) => elMapRev.get(id) || null);
-        return els;
-      },
-      { ids, helperKey }
-    );
+          const els = ids.map((id) => elMapRev.get(id) || null);
+          return els;
+        },
+        { ids, helperKey }
+      )
+      .catch(logAndRethrow);
     return elsHandle;
   };
 
   /** See {@link resolveIds}. */
   const resolveId = async (id: string) => {
     const elsHandle = await resolveIds([id]);
-    const handle = await elsHandle.evaluateHandle((ids) => ids[0]);
+    const handle = await elsHandle.evaluateHandle((ids) => ids[0]).catch(logAndRethrow);
     return handle;
   };
 
