@@ -552,7 +552,7 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     options = {}
   ) => {
     const [resProp] = await props([propOrPath], options);
-    return resProp;
+    return resProp as R;
   };
 
   const props: PlaywrightDOMLib<El>['props'] = async <R extends any[]>(
