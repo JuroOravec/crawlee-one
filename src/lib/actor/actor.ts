@@ -15,7 +15,7 @@ import { omitBy, pick, defaults } from 'lodash';
 import * as Sentry from '@sentry/node';
 
 import type { CrawlerMeta, CrawlerType } from '../../types';
-import type { MaybePromise } from '../../utils/types';
+import type { MaybePromise, PickPartial } from '../../utils/types';
 import { registerHandlers, setupDefaultRoute } from '../router';
 import {
   CrawlerConfigActorInput,
@@ -102,8 +102,7 @@ export const createAndRunApifyActor = async <
   actorType: TCrawlerType;
   actorName: string;
   /** Config passed to the {@link createApifyActor} */
-  actorConfig: Omit<ActorDefinition<Ctx, Labels, Input>, 'router' | 'createCrawler'> &
-    Partial<Pick<ActorDefinition<Ctx, Labels, Input>, 'router' | 'createCrawler'>>;
+  actorConfig: PickPartial<ActorDefinition<Ctx, Labels, Input>, 'router' | 'createCrawler'>;
   /**
    * If using default `createCrawler` implementation, these are crawler options
    * that may be overriden by user input.
