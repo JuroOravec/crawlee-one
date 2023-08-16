@@ -2,6 +2,7 @@ import type { Page, Locator, ElementHandle, JSHandle } from 'playwright';
 
 import type { MaybePromise } from '../../utils/types';
 import { wait } from '../../utils/async';
+import { handleIsLocator } from './domUtils';
 
 type InfiScrollTypes<TContainer, TChild, TChildren, TCB> = {
   container: TContainer;
@@ -67,7 +68,7 @@ export const playwrightPageLib = async <T extends Page>(page: T): Promise<Playwr
     const waitAfterScroll = options?.waitAfterScroll ?? (() => wait()); // prettier-ignore
 
     const handleOrLocator = typeof container === 'string' ? page.locator(container) : container;
-    if ((handleOrLocator as Locator).page() !== page)
+    if (handleIsLocator(handleOrLocator) && handleOrLocator.page() !== page)
       throw Error('Locator does not belong to given Page.');
 
     await _infiniteScrollLoader<InfiScrollTypes<PWIST['container'], string, string[], string[]>>(
@@ -175,25 +176,24 @@ interface PlaywrightElementSerializerHelperResult {
  */
 const _createPlaywrightElementSerializer = async <T extends Page>(page: T) => {
   const prefix = '__domLib_infiniteScrollLoader__';
-  const CACHE_HELPER_KEY = `${prefix}helpers_elIdMap`;
+  const helperKey = `${prefix}helpers_elIdMap`;
   // There may be multiple instances of this cache on the Page, so we distinguish
   // them with operationId.
   const operationId = Math.floor(Math.random() * 10 ** 9).toString().padStart(9, '0'); // prettier-ignore
+  const mapKey = `${prefix}${operationId}`;
 
   // Prepare a function in-page that creates the cache to store and retrieve the elements.
   await page.evaluate(
-    ({ operationId, CACHE_HELPER_KEY }) => {
+    ({ mapKey, helperKey }) => {
       // Create mapping between IDs and HTMLElements, so we can pass the IDs as a serializable
       // reference to the in-page DOM elements
-      globalThis[CACHE_HELPER_KEY] = () => {
-        const elMap: Map<Element, string> = (globalThis[`${prefix}${operationId}`] =
-          globalThis[`${prefix}${operationId}`] || new Map());
-        const elMapRev: Map<string, Element> = (globalThis[`${prefix}${operationId}_rev`] =
-          globalThis[`${prefix}${operationId}_rev`] || new Map());
+      globalThis[helperKey] = () => {
+        const elMap = (globalThis[mapKey] = globalThis[mapKey] || new Map());
+        const elMapRev = (globalThis[`${mapKey}_rev`] = globalThis[`${mapKey}_rev`] || new Map());
         return { elMap, elMapRev } satisfies PlaywrightElementSerializerHelperResult;
       };
     },
-    { operationId, CACHE_HELPER_KEY }
+    { mapKey, helperKey }
   );
 
   /**
@@ -212,12 +212,10 @@ const _createPlaywrightElementSerializer = async <T extends Page>(page: T) => {
    */
   const serializeEls = async (elsHandle: PWIST['children']) => {
     const ids = await page.evaluate(
-      ({ els, CACHE_HELPER_KEY }) => {
+      ({ els, helperKey }) => {
         if (!els) return [] as string[];
 
-        const { elMap, elMapRev } = globalThis[
-          CACHE_HELPER_KEY
-        ]() as PlaywrightElementSerializerHelperResult;
+        const { elMap, elMapRev } = globalThis[helperKey]() as PlaywrightElementSerializerHelperResult; // prettier-ignore
 
         const innerIds = [...els].map((el) => {
           if (!elMap.has(el)) {
@@ -232,7 +230,7 @@ const _createPlaywrightElementSerializer = async <T extends Page>(page: T) => {
         });
         return innerIds;
       },
-      { els: elsHandle, CACHE_HELPER_KEY }
+      { els: elsHandle, helperKey }
     );
 
     return ids;
@@ -254,15 +252,13 @@ const _createPlaywrightElementSerializer = async <T extends Page>(page: T) => {
   const resolveIds = async (ids: string[]) => {
     // Resolve serializable IDs to an element on the page
     const elsHandle = await page.evaluateHandle(
-      ({ ids, CACHE_HELPER_KEY }) => {
-        const { elMapRev } = globalThis[
-          CACHE_HELPER_KEY
-        ]() as PlaywrightElementSerializerHelperResult;
+      ({ ids, helperKey }) => {
+        const { elMapRev } = globalThis[helperKey]() as PlaywrightElementSerializerHelperResult; // prettier-ignore
 
         const els = ids.map((id) => elMapRev.get(id) || null);
         return els;
       },
-      { ids, CACHE_HELPER_KEY }
+      { ids, helperKey }
     );
     return elsHandle;
   };
