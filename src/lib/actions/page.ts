@@ -1,7 +1,6 @@
 import type { Page, Locator, ElementHandle, JSHandle } from 'playwright';
 
 import type { MaybePromise } from '../../utils/types';
-import { wait } from '../../utils/async';
 import { logAndRethrow } from '../../utils/error';
 import { handleIsLocator } from './domUtils';
 
@@ -20,8 +19,12 @@ type AnyInfiScrollTypes = InfiScrollTypes<any, any, any, any>;
  *
  * This common interfaces makes the scraping code more portable between them.
  */
-export interface PageLib<TPage, TScroll extends AnyInfiScrollTypes> {
-  page: TPage | null;
+export interface PageLib<
+  TPage,
+  TScroll extends AnyInfiScrollTypes,
+  TCtx extends { container: TScroll['container'] }
+> {
+  page: TPage;
 
   /** Load entries via infinite scroll and process them as you go. */
   infiniteScroll: (
@@ -39,8 +42,11 @@ export interface PageLib<TPage, TScroll extends AnyInfiScrollTypes> {
      * };
      * ```
      */
-    onNewChildren?: (elsHandle: TScroll['callbackArg']) => MaybePromise<void>,
-    options?: InfiniteScrollLoaderOptions<TScroll>
+    onNewChildren?: (
+      elsHandle: TScroll['callbackArg'],
+      ctx: { page: TPage; container: TScroll['container'] }
+    ) => MaybePromise<void>,
+    options?: InfiniteScrollLoaderOptions<TScroll, TCtx>
   ) => MaybePromise<void>;
 }
 
@@ -52,54 +58,73 @@ type PlaywrightInfiScrollTypes = InfiScrollTypes<
 >;
 type PWIST = PlaywrightInfiScrollTypes; // For brevity
 
-export type PlaywrightPageLib<T extends Page = Page> = PageLib<T, PWIST>;
+export interface InfiniteScrollLoaderOptions<
+  T extends AnyInfiScrollTypes,
+  TCtx extends { container: T['container'] } = { container: T['container'] }
+> {
+  /** Override how container children are counted. Default uses `el.childElementCount` */
+  childrenCounter?: (containerEl: T['container'], ctx: TCtx) => MaybePromise<number>;
+  /** Override how container children are extraced. Default uses `el.children` */
+  childrenGetter?: (containerEl: T['container'], ctx: TCtx) => MaybePromise<T['children']>;
+  /** Override how container children are scrolled into view. Default uses `el.scrollIntoView` */
+  scrollIntoView?: (childEl: T['child'], ctx: TCtx) => MaybePromise<void>;
+  /** Override whether and how to wait after scrolling into view */
+  waitAfterScroll?: (childEl: T['child'], ctx: TCtx) => MaybePromise<void>;
+}
+
+export type PlaywrightPageLib<T extends Page = Page> = PageLib<
+  T,
+  PWIST,
+  { container: PWIST['container']; page: T }
+>;
 
 /** Implementation of PageLib in Playwright */
 export const playwrightPageLib = async <T extends Page>(page: T): Promise<PlaywrightPageLib<T>> => {
   const { serializeEls, resolveId, resolveIds } = await _createPlaywrightElementSerializer(page);
 
   const infiniteScroll: PlaywrightPageLib<T>['infiniteScroll'] = async (
-    container: string | PWIST['container'],
-    onNewChildren?: (elsHandle: PWIST['callbackArg']) => MaybePromise<void>,
-    options?: InfiniteScrollLoaderOptions<PWIST>
+    container,
+    onNewChildren,
+    options
   ) => {
     const childrenCounter = options?.childrenCounter ?? ((h) => (h as ElementHandle).evaluate((el) => el ? (el as Element).childElementCount : 0).catch(logAndRethrow)); // prettier-ignore
     const childrenGetter = options?.childrenGetter ?? ((h) => h.evaluateHandle((el) => el ? (el as Element).children : []).catch(logAndRethrow)); // prettier-ignore
     const scrollIntoView = options?.scrollIntoView ?? ((h) => h.evaluate((el) => { el && el.scrollIntoView() }).catch(logAndRethrow)); // prettier-ignore
-    const waitAfterScroll = options?.waitAfterScroll ?? (() => wait()); // prettier-ignore
+    const waitAfterScroll = options?.waitAfterScroll ?? (() => page.waitForLoadState('networkidle')); // prettier-ignore
 
     const handleOrLocator = typeof container === 'string' ? page.locator(container) : container;
-    if (handleIsLocator(handleOrLocator) && handleOrLocator.page() !== page)
+    if (handleIsLocator(handleOrLocator) && handleOrLocator.page() !== page) {
       throw Error('Locator does not belong to given Page.');
+    }
 
     await _infiniteScrollLoader<InfiScrollTypes<PWIST['container'], string, string[], string[]>>(
       handleOrLocator,
-      async (childIds) => {
+      async (childIds, ctx) => {
         // Resolve child IDs to handle of child elements on the page
         const elsHandle = await resolveIds(childIds);
         // Then pass them to user
-        await onNewChildren?.(elsHandle);
+        await onNewChildren?.(elsHandle, { ...ctx, page });
       },
       {
-        childrenCounter,
-        childrenGetter: async (handle) => {
+        childrenCounter: (el, ctx) => childrenCounter(el, { ...ctx, page }),
+        childrenGetter: async (handle, ctx) => {
           // First let user tell us how to collect the child elements
-          const childElsHandle = await childrenGetter(handle);
+          const childElsHandle = await childrenGetter(handle, { ...ctx, page });
           // Then convert them to serializable IDs that we can return to user
           const childIds = await serializeEls(childElsHandle);
           return childIds;
         },
-        scrollIntoView: async (childId) => {
+        scrollIntoView: async (childId, ctx) => {
           // First resolve serializable ID to an element on the page
           const childElHandle = await resolveId(childId);
           // Then let user tell us how to scroll into view
-          await scrollIntoView(childElHandle);
+          await scrollIntoView(childElHandle, { ...ctx, page });
         },
-        waitAfterScroll: async (childId) => {
+        waitAfterScroll: async (childId, ctx) => {
           // First resolve serializable ID to an element on the page
           const childElHandle = await resolveId(childId);
           // Then let user tell us how to wait after scroll
-          await waitAfterScroll(childElHandle);
+          await waitAfterScroll(childElHandle, { ...ctx, page });
         },
       }
     );
@@ -112,21 +137,13 @@ export const playwrightPageLib = async <T extends Page>(page: T): Promise<Playwr
   } satisfies PlaywrightPageLib<T>;
 };
 
-export interface InfiniteScrollLoaderOptions<T extends AnyInfiScrollTypes> {
-  /** Override how container children are counted. Default uses `el.childElementCount` */
-  childrenCounter?: (containerEl: T['container']) => MaybePromise<number>;
-  /** Override how container children are extraced. Default uses `el.children` */
-  childrenGetter?: (containerEl: T['container']) => MaybePromise<T['children']>;
-  /** Override how container children are scrolled into view. Default uses `el.scrollIntoView` */
-  scrollIntoView?: (childEl: T['child']) => MaybePromise<void>;
-  /** Override whether and how to wait after scrolling into view */
-  waitAfterScroll?: (childEl: T['child']) => MaybePromise<void>;
-}
-
 /** Load entries via infinite scroll and process them as you go. */
 const _infiniteScrollLoader = async <T extends AnyInfiScrollTypes>(
   container: T['container'] | (() => MaybePromise<T['container']>),
-  onNewChildren: (childEls: T['callbackArg']) => MaybePromise<void>,
+  onNewChildren: (
+    childEls: T['callbackArg'],
+    ctx: { container: T['container'] }
+  ) => MaybePromise<void>,
   handlers: Required<InfiniteScrollLoaderOptions<T>>
 ) => {
   const containerElGetter = (
@@ -137,22 +154,24 @@ const _infiniteScrollLoader = async <T extends AnyInfiScrollTypes>(
 
   const processChildren = async (childrenEl: T['child'][]) => {
     const newChildren = await childrenEl.filter((el) => !processedChildren.has(el));
-    await onNewChildren?.(newChildren);
+    const container = await containerElGetter();
+    await onNewChildren?.(newChildren, { container });
     newChildren.forEach((el) => processedChildren.add(el));
   };
 
-  let currChildrenCount = await handlers.childrenCounter(await containerElGetter());
+  const initContainer = await containerElGetter();
+  let currChildrenCount = await handlers.childrenCounter(initContainer, { container: initContainer }); // prettier-ignore
   while (true) {
     // Process currently-loaded children
     const containerEl = await containerElGetter();
-    const currChildren = [...(await handlers.childrenGetter(containerEl))];
+    const currChildren = [...(await handlers.childrenGetter(containerEl, { container: containerEl }))]; // prettier-ignore
     await processChildren(currChildren);
 
     // Load next batch
     const lastChildEl = currChildren.slice(-1)[0];
-    await handlers.scrollIntoView(lastChildEl);
-    await handlers.waitAfterScroll(lastChildEl);
-    const newChildrenCount = await handlers.childrenCounter(containerEl);
+    await handlers.scrollIntoView(lastChildEl, { container: containerEl });
+    await handlers.waitAfterScroll(lastChildEl, { container: containerEl });
+    const newChildrenCount = await handlers.childrenCounter(containerEl, { container: containerEl }); // prettier-ignore
 
     if (newChildrenCount <= currChildrenCount) break;
 
