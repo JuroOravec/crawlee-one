@@ -43,8 +43,10 @@ export interface PageLib<
      * ```
      */
     onNewChildren?: (
+      /** New elements that were added */
       elsHandle: TScroll['callbackArg'],
       ctx: { page: TPage; container: TScroll['container'] },
+      /** Function that, if called, stops the infinite scrolling */
       stop: () => void
     ) => MaybePromise<void>,
     options?: InfiniteScrollLoaderOptions<TScroll, TCtx>
