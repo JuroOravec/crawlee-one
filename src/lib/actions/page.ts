@@ -44,7 +44,8 @@ export interface PageLib<
      */
     onNewChildren?: (
       elsHandle: TScroll['callbackArg'],
-      ctx: { page: TPage; container: TScroll['container'] }
+      ctx: { page: TPage; container: TScroll['container'] },
+      stop: () => void
     ) => MaybePromise<void>,
     options?: InfiniteScrollLoaderOptions<TScroll, TCtx>
   ) => MaybePromise<void>;
@@ -99,11 +100,11 @@ export const playwrightPageLib = async <T extends Page>(page: T): Promise<Playwr
 
     await _infiniteScrollLoader<InfiScrollTypes<PWIST['container'], string, string[], string[]>>(
       handleOrLocator,
-      async (childIds, ctx) => {
+      async (childIds, ctx, stopFn) => {
         // Resolve child IDs to handle of child elements on the page
         const elsHandle = await resolveIds(childIds);
         // Then pass them to user
-        await onNewChildren?.(elsHandle, { ...ctx, page });
+        await onNewChildren?.(elsHandle, { ...ctx, page }, stopFn);
       },
       {
         childrenCounter: (el, ctx) => childrenCounter(el, { ...ctx, page }),
@@ -142,7 +143,8 @@ const _infiniteScrollLoader = async <T extends AnyInfiScrollTypes>(
   container: T['container'] | (() => MaybePromise<T['container']>),
   onNewChildren: (
     childEls: T['callbackArg'],
-    ctx: { container: T['container'] }
+    ctx: { container: T['container'] },
+    stop: () => void
   ) => MaybePromise<void>,
   handlers: Required<InfiniteScrollLoaderOptions<T>>
 ) => {
@@ -151,21 +153,28 @@ const _infiniteScrollLoader = async <T extends AnyInfiScrollTypes>(
   ) as () => MaybePromise<T['container']>;
 
   const processedChildren = new Set();
+  let userAskedToStop = false;
+
+  const stopFn = () => {
+    userAskedToStop = true;
+  };
 
   const processChildren = async (childrenEl: T['child'][]) => {
     const newChildren = await childrenEl.filter((el) => !processedChildren.has(el));
     const container = await containerElGetter();
-    await onNewChildren?.(newChildren, { container });
+    await onNewChildren?.(newChildren, { container }, stopFn);
     newChildren.forEach((el) => processedChildren.add(el));
   };
 
   const initContainer = await containerElGetter();
   let currChildrenCount = await handlers.childrenCounter(initContainer, { container: initContainer }); // prettier-ignore
-  while (true) {
+  while (!userAskedToStop) {
     // Process currently-loaded children
     const containerEl = await containerElGetter();
     const currChildren = [...(await handlers.childrenGetter(containerEl, { container: containerEl }))]; // prettier-ignore
     await processChildren(currChildren);
+
+    if (userAskedToStop) break;
 
     // Load next batch
     const lastChildEl = currChildren.slice(-1)[0];
