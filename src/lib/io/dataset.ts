@@ -83,8 +83,12 @@ const createValueMonitor = <T>(
     return currValue as T;
   };
 
+  const getValue = () => {
+    return isStale() ? refreshValue() : currValue;
+  };
+
   return {
-    value: () => currValue,
+    value: getValue,
     isStale,
     refresh: refreshValue,
     onValue: registerCallback,
@@ -122,7 +126,7 @@ export const datasetSizeMonitor = (maxSize: number, options?: DatasetSizeMonitor
   }, options);
 
   const prepareDatasetSize = async () => {
-    const size = valueMonitor.value();
+    const size = await valueMonitor.value();
     if (typeof size === 'number' && size >= 0 && !valueMonitor.isStale()) return size;
     const newSize = await valueMonitor.refresh();
     return newSize;
