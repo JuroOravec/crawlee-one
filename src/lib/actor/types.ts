@@ -13,6 +13,7 @@ import type {
   PrivacyActorInput,
   ProxyActorInput,
   StartUrlsActorInput,
+  PerfActorInput,
 } from '../config';
 
 type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<R>);
@@ -20,6 +21,7 @@ type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<
 type OrigRunCrawler<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
 
 export type AllActorInputs = CrawlerConfigActorInput &
+  PerfActorInput &
   StartUrlsActorInput &
   LoggingActorInput &
   ProxyActorInput &

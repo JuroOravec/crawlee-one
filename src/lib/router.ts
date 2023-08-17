@@ -14,7 +14,7 @@ import type { CommonPage } from '@crawlee/browser-pool';
 import { Actor } from 'apify';
 
 import type { MaybePromise } from '../utils/types';
-import { serialAsyncFind, serialAsyncMap } from '../utils/async';
+import { serialAsyncFind, serialAsyncMap, wait } from '../utils/async';
 import type { PerfActorInput } from './config';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
@@ -253,10 +253,16 @@ export const setupDefaultRoute = async <
     let handledRequestsCount = 0;
     let req: CrawlerRequest | null = ctx.request;
 
-    const loadNextRequest = async () => {
+    const loadNextRequest = async (suffix: string) => {
+      log.debug(`Checking for new Request in the queue. ${suffix}`);
+
+      await wait(1000);
       const newReq = await reqQueue.fetchNextRequest();
       req = newReq ?? null;
       handledRequestsCount++;
+
+      if (req != null) log.debug(`Found new Request in the queue. ${suffix}`);
+      else log.debug(`No more Requests in the queue. ${suffix}`);
     };
 
     const hasBatchReqs = () =>
@@ -285,8 +291,7 @@ export const setupDefaultRoute = async <
         await reqQueue.markRequestHandled(req);
 
         // Load next request if possible
-        if (perfBatchSize != null) log.debug(`Checking for new Request in the queue. ${logSuffix}`); // prettier-ignore
-        await loadNextRequest();
+        await loadNextRequest(logSuffix);
       } while (hasBatchReqs());
     } catch (err) {
       log.error(`Failed to process a request, returning it to the queue. URL: ${req?.loadedUrl || req?.url}.`); // prettier-ignore
