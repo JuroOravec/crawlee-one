@@ -28,7 +28,7 @@ import {
 import { createErrorHandler } from '../error/errorHandler';
 import { setupSentry } from '../error/sentry';
 import { logLevelHandlerWrapper } from '../log';
-import { itemCacheKey, pushData } from '../io/pushData';
+import { type PushDataOptions, itemCacheKey, pushData } from '../io/pushData';
 import type {
   ActorContext,
   ActorDefinition,
@@ -309,24 +309,26 @@ const createScopedMetamorph = (actor: Pick<ActorContext, 'input'>) => {
 
 /** pushData wrapper that pre-populates options based on actor input */
 const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
-  const scopedPushData: typeof pushData = (entries, ctx, options) => {
-    const {
-      includePersonalData,
-      outputTransform,
-      outputFilter,
-      outputDatasetIdOrName,
-      outputPickFields,
-      outputRenameFields,
-      outputCacheStoreIdOrName,
-      outputCachePrimaryKeys,
-      outputCacheActionOnResult,
-    } = (actor.input ?? {}) as OutputActorInput & PrivacyActorInput;
+  const {
+    includePersonalData,
+    outputMaxCount,
+    outputTransform,
+    outputFilter,
+    outputDatasetIdOrName,
+    outputPickFields,
+    outputRenameFields,
+    outputCacheStoreIdOrName,
+    outputCachePrimaryKeys,
+    outputCacheActionOnResult,
+  } = (actor.input ?? {}) as OutputActorInput & PrivacyActorInput;
 
+  const scopedPushData: ActorContext['pushData'] = async (entries, ctx, options) => {
     const transformFn = genHookFn(actor, outputTransform);
     const filterFn = genHookFn(actor, outputFilter);
 
     const mergedOptions = {
       showPrivate: includePersonalData,
+      maxCount: outputMaxCount,
       pickKeys: outputPickFields,
       remapKeys: outputRenameFields,
       transform: outputTransform ? (item) => transformFn(item) : undefined,
@@ -336,7 +338,7 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
       cachePrimaryKeys: outputCachePrimaryKeys,
       cacheActionOnResult: outputCacheActionOnResult,
       ...options,
-    };
+    } satisfies PushDataOptions<object>;
 
     return pushData(entries, ctx, mergedOptions);
   };

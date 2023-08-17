@@ -169,6 +169,14 @@ export interface ActorContext<
   runCrawler: RunCrawler<Ctx>;
   /** Trigger actor metamorph, using actor's inputs as defaults. */
   metamorph: Metamorph;
+  /**
+   * `Actor.pushData` with extra optional features:
+   *
+   * - Limit the number of entries pushed to the Dataset based on the Actor input
+   * - Transform and filter entries via Actor input.
+   * - Add metadata to entries before they are pushed to Dataset.
+   * - Set which (nested) properties are personal data optionally redact them for privacy compliance.
+   */
   pushData: typeof pushData;
   startUrls: CrawlerUrl[];
   proxy?: ProxyConfiguration;

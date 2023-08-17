@@ -1,8 +1,9 @@
 import { Actor } from 'apify';
-import type { CrawlingContext } from 'crawlee';
+import type { CrawlingContext, Log } from 'crawlee';
 import { get, pick, set, unset, uniq, sortBy, isPlainObject, fromPairs } from 'lodash';
 
 import { serialAsyncMap } from '../../utils/async';
+import { datasetSizeMonitor } from './dataset';
 
 export interface ActorEntryMetadata {
   actorId: string | null;
@@ -63,6 +64,16 @@ export type PrivacyMask<T extends object> = {
 };
 
 export interface PushDataOptions<T extends object> {
+  /**
+   * If set, only at most this many entries will be scraped.
+   *
+   * The count is determined from the Apify Dataset that's used for the Actor run.
+   *
+   * This means that if `maxCount` is set to 50, but the
+   * associated Dataset already has 40 items in it, then only 10 new entries
+   * will be saved.
+   */
+  maxCount?: number;
   /**
    * Whether items should be enriched with request and run metadata.
    *
@@ -273,6 +284,33 @@ const cyrb53 = (str, seed = 0) => {
   return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
 
+const shortenToSize = async <T>(
+  entries: T[],
+  maxCount: number,
+  options?: { datasetIdOrName?: string; log: Log }
+) => {
+  const datasetIdOrName = options?.datasetIdOrName;
+  const datasetName = datasetIdOrName ? `"${datasetIdOrName}"` : 'DEFAULT';
+
+  const sizeMonitor = datasetSizeMonitor(maxCount, { datasetId: datasetIdOrName });
+
+  // Ignore incoming entries if the dataset is already full
+  const isDatasetFull = await sizeMonitor.isFull();
+  if (isDatasetFull) {
+    options?.log?.warning(`Dataset (${datasetName}) is already full (${maxCount} entries), ${entries.length} entries will be discarded.`);
+    return [];
+  } // prettier-ignore
+
+  // Show warning when only part of the incoming data made it into the dataset
+  const slicedEntries = sizeMonitor ? await sizeMonitor.shortenToSize(entries) : entries;
+  if (slicedEntries.length !== entries.length) {
+    options?.log?.warning(`Dataset (${datasetName}) has become full (${maxCount} entries), ${entries.length} entries will be discarded.`);
+    return [];
+  } // prettier-ignore
+
+  return slicedEntries;
+};
+
 /**
  * `Actor.pushData` with extra features:
  *
@@ -289,6 +327,7 @@ export const pushData = async <
   options: PushDataOptions<T>
 ) => {
   const {
+    maxCount,
     includeMetadata,
     showPrivate,
     privacyMask,
@@ -302,7 +341,11 @@ export const pushData = async <
     cacheActionOnResult,
   } = options;
 
-  const items = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
+  const manyItems = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
+  const items =
+    maxCount != null
+      ? await shortenToSize(manyItems, maxCount, { datasetIdOrName, log: ctx.log })
+      : manyItems;
 
   ctx.log.debug(`Preparing entries before pushing ${items.length} items to dataset`); // prettier-ignore
   const addMetadataToData = createMetadataMapper(ctx);

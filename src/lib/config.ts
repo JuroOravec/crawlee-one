@@ -84,6 +84,16 @@ export interface ProxyActorInput {
 /** Common input fields related to actor output */
 export interface OutputActorInput {
   /**
+   * If set, only at most this many entries will be scraped.
+   *
+   * The count is determined from the Apify Dataset that's used for the Actor run.
+   *
+   * This means that if `outputMaxCount` is set to 50, but the
+   * associated Dataset already has 40 items in it, then only 10 new entries
+   * will be saved.
+   */
+  outputMaxCount?: number;
+  /**
    * Option to select a subset of keys/fields of an entry that
    * will be pushed to the dataset.
    *
@@ -436,6 +446,18 @@ export const privacyInput = {
 
 /** Common input fields related to actor output */
 export const outputInput = {
+  outputMaxCount: createIntegerField({
+    title: 'Limit the number of scraped entries',
+    type: 'integer',
+    description: `If set, only at most this many entries will be scraped.<br/><br/>
+      The count is determined from the Apify Dataset that's used for the Actor run.<br/><br/>
+      This means that if \`outputMaxCount\` is set to 50, but the associated Dataset already has 40 items in it, then only 10 new entries will be saved.`,
+    example: 50,
+    prefill: 50,
+    minimum: 0,
+    nullable: true,
+    sectionCaption: 'Output size, transformation & filtering (T in ETL)',
+  }),
   outputPickFields: createArrayField({
     title: 'Pick dataset fields',
     type: 'array',
@@ -447,7 +469,6 @@ export const outputInput = {
     editor: 'stringList',
     example: ['fieldName', 'another.nested[0].field'],
     nullable: true,
-    sectionCaption: 'Output Transformation & Filtering (T in ETL)',
   }),
   outputRenameFields: createObjectField({
     title: 'Rename dataset fields',
@@ -584,7 +605,7 @@ export const outputInput = {
     example: 'add',
     nullable: true,
   }),
-};
+} satisfies Record<keyof OutputActorInput, Field>;
 
 /** Common input fields related to actor metamorphing */
 export const metamorphInput = {
@@ -651,6 +672,8 @@ export const privacyInputValidationFields = {
 } satisfies Record<keyof PrivacyActorInput, Joi.Schema>;
 
 export const outputInputValidationFields = {
+  outputMaxCount: Joi.number().integer().min(0).optional(),
+
   outputPickFields: Joi.array().items(Joi.string().min(1)).optional(),
   // https://stackoverflow.com/a/49898360/9788634
   outputRenameFields: Joi.object().pattern(/./, Joi.string().min(1)).optional(),
