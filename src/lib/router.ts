@@ -1,4 +1,4 @@
-import {
+import type {
   BasicCrawler,
   BasicCrawlingContext,
   CheerioCrawlingContext,
@@ -8,11 +8,14 @@ import {
   PlaywrightCrawlingContext,
   PuppeteerCrawlingContext,
   RouterHandler as CrawlerRouter,
+  Request as CrawlerRequest,
 } from 'crawlee';
 import type { CommonPage } from '@crawlee/browser-pool';
+import { Actor } from 'apify';
 
 import type { MaybePromise } from '../utils/types';
-import { serialAsyncMap } from '../utils/async';
+import { serialAsyncFind, serialAsyncMap } from '../utils/async';
+import type { PerfActorInput } from './config';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
 
@@ -202,7 +205,7 @@ export const registerHandlers = async <
  * ]);
  *
  * // Set up default route to redirect to labelled routes
- * setupDefaultRoute(router, routes);
+ * setupDefaultRoute({ router, routes });
  *
  * // Now set up the labelled routes
  * await router.addHandler(routeLabels.JOB_LISTING, async (ctx) => { ... }
@@ -210,20 +213,25 @@ export const registerHandlers = async <
 export const setupDefaultRoute = async <
   CrawlerCtx extends CrawlingContext,
   RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
+  Labels extends string = string,
+  Input extends Record<string, any> = Record<string, any>
 >({
   router,
   routerWrappers,
   routerContext,
   routes,
   routeHandlers,
+  input,
 }: {
   router: CrawlerRouter<CrawlerCtx>;
   routerWrappers?: CrawlerRouterWrapper<CrawlerCtx, RouterCtx>[];
   routerContext?: RouterCtx;
   routes: RouteMatcher<CrawlerCtx, RouterCtx, Labels>[];
   routeHandlers: Record<Labels, RouteHandler<CrawlerCtx, RouterCtx>>;
+  input?: Input | null;
 }) => {
+  const { perfBatchSize } = (input || {}) as PerfActorInput;
+
   /** Redirect the URL to the labelled route identical to route's name */
   // prettier-ignore
   const defaultAction: RouteMatcher<CrawlerCtx, RouterCtx, Labels>['action'] = async (url, ctx, route) => {
@@ -239,28 +247,57 @@ export const setupDefaultRoute = async <
   const defaultHandler = async (ctx: RouterHandlerCtx<CrawlerCtx & RouterCtx>): Promise<void> => {
     const { page, log: parentLog } = ctx;
     const log = parentLog.child({ prefix: '[Router] ' });
-    const url = page
-      ? await (page as any as CommonPage).url()
-      : ctx.request.loadedUrl || ctx.request.url;
 
-    let route: RouteMatcher<CrawlerCtx, RouterCtx, Labels>;
-    for (const currRoute of routes) {
-      if (await currRoute.match(url, ctx, currRoute, routeHandlers)) {
-        route = currRoute;
-        break;
-      }
-    }
+    const reqQueue = await Actor.openRequestQueue();
 
-    if (!route!) {
-      log.error(`No route matched URL. URL will not be processed. URL: ${url}`); // prettier-ignore
-      return;
+    let handledRequestsCount = 0;
+    let req: CrawlerRequest | null = ctx.request;
+
+    const loadNextRequest = async () => {
+      const newReq = await reqQueue.fetchNextRequest();
+      req = newReq ?? null;
+      handledRequestsCount++;
+    };
+
+    const hasBatchReqs = () =>
+      perfBatchSize != null && req != null && handledRequestsCount < perfBatchSize;
+
+    try {
+      do {
+        const url = page ? await (page as any as CommonPage).url() : req?.loadedUrl || req?.url;
+        const logSuffix = `Batch ${handledRequestsCount + 1} of ${perfBatchSize ?? 1}. URL: ${url}`;
+
+        // Find route handler for given URL
+        log.debug(`Searching for a handler for given Request. ${logSuffix}`);
+        const route = await serialAsyncFind(routes, async (currRoute) => {
+          const isMatch = await currRoute.match(url, ctx, currRoute, routeHandlers);
+          return isMatch;
+        });
+
+        // Run the handler
+        if (route) {
+          log.info(`URL matched route ${route.name} (handlerLabel: ${route.handlerLabel}). ${logSuffix}`); // prettier-ignore
+          await (route.action ?? defaultAction)(url, ctx, route, routeHandlers);
+        } else {
+          log.error(`No route matched URL. URL will not be processed. ${logSuffix}`);
+        }
+
+        await reqQueue.markRequestHandled(req);
+
+        // Load next request if possible
+        if (perfBatchSize != null) log.debug(`Checking for new Request in the queue. ${logSuffix}`); // prettier-ignore
+        await loadNextRequest();
+      } while (hasBatchReqs());
+    } catch (err) {
+      log.error(`Failed to process a request, returning it to the queue. URL: ${req?.loadedUrl || req?.url}.`); // prettier-ignore
+      log.error(err);
+      // Reinsert the request into the queue if we failed to process it due to an error
+      if (req) await reqQueue.reclaimRequest(req);
     }
-    log.info(`URL matched route ${route.name} (handlerLabel: ${route.handlerLabel}). URL: ${url}`);
-    await (route.action ?? defaultAction)(url, ctx, route, routeHandlers);
   };
 
   const wrappedHandler = (routerWrappers ?? []).reduceRight(
-    (fn, wrapper) => wrapper((ctx) => fn(ctx)),
+    (fn, wrapper) => wrapper(fn),
     defaultHandler
   );
   await router.addDefaultHandler<CrawlerCtx>((ctx) =>

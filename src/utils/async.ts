@@ -14,6 +14,32 @@ export const serialAsyncMap = async <T, R>(
   return results;
 };
 
+export const serialAsyncFilter = async <T>(
+  inputArr: T[],
+  fn: (item: T, index: number) => MaybePromise<any>
+) => {
+  const results = await inputArr.reduce(async (aggResultPromise, input, index) => {
+    const agg = await aggResultPromise;
+    const result = await fn(input, index);
+    if (result) agg.push(input);
+    return agg;
+  }, Promise.resolve([] as T[]));
+
+  return results;
+};
+
+export const serialAsyncFind = async <T>(
+  inputArr: T[],
+  fn: (item: T, index: number) => MaybePromise<any>
+) => {
+  let index = 0;
+  for (const input of inputArr) {
+    const result = await fn(input, index);
+    if (result) return input;
+    index++;
+  }
+};
+
 export interface RetryAsyncOptions {
   /** Number of retries after the function call fails */
   maxRetries?: number;

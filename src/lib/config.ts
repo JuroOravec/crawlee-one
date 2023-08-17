@@ -30,8 +30,20 @@ export type CrawlerConfigActorInput = Pick<
   | 'keepAlive'
 >;
 
+/** Common input fields related to performance which are not part of the CrawlerConfig */
+export interface PerfActorInput {
+  /**
+   * If set, multiple Requests will be handled by a single Actor instance.
+   *
+   * See official docs: https://docs.apify.com/platform/actors/development/performance#batch-jobs-win-over-the-single-jobs
+   *
+   * Example: If set to 20, then up to 20 requests will be handled in a single "go".
+   */
+  perfBatchSize?: number;
+}
+
 /** Common input fields for defining URLs to scrape */
-export type StartUrlsActorInput = {
+export interface StartUrlsActorInput {
   /** URLs to start with, defined manually as a list of strings or crawler requests */
   startUrls?: CrawlerUrl[];
   /**
@@ -56,7 +68,7 @@ export type StartUrlsActorInput = {
    * ```
    */
   startUrlsFromFunction?: string;
-};
+}
 
 /** Common input fields related to logging setup */
 export interface LoggingActorInput {
@@ -321,6 +333,22 @@ export const crawlerInput = {
     nullable: true,
   }),
 } satisfies Record<keyof CrawlerConfigActorInput, Field>;
+
+/** Common input fields related to performance which are not part of the CrawlerConfig */
+export const perfInput = {
+  perfBatchSize: createIntegerField({
+    title: 'Batch requests',
+    type: 'integer',
+    description: `If set, multiple Requests will be handled by a single Actor instance.<br/><br/>
+       Example: If set to 20, then up to 20 requests will be handled in a single "go".<br/><br/>
+       <a href="https://docs.apify.com/platform/actors/development/performance#batch-jobs-win-over-the-single-jobs">See Apify documentation</a>.`,
+    example: 20,
+    minimum: 0,
+    nullable: true,
+    sectionCaption: 'Performance configuration (Advanced)',
+    sectionDescription: 'Standalone performance options. These are not passed to the Crawler.',
+  }),
+} satisfies Record<keyof PerfActorInput, Field>;
 
 /** Common input fields for defining URLs to scrape */
 export const startUrlsInput = {
@@ -650,6 +678,10 @@ export const crawlerInputValidationFields = {
   maxConcurrency: Joi.number().integer().min(0).optional(),
   keepAlive: Joi.boolean().optional(),
 } satisfies Record<keyof CrawlerConfigActorInput, Joi.Schema>;
+
+export const perfInputValidationFields = {
+  perfBatchSize: Joi.number().integer().min(0).optional(),
+} satisfies Record<keyof PerfActorInput, Joi.Schema>;
 
 export const startUrlsInputValidationFields = {
   startUrls: Joi.array().items(Joi.string().min(1), Joi.object()).optional(),

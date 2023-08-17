@@ -272,12 +272,13 @@ export const createApifyActor = async <
   const routerContext = { actor, pushData: scopedPushData };
 
   // Set up router
-  await setupDefaultRoute<Ctx, ActorRouterContext<Ctx, Labels, Input>, Labels>({
+  await setupDefaultRoute<Ctx, ActorRouterContext<Ctx, Labels, Input>, Labels, Input>({
     router,
     routerWrappers,
     routerContext,
     routes,
     routeHandlers,
+    input,
   });
   await registerHandlers<Ctx, ActorRouterContext<Ctx, Labels, Input>, Labels>({
     router,
