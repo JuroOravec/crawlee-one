@@ -12,6 +12,7 @@ import type {
 } from 'crawlee';
 import type { CommonPage } from '@crawlee/browser-pool';
 import { Actor } from 'apify';
+import type { Page } from 'playwright';
 
 import type { MaybePromise } from '../utils/types';
 import { serialAsyncFind, serialAsyncMap, wait } from '../utils/async';
@@ -253,16 +254,29 @@ export const setupDefaultRoute = async <
     let handledRequestsCount = 0;
     let req: CrawlerRequest | null = ctx.request;
 
+    const closeRequest = async () => {
+      if (!req) return;
+      await reqQueue.markRequestHandled(req);
+      handledRequestsCount++;
+    };
+
     const loadNextRequest = async (suffix: string) => {
       log.debug(`Checking for new Request in the queue. ${suffix}`);
 
       await wait(1000);
       const newReq = await reqQueue.fetchNextRequest();
       req = newReq ?? null;
-      handledRequestsCount++;
 
-      if (req != null) log.debug(`Found new Request in the queue. ${suffix}`);
-      else log.debug(`No more Requests in the queue. ${suffix}`);
+      if (req) {
+        log.debug(`Found new Request in the queue. ${suffix}`);
+
+        // WARNING - For each subsequent Request, it must be loaded manually
+        //           Hence, batching is suitable only for browser-based Crawlers
+        //           like Playwright or Puppeteer.
+        if (page && page.goto) await (page as Page).goto(req.url);
+      } else {
+        log.debug(`No more Requests in the queue. ${suffix}`);
+      }
     };
 
     const hasBatchReqs = () =>
@@ -288,9 +302,8 @@ export const setupDefaultRoute = async <
           log.error(`No route matched URL. URL will not be processed. ${logSuffix}`);
         }
 
-        await reqQueue.markRequestHandled(req);
-
-        // Load next request if possible
+        // Clean up and move onto another request
+        await closeRequest();
         await loadNextRequest(logSuffix);
       } while (hasBatchReqs());
     } catch (err) {
