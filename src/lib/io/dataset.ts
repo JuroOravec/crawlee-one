@@ -140,7 +140,7 @@ export const datasetSizeMonitor = (maxSize: number, options?: DatasetSizeMonitor
 
   const shortenToSize = async <T>(arr: T[]) => {
     const currSize = await prepareDatasetSize();
-    return arr.slice(0, currSize);
+    return arr.slice(0, maxSize - currSize);
   };
 
   // Define handlers for when the value is updated

@@ -302,7 +302,7 @@ const shortenToSize = async <T>(
   } // prettier-ignore
 
   // Show warning when only part of the incoming data made it into the dataset
-  const slicedEntries = sizeMonitor ? await sizeMonitor.shortenToSize(entries) : entries;
+  const slicedEntries = await sizeMonitor.shortenToSize(entries);
   if (slicedEntries.length !== entries.length) {
     options?.log?.warning(`Dataset (${datasetName}) has become full (${maxCount} entries), ${entries.length} entries will be discarded.`);
     return [];
