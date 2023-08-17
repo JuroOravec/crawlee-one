@@ -484,7 +484,7 @@ export const outputInput = {
     prefill: 50,
     minimum: 0,
     nullable: true,
-    sectionCaption: 'Output size, transformation & filtering (T in ETL)',
+    sectionCaption: 'Output size, transformation & filtering (T in ETL) (Advanced)',
   }),
   outputPickFields: createArrayField({
     title: 'Pick dataset fields',
@@ -594,7 +594,7 @@ export const outputInput = {
     example: 'mIJVZsRQrDQf4rUAf',
     pattern: datasetIdPattern,
     nullable: true,
-    sectionCaption: 'Output Dataset & Caching (L in ETL)',
+    sectionCaption: 'Output Dataset & Caching (L in ETL) (Advanced)',
   }),
 
   outputCacheStoreIdOrName: createStringField({
@@ -644,7 +644,7 @@ export const metamorphInput = {
     editor: 'textfield',
     example: 'apify/web-scraper',
     nullable: true,
-    sectionCaption: 'Integrations (Metamorphing)',
+    sectionCaption: 'Integrations (Metamorphing) (Advanced)',
   }),
   metamorphActorBuild: createStringField({
     title: 'Metamorph actor build',

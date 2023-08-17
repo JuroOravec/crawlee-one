@@ -178,6 +178,14 @@ export interface ActorContext<
    * - Set which (nested) properties are personal data optionally redact them for privacy compliance.
    */
   pushData: typeof pushData;
+  /**
+   * A list of resolved Requests to be scraped.
+   *
+   * This list is a combination of 3 Actor inputs:
+   * - `startUrls` - Static list of URLs to scrape.
+   * - `startUrlsFromDataset` - From a specific field from an Apify Dataset (e.g. "dataset123#fieldName" - Dataset: "dataset123", field: "fieldName").
+   * - `startUrlsFromFunction` - A function that is evaulated to generate the Requests.
+   */
   startUrls: CrawlerUrl[];
   proxy?: ProxyConfiguration;
   router: RouterHandler<Ctx>;
