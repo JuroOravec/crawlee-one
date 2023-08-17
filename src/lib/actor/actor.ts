@@ -311,7 +311,7 @@ const createScopedMetamorph = (actor: Pick<ActorContext, 'input'>) => {
 const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
   const {
     includePersonalData,
-    outputMaxCount,
+    outputMaxEntries,
     outputTransform,
     outputFilter,
     outputDatasetIdOrName,
@@ -328,7 +328,7 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
 
     const mergedOptions = {
       showPrivate: includePersonalData,
-      maxCount: outputMaxCount,
+      maxCount: outputMaxEntries,
       pickKeys: outputPickFields,
       remapKeys: outputRenameFields,
       transform: outputTransform ? (item) => transformFn(item) : undefined,

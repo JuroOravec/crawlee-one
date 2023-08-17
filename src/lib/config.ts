@@ -88,11 +88,11 @@ export interface OutputActorInput {
    *
    * The count is determined from the Apify Dataset that's used for the Actor run.
    *
-   * This means that if `outputMaxCount` is set to 50, but the
+   * This means that if `outputMaxEntries` is set to 50, but the
    * associated Dataset already has 40 items in it, then only 10 new entries
    * will be saved.
    */
-  outputMaxCount?: number;
+  outputMaxEntries?: number;
   /**
    * Option to select a subset of keys/fields of an entry that
    * will be pushed to the dataset.
@@ -446,12 +446,12 @@ export const privacyInput = {
 
 /** Common input fields related to actor output */
 export const outputInput = {
-  outputMaxCount: createIntegerField({
+  outputMaxEntries: createIntegerField({
     title: 'Limit the number of scraped entries',
     type: 'integer',
     description: `If set, only at most this many entries will be scraped.<br/><br/>
       The count is determined from the Apify Dataset that's used for the Actor run.<br/><br/>
-      This means that if \`outputMaxCount\` is set to 50, but the associated Dataset already has 40 items in it, then only 10 new entries will be saved.`,
+      This means that if \`outputMaxEntries\` is set to 50, but the associated Dataset already has 40 items in it, then only 10 new entries will be saved.`,
     example: 50,
     prefill: 50,
     minimum: 0,
@@ -672,7 +672,7 @@ export const privacyInputValidationFields = {
 } satisfies Record<keyof PrivacyActorInput, Joi.Schema>;
 
 export const outputInputValidationFields = {
-  outputMaxCount: Joi.number().integer().min(0).optional(),
+  outputMaxEntries: Joi.number().integer().min(0).optional(),
 
   outputPickFields: Joi.array().items(Joi.string().min(1)).optional(),
   // https://stackoverflow.com/a/49898360/9788634
