@@ -13,6 +13,7 @@ import {
 } from 'crawlee';
 import { omitBy, pick, defaults } from 'lodash';
 import * as Sentry from '@sentry/node';
+import { gotScraping } from 'got-scraping';
 
 import type { CrawlerMeta, CrawlerType } from '../../types';
 import type { MaybePromise, PickPartial } from '../../utils/types';
@@ -65,16 +66,19 @@ const genHookFn = <
   actor: Pick<ActorContext<Ctx, Labels, Input>, 'input' | 'state'>,
   fnStr?: string
 ) => {
-  if (!fnStr) return async () => {};
+  if (!fnStr) return null;
 
   const hookCtx = {
     Actor,
     input: actor.input,
     state: actor.state,
     itemCacheKey,
+    sendRequest: gotScraping,
   } satisfies ActorHookContext;
 
   const hookFn = eval(fnStr);
+  if (!hookFn) return null;
+
   return async (...args) => hookFn(...args, hookCtx);
 };
 
@@ -332,8 +336,8 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
       maxCount: outputMaxEntries,
       pickKeys: outputPickFields,
       remapKeys: outputRenameFields,
-      transform: outputTransform ? (item) => transformFn(item) : undefined,
-      filter: outputFilter ? (item) => filterFn(item) : undefined,
+      transform: transformFn ? (item) => transformFn(item) : undefined,
+      filter: filterFn ? (item) => filterFn(item) : undefined,
       datasetIdOrName: outputDatasetIdOrName,
       cacheStoreIdOrName: outputCacheStoreIdOrName,
       cachePrimaryKeys: outputCachePrimaryKeys,
@@ -380,13 +384,13 @@ const createScopedCrawlerRun = <
       await store.drop();
     }
 
-    await genHookFn(actor, outputTransformBefore)();
-    await genHookFn(actor, outputFilterBefore)();
+    await genHookFn(actor, outputTransformBefore)?.();
+    await genHookFn(actor, outputFilterBefore)?.();
 
     const runRes = await actor.crawler.run(requests, options);
 
-    await genHookFn(actor, outputTransformAfter)();
-    await genHookFn(actor, outputFilterAfter)();
+    await genHookFn(actor, outputTransformAfter)?.();
+    await genHookFn(actor, outputFilterAfter)?.();
 
     // Trigger metamorph if it was set from the input
     await metamorph();
@@ -445,7 +449,7 @@ const getStartUrlsFromInput = async (actor: Pick<ActorContext, 'input' | 'state'
   }
 
   if (startUrlsFromFunction) {
-    const urlsFromFn = await genHookFn(actor, startUrlsFromFunction)();
+    const urlsFromFn = await genHookFn(actor, startUrlsFromFunction)?.();
     urlsAgg.push(...urlsFromFn);
   }
 

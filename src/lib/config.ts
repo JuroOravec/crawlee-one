@@ -226,6 +226,99 @@ export interface PrivacyActorInput {
 const datasetIdPattern = '^[a-zA-Z0-9][a-zA-Z0-9-]*$';
 const datasetIdWithFieldPattern = `${datasetIdPattern.slice(0, -1)}#.+$`;
 
+const createHookFnExample = (
+  args: Record<string, string>[],
+  mainCode: string,
+  includeGuides: boolean
+) => {
+  const formattedArgs = Object.keys(args).length ? args.join(', ') + ', ' : '';
+  const formattedArgDesc = Object.entries(args).length
+    ? Object.entries(args).map(([arg, desc]) => ` * \`${arg}\` - ${desc}.\n`)
+    : ` *`;
+  const formattedMainCode = mainCode
+    .split('\n')
+    .map((s) => '//   ' + s)
+    .join('\n');
+
+  const guides = `//
+//   /* ========== SEE BELOW FOR MORE EXAMPLES ========= */
+//
+//   /**
+//    * ======= ACCESSING DATASET ========
+//    * To save/load/access entries in Apify Dataset.
+//    * Docs:
+//    * - https://docs.apify.com/platform/storage/dataset
+//    * - https://docs.apify.com/sdk/js/docs/guides/result-storage#dataset
+//    * - https://docs.apify.com/sdk/js/docs/examples/map-and-reduce
+//    */
+//   // const dataset = await Actor.openDataset('MyDatasetId');
+//   // const info = await dataset.getInfo();
+//   // console.log(info.itemCount);
+//   // // => 0
+//
+//   /**
+//    * ======= ACCESSING REMOTE DATA ========
+//    * Use \`sendRequest\` to get data from the internet:
+//    * Docs:
+//    * - https://github.com/apify/got-scraping
+//    */
+//   // const catFact = await sendRequest.get('https://cat-fact.herokuapp.com/facts/5887e1d85c873e0011036889').json();
+//   // console.log(catFact.text);
+//   // // => "Cats make about 100 different sounds. Dogs make only about 10.",
+//
+//   /**
+//    * ======= USING CACHE ========
+//    * To save the entry to the KeyValue cache (or rerieve it), you can use
+//    * \`itemCacheKey\` to create the entry's ID for you:
+//    */
+//   // const cacheId = itemCacheKey(item, input.cachePrimaryKeys);
+//   // const cache = await Actor.openKeyValueStore('MyStoreId');
+//   // cache.setValue(cacheId, entry);`;
+
+  const hookFnExample = `
+/**
+ * Inputs:
+${formattedArgDesc}
+ * \`ctx.Actor\` - Apify Actor class, see https://docs.apify.com/sdk/js/reference/class/Actor.
+ * \`ctx.input\` - The input object that was passed to this Actor.
+ * \`ctx.state\` - An object you can use to persist state across all your custom functions.
+ * \`ctx.sendRequest\` - Fetch remote data. Uses 'got-scraping', same as Apify's \`sendRequest\`.
+ *                       See https://crawlee.dev/docs/guides/got-scraping
+ * \`ctx.itemCacheKey\` - A function you can use to get cacheID for current \`entry\`.
+ *                        It takes the entry itself, and a list of properties to be used for hashing.
+ *                        By default, you should pass \`input.cachePrimaryKeys\` to it.
+ *
+ */
+// async (${formattedArgs}{ Actor, input, state, sendRequest, itemCacheKey }) => {
+${formattedMainCode}
+${includeGuides ? guides : '//'}
+// };`;
+  return hookFnExample;
+};
+
+const CODE_EXAMPLES = {
+  startUrlsFromFunction: `// Example: Create and load URLs from an Apify Dataset by combining multiple fields
+const dataset = await Actor.openDataset(datasetNameOrId);
+const data = await dataset.getData();
+const urls = data.items.map((item) => \`https://example.com/u/\${item.userId}/list/\${item.listId}\`);
+return urls;`,
+  outputTransform: `// Example: Add extra custom fields like aggregates
+return {
+  ...entry,
+  imagesCount: entry.images.length,
+};`,
+  outputTransformBefore: `// Example: Fetch data or run code BEFORE entries are scraped.
+state.categories = await sendRequest.get('https://example.com/my-categories').json();`,
+  outputTransformAfter: `// Example: Fetch data or run code AFTER entries are scraped.
+delete state.categories;`,
+  outputFilter: `// Example: Filter entries based on number of images they have (at least 5)
+return entry.images.length > 5;`,
+  outputFilterBefore: `// Example: Fetch data or run code BEFORE entries are scraped.
+state.categories = await sendRequest.get('https://example.com/my-categories').json();`,
+  outputFilterAfter: `// Example: Fetch data or run code AFTER entries are scraped.
+delete state.categories;`,
+};
+
 /** Common input fields related to crawler setup */
 export const crawlerInput = {
   maxRequestRetries: createIntegerField({
@@ -376,24 +469,12 @@ export const startUrlsInput = {
     description: `Import or generate URLs to scrape using a custom function.<br/><br/>
     The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
     \`
-    // Example: Create and load URLs from an Apify Dataset by combining multiple fields
-    async ({ Actor, input, state, itemCacheKey }) => {
-      const dataset = await Actor.openDataset(datasetNameOrId);
-      const data = await dataset.getData();
-      const urls = data.items.map((item) => \`https://example.com/u/\${item.userId}/list/\${item.listId}\`);
-      return urls;
-    }
+    ${createHookFnExample([], CODE_EXAMPLES.startUrlsFromFunction, false)}
     \`
     `,
     editor: 'javascript',
-    example: `
-    // Example: Create and load URLs from an Apify Dataset by combining multiple fields
-    async ({ Actor, input, state, itemCacheKey }) => {
-      const dataset = await Actor.openDataset(datasetNameOrId);
-      const data = await dataset.getData();
-      const urls = data.items.map((item) => \`https://example.com/u/\${item.userId}/list/\${item.listId}\`);
-      return urls;
-    }`,
+    example: createHookFnExample([], CODE_EXAMPLES.startUrlsFromFunction, false),
+    prefill: createHookFnExample([], CODE_EXAMPLES.startUrlsFromFunction, true),
     nullable: true,
   }),
 } satisfies Record<keyof StartUrlsActorInput, Field>;
@@ -518,34 +599,43 @@ export const outputInput = {
     If not set, the data will remain as is.<br/><br/>
     This is done after \`outputPickFields\` and \`outputRenameFields\`.<br/><br/>
     The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>
-    \`async (entry, { Actor, input, state, itemCacheKey }) => { ... }\`
+    \`
+    ${createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputTransform, false)}
+    \`
     `,
     editor: 'javascript',
-    example: 'async (entry, { Actor, input, state, itemCacheKey }) => { ... }',
+    example: createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputTransform, false),
+    prefill: createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputTransform, true),
     nullable: true,
-  }),
+  }), // prettier-ignore
   outputTransformBefore: createStringField({
     title: 'Transform entries - Setup',
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`outputTransform\`.<br/><br/>
     The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
-    \`async ({ Actor, input, state, itemCacheKey }) => { ... }\`
+    \`
+    ${createHookFnExample([], CODE_EXAMPLES.outputTransformBefore, false)}
+    \`
     `,
     editor: 'javascript',
-    example: 'async ({ Actor, input, state, itemCacheKey }) => { ... }',
+    example: createHookFnExample([], CODE_EXAMPLES.outputTransformBefore, false),
+    prefill: createHookFnExample([], CODE_EXAMPLES.outputTransformBefore, true),
     nullable: true,
-  }),
+  }), // prettier-ignore
   outputTransformAfter: createStringField({
     title: 'Transform entries - Teardown',
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`outputTransform\`.<br/><br/>
     The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
-    \`async ({ Actor, input, state, itemCacheKey }) => { ... }\`
+    \`
+    ${createHookFnExample([], CODE_EXAMPLES.outputTransformAfter, false)}
+    \`
     `,
     editor: 'javascript',
-    example: 'async ({ Actor, input, state, itemCacheKey }) => { ... }',
+    example: createHookFnExample([], CODE_EXAMPLES.outputTransformAfter, false),
+    prefill: createHookFnExample([], CODE_EXAMPLES.outputTransformAfter, true),
     nullable: true,
-  }),
+  }), // prettier-ignore
 
   outputFilter: createStringField({
     title: 'Filter entries',
@@ -554,10 +644,13 @@ export const outputInput = {
     If not set, all scraped entries will be included.<br/><br/>
     This is done after \`outputPickFields\`, \`outputRenameFields\`, and \`outputTransform\`.<br/><br/>
     The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>
-    \`async (entry, { Actor, input, state, itemCacheKey }) => boolean\`
+    \`
+    ${createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputFilter, false)}
+    \`
     `,
     editor: 'javascript',
-    example: 'async (entry, { Actor, input, state, itemCacheKey }) => boolean',
+    example: createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputFilter, false),
+    prefill: createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputFilter, true),
     nullable: true,
   }),
   outputFilterBefore: createStringField({
@@ -565,10 +658,13 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`outputFilter\`.<br/><br/>
     The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
-    \`async (entry, { Actor, input, state, itemCacheKey }) => boolean\`
+    \`
+    ${createHookFnExample([], CODE_EXAMPLES.outputFilterBefore, false)}
+    \`
     `,
     editor: 'javascript',
-    example: 'async ({ Actor, input, state, itemCacheKey }) => boolean',
+    example: createHookFnExample([], CODE_EXAMPLES.outputFilterBefore, false),
+    prefill: createHookFnExample([], CODE_EXAMPLES.outputFilterBefore, true),
     nullable: true,
   }),
   outputFilterAfter: createStringField({
@@ -576,10 +672,13 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`outputFilter\`.<br/><br/>
     The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
-    \`async ({ Actor, input, state, itemCacheKey }) => boolean\`
+    \`
+    ${createHookFnExample([], CODE_EXAMPLES.outputFilterAfter, false)}
+    \`
     `,
     editor: 'javascript',
-    example: 'async ({ Actor, input, state, itemCacheKey }) => boolean',
+    example: createHookFnExample([], CODE_EXAMPLES.outputFilterAfter, false),
+    prefill: createHookFnExample([], CODE_EXAMPLES.outputFilterAfter, true),
     nullable: true,
   }),
 

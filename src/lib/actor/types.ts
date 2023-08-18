@@ -1,5 +1,6 @@
 import type { Actor } from 'apify';
 import type { BasicCrawler, CrawlingContext, ProxyConfiguration, RouterHandler } from 'crawlee';
+import type { gotScraping } from 'got-scraping';
 
 import type { MaybePromise } from '../../utils/types';
 import type { CrawlerUrl } from '../../types';
@@ -51,6 +52,7 @@ export type ActorRouterContext<
 export type ActorHookContext = Pick<ActorContext, 'input' | 'state'> & {
   Actor: typeof Actor;
   itemCacheKey: typeof itemCacheKey;
+  sendRequest: typeof gotScraping;
 };
 
 export interface ActorDefinition<
