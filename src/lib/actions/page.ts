@@ -192,6 +192,8 @@ const _infiniteScrollLoader = async <T extends AnyInfiScrollTypes>(
     if (newChildrenCount <= currChildrenCount) {
       if (currRetries >= options.retries) break;
       else currRetries++;
+    } else {
+      currRetries = 0;
     }
 
     currChildrenCount = newChildrenCount;
