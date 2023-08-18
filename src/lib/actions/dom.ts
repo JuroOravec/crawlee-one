@@ -516,40 +516,46 @@ export const cheerioDOMLib = <El extends Cheerio<AnyNode>>(
   } satisfies CheerioDOMLib<El>;
 };
 
-export type PlaywrightDOMLib<
+export type PlaywrightHandleDOMLib<
   El extends Locator | ElementHandle<Node> = Locator | ElementHandle<Node>
 > = DOMLib<El, Locator | ElementHandle<Node>>;
 
-/** Implementation of DOMLib in Playwright */
-export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
+const verifyHandleEl = async (el: Locator | ElementHandle<Node> | JSHandle | null) => {
+  if (!el) return null;
+  const exists = await (el as ElementHandle).evaluate((el) => !!el).catch(logAndRethrow);
+  return exists ? el : null;
+};
+
+/** Implementation of DOMLib in Playwright using Handles */
+export const playwrightHandleDOMLib = <El extends Locator | ElementHandle<Node>>(
   node: El,
   page: Page
-): PlaywrightDOMLib<El> => {
+): PlaywrightHandleDOMLib<El> => {
   ///////////////////////
   // SCALAR OPERATIONS
   ///////////////////////
 
-  const text: PlaywrightDOMLib<El>['text'] = async ({ allowEmpty } = {}) => {
+  const text: PlaywrightHandleDOMLib<El>['text'] = async ({ allowEmpty } = {}) => {
     const txt = (await node.textContent())?.trim() ?? null;
     return strOrNull(txt, allowEmpty);
   };
 
-  const textAsUpper: PlaywrightDOMLib<El>['textAsUpper'] = async (options) => {
+  const textAsUpper: PlaywrightHandleDOMLib<El>['textAsUpper'] = async (options) => {
     const txt = await text(options);
     return txt ? txt.toLocaleUpperCase() : txt;
   };
 
-  const textAsLower: PlaywrightDOMLib<El>['textAsLower'] = async (options) => {
+  const textAsLower: PlaywrightHandleDOMLib<El>['textAsLower'] = async (options) => {
     const txt = await text(options);
     return txt ? txt.toLocaleLowerCase() : txt;
   };
 
-  const textAsNumber: PlaywrightDOMLib<El>['textAsNumber'] = async (options) => {
+  const textAsNumber: PlaywrightHandleDOMLib<El>['textAsNumber'] = async (options) => {
     const txt = await text(options);
     return strAsNumber(txt, options);
   };
 
-  const prop: PlaywrightDOMLib<El>['prop'] = async <R = unknown>(
+  const prop: PlaywrightHandleDOMLib<El>['prop'] = async <R = unknown>(
     propOrPath: MaybeArray<string>,
     options = {}
   ) => {
@@ -557,7 +563,7 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     return resProp as R;
   };
 
-  const props: PlaywrightDOMLib<El>['props'] = async <R extends any[]>(
+  const props: PlaywrightHandleDOMLib<El>['props'] = async <R extends any[]>(
     propsOrPaths: MaybeArray<string>[],
     { allowEmpty = false } = {}
   ) => {
@@ -581,13 +587,12 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     return data as R;
   };
 
-  const attr: PlaywrightDOMLib<El>['attr'] = async (attrName, { allowEmpty } = {}) => {
-    let attrVal = (await node.getAttribute(attrName)) ?? null;
-    attrVal = typeof attrVal === 'string' ? attrVal.trim() : attrVal;
-    return strOrNull(attrVal, allowEmpty);
+  const attr: PlaywrightHandleDOMLib<El>['attr'] = async (attrName, options) => {
+    const data = await attrs([attrName], options);
+    return data[attrName] ?? null;
   };
 
-  const attrs: PlaywrightDOMLib<El>['attrs'] = <El extends string>(
+  const attrs: PlaywrightHandleDOMLib<El>['attrs'] = <El extends string>(
     attrNames: El[],
     { allowEmpty = false } = {}
   ) => {
@@ -608,7 +613,7 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     return data;
   };
 
-  const href: PlaywrightDOMLib<El>['href'] = async ({
+  const href: PlaywrightHandleDOMLib<El>['href'] = async ({
     allowEmpty,
     allowRelative,
     baseUrl,
@@ -617,22 +622,26 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const src: PlaywrightDOMLib<El>['src'] = async ({ allowEmpty, allowRelative, baseUrl } = {}) => {
+  const src: PlaywrightHandleDOMLib<El>['src'] = async ({
+    allowEmpty,
+    allowRelative,
+    baseUrl,
+  } = {}) => {
     const val = (await prop('src', { allowEmpty })) as string | null;
     return formatUrl(val, { allowRelative, baseUrl });
   };
 
-  const nodeName: PlaywrightDOMLib<El>['nodeName'] = async () => {
+  const nodeName: PlaywrightHandleDOMLib<El>['nodeName'] = async () => {
     // On UPPER- vs lower-case https://stackoverflow.com/questions/27223756/
     const val = (await prop('nodeName')) as string | null;
     return typeof val === 'string' ? val.toLocaleUpperCase() : val;
   };
 
-  const url: PlaywrightDOMLib<El>['url'] = async () => {
+  const url: PlaywrightHandleDOMLib<El>['url'] = async () => {
     return page.url() || null;
   };
 
-  const map: PlaywrightDOMLib<El>['map'] = <TVal>(mapFn: (node: El) => TVal) => {
+  const map: PlaywrightHandleDOMLib<El>['map'] = <TVal>(mapFn: (node: El) => TVal) => {
     return mapFn(node);
   };
 
@@ -640,7 +649,7 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
   // NODE OPERATIONS
   ///////////////////////
 
-  const findOne: PlaywrightDOMLib<El>['findOne'] = async <
+  const findOne: PlaywrightHandleDOMLib<El>['findOne'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >(
     selector
@@ -648,14 +657,14 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     const resultEl = await node
       .evaluateHandle((el, s) => {
         if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE].includes(el.nodeType as any)) return null;
-        return (el as Element).querySelector(s) || null;
+        return (el as Element).querySelector<Element>(s) || null;
       }, selector)
       .catch(logAndRethrow);
-    const hasResult = await resultEl.evaluate((el) => !!el).catch(logAndRethrow);
-    return hasResult ? playwrightDOMLib(resultEl as TNewEl, page) : null;
+    const hasResult = await verifyHandleEl(resultEl);
+    return hasResult ? playwrightHandleDOMLib(resultEl as TNewEl, page) : null;
   };
 
-  const findMany: PlaywrightDOMLib<El>['findMany'] = async <
+  const findMany: PlaywrightHandleDOMLib<El>['findMany'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >(
     selector
@@ -667,10 +676,10 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
       }, selector)
       .catch(logAndRethrow);
     const resultEls = await splitPlaywrightSelection<any>(elsHandle);
-    return resultEls.map((el) => playwrightDOMLib(el as TNewEl, page));
+    return resultEls.map((el) => playwrightHandleDOMLib(el as TNewEl, page));
   };
 
-  const closest: PlaywrightDOMLib<El>['closest'] = async <
+  const closest: PlaywrightHandleDOMLib<El>['closest'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >(
     selector
@@ -681,41 +690,41 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
         return (el as Element).closest(s) || null;
       }, selector)
       .catch(logAndRethrow);
-    const hasResult = await resultEl.evaluate((el) => !!el).catch(logAndRethrow);
-    return hasResult ? playwrightDOMLib(resultEl as TNewEl, page) : null;
+    const hasResult = await verifyHandleEl(resultEl);
+    return hasResult ? playwrightHandleDOMLib(resultEl as TNewEl, page) : null;
   };
 
-  const parent: PlaywrightDOMLib<El>['parent'] = async <
+  const parent: PlaywrightHandleDOMLib<El>['parent'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >() => {
-    const parentEl = await node
+    const resultEl = await node
       .evaluateHandle((el) => el.parentElement || null)
       .catch(logAndRethrow);
-    const hasResult = await parentEl.evaluate((el) => !!el).catch(logAndRethrow);
-    return hasResult ? playwrightDOMLib(parentEl as TNewEl, page) : null;
+    const hasResult = await verifyHandleEl(resultEl);
+    return hasResult ? playwrightHandleDOMLib(resultEl as TNewEl, page) : null;
   };
 
-  const children: PlaywrightDOMLib<El>['children'] = async <
+  const children: PlaywrightHandleDOMLib<El>['children'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >() => {
     const elsHandle = await node
       .evaluateHandle((el) => [...(el as Element).children])
       .catch(logAndRethrow);
     const resultEls = await splitPlaywrightSelection<any>(elsHandle);
-    return resultEls.map((el) => playwrightDOMLib(el as TNewEl, page));
+    return resultEls.map((el) => playwrightHandleDOMLib(el as TNewEl, page));
   };
 
-  const root: PlaywrightDOMLib<El>['root'] = async <
+  const root: PlaywrightHandleDOMLib<El>['root'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >() => {
-    const rootEl = await node
+    const resultEl = await node
       .evaluateHandle((el) => el.ownerDocument?.documentElement || null)
       .catch(logAndRethrow);
-    const hasResult = await rootEl.evaluate((el) => !!el).catch(logAndRethrow);
-    return hasResult ? playwrightDOMLib(rootEl as TNewEl, page) : null;
+    const hasResult = await verifyHandleEl(resultEl);
+    return hasResult ? playwrightHandleDOMLib(resultEl as TNewEl, page) : null;
   };
 
-  const remove: PlaywrightDOMLib<El>['remove'] = async () => {
+  const remove: PlaywrightHandleDOMLib<El>['remove'] = async () => {
     await (node as Locator).evaluate((el) => el.remove()).catch(logAndRethrow);
   };
 
@@ -754,30 +763,23 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     return hasResult ? (ancestor as El) : null;
   };
 
-  const getCommonAncestor: PlaywrightDOMLib<El>['getCommonAncestor'] = async <
+  const getCommonAncestor: PlaywrightHandleDOMLib<El>['getCommonAncestor'] = async <
     TNewEl extends Locator | ElementHandle<Node> = El
   >(
     otherEl
   ) => {
-    const ancestor = (await _getCommonAncestor(node, otherEl)) as TNewEl | null;
-    const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el).catch(logAndRethrow);
-    return ancestor && hasResult ? playwrightDOMLib(ancestor, page) : null;
+    const resultEl = (await _getCommonAncestor(node, otherEl)) as TNewEl | null;
+    const hasResult = await verifyHandleEl(resultEl);
+    return resultEl && hasResult ? playwrightHandleDOMLib(resultEl, page) : null;
   };
 
   const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<El>({
     querySelectorAll: async (selector) => {
-      const elsHandle = await (node as Locator)
-        .evaluateHandle((el, s) => [...el.querySelectorAll(s)], selector)
-        .catch(logAndRethrow);
-      const resultEls = await splitPlaywrightSelection<any>(elsHandle);
-      return resultEls as El[];
+      const resultEls = (await findMany(selector)).map((d) => d.node).filter(Boolean);
+      return resultEls as NonNullable<(typeof resultEls)[0]>[];
     },
     getParent: async (el) => {
-      const parentEl = await el
-        .evaluateHandle((el) => el.parentElement || null)
-        .catch(logAndRethrow);
-      const hasResult = await parentEl.evaluate((el) => !!el).catch(logAndRethrow);
-      return hasResult ? (parentEl as El) : null;
+      return (await playwrightHandleDOMLib(el, page).parent())?.node ?? null;
     },
     isAncestor: async (el1, el2) => {
       return (await mergeHandles([el1, el2]))
@@ -792,11 +794,11 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     getCommonAncestor: _getCommonAncestor,
   });
 
-  const getCommonAncestorFromSelector: PlaywrightDOMLib<El>['getCommonAncestorFromSelector'] =
+  const getCommonAncestorFromSelector: PlaywrightHandleDOMLib<El>['getCommonAncestorFromSelector'] =
     async <TNewEl extends Locator | ElementHandle<Node> = El>(selector) => {
-      const ancestor = (await _getCommonAncestorFromSelector(selector)) as TNewEl | null;
-      const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el).catch(logAndRethrow);
-      return ancestor && hasResult ? playwrightDOMLib(ancestor, page) : null;
+      const resultEl = (await _getCommonAncestorFromSelector(selector)) as TNewEl | null;
+      const hasResult = await verifyHandleEl(resultEl);
+      return resultEl && hasResult ? playwrightHandleDOMLib(resultEl, page) : null;
     };
 
   return {
@@ -825,7 +827,164 @@ export const playwrightDOMLib = <El extends Locator | ElementHandle<Node>>(
     remove,
     getCommonAncestor,
     getCommonAncestorFromSelector,
-  } satisfies PlaywrightDOMLib<El>;
+  } satisfies PlaywrightHandleDOMLib<El>;
+};
+
+export type PlaywrightLocatorDOMLib<El extends Locator = Locator> = DOMLib<El, Locator>;
+
+/** Implementation of DOMLib in Playwright using Locators */
+export const playwrightLocatorDOMLib = <El extends Locator>(
+  node: El,
+  page: Page
+): PlaywrightLocatorDOMLib<El> => {
+  // NOTE: Where possible, make use of the already-existing logic for Handles
+  const handleDom = playwrightHandleDOMLib(node, page);
+
+  ///////////////////////
+  // SCALAR OPERATIONS
+  ///////////////////////
+
+  /** Empty */
+
+  ///////////////////////
+  // NODE OPERATIONS
+  ///////////////////////
+
+  const findOne: PlaywrightLocatorDOMLib<El>['findOne'] = async <TNewEl extends Locator = El>(
+    selector
+  ) => {
+    const resultEl = node.locator(selector);
+    const hasResult = await verifyHandleEl(resultEl);
+    return hasResult ? playwrightLocatorDOMLib(resultEl as TNewEl, page) : null;
+  };
+
+  const findMany: PlaywrightLocatorDOMLib<El>['findMany'] = async <TNewEl extends Locator = El>(
+    selector
+  ) => {
+    const resultEls = await node.locator(selector).all();
+    return resultEls.map((el) => playwrightLocatorDOMLib(el as TNewEl, page));
+  };
+
+  const closest: PlaywrightLocatorDOMLib<El>['closest'] = async <TNewEl extends Locator = El>(
+    selector
+  ) => {
+    // Find closest ancestor matching the given selector.
+    // See https://stackoverflow.com/a/40333166/9788634
+    const resultEl = node.locator(`xpath=ancestor::${selector.trim()}[position() = 1]`);
+    const hasResult = await verifyHandleEl(resultEl);
+    return hasResult ? playwrightLocatorDOMLib(resultEl as TNewEl, page) : null;
+  };
+
+  const parent: PlaywrightLocatorDOMLib<El>['parent'] = async <TNewEl extends Locator = El>() => {
+    return closest<TNewEl>('*');
+  };
+
+  const children: PlaywrightLocatorDOMLib<El>['children'] = async <
+    TNewEl extends Locator = El
+  >() => {
+    const resultEls = await node.locator('xpath=child::*').all();
+    return resultEls.map((el) => playwrightLocatorDOMLib(el as TNewEl, page));
+  };
+
+  const root: PlaywrightLocatorDOMLib<El>['root'] = async <TNewEl extends Locator = El>() => {
+    // Find closest ancestor matching the given selector.
+    // See https://stackoverflow.com/a/40333166/9788634 and https://stackoverflow.com/q/31562639/9788634
+    const resultEl = node.locator(`xpath=ancestor::*[position() = last()]`);
+    const hasResult = await verifyHandleEl(resultEl);
+    return hasResult ? playwrightLocatorDOMLib(resultEl as TNewEl, page) : null;
+  };
+
+  const remove: PlaywrightLocatorDOMLib<El>['remove'] = async () => {
+    await node.evaluate((el) => el.remove()).catch(logAndRethrow);
+  };
+
+  /** Function that finds the closest common ancestor for `el1` and `el2`. */
+  const _getCommonAncestor = async (el1: El, el2: El) => {
+    const ch1Parents = await el1.locator(`xpath=ancestor::*`).all();
+    const ch2Parents = await el2.locator(`xpath=ancestor::*`).all();
+
+    let commonAncestor: El | null = null;
+    for (const comparerParent of ch1Parents) {
+      for (const compareeParent of ch2Parents) {
+        const handle = await mergeHandles([comparerParent, compareeParent]);
+        const isSame = await handle.evaluate(([el1, el2]: Element[]) => {
+          return el1 === el2;
+        });
+        if (isSame) {
+          commonAncestor = comparerParent as El;
+          break;
+        }
+      }
+      if (commonAncestor) break;
+    }
+    return commonAncestor;
+  };
+
+  const getCommonAncestor: PlaywrightLocatorDOMLib<El>['getCommonAncestor'] = async <
+    TNewEl extends Locator = El
+  >(
+    otherEl
+  ) => {
+    const resultEl = (await _getCommonAncestor(node, otherEl)) as TNewEl | null;
+    const hasResult = await verifyHandleEl(resultEl);
+    return resultEl && hasResult ? playwrightLocatorDOMLib(resultEl, page) : null;
+  };
+
+  const _getCommonAncestorFromSelector = _createCommonAncestorFromSelectorFn<El>({
+    querySelectorAll: async (selector) => {
+      const resultEls = (await findMany(selector)).map((d) => d.node).filter(Boolean);
+      return resultEls as NonNullable<(typeof resultEls)[0]>[];
+    },
+    getParent: async (el) => {
+      return (await playwrightLocatorDOMLib(el, page).parent())?.node ?? null;
+    },
+    isAncestor: async (el1, el2) => {
+      return (await mergeHandles([el1, el2]))
+        .evaluate(([el1, el2]) => {
+          if (!el1 || !el2) return false;
+          // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
+          const result = !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_CONTAINED_BY);
+          return result;
+        })
+        .catch(logAndRethrow);
+    },
+    getCommonAncestor: _getCommonAncestor,
+  });
+
+  const getCommonAncestorFromSelector: PlaywrightLocatorDOMLib<El>['getCommonAncestorFromSelector'] =
+    async <TNewEl extends Locator | ElementHandle<Node> = El>(selector) => {
+      const ancestor = (await _getCommonAncestorFromSelector(selector)) as TNewEl | null;
+      const hasResult = await (ancestor as Locator)?.evaluate((el) => !!el).catch(logAndRethrow);
+      return ancestor && hasResult ? playwrightHandleDOMLib(ancestor, page) : null;
+    };
+
+  return {
+    node,
+
+    text: handleDom.text,
+    textAsLower: handleDom.textAsLower,
+    textAsUpper: handleDom.textAsUpper,
+    textAsNumber: handleDom.textAsNumber,
+    attr: handleDom.attr,
+    attrs: handleDom.attrs,
+    prop: handleDom.prop,
+    props: handleDom.props,
+    href: handleDom.href,
+    src: handleDom.src,
+    nodeName: handleDom.nodeName,
+    url: handleDom.url,
+    map: handleDom.map,
+
+    findOne,
+    findMany,
+    closest,
+    parent,
+    children,
+    root,
+    remove,
+    getCommonAncestor,
+    getCommonAncestorFromSelector,
+  } satisfies PlaywrightLocatorDOMLib<El>;
 };
 
 const _createCommonAncestorFromSelectorFn = <El>(input: {
