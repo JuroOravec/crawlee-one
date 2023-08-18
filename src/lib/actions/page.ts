@@ -65,6 +65,8 @@ export interface InfiniteScrollLoaderOptions<
   T extends AnyInfiScrollTypes,
   TCtx extends { container: T['container'] } = { container: T['container'] }
 > {
+  /** How many times to retry the infinite scroll if new items aren't loading */
+  retries?: number;
   /** Override how container children are counted. Default uses `el.childElementCount` */
   childrenCounter?: (containerEl: T['container'], ctx: TCtx) => MaybePromise<number>;
   /** Override how container children are extraced. Default uses `el.children` */
@@ -109,6 +111,7 @@ export const playwrightPageLib = async <T extends Page>(page: T): Promise<Playwr
         await onNewChildren?.(elsHandle, { ...ctx, page }, stopFn);
       },
       {
+        retries: options?.retries ?? 3,
         childrenCounter: (el, ctx) => childrenCounter(el, { ...ctx, page }),
         childrenGetter: async (handle, ctx) => {
           // First let user tell us how to collect the child elements
@@ -148,7 +151,7 @@ const _infiniteScrollLoader = async <T extends AnyInfiScrollTypes>(
     ctx: { container: T['container'] },
     stop: () => void
   ) => MaybePromise<void>,
-  handlers: Required<InfiniteScrollLoaderOptions<T>>
+  options: Required<InfiniteScrollLoaderOptions<T>>
 ) => {
   const containerElGetter = (
     typeof container === 'function' ? container : () => container
@@ -169,22 +172,27 @@ const _infiniteScrollLoader = async <T extends AnyInfiScrollTypes>(
   };
 
   const initContainer = await containerElGetter();
-  let currChildrenCount = await handlers.childrenCounter(initContainer, { container: initContainer }); // prettier-ignore
+  let currChildrenCount = await options.childrenCounter(initContainer, { container: initContainer }); // prettier-ignore
+  let currRetries = 0;
+
   while (!userAskedToStop) {
     // Process currently-loaded children
     const containerEl = await containerElGetter();
-    const currChildren = [...(await handlers.childrenGetter(containerEl, { container: containerEl }))]; // prettier-ignore
+    const currChildren = [...(await options.childrenGetter(containerEl, { container: containerEl }))]; // prettier-ignore
     await processChildren(currChildren);
 
     if (userAskedToStop) break;
 
     // Load next batch
     const lastChildEl = currChildren.slice(-1)[0];
-    await handlers.scrollIntoView(lastChildEl, { container: containerEl });
-    await handlers.waitAfterScroll(lastChildEl, { container: containerEl });
-    const newChildrenCount = await handlers.childrenCounter(containerEl, { container: containerEl }); // prettier-ignore
+    await options.scrollIntoView(lastChildEl, { container: containerEl });
+    await options.waitAfterScroll(lastChildEl, { container: containerEl });
+    const newChildrenCount = await options.childrenCounter(containerEl, { container: containerEl }); // prettier-ignore
 
-    if (newChildrenCount <= currChildrenCount) break;
+    if (newChildrenCount <= currChildrenCount) {
+      if (currRetries >= options.retries) break;
+      else currRetries++;
+    }
 
     currChildrenCount = newChildrenCount;
   }
