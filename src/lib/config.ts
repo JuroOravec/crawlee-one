@@ -233,7 +233,7 @@ const createHookFnExample = (
 ) => {
   const formattedArgs = Object.keys(args).length ? Object.keys(args).join(', ') + ', ' : '';
   const formattedArgDesc = Object.entries(args).length
-    ? Object.entries(args).map(([arg, desc]) => ` * \`${arg}\` - ${desc}.\n`)
+    ? Object.entries(args).map(([arg, desc]) => ` * \`${arg}\` - ${desc}.`)
     : ` *`;
   const formattedMainCode = mainCode
     .split('\n')
