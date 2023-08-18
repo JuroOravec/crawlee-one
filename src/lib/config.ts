@@ -226,6 +226,8 @@ export interface PrivacyActorInput {
 const datasetIdPattern = '^[a-zA-Z0-9][a-zA-Z0-9-]*$';
 const datasetIdWithFieldPattern = `${datasetIdPattern.slice(0, -1)}#.+$`;
 
+const newLine = (n: number) => '<br/>'.repeat(n);
+
 const createHookFnExample = (
   args: Record<string, string>,
   mainCode: string,
@@ -347,21 +349,21 @@ export const crawlerInput = {
   maxRequestsPerCrawl: createIntegerField({
     title: 'maxRequestsPerCrawl',
     type: 'integer',
-    description:
-      'Maximum number of pages that the crawler will open. The crawl will stop when this limit is reached. <br/><br/> <strong>NOTE:</strong> In cases of parallel crawling, the actual number of pages visited might be slightly higher than this value.',
+    description: `Maximum number of pages that the crawler will open. The crawl will stop when this limit is reached.
+    ${newLine(1)} <strong>NOTE:</strong> In cases of parallel crawling, the actual number of pages visited might be slightly higher than this value.`,
     minimum: 1,
     nullable: true,
-  }),
+  }), // prettier-ignore
   minConcurrency: createIntegerField({
     title: 'minConcurrency',
     type: 'integer',
-    description:
-      "Sets the minimum concurrency (parallelism) for the crawl.<br/><br/><strong>WARNING:</strong> If we set this value too high with respect to the available system memory and CPU, our crawler will run extremely slow or crash. If not sure, it's better to keep the default value and the concurrency will scale up automatically.",
+    description: `Sets the minimum concurrency (parallelism) for the crawl.${newLine(1)}
+    <strong>WARNING:</strong> If we set this value too high with respect to the available system memory and CPU, our crawler will run extremely slow or crash. If not sure, it's better to keep the default value and the concurrency will scale up automatically.`,
     example: 1,
     prefill: 1,
     minimum: 1,
     nullable: true,
-  }),
+  }), // prettier-ignore
   maxConcurrency: createIntegerField({
     title: 'maxConcurrency',
     type: 'integer',
@@ -432,8 +434,8 @@ export const perfInput = {
   perfBatchSize: createIntegerField({
     title: 'Batch requests',
     type: 'integer',
-    description: `If set, multiple Requests will be handled by a single Actor instance.<br/><br/>
-       Example: If set to 20, then up to 20 requests will be handled in a single "go".<br/><br/>
+    description: `If set, multiple Requests will be handled by a single Actor instance.${newLine(1)}
+       Example: If set to 20, then up to 20 requests will be handled in a single "go".${newLine(1)}
        <a href="https://docs.apify.com/platform/actors/development/performance#batch-jobs-win-over-the-single-jobs">See Apify documentation</a>.`,
     example: 20,
     minimum: 0,
@@ -456,8 +458,8 @@ export const startUrlsInput = {
     title: 'Start URLs from Dataset',
     type: 'string',
     editor: 'textfield',
-    description: `Import URLs to scrape from an existing Apify Dataset.<br/><br/>
-    Write the dataset and the field to import in the format \`{datasetID}#{field}\`.<br/><br/>
+    description: `Import URLs to scrape from an existing Apify Dataset.${newLine(1)}
+    Write the dataset and the field to import in the format \`{datasetID}#{field}\`.${newLine(1)}
     Example: \`datasetid123#url\` will take URLs from dataset \`datasetid123\` from field \`url\`.`,
     pattern: datasetIdWithFieldPattern,
     example: 'datasetid123#url',
@@ -466,13 +468,13 @@ export const startUrlsInput = {
   startUrlsFromFunction: createStringField({
     title: 'Start URLs from custom function',
     type: 'string',
-    description: `Import or generate URLs to scrape using a custom function.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
+    description: `Import or generate URLs to scrape using a custom function.${newLine(1)}
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, true),
     nullable: true,
-  }),
+  }), // prettier-ignore
 } satisfies Record<keyof StartUrlsActorInput, Field>;
 
 /** Common input fields related to logging setup */
@@ -502,8 +504,8 @@ export const loggingInput = {
     title: 'Error reporting dataset ID',
     type: 'string',
     editor: 'textfield',
-    description: `Apify dataset ID or name to which errors should be captured.<br/><br/>
-    Default: \`'REPORTING'\`.<br/><br/>
+    description: `Apify dataset ID or name to which errors should be captured.${newLine(1)}
+    Default: \`'REPORTING'\`.${newLine(1)}
     <strong>NOTE:<strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
     example: 'REPORTING',
     prefill: 'REPORTING',
@@ -515,13 +517,13 @@ export const loggingInput = {
     title: 'Send errors to Sentry',
     type: 'boolean',
     editor: 'checkbox',
-    description: `Whether to send actor error reports to <a href="https://sentry.io/">Sentry</a>.<br/><br/>
+    description: `Whether to send actor error reports to <a href="https://sentry.io/">Sentry</a>.${newLine(1)}
     This info is used by the author of this actor to identify broken integrations,
     and track down and fix issues.`,
     example: true,
     default: true,
     nullable: true,
-  }),
+  }), // prettier-ignore
 } satisfies Record<keyof LoggingActorInput, Field>;
 
 /** Common input fields related to proxy setup */
@@ -541,12 +543,13 @@ export const privacyInput = {
   includePersonalData: createBooleanField({
     title: 'Include personal data',
     type: 'boolean',
-    description: `By default, fields that are potential personal data are censored. Toggle this option on to get the un-uncensored values.<br/><br/><strong>WARNING:</strong> Turn this on ONLY if you have consent, legal basis for using the data, or at your own risk. <a href="https://gdpr.eu/eu-gdpr-personal-data/">Learn more</a>`,
+    description: `By default, fields that are potential personal data are censored. Toggle this option on to get the un-uncensored values.${newLine(1)}
+    <strong>WARNING:</strong> Turn this on ONLY if you have consent, legal basis for using the data, or at your own risk. <a href="https://gdpr.eu/eu-gdpr-personal-data/">Learn more</a>`,
     default: false,
     example: false,
     nullable: true,
     sectionCaption: 'Privacy & Data governance (GDPR)',
-  }),
+  }), // prettier-ignore
 } satisfies Record<keyof PrivacyActorInput, Field>;
 
 /** Common input fields related to actor output */
@@ -554,8 +557,8 @@ export const outputInput = {
   outputMaxEntries: createIntegerField({
     title: 'Limit the number of scraped entries',
     type: 'integer',
-    description: `If set, only at most this many entries will be scraped.<br/><br/>
-      The count is determined from the Apify Dataset that's used for the Actor run.<br/><br/>
+    description: `If set, only at most this many entries will be scraped.${newLine(1)}
+      The count is determined from the Apify Dataset that's used for the Actor run.${newLine(1)}
       This means that if \`outputMaxEntries\` is set to 50, but the associated Dataset already has 40 items in it, then only 10 new entries will be saved.`,
     example: 50,
     prefill: 50,
@@ -566,21 +569,21 @@ export const outputInput = {
   outputPickFields: createArrayField({
     title: 'Pick dataset fields',
     type: 'array',
-    description: `Select a subset of fields of an entry that will be pushed to the dataset.<br/><br/>
-    If not set, all fields on an entry will be pushed to the dataset.<br/><br/>
-    This is done before \`outputRenameFields\`.<br/><br/>
+    description: `Select a subset of fields of an entry that will be pushed to the dataset.${newLine(1)}
+    If not set, all fields on an entry will be pushed to the dataset.${newLine(1)}
+    This is done before \`outputRenameFields\`.${newLine(1)}
     Keys can be nested, e.g. \`"someProp.value[0]"\`.
     Nested path is resolved using <a href="https://lodash.com/docs/4.17.15#get">Lodash.get()</a>.`,
     editor: 'stringList',
     example: ['fieldName', 'another.nested[0].field'],
     nullable: true,
-  }),
+  }), // prettier-ignore
   outputRenameFields: createObjectField({
     title: 'Rename dataset fields',
     type: 'object',
-    description: `Rename fields (columns) of the output data.<br/><br/>
-    If not set, all fields will have their original names.<br/><br/>
-    This is done after \`outputPickFields\`.<br/><br/>
+    description: `Rename fields (columns) of the output data.${newLine(1)}
+    If not set, all fields will have their original names.${newLine(1)}
+    This is done after \`outputPickFields\`.${newLine(1)}
     Keys can be nested, e.g. \`"someProp.value[0]"\`.
     Nested path is resolved using <a href="https://lodash.com/docs/4.17.15#get">Lodash.get()</a>.`,
     editor: 'json',
@@ -591,10 +594,10 @@ export const outputInput = {
   outputTransform: createStringField({
     title: 'Transform entries',
     type: 'string',
-    description: `Freely transform the output data object using a custom function.<br/><br/>
-    If not set, the data will remain as is.<br/><br/>
-    This is done after \`outputPickFields\` and \`outputRenameFields\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>`,
+    description: `Freely transform the output data object using a custom function.${newLine(1)}
+    If not set, the data will remain as is.${newLine(1)}
+    This is done after \`outputPickFields\` and \`outputRenameFields\`.${newLine(1)}
+    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, false),
     prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, true),
@@ -603,8 +606,8 @@ export const outputInput = {
   outputTransformBefore: createStringField({
     title: 'Transform entries - Setup',
     type: 'string',
-    description: `Use this if you need to run one-time initialization code before \`outputTransform\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
+    description: `Use this if you need to run one-time initialization code before \`outputTransform\`.${newLine(1)}
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, true),
@@ -613,8 +616,8 @@ export const outputInput = {
   outputTransformAfter: createStringField({
     title: 'Transform entries - Teardown',
     type: 'string',
-    description: `Use this if you need to run one-time teardown code after \`outputTransform\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
+    description: `Use this if you need to run one-time teardown code after \`outputTransform\`.${newLine(1)}
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, true),
@@ -624,86 +627,86 @@ export const outputInput = {
   outputFilter: createStringField({
     title: 'Filter entries',
     type: 'string',
-    description: `Decide which scraped entries should be included in the output by using a custom function.<br/><br/>
-    If not set, all scraped entries will be included.<br/><br/>
-    This is done after \`outputPickFields\`, \`outputRenameFields\`, and \`outputTransform\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>`,
+    description: `Decide which scraped entries should be included in the output by using a custom function.${newLine(1)}
+    If not set, all scraped entries will be included.${newLine(1)}
+    This is done after \`outputPickFields\`, \`outputRenameFields\`, and \`outputTransform\`.${newLine(1)}
+    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, false),
     prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, true),
     nullable: true,
-  }),
+  }), // prettier-ignore
   outputFilterBefore: createStringField({
     title: 'Filter entries - Setup',
     type: 'string',
-    description: `Use this if you need to run one-time initialization code before \`outputFilter\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
+    description: `Use this if you need to run one-time initialization code before \`outputFilter\`.${newLine(1)}
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, true),
     nullable: true,
-  }),
+  }), // prettier-ignore
   outputFilterAfter: createStringField({
     title: 'Filter entries - Teardown',
     type: 'string',
-    description: `Use this if you need to run one-time teardown code after \`outputFilter\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
+    description: `Use this if you need to run one-time teardown code after \`outputFilter\`.${newLine(1)}
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, true),
     nullable: true,
-  }),
+  }), // prettier-ignore
 
   outputDatasetIdOrName: createStringField({
     title: 'Dataset ID or name',
     type: 'string',
     description: `By default, data is written to Default dataset.
     Set this option if you want to write data to non-default dataset.
-    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a><br/><br/>
+    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a>${newLine(1)}
     <strong>NOTE:<strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
     editor: 'textfield',
     example: 'mIJVZsRQrDQf4rUAf',
     pattern: datasetIdPattern,
     nullable: true,
     sectionCaption: 'Output Dataset & Caching (L in ETL) (Advanced)',
-  }),
+  }), // prettier-ignore
 
   outputCacheStoreIdOrName: createStringField({
     title: 'Cache ID or name',
     type: 'string',
-    description: `Set this option if you want to cache scraped entries in <a href="https://docs.apify.com/sdk/js/docs/guides/result-storage#key-value-store">Apify's Key-value store</a>.<br/><br/>
+    description: `Set this option if you want to cache scraped entries in <a href="https://docs.apify.com/sdk/js/docs/guides/result-storage#key-value-store">Apify's Key-value store</a>.${newLine(1)}
     This is useful for example when you want to scrape only NEW entries. In such case, you can use the \`outputFilter\` option to define a custom function to filter out entries already found in the cache.
-    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#working-with-key-value-stores">Learn more</a><br/><br/>
+    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#working-with-key-value-stores">Learn more</a>${newLine(1)}
     <strong>NOTE:<strong> Cache name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
     editor: 'textfield',
     example: 'mIJVZsRQrDQf4rUAf',
     pattern: datasetIdPattern,
     nullable: true,
-  }),
+  }), // prettier-ignore
   outputCachePrimaryKeys: createArrayField<string[]>({
     title: 'Cache primary keys',
     type: 'array',
-    description: `Specify fields that uniquely identify entries (primary keys), so entries can be compared against the cache.<br/><br/>
+    description: `Specify fields that uniquely identify entries (primary keys), so entries can be compared against the cache.${newLine(1)}
     <strong>NOTE:<strong> If not set, the entries are hashed based on all fields`,
     editor: 'stringList',
     example: ['name', 'city'],
     nullable: true,
-  }),
+  }), // prettier-ignore
   outputCacheActionOnResult: createStringField<
     NonNullable<OutputActorInput['outputCacheActionOnResult']>
   >({
     title: 'Cache action on result',
     type: 'string',
-    description: `Specify whether scraped results should be added to, removed from, or overwrite the cache.<br/><br/>
-    - <strong>add<strong> - Adds scraped results to the cache<br/><br/>
-    - <strong>remove<strong> - Removes scraped results from the cache<br/><br/>
-    - <strong>set<strong> - First clears all entries from the cache, then adds scraped results to the cache<br/><br/>
+    description: `Specify whether scraped results should be added to, removed from, or overwrite the cache.${newLine(1)}
+    - <strong>add<strong> - Adds scraped results to the cache${newLine(1)}
+    - <strong>remove<strong> - Removes scraped results from the cache${newLine(1)}
+    - <strong>set<strong> - First clears all entries from the cache, then adds scraped results to the cache${newLine(1)}
     <strong>NOTE:<strong> No action happens when this field is empty.`,
     editor: 'select',
     enum: ['add', 'remove', 'overwrite'],
     example: 'add',
     nullable: true,
-  }),
+  }), // prettier-ignore
 } satisfies Record<keyof OutputActorInput, Field>;
 
 /** Common input fields related to actor metamorphing */
@@ -711,12 +714,13 @@ export const metamorphInput = {
   metamorphActorId: createStringField({
     title: 'Metamorph actor ID - metamorph to another actor at the end',
     type: 'string',
-    description: `Use this option if you want to run another actor with the same dataset after this actor has finished (AKA metamorph into another actor). <a href="https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph">Learn more</a> <br/><br/>New actor is identified by its ID, e.g. "apify/web-scraper".`,
+    description: `Use this option if you want to run another actor with the same dataset after this actor has finished (AKA metamorph into another actor). <a href="https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph">Learn more</a> ${newLine(1)}
+    New actor is identified by its ID, e.g. "apify/web-scraper".`,
     editor: 'textfield',
     example: 'apify/web-scraper',
     nullable: true,
     sectionCaption: 'Integrations (Metamorphing) (Advanced)',
-  }),
+  }), // prettier-ignore
   metamorphActorBuild: createStringField({
     title: 'Metamorph actor build',
     type: 'string',
