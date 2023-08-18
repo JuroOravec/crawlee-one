@@ -227,11 +227,11 @@ const datasetIdPattern = '^[a-zA-Z0-9][a-zA-Z0-9-]*$';
 const datasetIdWithFieldPattern = `${datasetIdPattern.slice(0, -1)}#.+$`;
 
 const createHookFnExample = (
-  args: Record<string, string>[],
+  args: Record<string, string>,
   mainCode: string,
   includeGuides: boolean
 ) => {
-  const formattedArgs = Object.keys(args).length ? args.join(', ') + ', ' : '';
+  const formattedArgs = Object.keys(args).length ? Object.keys(args).join(', ') + ', ' : '';
   const formattedArgDesc = Object.entries(args).length
     ? Object.entries(args).map(([arg, desc]) => ` * \`${arg}\` - ${desc}.\n`)
     : ` *`;
@@ -467,14 +467,10 @@ export const startUrlsInput = {
     title: 'Start URLs from custom function',
     type: 'string',
     description: `Import or generate URLs to scrape using a custom function.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
-    \`
-    ${createHookFnExample([], CODE_EXAMPLES.startUrlsFromFunction, false)}
-    \`
-    `,
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
     editor: 'javascript',
-    example: createHookFnExample([], CODE_EXAMPLES.startUrlsFromFunction, false),
-    prefill: createHookFnExample([], CODE_EXAMPLES.startUrlsFromFunction, true),
+    example: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, true),
     nullable: true,
   }),
 } satisfies Record<keyof StartUrlsActorInput, Field>;
@@ -598,42 +594,30 @@ export const outputInput = {
     description: `Freely transform the output data object using a custom function.<br/><br/>
     If not set, the data will remain as is.<br/><br/>
     This is done after \`outputPickFields\` and \`outputRenameFields\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>
-    \`
-    ${createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputTransform, false)}
-    \`
-    `,
+    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>`,
     editor: 'javascript',
-    example: createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputTransform, false),
-    prefill: createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputTransform, true),
+    example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, false),
+    prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, true),
     nullable: true,
   }), // prettier-ignore
   outputTransformBefore: createStringField({
     title: 'Transform entries - Setup',
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`outputTransform\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
-    \`
-    ${createHookFnExample([], CODE_EXAMPLES.outputTransformBefore, false)}
-    \`
-    `,
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
     editor: 'javascript',
-    example: createHookFnExample([], CODE_EXAMPLES.outputTransformBefore, false),
-    prefill: createHookFnExample([], CODE_EXAMPLES.outputTransformBefore, true),
+    example: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, true),
     nullable: true,
   }), // prettier-ignore
   outputTransformAfter: createStringField({
     title: 'Transform entries - Teardown',
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`outputTransform\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
-    \`
-    ${createHookFnExample([], CODE_EXAMPLES.outputTransformAfter, false)}
-    \`
-    `,
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
     editor: 'javascript',
-    example: createHookFnExample([], CODE_EXAMPLES.outputTransformAfter, false),
-    prefill: createHookFnExample([], CODE_EXAMPLES.outputTransformAfter, true),
+    example: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, true),
     nullable: true,
   }), // prettier-ignore
 
@@ -643,42 +627,30 @@ export const outputInput = {
     description: `Decide which scraped entries should be included in the output by using a custom function.<br/><br/>
     If not set, all scraped entries will be included.<br/><br/>
     This is done after \`outputPickFields\`, \`outputRenameFields\`, and \`outputTransform\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>
-    \`
-    ${createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputFilter, false)}
-    \`
-    `,
+    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.<br/><br/>`,
     editor: 'javascript',
-    example: createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputFilter, false),
-    prefill: createHookFnExample([{ entry: 'Scraped entry' }], CODE_EXAMPLES.outputFilter, true),
+    example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, false),
+    prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, true),
     nullable: true,
   }),
   outputFilterBefore: createStringField({
     title: 'Filter entries - Setup',
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`outputFilter\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
-    \`
-    ${createHookFnExample([], CODE_EXAMPLES.outputFilterBefore, false)}
-    \`
-    `,
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
     editor: 'javascript',
-    example: createHookFnExample([], CODE_EXAMPLES.outputFilterBefore, false),
-    prefill: createHookFnExample([], CODE_EXAMPLES.outputFilterBefore, true),
+    example: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, true),
     nullable: true,
   }),
   outputFilterAfter: createStringField({
     title: 'Filter entries - Teardown',
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`outputFilter\`.<br/><br/>
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>
-    \`
-    ${createHookFnExample([], CODE_EXAMPLES.outputFilterAfter, false)}
-    \`
-    `,
+    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.<br/><br/>`,
     editor: 'javascript',
-    example: createHookFnExample([], CODE_EXAMPLES.outputFilterAfter, false),
-    prefill: createHookFnExample([], CODE_EXAMPLES.outputFilterAfter, true),
+    example: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, true),
     nullable: true,
   }),
 
