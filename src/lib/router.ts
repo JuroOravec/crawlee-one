@@ -231,7 +231,7 @@ export const setupDefaultRoute = async <
   routeHandlers: Record<Labels, RouteHandler<CrawlerCtx, RouterCtx>>;
   input?: Input | null;
 }) => {
-  const { perfBatchSize } = (input || {}) as PerfActorInput;
+  const { perfBatchSize, perfBatchWaitSecs } = (input || {}) as PerfActorInput;
 
   /** Redirect the URL to the labelled route identical to route's name */
   // prettier-ignore
@@ -263,7 +263,7 @@ export const setupDefaultRoute = async <
     const loadNextRequest = async (suffix: string) => {
       log.debug(`Checking for new Request in the queue. ${suffix}`);
 
-      await wait(1000);
+      if (perfBatchWaitSecs) await wait(perfBatchWaitSecs);
       const newReq = await reqQueue.fetchNextRequest();
       req = newReq ?? null;
 

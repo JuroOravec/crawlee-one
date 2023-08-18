@@ -40,6 +40,14 @@ export interface PerfActorInput {
    * Example: If set to 20, then up to 20 requests will be handled in a single "go".
    */
   perfBatchSize?: number;
+  /**
+   * How long to wait between entries within a single batch.
+   *
+   * Increase this value if you're using batching and you're sending requests to the scraped website too fast.
+   *
+   * Example: If set to 1, then after each entry in a batch, wait 1 second before continuing.
+   */
+  perfBatchWaitSecs?: number;
 }
 
 /** Common input fields for defining URLs to scrape */
@@ -443,6 +451,16 @@ export const perfInput = {
     sectionCaption: 'Performance configuration (Advanced)',
     sectionDescription: 'Standalone performance options. These are not passed to the Crawler.',
   }),
+  perfBatchWaitSecs: createIntegerField({
+    title: 'Wait (in seconds) between processing requests in a single batch',
+    type: 'integer',
+    description: `How long to wait between entries within a single batch.${newLine(1)}
+      Increase this value if you're using batching and you're sending requests to the scraped website too fast.${newLine(1)}
+      Example: If set to 1, then after each entry in a batch, wait 1 second before continuing.`,
+    example: 1,
+    minimum: 0,
+    nullable: true,
+  }), // prettier-ignore
 } satisfies Record<keyof PerfActorInput, Field>;
 
 /** Common input fields for defining URLs to scrape */
@@ -756,6 +774,7 @@ export const crawlerInputValidationFields = {
 
 export const perfInputValidationFields = {
   perfBatchSize: Joi.number().integer().min(0).optional(),
+  perfBatchWaitSecs: Joi.number().integer().min(0).optional(),
 } satisfies Record<keyof PerfActorInput, Joi.Schema>;
 
 export const startUrlsInputValidationFields = {
