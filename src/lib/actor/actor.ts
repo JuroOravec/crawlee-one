@@ -25,6 +25,7 @@ import {
   PrivacyActorInput,
   crawlerInput,
   StartUrlsActorInput,
+  InputActorInput,
 } from '../config';
 import { createErrorHandler } from '../error/errorHandler';
 import { setupSentry } from '../error/sentry';
@@ -215,19 +216,18 @@ export const createApifyActor = async <
 >(
   config: ActorDefinition<Ctx, Labels, Input>
 ): Promise<ActorContext<Ctx, Labels, Input>> => {
-  // Initialize actor inputs
-  const input = Object.freeze(
-    config.input
-      ? isFunc(config.input)
-        ? await config.input({ ...config })
-        : config.input
-      : await Actor.getInput<Input>()
-  );
-
-  if (config.validateInput) await config.validateInput(input);
-
   // Mutable state that is available to the actor hooks
   const state = {};
+
+  // Initialize actor inputs
+  const rawInput = config.input
+    ? isFunc(config.input)
+      ? await config.input({ ...config })
+      : config.input
+    : await Actor.getInput<Input>();
+  const input = Object.freeze(await resolveInput<Input | null>(rawInput, state));
+
+  if (config.validateInput) await config.validateInput(input);
 
   // This is context that is available to options that use initialization function
   const getConfig = () => ({ ...config, input, state });
@@ -292,6 +292,20 @@ export const createApifyActor = async <
   });
 
   return actor;
+};
+
+const resolveInput = async <T extends Record<string, any> | null>(
+  input: object | null,
+  state: Record<string, unknown>
+) => {
+  const { inputExtendUrl, inputExtendFromFunction } = (input ?? {}) as InputActorInput;
+
+  const inputFromUrl = inputExtendUrl ? await gotScraping.get(inputExtendUrl).json<object>() : null;
+  const inputFn = genHookFn({ state, input }, inputExtendFromFunction);
+  const inputFromFunc = (await inputFn?.()) ?? null;
+  const extendedInput = { ...inputFromUrl, ...inputFromFunc, ...input };
+
+  return extendedInput as T;
 };
 
 /** Create a function that triggers metamorph, using Actor's inputs as defaults. */

@@ -15,13 +15,15 @@ import type {
   ProxyActorInput,
   StartUrlsActorInput,
   PerfActorInput,
+  InputActorInput,
 } from '../config';
 
 type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<R>);
 
 type OrigRunCrawler<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
 
-export type AllActorInputs = CrawlerConfigActorInput &
+export type AllActorInputs = InputActorInput &
+  CrawlerConfigActorInput &
   PerfActorInput &
   StartUrlsActorInput &
   LoggingActorInput &

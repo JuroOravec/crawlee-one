@@ -30,6 +30,32 @@ export type CrawlerConfigActorInput = Pick<
   | 'keepAlive'
 >;
 
+/** Common input fields related to extending Actor input with remote or generated data */
+export interface InputActorInput {
+  /**
+   * If set, the Actor input is extended with a config from this URL.
+   *
+   * For example, you can store your actor input in a source control, and import it here.
+   *
+   * In case of a conflict (if a field is defined both in Actor input and in imported input)
+   * the Actor input overwrites the imported fields.
+   *
+   * The URL must point to a JSON file containing a single object (the config).
+   */
+  inputExtendUrl?: string;
+  /**
+   * If set, the Actor input is extended with a config from this custom function.
+   *
+   * For example, you can store your actor input in a source control, and import it here.
+   *
+   * In case of a conflict (if a field is defined both in Actor input and in imported input)
+   * the Actor input overwrites the imported fields.
+   *
+   * The URL must point to a JSON file containing a single object (the config).
+   */
+  inputExtendFromFunction?: string;
+}
+
 /** Common input fields related to performance which are not part of the CrawlerConfig */
 export interface PerfActorInput {
   /**
@@ -307,6 +333,16 @@ ${includeGuides ? guides : '//'}
 };
 
 const CODE_EXAMPLES = {
+  inputExtendFromFunction: `// Example: Load Actor config from GitHub URL (public)
+const config = await sendRequest.get('https://raw.githubusercontent.com/username/project/main/config.json').json();
+
+// Increase concurrency during off-peak hours
+// NOTE: Imagine we're targetting a small server, that can be slower during the day
+const hours = new Date().getUTCHours();
+const isOffPeak = hours < 6 || hours > 20;
+config.maxConcurrency = isOffPeak ? 8 : 3;
+
+return config;`,
   startUrlsFromFunction: `// Example: Create and load URLs from an Apify Dataset by combining multiple fields
 const dataset = await Actor.openDataset(datasetNameOrId);
 const data = await dataset.getData();
@@ -328,6 +364,38 @@ state.categories = await sendRequest.get('https://example.com/my-categories').js
   outputFilterAfter: `// Example: Fetch data or run code AFTER entries are scraped.
 delete state.categories;`,
 };
+
+/** Common input fields related to actor input */
+export const inputInput = {
+  inputExtendUrl: createStringField({
+    title: 'Extend Actor input from URL',
+    type: 'string',
+    editor: 'textfield',
+    description: `Extend Actor input with a config from a URL.${newLine(1)}
+    For example, you can store your actor input in a source control, and import it here.${newLine(1)}
+    In case of a conflict (if a field is defined both in Actor input and in imported input) the Actor input overwrites the imported fields.${newLine(1)}
+    The URL is requested with GET method, and must point to a JSON file containing a single object (the config).${newLine(1)}
+    If you need to send a POST request or to modify the response further, use \`inputExtendFromFunction\` instead.`,
+    example: 'https://raw.githubusercontent.com/jfairbank/programming-elm.com/master/cat-breeds.json',
+    nullable: true,
+    sectionCaption: 'Programmatic Input (Advanced)',
+    sectionDescription:
+      "With these options you can configure other Actor options programmatically or from remote source.",
+  }), // prettier-ignore
+
+  inputExtendFromFunction: createStringField({
+    title: 'Extend Actor input from custom function',
+    type: 'string',
+    editor: 'javascript',
+    description: `Extend Actor input with a config defined by a custom function.${newLine(1)}
+    For example, you can store your actor input in a source control, and import it here.${newLine(1)}
+    In case of a conflict (if a field is defined both in Actor input and in imported input) the Actor input overwrites the imported fields.${newLine(1)}
+    The function must return an object (the config).`,
+    example: createHookFnExample({}, CODE_EXAMPLES.inputExtendFromFunction, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.inputExtendFromFunction, true),
+    nullable: true,
+  }), // prettier-ignore
+} satisfies Record<keyof InputActorInput, Field>;
 
 /** Common input fields related to crawler setup */
 export const crawlerInput = {
@@ -486,8 +554,7 @@ export const startUrlsInput = {
   startUrlsFromFunction: createStringField({
     title: 'Start URLs from custom function',
     type: 'string',
-    description: `Import or generate URLs to scrape using a custom function.${newLine(1)}
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
+    description: `Import or generate URLs to scrape using a custom function.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, true),
@@ -614,8 +681,7 @@ export const outputInput = {
     type: 'string',
     description: `Freely transform the output data object using a custom function.${newLine(1)}
     If not set, the data will remain as is.${newLine(1)}
-    This is done after \`outputPickFields\` and \`outputRenameFields\`.${newLine(1)}
-    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.${newLine(1)}`,
+    This is done after \`outputPickFields\` and \`outputRenameFields\`.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, false),
     prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, true),
@@ -624,8 +690,7 @@ export const outputInput = {
   outputTransformBefore: createStringField({
     title: 'Transform entries - Setup',
     type: 'string',
-    description: `Use this if you need to run one-time initialization code before \`outputTransform\`.${newLine(1)}
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
+    description: `Use this if you need to run one-time initialization code before \`outputTransform\`.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, true),
@@ -634,8 +699,7 @@ export const outputInput = {
   outputTransformAfter: createStringField({
     title: 'Transform entries - Teardown',
     type: 'string',
-    description: `Use this if you need to run one-time teardown code after \`outputTransform\`.${newLine(1)}
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
+    description: `Use this if you need to run one-time teardown code after \`outputTransform\`.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, true),
@@ -647,8 +711,7 @@ export const outputInput = {
     type: 'string',
     description: `Decide which scraped entries should be included in the output by using a custom function.${newLine(1)}
     If not set, all scraped entries will be included.${newLine(1)}
-    This is done after \`outputPickFields\`, \`outputRenameFields\`, and \`outputTransform\`.${newLine(1)}
-    The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.${newLine(1)}`,
+    This is done after \`outputPickFields\`, \`outputRenameFields\`, and \`outputTransform\`.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, false),
     prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, true),
@@ -657,8 +720,7 @@ export const outputInput = {
   outputFilterBefore: createStringField({
     title: 'Filter entries - Setup',
     type: 'string',
-    description: `Use this if you need to run one-time initialization code before \`outputFilter\`.${newLine(1)}
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
+    description: `Use this if you need to run one-time initialization code before \`outputFilter\`.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, true),
@@ -667,8 +729,7 @@ export const outputInput = {
   outputFilterAfter: createStringField({
     title: 'Filter entries - Teardown',
     type: 'string',
-    description: `Use this if you need to run one-time teardown code after \`outputFilter\`.${newLine(1)}
-    The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.${newLine(1)}`,
+    description: `Use this if you need to run one-time teardown code after \`outputFilter\`.${newLine(1)}`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, true),
@@ -776,6 +837,11 @@ export const perfInputValidationFields = {
   perfBatchSize: Joi.number().integer().min(0).optional(),
   perfBatchWaitSecs: Joi.number().integer().min(0).optional(),
 } satisfies Record<keyof PerfActorInput, Joi.Schema>;
+
+export const inputInputValidationFields = {
+  inputExtendUrl: Joi.string().min(1).uri().optional(),
+  inputExtendFromFunction: Joi.string().min(1).optional(),
+} satisfies Record<keyof InputActorInput, Joi.Schema>;
 
 export const startUrlsInputValidationFields = {
   startUrls: Joi.array().items(Joi.string().min(1), Joi.object()).optional(),
