@@ -744,7 +744,7 @@ export const requestInput = {
     prefill: 50,
     minimum: 0,
     nullable: true,
-    sectionCaption: 'Requests (Advanced)',
+    sectionCaption: 'Requests limit, transformation & filtering (Advanced)',
   }), // prettier-ignore
 
   requestTransform: createStringField({
