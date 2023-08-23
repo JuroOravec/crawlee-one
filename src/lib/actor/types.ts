@@ -5,6 +5,7 @@ import type { gotScraping } from 'got-scraping';
 import type { MaybePromise } from '../../utils/types';
 import type { CrawlerUrl } from '../../types';
 import type { itemCacheKey, pushData } from '../io/pushData';
+import type { pushRequests } from '../io/pushRequests';
 import type { RouteHandler, RouteMatcher, CrawlerRouterWrapper } from '../router';
 import type {
   CrawlerConfigActorInput,
@@ -16,6 +17,7 @@ import type {
   StartUrlsActorInput,
   PerfActorInput,
   InputActorInput,
+  RequestActorInput,
 } from '../config';
 
 type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<R>);
@@ -29,6 +31,7 @@ export type AllActorInputs = InputActorInput &
   LoggingActorInput &
   ProxyActorInput &
   PrivacyActorInput &
+  RequestActorInput &
   OutputActorInput &
   MetamorphActorInput;
 
@@ -145,7 +148,7 @@ export interface ActorDefinition<
   createCrawler: (
     actorCtx: Omit<
       ActorContext<Ctx, Labels, Input>,
-      'crawler' | 'runCrawler' | 'metamorph' | 'pushData' | 'startUrls'
+      'crawler' | 'runCrawler' | 'metamorph' | 'pushData' | 'pushRequests' | 'startUrls'
     >
   ) => MaybePromise<Ctx['crawler']>;
 }
@@ -184,6 +187,13 @@ export interface ActorContext<
    * - Set which (nested) properties are personal data optionally redact them for privacy compliance.
    */
   pushData: typeof pushData;
+  /**
+   * Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
+   *
+   * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
+   * - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
+   */
+  pushRequests: typeof pushRequests;
   /**
    * A list of resolved Requests to be scraped.
    *

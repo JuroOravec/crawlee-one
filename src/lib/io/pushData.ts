@@ -129,6 +129,8 @@ export interface PushDataOptions<T extends object> {
   filter?: (item: any) => any;
   /** ID or name of the dataset to which the data should be pushed */
   datasetIdOrName?: string;
+  /** ID of the RequestQueue that stores remaining requests */
+  requestQueueId?: string;
   /** ID or name of the key-value store used as cache */
   cacheStoreIdOrName?: string;
   /** Define fields that uniquely identify entries for caching */
@@ -287,24 +289,24 @@ const cyrb53 = (str, seed = 0) => {
 const shortenToSize = async <T>(
   entries: T[],
   maxCount: number,
-  options?: { datasetIdOrName?: string; log: Log }
+  options?: { datasetIdOrName?: string; requestQueueId?: string; log: Log }
 ) => {
-  const datasetIdOrName = options?.datasetIdOrName;
+  const { datasetIdOrName, requestQueueId, log } = options ?? {};
   const datasetName = datasetIdOrName ? `"${datasetIdOrName}"` : 'DEFAULT';
 
-  const sizeMonitor = datasetSizeMonitor(maxCount, { datasetId: datasetIdOrName });
+  const sizeMonitor = datasetSizeMonitor(maxCount, { datasetId: datasetIdOrName, requestQueueId });
 
   // Ignore incoming entries if the dataset is already full
   const isDatasetFull = await sizeMonitor.isFull();
   if (isDatasetFull) {
-    options?.log?.warning(`Dataset (${datasetName}) is already full (${maxCount} entries), ${entries.length} entries will be discarded.`);
+    log?.warning(`Dataset (${datasetName}) is already full (${maxCount} entries), ${entries.length} entries will be discarded.`);
     return [];
   } // prettier-ignore
 
   // Show warning when only part of the incoming data made it into the dataset
   const slicedEntries = await sizeMonitor.shortenToSize(entries);
   if (slicedEntries.length !== entries.length) {
-    options?.log?.warning(`Dataset (${datasetName}) has become full (${maxCount} entries), ${entries.length} entries will be discarded.`);
+    log?.warning(`Dataset (${datasetName}) has become full (${maxCount} entries), ${entries.length} entries will be discarded.`);
     return [];
   } // prettier-ignore
 
@@ -314,9 +316,12 @@ const shortenToSize = async <T>(
 /**
  * `Actor.pushData` with extra features:
  *
- * - (Optionally) Add metadata to entries before they are pushed to dataset.
- * - (Optionally) Set which (nested) properties are personal data and allow to
- * redact them for privacy compliance.
+ * - Limit the max size of the Dataset. No entries are added when Dataset is at or above the limit.
+ * - Redact "private" fields
+ * - Add metadata to entries before they are pushed to dataset.
+ * - Select and rename (nested) properties
+ * - Transform and filter entries. Entries that did not pass the filter are not added to the dataset.
+ * - Add/remove entries to/from KeyValueStore. Entries are saved to the store by hash generated from entry fields set by `cachePrimaryKeys`.
  */
 export const pushData = async <
   Ctx extends CrawlingContext,
@@ -336,6 +341,7 @@ export const pushData = async <
     transform,
     filter,
     datasetIdOrName,
+    requestQueueId,
     cacheStoreIdOrName,
     cachePrimaryKeys,
     cacheActionOnResult,
@@ -344,10 +350,10 @@ export const pushData = async <
   const manyItems = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
   const items =
     maxCount != null
-      ? await shortenToSize(manyItems, maxCount, { datasetIdOrName, log: ctx.log })
+      ? await shortenToSize(manyItems, maxCount, { datasetIdOrName, requestQueueId, log: ctx.log })
       : manyItems;
 
-  ctx.log.debug(`Preparing entries before pushing ${items.length} items to dataset`); // prettier-ignore
+  ctx.log.debug(`Preparing to push ${items.length} entries to dataset`); // prettier-ignore
   const addMetadataToData = createMetadataMapper(ctx);
 
   const adjustedItems = await items.reduce(async (aggPromise, item) => {
@@ -361,9 +367,9 @@ export const pushData = async <
         `<Redacted property "${key}". To include the actual value, toggle ON the Actor input option "Include personal data">`,
     });
 
-    const pickedItem = pickKeys ? pick(maskedItem, pickKeys) : maskedItem;
-    const renamedItem = remapKeys ? renameKeys(pickedItem, remapKeys) : pickedItem;
-    const transformedItem = transform ? await transform(renamedItem) : renamedItem;
+    const renamedItem = remapKeys ? renameKeys(maskedItem, remapKeys) : maskedItem;
+    const pickedItem = pickKeys ? pick(renamedItem, pickKeys) : renamedItem;
+    const transformedItem = transform ? await transform(pickedItem) : pickedItem;
     const passedFilter = filter ? await filter(transformedItem) : true;
 
     if (passedFilter) agg.push(transformedItem);

@@ -26,6 +26,7 @@ import {
   crawlerInput,
   StartUrlsActorInput,
   InputActorInput,
+  RequestActorInput,
 } from '../config';
 import { createErrorHandler } from '../error/errorHandler';
 import { setupSentry } from '../error/sentry';
@@ -41,6 +42,7 @@ import type {
   RunCrawler,
 } from './types';
 import { getColumnFromDataset } from '../io/dataset';
+import { PushRequestsOptions, pushRequests } from '../io/pushRequests';
 
 const actorClassByType = {
   basic: BasicCrawler,
@@ -261,6 +263,7 @@ export const createApifyActor = async <
   const runCrawler = createScopedCrawlerRun(preActor);
   const metamorph = createScopedMetamorph(preActor);
   const scopedPushData = createScopedPushData(preActor);
+  const scopedPushRequest = createScopedPushRequests(preActor);
   const startUrls = await getStartUrlsFromInput(preActor);
 
   const actor = {
@@ -269,6 +272,7 @@ export const createApifyActor = async <
     runCrawler,
     metamorph,
     pushData: scopedPushData,
+    pushRequests: scopedPushRequest,
     startUrls,
   } satisfies ActorContext<Ctx, Labels, Input>;
 
@@ -330,6 +334,7 @@ const createScopedMetamorph = (actor: Pick<ActorContext, 'input'>) => {
 const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
   const {
     includePersonalData,
+    requestQueueId,
     outputMaxEntries,
     outputTransform,
     outputFilter,
@@ -339,7 +344,7 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
     outputCacheStoreIdOrName,
     outputCachePrimaryKeys,
     outputCacheActionOnResult,
-  } = (actor.input ?? {}) as OutputActorInput & PrivacyActorInput;
+  } = (actor.input ?? {}) as OutputActorInput & PrivacyActorInput & RequestActorInput;
 
   const scopedPushData: ActorContext['pushData'] = async (entries, ctx, options) => {
     const transformFn = genHookFn(actor, outputTransform);
@@ -353,6 +358,7 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
       transform: transformFn ? (item) => transformFn(item) : undefined,
       filter: filterFn ? (item) => filterFn(item) : undefined,
       datasetIdOrName: outputDatasetIdOrName,
+      requestQueueId,
       cacheStoreIdOrName: outputCacheStoreIdOrName,
       cachePrimaryKeys: outputCachePrimaryKeys,
       cacheActionOnResult: outputCacheActionOnResult,
@@ -363,6 +369,29 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state'>) => {
   };
 
   return scopedPushData;
+};
+
+/** pushRequests wrapper that pre-populates options based on actor input */
+const createScopedPushRequests = (actor: Pick<ActorContext, 'input' | 'state'>) => {
+  const { requestQueueId, requestMaxEntries, requestTransform, requestFilter } = (actor.input ??
+    {}) as RequestActorInput;
+
+  const scopedPushRequest: ActorContext['pushRequests'] = async (entries, ctx, options) => {
+    const transformFn = genHookFn(actor, requestTransform);
+    const filterFn = genHookFn(actor, requestFilter);
+
+    const mergedOptions = {
+      maxCount: requestMaxEntries,
+      transform: transformFn ? (item) => transformFn(item) : undefined,
+      filter: filterFn ? (item) => filterFn(item) : undefined,
+      requestQueueId,
+      ...options,
+    } satisfies PushRequestsOptions<any>;
+
+    return pushRequests(entries, ctx, mergedOptions);
+  };
+
+  return scopedPushRequest;
 };
 
 /**
@@ -377,17 +406,21 @@ const createScopedCrawlerRun = <
 >(
   actor: Omit<
     ActorContext<Ctx, Labels, Input>,
-    'runCrawler' | 'metamorph' | 'pushData' | 'startUrls'
+    'runCrawler' | 'metamorph' | 'pushData' | 'pushRequests' | 'startUrls'
   >
 ) => {
   const {
+    requestTransformBefore,
+    requestTransformAfter,
+    requestFilterBefore,
+    requestFilterAfter,
     outputTransformBefore,
     outputTransformAfter,
     outputFilterBefore,
     outputFilterAfter,
     outputCacheStoreIdOrName,
     outputCacheActionOnResult,
-  } = (actor.input ?? {}) as OutputActorInput;
+  } = (actor.input ?? {}) as OutputActorInput & RequestActorInput;
 
   const metamorph = createScopedMetamorph(actor);
 
@@ -400,11 +433,15 @@ const createScopedCrawlerRun = <
 
     await genHookFn(actor, outputTransformBefore)?.();
     await genHookFn(actor, outputFilterBefore)?.();
+    await genHookFn(actor, requestTransformBefore)?.();
+    await genHookFn(actor, requestFilterBefore)?.();
 
     const runRes = await actor.crawler.run(requests, options);
 
     await genHookFn(actor, outputTransformAfter)?.();
     await genHookFn(actor, outputFilterAfter)?.();
+    await genHookFn(actor, requestTransformAfter)?.();
+    await genHookFn(actor, requestFilterAfter)?.();
 
     // Trigger metamorph if it was set from the input
     await metamorph();

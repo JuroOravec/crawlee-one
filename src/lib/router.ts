@@ -16,7 +16,7 @@ import type { Page } from 'playwright';
 
 import type { MaybePromise } from '../utils/types';
 import { serialAsyncFind, serialAsyncMap, wait } from '../utils/async';
-import type { PerfActorInput } from './config';
+import type { PerfActorInput, RequestActorInput } from './config';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
 
@@ -231,7 +231,8 @@ export const setupDefaultRoute = async <
   routeHandlers: Record<Labels, RouteHandler<CrawlerCtx, RouterCtx>>;
   input?: Input | null;
 }) => {
-  const { perfBatchSize, perfBatchWaitSecs } = (input || {}) as PerfActorInput;
+  const { perfBatchSize, perfBatchWaitSecs, requestQueueId } = (input || {}) as PerfActorInput &
+    RequestActorInput;
 
   /** Redirect the URL to the labelled route identical to route's name */
   // prettier-ignore
@@ -249,7 +250,7 @@ export const setupDefaultRoute = async <
     const { page, log: parentLog } = ctx;
     const log = parentLog.child({ prefix: '[Router] ' });
 
-    const reqQueue = await Actor.openRequestQueue();
+    const reqQueue = await Actor.openRequestQueue(requestQueueId);
 
     let handledRequestsCount = 0;
     let req: CrawlerRequest | null = ctx.request;
@@ -310,7 +311,7 @@ export const setupDefaultRoute = async <
       log.error(`Failed to process a request, returning it to the queue. URL: ${req?.loadedUrl || req?.url}.`); // prettier-ignore
       log.error(err);
       // Reinsert the request into the queue if we failed to process it due to an error
-      if (req) await reqQueue.reclaimRequest(req);
+      if (req) await reqQueue.reclaimRequest(req, { forefront: true });
     }
   };
 

@@ -127,6 +127,79 @@ export interface ProxyActorInput {
   proxy?: Parameters<Actor['createProxyConfiguration']>[0];
 }
 
+/** Common input fields related to actor requests */
+export interface RequestActorInput {
+  /**
+   * If set, only at most this many requests will be scraped.
+   *
+   * The count is determined from the Apify RequestQueue that's used for the Actor run.
+   *
+   * This means that if `requestMaxEntries` is set to 50, but the
+   * associated RequestQueue already handled 40 requests, then only 10 new requests
+   * will be handled.
+   */
+  requestMaxEntries?: number;
+
+  /**
+   * Option to freely transform a request using a custom function before pushing it to the RequestQueue.
+   *
+   * If not set, the request will remain as is.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.
+   *
+   * `async (entry, { Actor, input, state, itemCacheKey }) => { ... }`
+   */
+  requestTransform?: string;
+  /**
+   * Use this if you need to run one-time initialization code before `requestTransform`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   *
+   * `async ({ Actor, input, state, itemCacheKey }) => { ... }`
+   */
+  requestTransformBefore?: string;
+  /**
+   * Use this if you need to run one-time teardown code after `requestTransform`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   *
+   * `async ({ Actor, input, state, itemCacheKey }) => { ... }`
+   */
+  requestTransformAfter?: string;
+
+  /**
+   * Option to filter a request using a custom function before pushing it to the RequestQueue.
+   *
+   * If not set, all requests will be included.
+   *
+   * This is done after `requestTransform`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.
+   *
+   * `async (entry, { Apify, input, state, itemCacheKey }) => boolean`
+   */
+  requestFilter?: string;
+  /**
+   * Use this if you need to run one-time initialization code before `requestFilter`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   *
+   * `async ({ Apify, input, state, itemCacheKey }) => boolean`
+   */
+  requestFilterBefore?: string;
+  /**
+   * Use this if you need to run one-time initialization code after `requestFilter`.
+   *
+   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   *
+   * `async ({ Actor, input, state, itemCacheKey }) => boolean`
+   */
+  requestFilterAfter?: string;
+
+  /** ID of the RequestQueue to which the requests should be pushed */
+  requestQueueId?: string;
+}
+
 /** Common input fields related to actor output */
 export interface OutputActorInput {
   /**
@@ -145,7 +218,7 @@ export interface OutputActorInput {
    *
    * If not set, all fields on an entry will be pushed to the dataset.
    *
-   * This is done before `outputRenameFields`.
+   * This is done after `outputRenameFields`.
    *
    * Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
    * resolved using Lodash.get().
@@ -153,6 +226,8 @@ export interface OutputActorInput {
   outputPickFields?: string[];
   /**
    * Option to remap the keys before pushing the entries to the dataset.
+   *
+   * This is done before `outputRenameFields`.
    *
    * Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
    * resolved using Lodash.get().
@@ -193,7 +268,7 @@ export interface OutputActorInput {
    *
    * If not set, all entries will be included.
    *
-   * This is done after `outputPickFields`, `outputRenameFields`, and `outputFilter`.
+   * This is done after `outputPickFields`, `outputRenameFields`, and `outputTransform`.
    *
    * The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.
    *
@@ -304,7 +379,7 @@ const createHookFnExample = (
 //
 //   /**
 //    * ======= USING CACHE ========
-//    * To save the entry to the KeyValue cache (or rerieve it), you can use
+//    * To save the entry to the KeyValue cache (or retrieve it), you can use
 //    * \`itemCacheKey\` to create the entry's ID for you:
 //    */
 //   // const cacheId = itemCacheKey(item, input.cachePrimaryKeys);
@@ -333,6 +408,7 @@ ${includeGuides ? guides : '//'}
 };
 
 const CODE_EXAMPLES = {
+  // Input
   inputExtendFromFunction: `// Example: Load Actor config from GitHub URL (public)
 const config = await sendRequest.get('https://raw.githubusercontent.com/username/project/main/config.json').json();
 
@@ -348,6 +424,8 @@ const dataset = await Actor.openDataset(datasetNameOrId);
 const data = await dataset.getData();
 const urls = data.items.map((item) => \`https://example.com/u/\${item.userId}/list/\${item.listId}\`);
 return urls;`,
+
+  // Output
   outputTransform: `// Example: Add extra custom fields like aggregates
 return {
   ...entry,
@@ -362,6 +440,23 @@ return entry.images.length > 5;`,
   outputFilterBefore: `// Example: Fetch data or run code BEFORE entries are scraped.
 state.categories = await sendRequest.get('https://example.com/my-categories').json();`,
   outputFilterAfter: `// Example: Fetch data or run code AFTER entries are scraped.
+delete state.categories;`,
+
+  // Requests
+  requestTransform: `// Example: Tag requests
+// (maybe because we use RequestQueue that pools multiple scrapers)
+request.userData.tag = "VARIANT_A";
+return requestQueue;`,
+  requestTransformBefore: `// Example: Fetch data or run code BEFORE requests are processed.
+state.categories = await sendRequest.get('https://example.com/my-categories').json();`,
+  requestTransformAfter: `// Example: Fetch data or run code AFTER requests are processed.
+delete state.categories;`,
+  requestFilter: `// Example: Filter requests based on their tag
+// (maybe because we use RequestQueue that pools multiple scrapers)
+return request.userData.tag === "VARIANT_A";`,
+  requestFilterBefore: `// Example: Fetch data or run code BEFORE requests are processed.
+state.categories = await sendRequest.get('https://example.com/my-categories').json();`,
+  requestFilterAfter: `// Example: Fetch data or run code AFTER requests are processed.
 delete state.categories;`,
 };
 
@@ -637,6 +732,94 @@ export const privacyInput = {
   }), // prettier-ignore
 } satisfies Record<keyof PrivacyActorInput, Field>;
 
+/** Common input fields related to actor request */
+export const requestInput = {
+  requestMaxEntries: createIntegerField({
+    title: 'Limit the number of requests',
+    type: 'integer',
+    description: `If set, only at most this many requests will be processed.${newLine(1)}
+      The count is determined from the Apify RequestQueue that's used for the Actor run.${newLine(1)}
+      This means that if \`requestMaxEntries\` is set to 50, but the associated queue already handled 40 requests, then only 10 new requests will be handled.`,
+    example: 50,
+    prefill: 50,
+    minimum: 0,
+    nullable: true,
+    sectionCaption: 'Requests (Advanced)',
+  }), // prettier-ignore
+
+  requestTransform: createStringField({
+    title: 'Transform requests',
+    type: 'string',
+    description: `Freely transform the request object using a custom function.${newLine(1)}
+    If not set, the request will remain as is.${newLine(1)}.`,
+    editor: 'javascript',
+    example: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, false),
+    prefill: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, true),
+    nullable: true,
+  }), // prettier-ignore
+  requestTransformBefore: createStringField({
+    title: 'Transform requests - Setup',
+    type: 'string',
+    description: `Use this if you need to run one-time initialization code before \`requestTransform\`.${newLine(1)}`,
+    editor: 'javascript',
+    example: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, true),
+    nullable: true,
+  }), // prettier-ignore
+  requestTransformAfter: createStringField({
+    title: 'Transform requests - Teardown',
+    type: 'string',
+    description: `Use this if you need to run one-time teardown code after \`requestTransform\`.${newLine(1)}`,
+    editor: 'javascript',
+    example: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, true),
+    nullable: true,
+  }), // prettier-ignore
+
+  requestFilter: createStringField({
+    title: 'Filter requests',
+    type: 'string',
+    description: `Decide which requests should be processed by using a custom function.${newLine(1)}
+    If not set, all requests will be included.${newLine(1)}
+    This is done after \`requestTransform\`.${newLine(1)}`,
+    editor: 'javascript',
+    example: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestFilter, false),
+    prefill: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestFilter, true),
+    nullable: true,
+  }), // prettier-ignore
+  requestFilterBefore: createStringField({
+    title: 'Filter requests - Setup',
+    type: 'string',
+    description: `Use this if you need to run one-time initialization code before \`requestFilter\`.${newLine(1)}`,
+    editor: 'javascript',
+    example: createHookFnExample({}, CODE_EXAMPLES.requestFilterBefore, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.requestFilterBefore, true),
+    nullable: true,
+  }), // prettier-ignore
+  requestFilterAfter: createStringField({
+    title: 'Filter requests - Teardown',
+    type: 'string',
+    description: `Use this if you need to run one-time teardown code after \`requestFilter\`.${newLine(1)}`,
+    editor: 'javascript',
+    example: createHookFnExample({}, CODE_EXAMPLES.requestFilterAfter, false),
+    prefill: createHookFnExample({}, CODE_EXAMPLES.requestFilterAfter, true),
+    nullable: true,
+  }), // prettier-ignore
+
+  requestQueueId: createStringField({
+    title: 'RequestQueue ID',
+    type: 'string',
+    description: `By default, requests are stored in the default request queue.
+    Set this option if you want to use a non-default queue.
+    <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a>${newLine(1)}
+    <strong>NOTE:<strong> RequestQueue name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
+    editor: 'textfield',
+    example: 'mIJVZsRQrDQf4rUAf',
+    pattern: datasetIdPattern,
+    nullable: true,
+  }), // prettier-ignore
+} satisfies Record<keyof RequestActorInput, Field>;
+
 /** Common input fields related to actor output */
 export const outputInput = {
   outputMaxEntries: createIntegerField({
@@ -651,30 +834,30 @@ export const outputInput = {
     nullable: true,
     sectionCaption: 'Output size, transformation & filtering (T in ETL) (Advanced)',
   }),
-  outputPickFields: createArrayField({
-    title: 'Pick dataset fields',
-    type: 'array',
-    description: `Select a subset of fields of an entry that will be pushed to the dataset.${newLine(1)}
-    If not set, all fields on an entry will be pushed to the dataset.${newLine(1)}
-    This is done before \`outputRenameFields\`.${newLine(1)}
-    Keys can be nested, e.g. \`"someProp.value[0]"\`.
-    Nested path is resolved using <a href="https://lodash.com/docs/4.17.15#get">Lodash.get()</a>.`,
-    editor: 'stringList',
-    example: ['fieldName', 'another.nested[0].field'],
-    nullable: true,
-  }), // prettier-ignore
   outputRenameFields: createObjectField({
     title: 'Rename dataset fields',
     type: 'object',
     description: `Rename fields (columns) of the output data.${newLine(1)}
     If not set, all fields will have their original names.${newLine(1)}
-    This is done after \`outputPickFields\`.${newLine(1)}
+    This is done before \`outputPickFields\`.${newLine(1)}
     Keys can be nested, e.g. \`"someProp.value[0]"\`.
     Nested path is resolved using <a href="https://lodash.com/docs/4.17.15#get">Lodash.get()</a>.`,
     editor: 'json',
     example: { oldFieldName: 'newFieldName' },
     nullable: true,
   }),
+  outputPickFields: createArrayField({
+    title: 'Pick dataset fields',
+    type: 'array',
+    description: `Select a subset of fields of an entry that will be pushed to the dataset.${newLine(1)}
+    If not set, all fields on an entry will be pushed to the dataset.${newLine(1)}
+    This is done after \`outputRenameFields\`.${newLine(1)}
+    Keys can be nested, e.g. \`"someProp.value[0]"\`.
+    Nested path is resolved using <a href="https://lodash.com/docs/4.17.15#get">Lodash.get()</a>.`,
+    editor: 'stringList',
+    example: ['fieldName', 'another.nested[0].field'],
+    nullable: true,
+  }), // prettier-ignore
 
   outputTransform: createStringField({
     title: 'Transform entries',
@@ -862,6 +1045,19 @@ export const proxyInputValidationFields = {
 export const privacyInputValidationFields = {
   includePersonalData: Joi.boolean().optional(),
 } satisfies Record<keyof PrivacyActorInput, Joi.Schema>;
+
+export const requestInputValidationFields = {
+  requestMaxEntries: Joi.number().integer().min(0).optional(),
+
+  requestTransform: Joi.string().min(1).optional(),
+  requestTransformBefore: Joi.string().min(1).optional(),
+  requestTransformAfter: Joi.string().min(1).optional(),
+  requestFilter: Joi.string().min(1).optional(),
+  requestFilterBefore: Joi.string().min(1).optional(),
+  requestFilterAfter: Joi.string().min(1).optional(),
+
+  requestQueueId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
+} satisfies Record<keyof RequestActorInput, Joi.Schema>;
 
 export const outputInputValidationFields = {
   outputMaxEntries: Joi.number().integer().min(0).optional(),
