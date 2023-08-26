@@ -1,29 +1,10 @@
-import { Actor } from 'apify';
 import type { CrawlingContext, Log } from 'crawlee';
 import { get, pick, set, unset, uniq, sortBy, isPlainObject, fromPairs } from 'lodash';
 
 import { serialAsyncMap } from '../../utils/async';
+import type { CrawleeOneIO } from '../integrations/types';
+import { ApifyCrawleeOneIO, apifyIO } from '../integrations/apify';
 import { datasetSizeMonitor } from './dataset';
-
-export interface ActorEntryMetadata {
-  actorId: string | null;
-  actorRunId: string | null;
-  actorRunUrl: string | null;
-  contextId: string;
-  requestId: string | null;
-
-  /** The URL given to the crawler */
-  originalUrl: string | null;
-  /** The URL given to the crawler after possible redirects */
-  loadedUrl: string | null;
-
-  /** ISO datetime string that indicates the time when the request has been processed. */
-  dateHandled: string;
-  numberOfRetries: number;
-}
-
-/** Add metadata to the object */
-export type WithActorEntryMetadata<T> = T & { metadata: ActorEntryMetadata };
 
 /** Functions that generates a "redacted" version of a value */
 export type PrivateValueGen<V, K, O> = (val: V, key: K, obj: O) => any;
@@ -64,10 +45,11 @@ export type PrivacyMask<T extends object> = {
 };
 
 export interface PushDataOptions<T extends object> {
+  io?: CrawleeOneIO<any, any>;
   /**
    * If set, only at most this many entries will be scraped.
    *
-   * The count is determined from the Apify Dataset that's used for the Actor run.
+   * The count is determined from the Dataset that's used for the crawler run.
    *
    * This means that if `maxCount` is set to 50, but the
    * associated Dataset already has 40 items in it, then only 10 new entries
@@ -128,43 +110,28 @@ export interface PushDataOptions<T extends object> {
    */
   filter?: (item: any) => any;
   /** ID or name of the dataset to which the data should be pushed */
-  datasetIdOrName?: string;
+  datasetId?: string;
   /** ID of the RequestQueue that stores remaining requests */
   requestQueueId?: string;
   /** ID or name of the key-value store used as cache */
-  cacheStoreIdOrName?: string;
+  cacheStoreId?: string;
   /** Define fields that uniquely identify entries for caching */
   cachePrimaryKeys?: string[];
   /** Define whether we want to add, remove, or overwrite cached entries with results from the actor run */
   cacheActionOnResult?: 'add' | 'remove' | 'overwrite' | null;
 }
 
-const createMetadataMapper = <Ctx extends CrawlingContext>(ctx: Ctx) => {
-  const { actorId, actorRunId } = Actor.getEnv();
-  const actorRunUrl =
-    actorId != null && actorRunId != null
-      ? `https://console.apify.com/actors/${actorId}/runs/${actorRunId}`
-      : null;
-  const handledAt = new Date().toISOString();
+const createMetadataMapper = async <
+  Ctx extends CrawlingContext,
+  TIO extends CrawleeOneIO<any, any> = ApifyCrawleeOneIO
+>(
+  ctx: Ctx,
+  options: { io: TIO }
+) => {
+  const { io = apifyIO } = options ?? {};
 
-  const addMetadataToData = <T extends Record<any, any> = Record<any, any>>(
-    item
-  ): WithActorEntryMetadata<T> => ({
-    ...item,
-    metadata: {
-      actorId,
-      actorRunId,
-      actorRunUrl,
-      contextId: ctx.id,
-      requestId: ctx.request.id ?? null,
-
-      originalUrl: ctx.request.url ?? null,
-      loadedUrl: ctx.request.loadedUrl ?? null,
-
-      dateHandled: ctx.request.handledAt || handledAt,
-      numberOfRetries: ctx.request.retryCount,
-    },
-  });
+  const metadata = await io.generateEntryMetadata(ctx);
+  const addMetadataToData = <T extends object>(item: T) => ({ ...item, metadata });
   return addMetadataToData;
 };
 
@@ -231,7 +198,7 @@ const applyPrivacyMask = <T extends Record<any, any> = Record<any, any>>(
 };
 
 /** Rename object properties in place */
-const renameKeys = <T extends object>(item: T, keyNameMap: Partial<Record<keyof T, string>>) => {
+const renameKeys = <T extends object>(item: T, keyNameMap: Record<string, string>) => {
   Object.entries(keyNameMap || {}).forEach(([oldPath, newPath]) => {
     if (oldPath === newPath) return;
     const val = get(item, oldPath);
@@ -247,7 +214,8 @@ const sortObjectKeys = <T extends object>(obj: T) =>
 /**
  * Serialize dataset item to fixed-length hash.
  *
- * NOTE: Apify allows the key-value store key to be max 256 char long.
+ * NOTE: Apify (around which this lib is designed) allows the key-value store key
+ *       to be max 256 char long.
  *       https://docs.apify.com/sdk/js/reference/class/KeyValueStore#setValue
  */
 export const itemCacheKey = (item: any, primaryKeys?: string[]) => {
@@ -289,12 +257,12 @@ const cyrb53 = (str, seed = 0) => {
 const shortenToSize = async <T>(
   entries: T[],
   maxCount: number,
-  options?: { datasetIdOrName?: string; requestQueueId?: string; log: Log }
+  options?: { io?: CrawleeOneIO; datasetId?: string; requestQueueId?: string; log: Log }
 ) => {
-  const { datasetIdOrName, requestQueueId, log } = options ?? {};
-  const datasetName = datasetIdOrName ? `"${datasetIdOrName}"` : 'DEFAULT';
+  const { io, datasetId, requestQueueId, log } = options ?? {};
+  const datasetName = datasetId ? `"${datasetId}"` : 'DEFAULT';
 
-  const sizeMonitor = datasetSizeMonitor(maxCount, { datasetId: datasetIdOrName, requestQueueId });
+  const sizeMonitor = datasetSizeMonitor(maxCount, { datasetId, requestQueueId, io });
 
   // Ignore incoming entries if the dataset is already full
   const isDatasetFull = await sizeMonitor.isFull();
@@ -314,8 +282,9 @@ const shortenToSize = async <T>(
 };
 
 /**
- * `Actor.pushData` with extra features:
+ * Apify's `Actor.pushData` with extra features:
  *
+ * - Data can be sent elsewhere, not just to Apify. This is set by the `io` options. By default data is sent using Apify (cloud/local).
  * - Limit the max size of the Dataset. No entries are added when Dataset is at or above the limit.
  * - Redact "private" fields
  * - Add metadata to entries before they are pushed to dataset.
@@ -332,6 +301,7 @@ export const pushData = async <
   options: PushDataOptions<T>
 ) => {
   const {
+    io = apifyIO as CrawleeOneIO,
     maxCount,
     includeMetadata,
     showPrivate,
@@ -340,9 +310,9 @@ export const pushData = async <
     pickKeys,
     transform,
     filter,
-    datasetIdOrName,
+    datasetId,
     requestQueueId,
-    cacheStoreIdOrName,
+    cacheStoreId,
     cachePrimaryKeys,
     cacheActionOnResult,
   } = options;
@@ -350,11 +320,11 @@ export const pushData = async <
   const manyItems = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
   const items =
     maxCount != null
-      ? await shortenToSize(manyItems, maxCount, { datasetIdOrName, requestQueueId, log: ctx.log })
+      ? await shortenToSize(manyItems, maxCount, { io, datasetId, requestQueueId, log: ctx.log })
       : manyItems;
 
   ctx.log.debug(`Preparing to push ${items.length} entries to dataset`); // prettier-ignore
-  const addMetadataToData = createMetadataMapper(ctx);
+  const addMetadataToData = await createMetadataMapper(ctx, { io });
 
   const adjustedItems = await items.reduce(async (aggPromise, item) => {
     const agg = await aggPromise;
@@ -364,7 +334,7 @@ export const pushData = async <
       showPrivate,
       privacyMask,
       privateValueGen: (val, key) =>
-        `<Redacted property "${key}". To include the actual value, toggle ON the Actor input option "Include personal data">`,
+        `<Redacted property "${key}". To include the actual value, toggle ON the input option "Include personal data">`,
     });
 
     const renamedItem = remapKeys ? renameKeys(maskedItem, remapKeys) : maskedItem;
@@ -379,14 +349,14 @@ export const pushData = async <
 
   // Push entries to primary dataset
   ctx.log.info(`Pushing ${adjustedItems.length} entries to dataset`);
-  const dataset = datasetIdOrName ? await Actor.openDataset(datasetIdOrName) : Actor;
+  const dataset = await io.openDataset(datasetId);
   await dataset.pushData(adjustedItems);
   ctx.log.info(`Done pushing ${adjustedItems.length} entries to dataset`);
 
   // Update entries in cache
-  if (cacheStoreIdOrName && cacheActionOnResult) {
+  if (cacheStoreId && cacheActionOnResult) {
     ctx.log.info(`Update ${adjustedItems.length} entries in cache`);
-    const store = await Actor.openKeyValueStore(cacheStoreIdOrName);
+    const store = await io.openKeyValueStore(cacheStoreId);
     await serialAsyncMap(adjustedItems, async (item: any) => {
       const cacheId = itemCacheKey(item, cachePrimaryKeys);
 

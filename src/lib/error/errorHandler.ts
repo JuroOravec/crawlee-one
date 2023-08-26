@@ -1,5 +1,4 @@
-import { Actor, Log } from 'apify';
-import {
+import type {
   BasicCrawlingContext,
   CheerioCrawlingContext,
   CrawlingContext,
@@ -8,106 +7,52 @@ import {
   JSDOMCrawlingContext,
   PlaywrightCrawlingContext,
   PuppeteerCrawlingContext,
-  playwrightUtils,
 } from 'crawlee';
-import type { Page } from 'playwright';
 import * as Sentry from '@sentry/node';
+import type { Page } from 'playwright';
 
-import type { MaybePromise } from '../../utils/types';
+import type { MaybePromise, PickRequired } from '../../utils/types';
 import type { RouteHandler, RouterHandlerCtx } from '../router';
+import type {
+  CrawleeOneErrorHandlerInput,
+  CrawleeOneErrorHandlerOptions,
+  CrawleeOneIO,
+} from '../integrations/types';
+import { apifyIO } from '../integrations/apify';
 
-export interface CaptureErrorInput {
-  error: Error;
-  page?: Page;
-  /** URL where the error happened. If not given URL is taken from the Page object */
-  url?: string;
-  log?: Log;
-}
-
+export type CaptureErrorInput = PickRequired<Partial<CrawleeOneErrorHandlerInput>, 'error'>;
 export type CaptureError = (input: CaptureErrorInput) => MaybePromise<void>;
 
-export interface ErrorReport {
-  actorId: string | null;
-  actorRunId: string | null;
-  actorRunUrl: string;
-  errorName: string;
-  errorMessage: string;
-  pageUrl: string | null;
-  pageHtmlSnapshot: string | null;
-  pageScreenshot: string | null;
-}
-
-export interface ErrorCaptureOptions {
-  allowScreenshot?: boolean;
-  reportingDatasetId?: string;
-  onErrorCapture?: (input: { error: Error; report: ErrorReport }) => MaybePromise<void>;
-}
-
 /**
- * Error handling for Apify actors.
+ * Error handling for CrawleeOne crawlers.
+ *
+ * By default, error reports are saved to Apify Dataset.
  *
  * See https://docs.apify.com/academy/node-js/analyzing-pages-and-fixing-errors#error-reporting
  */
-export const captureError = async ({
-  error,
-  page,
-  url: givenUrl,
-  log: parentLog,
-  allowScreenshot,
-  reportingDatasetId,
-  onErrorCapture,
-}: ErrorCaptureOptions & {
-  error: Error;
-  page?: Page;
-  /** URL where the error happened. If not given URL is taken from the Page object */
-  url?: string;
-  log?: Log;
-}) => {
-  const log = parentLog?.child({ prefix: '[Error capture] ' });
+export const captureError = async <TEnv extends object = object, TReport extends object = object>(
+  input: CaptureErrorInput,
+  options: CrawleeOneErrorHandlerOptions<TEnv, TReport>
+) => {
+  const { error, log: parentLog } = input;
+  const {
+    io = apifyIO as any as CrawleeOneIO<TEnv, TReport>,
+    reportingDatasetId,
+    onErrorCapture,
+  } = options;
+
+  const log = parentLog?.child({ prefix: '[Error capture] ' }) ?? null;
 
   log?.error(`ERROR ${error.name}: ${error.message}`, error);
   console.error(`ERROR ${error.name}: ${error.message}`, error);
 
   // Let's create reporting dataset
   // If you already have one, this will continue adding to it
-  const reportingDataset = reportingDatasetId ? await Actor.openDataset(reportingDatasetId) : null;
-
-  // storeId is ID of current key-value store, where we save snapshots
-  const storeId = Actor.getEnv().defaultKeyValueStoreId;
-
-  // We can also capture actor and run IDs
-  // to have easy access in the reporting dataset
-  const { actorId, actorRunId } = Actor.getEnv();
-  const actorRunUrl = `https://console.apify.com/actors/${actorId}/runs/${actorRunId}`;
-
-  const randomNumber = Math.random();
-  const key = `ERROR-${randomNumber}`;
-
-  let pageScreenshot: string | null = null;
-  let pageHtmlSnapshot: string | null = null;
-  let pageUrl: string | null = givenUrl ?? null;
-  if (page && allowScreenshot) {
-    pageUrl = pageUrl || page.url();
-    log?.info('Capturing page snapshot');
-    await playwrightUtils.saveSnapshot(page, { key });
-    log?.info('DONE capturing page snapshot');
-    // You will have to adjust the keys if you save them in a non-standard way
-    pageScreenshot = `https://api.apify.com/v2/key-value-stores/${storeId}/records/${key}.jpg?disableRedirect=true`;
-    pageHtmlSnapshot = `https://api.apify.com/v2/key-value-stores/${storeId}/records/${key}.html?disableRedirect=true`;
-  }
-
-  // We create a report object
-  const report = {
-    actorId,
-    actorRunId,
-    actorRunUrl,
-    errorName: error.name,
-    errorMessage: error.toString(),
-
-    pageUrl,
-    pageHtmlSnapshot,
-    pageScreenshot,
-  } satisfies ErrorReport;
+  const reportingDataset = reportingDatasetId ? await io.openDataset(reportingDatasetId) : null;
+  const report = await io.generateErrorReport(
+    { error, page: input.page ?? null, url: input.url ?? null, log },
+    { ...options, io }
+  );
 
   log?.error('[Error capture] Error captured', report);
 
@@ -123,33 +68,41 @@ export const captureError = async ({
   log?.error('[Error capture] Done calling onErrorCapture');
 
   // @ts-expect-error Tag the error, so we don't capture it twice.
-  error._apifyActorErrorCaptured = true;
+  error._crawleeOneErrorCaptured = true;
   // Propagate the error
   throw error;
 };
 
-/** Error handling for Apify actors as a function wrapper */
-export const captureErrorWrapper = async (
+/**
+ * Error handling for Crawlers as a function wrapper
+ *
+ * By default, error reports are saved to Apify Dataset.
+ */
+export const captureErrorWrapper = async <
+  TEnv extends object = object,
+  TReport extends object = object
+>(
   fn: (input: { captureError: CaptureError }) => MaybePromise<void>,
-  defaults: ErrorCaptureOptions = {}
+  options: CrawleeOneErrorHandlerOptions<TEnv, TReport>
 ) => {
-  const captureErrorWithArgs: typeof captureError = (options) =>
-    captureError({ ...defaults, ...options });
+  const captureErrorWithArgs: CaptureError = (input) => captureError(input, options);
 
   try {
     // Pass the error capturing function to the wrapped function, so it can trigger it by itself
     await fn({ captureError: captureErrorWithArgs });
   } catch (error: any) {
-    if (!error._apifyActorErrorCaptured) {
+    if (!error._crawleeOneErrorCaptured) {
       // And if the wrapped function fails, we capture error for them
-      await captureErrorWithArgs({ error });
+      await captureErrorWithArgs({ error, url: null, page: null, log: null });
     }
   }
 };
 
 /**
  * Drop-in replacement for regular request handler callback for Crawlee route
- * (in the context of Apify) that automatically tracks errors.
+ * that automatically tracks errors.
+ *
+ * By default, error reports are saved to Apify Dataset.
  *
  * @example
  *
@@ -161,9 +114,13 @@ export const captureErrorWrapper = async (
  *  })
  * );
  */
-export const captureErrorRouteHandler = <Ctx extends CrawlingContext>(
+export const captureErrorRouteHandler = <
+  Ctx extends CrawlingContext,
+  TEnv extends object = object,
+  TReport extends object = object
+>(
   handler: (ctx: RouterHandlerCtx<Ctx> & { captureError: CaptureError }) => MaybePromise<void>,
-  options?: ErrorCaptureOptions
+  options: CrawleeOneErrorHandlerOptions<TEnv, TReport>
 ) => {
   // Wrap the original handler, so we can additionally pass it the captureError function
   const wrapperHandler = (ctx: Parameters<RouteHandler<Ctx>>[0]) => {
@@ -171,14 +128,20 @@ export const captureErrorRouteHandler = <Ctx extends CrawlingContext>(
       return handler({
         ...(ctx as any),
         // And automatically feed contextual args (page, url, log) to captureError
-        captureError: (input) => captureError({ ...input, ...ctx, url: ctx.request.url }),
+        captureError: (input) =>
+          captureError({
+            error: input.error,
+            page: input.page ?? ctx.page,
+            url: input.url || ctx.request.url,
+            log: input.log ?? ctx.log,
+          }),
       });
     }, options);
   };
   return wrapperHandler;
 };
 
-export const basicCcaptureErrorRouteHandler = <Ctx extends BasicCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
+export const basicCaptureErrorRouteHandler = <Ctx extends BasicCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
 export const httpCaptureErrorRouteHandler = <Ctx extends HttpCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
 export const jsdomCaptureErrorRouteHandler = <Ctx extends JSDOMCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
 export const playwrightCaptureErrorRouteHandler = <Ctx extends PlaywrightCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
@@ -189,26 +152,27 @@ export const puppeteerCaptureErrorRouteHandler = <Ctx extends PuppeteerCrawlingC
  * Create an `ErrorHandler` function that can be assigned to
  * `failedRequestHandler` option of `BasicCrawlerOptions`.
  *
- * The function saves error to an Apify dataset, and optionally
- * forwards it to Sentry.
+ * The function saves error to a Dataset, and optionally forwards it to Sentry.
+ *
+ * By default, error reports are saved to Apify Dataset.
  */
-export const createErrorHandler = <Ctx extends CrawlingContext>(options: {
-  reportingDatasetId: string;
-  sendToSentry?: boolean;
-}): ErrorHandler<Ctx> => {
-  return async ({ error, request, log }) => {
+export const createErrorHandler = <Ctx extends CrawlingContext>(
+  options: CrawleeOneErrorHandlerOptions & { sendToSentry?: boolean }
+): ErrorHandler<Ctx> => {
+  return async ({ request, log, page }, error) => {
     const url = request.loadedUrl || request.url;
-    captureError({
-      error: error as Error,
-      url,
-      log,
-      reportingDatasetId: options.reportingDatasetId,
-      allowScreenshot: true,
-      onErrorCapture: ({ error, report }) => {
-        if (!options.sendToSentry) return;
+    captureError(
+      { error, url, log, page: page as Page },
+      {
+        io: options.io,
+        reportingDatasetId: options.reportingDatasetId,
+        allowScreenshot: options.allowScreenshot ?? true,
+        onErrorCapture: ({ error, report }) => {
+          if (!options.sendToSentry) return;
 
-        Sentry.captureException(error, { extra: report as any });
-      },
-    });
+          Sentry.captureException(error, { extra: report as any });
+        },
+      }
+    );
   };
 };

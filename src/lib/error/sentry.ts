@@ -1,15 +1,23 @@
 import * as Sentry from '@sentry/node';
 
+import type { CrawleeOneIO } from '../integrations/types';
+import { apifyIO } from '../integrations/apify';
+
 /**
- * Sentry configuration common to all actors.
+ * Sentry configuration common to all crawlers.
  *
- * By default, sentry is enabled only on Apify server
- * where `process.env.APIFY_IS_AT_HOME` is true
+ * By default, sentry is enabled only on the server.
+ * In Apify, whis is when `process.env.APIFY_IS_AT_HOME` is true.
  */
-export const setupSentry = (sentryOptions?: Sentry.NodeOptions) => {
+export const setupSentry = async (
+  sentryOptions?: Sentry.NodeOptions,
+  options?: { io?: CrawleeOneIO }
+) => {
+  const { io = apifyIO } = options ?? {};
+
   // As default, enable sentry only on Apify server
   const enabled =
-    sentryOptions?.enabled != null ? sentryOptions.enabled : !!process.env.APIFY_IS_AT_HOME;
+    sentryOptions?.enabled != null ? sentryOptions.enabled : await io.isTelemetryEnabled();
 
   if (!enabled) return;
 

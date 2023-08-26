@@ -6,16 +6,17 @@ import { capitalize, cloneDeep, defaults, round, uniqBy } from 'lodash';
 import type { DatasetPerfStat } from 'actor-spec';
 
 import {
-  ApifyReadmeTemplates,
+  CrawleeOneReadmeTemplates,
   README_HOOK,
   README_HOOK_ENUM,
   ReadmeFeature,
   ReadmeFeatureType,
   RenderContext,
 } from './types';
-import type { ApifyScraperActorSpec } from '../actorSpec';
+import type { CrawleeOneScraperActorSpec } from '../actorSpec';
 
-export interface ApifyReadmeTemplatesOverrides extends Omit<ApifyReadmeTemplates, 'features'> {
+export interface CrawleeOneReadmeTemplatesOverrides
+  extends Omit<CrawleeOneReadmeTemplates, 'features'> {
   features?: Partial<Record<ReadmeFeatureType, Partial<ReadmeFeature>>>;
 }
 
@@ -101,7 +102,7 @@ const collectModes = (it: any) => uniqBy(it.a.datasets.flatMap((d) => d.modes), 
 const collectEmails = (it: any) => uniqBy(it.a.authors.flatMap((a) => a.email), e => e); // prettier-ignore
 
 /** Define the texts in features sections that are, by default, common across all actors */
-export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
+export const defaultFeatureTexts: CrawleeOneReadmeTemplates['features'] = {
   datasets: {
     supported: (it) => it.a.datasets.length > 1,
     title: '<%~ it.a.datasets.length %> kinds of datasets',
@@ -188,7 +189,7 @@ export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
 
 const H = README_HOOK_ENUM;
 
-/** The template for rendering README for Apify actor */
+/** The template for rendering README for crawler */
 const readmeTemplate = `
 <%~ it.a.actor.title %>
 ===============================
@@ -482,7 +483,7 @@ email me at <%~ it.fn.email(it.fn.collectEmails(it)[0]) %>
 `;
 
 /**
- * Render a README.md file from a common template for a given Apify actor.
+ * Render a README.md file from a common template for a given Apify crawler.
  *
  * See https://docs.apify.com/academy/get-most-of-actors/actor-readme
  *
@@ -513,7 +514,7 @@ email me at <%~ it.fn.email(it.fn.collectEmails(it)[0]) %>
  *
  * See their definitions for details
  */
-export const renderReadme = async (input: {
+export const renderApifyReadme = async (input: {
   /** Filepath (relative to CWD) where the generated README should be written. */
   filepath: string;
   /**
@@ -522,7 +523,7 @@ export const renderReadme = async (input: {
    * Inside the template during rendering, this object
    * can be accessed as `<%~ it.a.platform.actorId %>`
    */
-  actorSpec: ApifyScraperActorSpec;
+  actorSpec: CrawleeOneScraperActorSpec;
   /**
    * Custom eta template strings that plug into different
    * parts of the README template.
@@ -530,7 +531,7 @@ export const renderReadme = async (input: {
    * Inside the template during rendering, these templates
    * can be accessed as `<%~ it.t.someTemplate %>`
    */
-  templates: ApifyReadmeTemplatesOverrides;
+  templates: CrawleeOneReadmeTemplatesOverrides;
   /**
    * Functions to be made available in the template.
    *
@@ -540,7 +541,7 @@ export const renderReadme = async (input: {
   fn?: Record<string, (...args: any[]) => any>;
 }) => {
   // Assign the default values to a clone
-  const templates = cloneDeep(input.templates) as ApifyReadmeTemplates;
+  const templates = cloneDeep(input.templates) as CrawleeOneReadmeTemplates;
   templates.features = templates.features || {};
   Object.entries(defaultFeatureTexts).forEach(([key, feat]) => {
     templates.features[key] = defaults(templates.features[key] || {}, feat);

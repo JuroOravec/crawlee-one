@@ -1,67 +1,25 @@
-import { Actor, DatasetDataOptions, Log } from 'apify';
+import type { DatasetDataOptions, Log } from 'apify';
 
 import { ValueMonitorOptions, createSizeMonitor } from '../../utils/valueMonitor';
+import type { CrawleeOneIO } from '../integrations/types';
+import { apifyIO } from '../integrations/apify';
 
-// TODO - This is a weird function and should be refactored or moved out of utils package
 /**
- * Given a batch of entries, use several strategies to check
- * if we've reached the limit on the max number of entries
- * we're allowed to extract this run.
+ * Given a Dataset ID, get the number of entries already in the Dataset.
+ *
+ * By default uses Apify Dataset.
  */
-export const checkDatasetEntriesCount = async (
-  {
-    currBatchCount,
-    maxCount,
-    datasetNameOrId,
-    customItemCount,
-  }: {
-    /** Number of entries in the current batch */
-    currBatchCount: number;
-    /** Max number of entries allowed to extract. */
-    maxCount?: number | null;
-    /**
-     * If given, maxCount will be ALSO compared against
-     * the amount of entries already in the dataset.
-     */
-    datasetNameOrId?: string | null;
-    /**
-     * If given, maxCount will be ALSO compared against
-     * this amount.
-     */
-    customItemCount?: number | null;
-  },
-  { log }: { log?: Log } = {}
+export const getDatasetCount = async (
+  datasetNameOrId?: string,
+  options?: { io?: CrawleeOneIO; log?: Log }
 ) => {
-  const datasetItemCount = datasetNameOrId ? await getDatasetCount(datasetNameOrId, { log }) : null;
+  const { io = apifyIO, log } = options ?? {};
 
-  if ((datasetItemCount == null && customItemCount == null) || maxCount == null) {
-    return { limitReached: false, overflow: 0 };
-  }
-
-  // Check if we've reached the limit for max entries
-  if (currBatchCount >= maxCount) {
-    return { limitReached: true, overflow: currBatchCount - maxCount };
-  }
-
-  // Use count of items already in dataset to check if limit reached
-  if (datasetItemCount != null && datasetItemCount + currBatchCount >= maxCount) {
-    return { limitReached: true, overflow: datasetItemCount + currBatchCount - maxCount };
-  }
-
-  // Use page offset to check if limit reached (20 entries per page)
-  if (customItemCount != null && customItemCount >= maxCount) {
-    return { limitReached: true, overflow: customItemCount - maxCount };
-  }
-
-  return { limitReached: false, overflow: 0 };
-};
-
-export const getDatasetCount = async (datasetNameOrId?: string, { log }: { log?: Log } = {}) => {
   log?.debug('Opening dataset');
-  const dataset = await Actor.openDataset(datasetNameOrId);
+  const dataset = await io.openDataset(datasetNameOrId);
+  // const dataset = await io.openDataset(datasetNameOrId);
   log?.debug('Obtaining dataset entries count');
-  const datasetInfo = await dataset.getInfo();
-  const count = datasetInfo?.itemCount ?? null;
+  const count = await dataset.getItemCount();
   if (typeof count !== 'number') {
     log?.warning('Failed to get count of entries in dataset. We use this info to know how many items were scraped. More entries might be scraped than was set.'); // prettier-ignore
   } else {
@@ -71,8 +29,9 @@ export const getDatasetCount = async (datasetNameOrId?: string, { log }: { log?:
 };
 
 /**
- * Given an ID of an Apify Dataset and a name of a field,
- * get the columnar data.
+ * Given a Dataset ID and a name of a field, get the columnar data.
+ *
+ * By default uses Apify Dataset.
  *
  * Example:
  * ```js
@@ -86,18 +45,22 @@ export const getDatasetCount = async (datasetNameOrId?: string, { log }: { log?:
  * // ['abc', 'def']
  * ```
  */
-export const getColumnFromDataset = async (
+export const getColumnFromDataset = async <T>(
   datasetId: string,
   field: string,
-  options?: { dataOptions?: Pick<DatasetDataOptions, 'offset' | 'limit' | 'desc'> }
+  options?: {
+    io?: CrawleeOneIO;
+    dataOptions?: Pick<DatasetDataOptions, 'offset' | 'limit' | 'desc'>;
+  }
 ) => {
-  const dataset = await Actor.openDataset(datasetId);
-  const result = await dataset.getData({
-    ...options?.dataOptions,
+  const { io = apifyIO, dataOptions } = options ?? {};
+
+  const dataset = await io.openDataset(datasetId);
+  const items = await dataset.getItems({
+    ...dataOptions,
     fields: [field],
-    skipEmpty: true,
   });
-  const data = result.items.map((d) => d[field]);
+  const data = items.map((d) => d[field] as T);
   return data;
 };
 
@@ -115,25 +78,31 @@ export interface DatasetSizeMonitorOptions extends ValueMonitorOptions {
    * If omitted, the default RequestQueue is used.
    */
   requestQueueId?: string;
+  io?: CrawleeOneIO;
 }
 
 /**
- * Semi-automatic monitoring of Apify Dataset size used in limiting the total of entries scraped per run / Dataset:
+ * Semi-automatic monitoring of Dataset size. This is used in limiting the total of entries
+ * scraped per run / Dataset:
  * - When Dataset reaches `maxSize`, then all remaining Requests
  *   in the RequestQueue are removed.
  * - Pass an array of items to `shortenToSize` to shorten the array to the size
  *   that still fits the Dataset.
+ *
+ * By default uses Apify Dataset.
  */
 export const datasetSizeMonitor = (maxSize: number, options?: DatasetSizeMonitorOptions) => {
+  const { io = apifyIO } = options ?? {};
+
   const getSize = async () => {
-    const dataset = await Actor.openDataset(options?.datasetId);
-    const info = await dataset.getInfo();
-    return info?.itemCount ?? 0;
+    const dataset = await io.openDataset(options?.datasetId);
+    const size = await dataset.getItemCount();
+    return size ?? 0;
   };
 
   // When we've reached the Dataset's max size, then remove all remaining Requests
   const onMaxSizeReached = async () => {
-    const reqQueue = await Actor.openRequestQueue(options?.requestQueueId);
+    const reqQueue = await io.openRequestQueue(options?.requestQueueId);
     await reqQueue.drop();
   };
 

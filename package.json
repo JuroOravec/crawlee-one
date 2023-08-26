@@ -1,22 +1,26 @@
 {
-  "name": "apify-actor-utils",
+  "name": "crawlee-one",
   "version": "0.22.1",
   "private": false,
-  "description": "Apify Actor utilities",
+  "description": "Most comprehensive template for scraping with Crawlee. Write crawlers that remain flexible amd configurable.",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
-  "homepage": "https://github.com/jurooravec/apify-actor-utils#readme",
+  "homepage": "https://github.com/jurooravec/crawlee-one#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jurooravec/apify-actor-utils.git"
+    "url": "git+https://github.com/jurooravec/crawlee-one.git"
   },
   "bugs": {
-    "url": "https://github.com/jurooravec/apify-actor-utils/issues"
+    "url": "https://github.com/jurooravec/crawlee-one/issues"
   },
   "license": "MIT",
   "keywords": [
+    "crawlee",
+    "crawlee-one",
     "apify",
     "actor",
-    "scraper"
+    "crawler",
+    "scraper",
+    "template"
   ],
   "files": [
     "dist"

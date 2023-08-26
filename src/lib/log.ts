@@ -1,5 +1,4 @@
-import { LogLevel as ApifyLogLevel } from 'apify';
-import type { CrawlingContext } from 'crawlee';
+import { type CrawlingContext, LogLevel as CrawleeLogLevel } from 'crawlee';
 
 import type { ArrVal } from '../utils/types';
 import type { CrawlerRouterWrapper } from './router';
@@ -7,34 +6,34 @@ import type { CrawlerRouterWrapper } from './router';
 export const LOG_LEVEL = ['debug', 'info', 'warn', 'error', 'off'] as const; // prettier-ignore
 export type LogLevel = ArrVal<typeof LOG_LEVEL>;
 
-/** Map log levels of `apify-actor-utils` to log levels of `apify` */
-export const logLevelToApify: Record<LogLevel, ApifyLogLevel> = {
-  off: ApifyLogLevel.OFF,
-  debug: ApifyLogLevel.DEBUG,
-  info: ApifyLogLevel.INFO,
-  warn: ApifyLogLevel.WARNING,
-  error: ApifyLogLevel.ERROR,
+/** Map log levels of `crawlee-one` to log levels of `crawlee` */
+export const logLevelToCrawlee: Record<LogLevel, CrawleeLogLevel> = {
+  off: CrawleeLogLevel.OFF,
+  debug: CrawleeLogLevel.DEBUG,
+  info: CrawleeLogLevel.INFO,
+  warn: CrawleeLogLevel.WARNING,
+  error: CrawleeLogLevel.ERROR,
 };
 
 /**
- * Wrapper for Apify route handler that configures log level.
+ * Wrapper for Crawlee route handler that configures log level.
  *
  *
- * Usage with Apify's `RouterHandler.addDefaultHandler`
+ * Usage with Crawlee's `RouterHandler.addDefaultHandler`
  * ```ts
  * const wrappedHandler = logLevelHandlerWrapper('debug')(handler)
  * await router.addDefaultHandler<Ctx>(wrappedHandler);
  * ```
  *
- * Usage with Apify's `RouterHandler.addHandler`
+ * Usage with Crawlee's `RouterHandler.addHandler`
  * ```ts
  * const wrappedHandler = logLevelHandlerWrapper('error')(handler)
  * await router.addHandler<Ctx>(wrappedHandler);
  * ```
  *
- * Usage with `createApifyActor`
+ * Usage with `createCrawleeOne`
  * ```ts
- * const actor = await createApifyActor<CheerioCrawlingContext>({
+ * const actor = await createCrawleeOne<CheerioCrawlingContext>({
  *   validateInput,
  *   router: createCheerioRouter(),
  *   routes,
@@ -55,7 +54,7 @@ export const logLevelHandlerWrapper = <
   return (handler) => {
     return (ctx, ...args) => {
       ctx.log.info(`Setting log level to ${logLevel}`);
-      ctx.log.setLevel(logLevelToApify[logLevel]);
+      ctx.log.setLevel(logLevelToCrawlee[logLevel]);
       return handler(ctx, ...args);
     };
   };

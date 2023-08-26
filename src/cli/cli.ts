@@ -8,7 +8,7 @@ const pkgJson = getPackageJsonInfo(module, ['name', 'version']);
 
 program //
   .name(pkgJson.name)
-  .description('CLI to run Apify actor utils')
+  .description('CLI to run crawlee-one tools')
   .version(pkgJson.version);
 
 program
@@ -29,7 +29,7 @@ program
     `
 
 Example call:
-  $ apify-actor-utils migrate -d ./path/to/migrations-dir -t v1`
+  $ crawlee-one migrate -d ./path/to/migrations-dir -t v1`
   )
   .action(async ({ dir, target, extension, delimeter }) => {
     const migrationsDir = path.resolve(process.cwd(), dir);
@@ -55,7 +55,7 @@ program
     `
 
 Example call:
-  $ apify-actor-utils unmigrate -d ./path/to/migrations-dir -t v1`
+  $ crawlee-one unmigrate -d ./path/to/migrations-dir -t v1`
   )
   .action(async ({ dir, target, extension, delimeter }) => {
     const migrationsDir = path.resolve(process.cwd(), dir);

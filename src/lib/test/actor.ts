@@ -32,9 +32,9 @@ export const setupMockApifyActor = async <
   viInstance.spyOn(Actor, 'main').mockImplementation(async (fn) => fn());
   viInstance.spyOn(Actor, 'getInput').mockImplementation(() => Promise.resolve(actorInput));
 
-  viInstance.spyOn(Actor, 'openDataset').mockImplementation(async (datasetIdOrName, options) => {
-    console.log('Mock Actor.openDataset: ', datasetIdOrName);
-    return createMockStorageDataset(datasetIdOrName, options, { log, onPushData, onGetInfo });
+  viInstance.spyOn(Actor, 'openDataset').mockImplementation(async (datasetId, options) => {
+    console.log('Mock Actor.openDataset: ', datasetId);
+    return createMockStorageDataset(datasetId, options, { log, onPushData, onGetInfo });
   });
   viInstance.spyOn(Actor, 'pushData').mockImplementation(async (data) => {
     console.log('Mock Actor.pushData');

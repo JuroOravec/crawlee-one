@@ -1,5 +1,5 @@
 import { ArrVal, enumFromArray } from '../../utils/types';
-import type { ApifyScraperActorSpec } from '../actorSpec';
+import type { CrawleeOneScraperActorSpec } from '../actorSpec';
 
 export const README_FEATURE = [
   'datasets',
@@ -55,7 +55,7 @@ export const README_HOOK_ENUM = enumFromArray(README_HOOK);
 export type ReadmeHook = ArrVal<typeof README_HOOK>;
 
 /**
- * Defines how to render a feature block for Apify actor README.
+ * Defines how to render a feature block for crawler README.
  *
  * Example rendered output:
  * ```markdown
@@ -119,7 +119,7 @@ export interface ReadmeFeature<TData extends any = any> {
 }
 
 /**
- * Defines how to render an example input block for Apify actor README.
+ * Defines how to render an example input block for crawler README.
  *
  * Example rendered output:
  * ```markdown
@@ -166,7 +166,7 @@ export interface ReadmeExampleInput<TData extends object = object> {
 
 /**
  * Defines how to render a table block with data on performance
- * for Apify actor README
+ * for crawler README
  *
  * Example rendered output:
  * ```markdown
@@ -228,8 +228,8 @@ export interface PerfTable {
   }[];
 }
 
-/** Defines how to render the Apify actor README. */
-export interface ApifyReadmeTemplates {
+/** Defines how to render the crawler README. */
+export interface CrawleeOneReadmeTemplates {
   input: {
     /**
      * ID (key on input JSON) of the actor input that sets the max number of entries.
@@ -262,6 +262,6 @@ export interface ApifyReadmeTemplates {
 /** Context available inside the rendering via `it` */
 export interface RenderContext {
   fn: Record<string, any>;
-  t: ApifyReadmeTemplates;
-  a: ApifyScraperActorSpec;
+  t: CrawleeOneReadmeTemplates;
+  a: CrawleeOneScraperActorSpec;
 }

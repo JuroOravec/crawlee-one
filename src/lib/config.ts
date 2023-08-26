@@ -13,6 +13,17 @@ import Joi from 'joi';
 import type { CrawlerUrl } from '../types';
 import { LOG_LEVEL, LogLevel } from './log';
 
+export type AllActorInputs = InputActorInput &
+  CrawlerConfigActorInput &
+  PerfActorInput &
+  StartUrlsActorInput &
+  LoggingActorInput &
+  ProxyActorInput &
+  PrivacyActorInput &
+  RequestActorInput &
+  OutputActorInput &
+  MetamorphActorInput;
+
 /** Crawler config fields that can be overriden from the actor input */
 export type CrawlerConfigActorInput = Pick<
   CheerioCrawlerOptions,
@@ -81,7 +92,7 @@ export interface StartUrlsActorInput {
   /** URLs to start with, defined manually as a list of strings or crawler requests */
   startUrls?: CrawlerUrl[];
   /**
-   * Import starting URLs from an existing Apify Dataset.
+   * Import starting URLs from an existing Dataset.
    *
    * String is in the format `datasetID#field` (e.g. `datasetid123#url`).
    */
@@ -89,12 +100,13 @@ export interface StartUrlsActorInput {
   /**
    * Import or generate starting URLs using a custom function.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the first argument.
    *
    * ```js
-   * // Example: Create and load URLs from an Apify Dataset by combining multiple fields
-   * async ({ Actor, input, state, itemCacheKey }) => {
-   *   const dataset = await Actor.openDataset(datasetNameOrId);
+   * // Example: Create and load URLs from a Dataset by combining multiple fields
+   * async ({ io, input, state, itemCacheKey }) => {
+   *   const dataset = await io.openDataset(datasetNameOrId);
    *   const data = await dataset.getData();
    *   const urls = data.items.map((item) => `https://example.com/u/${item.userId}/list/${item.listId}`);
    *   return urls;
@@ -115,7 +127,7 @@ export interface LoggingActorInput {
    */
   errorSendToSentry?: boolean;
   /**
-   * Apify dataset ID or name to which errors should be captured.
+   * Dataset ID to which errors should be captured.
    *
    * Default: `'REPORTING'`.
    */
@@ -132,7 +144,7 @@ export interface RequestActorInput {
   /**
    * If set, only at most this many requests will be scraped.
    *
-   * The count is determined from the Apify RequestQueue that's used for the Actor run.
+   * The count is determined from the RequestQueue that's used for the Actor run.
    *
    * This means that if `requestMaxEntries` is set to 50, but the
    * associated RequestQueue already handled 40 requests, then only 10 new requests
@@ -145,25 +157,28 @@ export interface RequestActorInput {
    *
    * If not set, the request will remain as is.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the second argument.
    *
-   * `async (entry, { Actor, input, state, itemCacheKey }) => { ... }`
+   * `async (entry, { io, input, state, itemCacheKey }) => { ... }`
    */
   requestTransform?: string;
   /**
    * Use this if you need to run one-time initialization code before `requestTransform`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the first argument.
    *
-   * `async ({ Actor, input, state, itemCacheKey }) => { ... }`
+   * `async ({ io, input, state, itemCacheKey }) => { ... }`
    */
   requestTransformBefore?: string;
   /**
    * Use this if you need to run one-time teardown code after `requestTransform`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the first argument.
    *
-   * `async ({ Actor, input, state, itemCacheKey }) => { ... }`
+   * `async ({ io, input, state, itemCacheKey }) => { ... }`
    */
   requestTransformAfter?: string;
 
@@ -174,25 +189,28 @@ export interface RequestActorInput {
    *
    * This is done after `requestTransform`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the second argument.
    *
-   * `async (entry, { Apify, input, state, itemCacheKey }) => boolean`
+   * `async (entry, { io, input, state, itemCacheKey }) => boolean`
    */
   requestFilter?: string;
   /**
    * Use this if you need to run one-time initialization code before `requestFilter`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the first argument.
    *
-   * `async ({ Apify, input, state, itemCacheKey }) => boolean`
+   * `async ({ io, input, state, itemCacheKey }) => boolean`
    */
   requestFilterBefore?: string;
   /**
    * Use this if you need to run one-time initialization code after `requestFilter`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the first argument.
    *
-   * `async ({ Actor, input, state, itemCacheKey }) => boolean`
+   * `async ({ io, input, state, itemCacheKey }) => boolean`
    */
   requestFilterAfter?: string;
 
@@ -205,7 +223,7 @@ export interface OutputActorInput {
   /**
    * If set, only at most this many entries will be scraped.
    *
-   * The count is determined from the Apify Dataset that's used for the Actor run.
+   * The count is determined from the Dataset that's used for the Actor run.
    *
    * This means that if `outputMaxEntries` is set to 50, but the
    * associated Dataset already has 40 items in it, then only 10 new entries
@@ -241,25 +259,28 @@ export interface OutputActorInput {
    *
    * This is done after `outputPickFields` and `outputRenameFields`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the second argument.
    *
-   * `async (entry, { Actor, input, state, itemCacheKey }) => { ... }`
+   * `async (entry, { io, input, state, itemCacheKey }) => { ... }`
    */
   outputTransform?: string;
   /**
    * Use this if you need to run one-time initialization code before `outputTransform`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the first argument.
    *
-   * `async ({ Actor, input, state, itemCacheKey }) => { ... }`
+   * `async ({ io, input, state, itemCacheKey }) => { ... }`
    */
   outputTransformBefore?: string;
   /**
    * Use this if you need to run one-time teardown code after `outputTransform`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the first argument.
    *
-   * `async ({ Actor, input, state, itemCacheKey }) => { ... }`
+   * `async ({ io, input, state, itemCacheKey }) => { ... }`
    */
   outputTransformAfter?: string;
 
@@ -270,33 +291,36 @@ export interface OutputActorInput {
    *
    * This is done after `outputPickFields`, `outputRenameFields`, and `outputTransform`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the second argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the second argument.
    *
-   * `async (entry, { Apify, input, state, itemCacheKey }) => boolean`
+   * `async (entry, { io, input, state, itemCacheKey }) => boolean`
    */
   outputFilter?: string;
   /**
    * Use this if you need to run one-time initialization code before `outputFilter`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the first argument.
    *
-   * `async ({ Apify, input, state, itemCacheKey }) => boolean`
+   * `async ({ io, input, state, itemCacheKey }) => boolean`
    */
   outputFilterBefore?: string;
   /**
    * Use this if you need to run one-time initialization code after `outputFilter`.
    *
-   * The function has access to Apify's Actor class, and actor's input and a shared state in the first argument.
+   * The function has access to Apify's Actor class (under variable `io`), and actor's input
+   * and a shared state in the first argument.
    *
-   * `async ({ Actor, input, state, itemCacheKey }) => boolean`
+   * `async ({ io, input, state, itemCacheKey }) => boolean`
    */
   outputFilterAfter?: string;
 
   /** ID or name of the dataset to which the data should be pushed */
-  outputDatasetIdOrName?: string;
+  outputDatasetId?: string;
 
   /** ID or name of the key-value store used as cache */
-  outputCacheStoreIdOrName?: string;
+  outputCacheStoreId?: string;
   /** Define fields that will be used for cache key */
   outputCachePrimaryKeys?: string[];
   /** Define whether we want to add, remove, or overwrite cached entries with results from the actor run */
@@ -356,13 +380,13 @@ const createHookFnExample = (
 //
 //   /**
 //    * ======= ACCESSING DATASET ========
-//    * To save/load/access entries in Apify Dataset.
+//    * To save/load/access entries in Dataset.
 //    * Docs:
 //    * - https://docs.apify.com/platform/storage/dataset
 //    * - https://docs.apify.com/sdk/js/docs/guides/result-storage#dataset
 //    * - https://docs.apify.com/sdk/js/docs/examples/map-and-reduce
 //    */
-//   // const dataset = await Actor.openDataset('MyDatasetId');
+//   // const dataset = await io.openDataset('MyDatasetId');
 //   // const info = await dataset.getInfo();
 //   // console.log(info.itemCount);
 //   // // => 0
@@ -383,14 +407,14 @@ const createHookFnExample = (
 //    * \`itemCacheKey\` to create the entry's ID for you:
 //    */
 //   // const cacheId = itemCacheKey(item, input.cachePrimaryKeys);
-//   // const cache = await Actor.openKeyValueStore('MyStoreId');
+//   // const cache = await io.openKeyValueStore('MyStoreId');
 //   // cache.setValue(cacheId, entry);`;
 
   const hookFnExample = `
 /**
  * Inputs:
 ${formattedArgDesc}
- * \`ctx.Actor\` - Apify Actor class, see https://docs.apify.com/sdk/js/reference/class/Actor.
+ * \`ctx.io\` - Apify Actor class, see https://docs.apify.com/sdk/js/reference/class/Actor.
  * \`ctx.input\` - The input object that was passed to this Actor.
  * \`ctx.state\` - An object you can use to persist state across all your custom functions.
  * \`ctx.sendRequest\` - Fetch remote data. Uses 'got-scraping', same as Apify's \`sendRequest\`.
@@ -400,7 +424,7 @@ ${formattedArgDesc}
  *                        By default, you should pass \`input.cachePrimaryKeys\` to it.
  *
  */
-// async (${formattedArgs}{ Actor, input, state, sendRequest, itemCacheKey }) => {
+// async (${formattedArgs}{ io, input, state, sendRequest, itemCacheKey }) => {
 ${formattedMainCode}
 ${includeGuides ? guides : '//'}
 // };`;
@@ -419,8 +443,8 @@ const isOffPeak = hours < 6 || hours > 20;
 config.maxConcurrency = isOffPeak ? 8 : 3;
 
 return config;`,
-  startUrlsFromFunction: `// Example: Create and load URLs from an Apify Dataset by combining multiple fields
-const dataset = await Actor.openDataset(datasetNameOrId);
+  startUrlsFromFunction: `// Example: Create and load URLs from a Dataset by combining multiple fields
+const dataset = await io.openDataset(datasetNameOrId);
 const data = await dataset.getData();
 const urls = data.items.map((item) => \`https://example.com/u/\${item.userId}/list/\${item.listId}\`);
 return urls;`,
@@ -606,14 +630,14 @@ export const perfInput = {
     title: 'Batch requests',
     type: 'integer',
     description: `If set, multiple Requests will be handled by a single Actor instance.${newLine(1)}
-       Example: If set to 20, then up to 20 requests will be handled in a single "go".${newLine(1)}
+       Example: If set to 20, then up to 20 requests will be handled in a single "go", after which the actor instance will reset.${newLine(1)}
        <a href="https://docs.apify.com/platform/actors/development/performance#batch-jobs-win-over-the-single-jobs">See Apify documentation</a>.`,
     example: 20,
     minimum: 0,
     nullable: true,
     sectionCaption: 'Performance configuration (Advanced)',
     sectionDescription: 'Standalone performance options. These are not passed to the Crawler.',
-  }),
+  }), // prettier-ignore
   perfBatchWaitSecs: createIntegerField({
     title: 'Wait (in seconds) between processing requests in a single batch',
     type: 'integer',
@@ -639,13 +663,13 @@ export const startUrlsInput = {
     title: 'Start URLs from Dataset',
     type: 'string',
     editor: 'textfield',
-    description: `Import URLs to scrape from an existing Apify Dataset.${newLine(1)}
-    Write the dataset and the field to import in the format \`{datasetID}#{field}\`.${newLine(1)}
+    description: `Import URLs to scrape from an existing Dataset.${newLine(1)}
+    The dataset and the field to import from should be written as \`{datasetID}#{field}\`.${newLine(1)}
     Example: \`datasetid123#url\` will take URLs from dataset \`datasetid123\` from field \`url\`.`,
     pattern: datasetIdWithFieldPattern,
     example: 'datasetid123#url',
     nullable: true,
-  }),
+  }), // prettier-ignore
   startUrlsFromFunction: createStringField({
     title: 'Start URLs from custom function',
     type: 'string',
@@ -684,9 +708,9 @@ export const loggingInput = {
     title: 'Error reporting dataset ID',
     type: 'string',
     editor: 'textfield',
-    description: `Apify dataset ID or name to which errors should be captured.${newLine(1)}
+    description: `Dataset ID to which errors should be captured.${newLine(1)}
     Default: \`'REPORTING'\`.${newLine(1)}
-    <strong>NOTE:<strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
+    <strong>NOTE:</strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
     example: 'REPORTING',
     prefill: 'REPORTING',
     default: 'REPORTING',
@@ -738,7 +762,7 @@ export const requestInput = {
     title: 'Limit the number of requests',
     type: 'integer',
     description: `If set, only at most this many requests will be processed.${newLine(1)}
-      The count is determined from the Apify RequestQueue that's used for the Actor run.${newLine(1)}
+      The count is determined from the RequestQueue that's used for the Actor run.${newLine(1)}
       This means that if \`requestMaxEntries\` is set to 50, but the associated queue already handled 40 requests, then only 10 new requests will be handled.`,
     example: 50,
     prefill: 50,
@@ -751,7 +775,7 @@ export const requestInput = {
     title: 'Transform requests',
     type: 'string',
     description: `Freely transform the request object using a custom function.${newLine(1)}
-    If not set, the request will remain as is.${newLine(1)}.`,
+    If not set, the request will remain as is.`,
     editor: 'javascript',
     example: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, false),
     prefill: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, true),
@@ -760,7 +784,7 @@ export const requestInput = {
   requestTransformBefore: createStringField({
     title: 'Transform requests - Setup',
     type: 'string',
-    description: `Use this if you need to run one-time initialization code before \`requestTransform\`.${newLine(1)}`,
+    description: `Use this if you need to run one-time initialization code before \`requestTransform\`.`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, true),
@@ -769,7 +793,7 @@ export const requestInput = {
   requestTransformAfter: createStringField({
     title: 'Transform requests - Teardown',
     type: 'string',
-    description: `Use this if you need to run one-time teardown code after \`requestTransform\`.${newLine(1)}`,
+    description: `Use this if you need to run one-time teardown code after \`requestTransform\`.`,
     editor: 'javascript',
     example: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, true),
@@ -812,7 +836,7 @@ export const requestInput = {
     description: `By default, requests are stored in the default request queue.
     Set this option if you want to use a non-default queue.
     <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a>${newLine(1)}
-    <strong>NOTE:<strong> RequestQueue name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
+    <strong>NOTE:</strong> RequestQueue name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
     editor: 'textfield',
     example: 'mIJVZsRQrDQf4rUAf',
     pattern: datasetIdPattern,
@@ -826,7 +850,7 @@ export const outputInput = {
     title: 'Limit the number of scraped entries',
     type: 'integer',
     description: `If set, only at most this many entries will be scraped.${newLine(1)}
-      The count is determined from the Apify Dataset that's used for the Actor run.${newLine(1)}
+      The count is determined from the Dataset that's used for the Actor run.${newLine(1)}
       This means that if \`outputMaxEntries\` is set to 50, but the associated Dataset already has 40 items in it, then only 10 new entries will be saved.`,
     example: 50,
     prefill: 50,
@@ -919,13 +943,13 @@ export const outputInput = {
     nullable: true,
   }), // prettier-ignore
 
-  outputDatasetIdOrName: createStringField({
-    title: 'Dataset ID or name',
+  outputDatasetId: createStringField({
+    title: 'Dataset ID',
     type: 'string',
     description: `By default, data is written to Default dataset.
     Set this option if you want to write data to non-default dataset.
     <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#opening-named-and-unnamed-storages">Learn more</a>${newLine(1)}
-    <strong>NOTE:<strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
+    <strong>NOTE:</strong> Dataset name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
     editor: 'textfield',
     example: 'mIJVZsRQrDQf4rUAf',
     pattern: datasetIdPattern,
@@ -933,13 +957,13 @@ export const outputInput = {
     sectionCaption: 'Output Dataset & Caching (L in ETL) (Advanced)',
   }), // prettier-ignore
 
-  outputCacheStoreIdOrName: createStringField({
-    title: 'Cache ID or name',
+  outputCacheStoreId: createStringField({
+    title: 'Cache ID',
     type: 'string',
     description: `Set this option if you want to cache scraped entries in <a href="https://docs.apify.com/sdk/js/docs/guides/result-storage#key-value-store">Apify's Key-value store</a>.${newLine(1)}
     This is useful for example when you want to scrape only NEW entries. In such case, you can use the \`outputFilter\` option to define a custom function to filter out entries already found in the cache.
     <a href="https://docs.apify.com/sdk/python/docs/concepts/storages#working-with-key-value-stores">Learn more</a>${newLine(1)}
-    <strong>NOTE:<strong> Cache name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
+    <strong>NOTE:</strong> Cache name can only contain letters 'a' through 'z', the digits '0' through '9', and the hyphen ('-') but only in the middle of the string (e.g. 'my-value-1')`,
     editor: 'textfield',
     example: 'mIJVZsRQrDQf4rUAf',
     pattern: datasetIdPattern,
@@ -949,7 +973,7 @@ export const outputInput = {
     title: 'Cache primary keys',
     type: 'array',
     description: `Specify fields that uniquely identify entries (primary keys), so entries can be compared against the cache.${newLine(1)}
-    <strong>NOTE:<strong> If not set, the entries are hashed based on all fields`,
+    <strong>NOTE:</strong> If not set, the entries are hashed based on all fields`,
     editor: 'stringList',
     example: ['name', 'city'],
     nullable: true,
@@ -963,7 +987,7 @@ export const outputInput = {
     - <strong>add<strong> - Adds scraped results to the cache${newLine(1)}
     - <strong>remove<strong> - Removes scraped results from the cache${newLine(1)}
     - <strong>set<strong> - First clears all entries from the cache, then adds scraped results to the cache${newLine(1)}
-    <strong>NOTE:<strong> No action happens when this field is empty.`,
+    <strong>NOTE:</strong> No action happens when this field is empty.`,
     editor: 'select',
     enum: ['add', 'remove', 'overwrite'],
     example: 'add',
@@ -1073,11 +1097,11 @@ export const outputInputValidationFields = {
   outputFilterBefore: Joi.string().min(1).optional(),
   outputFilterAfter: Joi.string().min(1).optional(),
 
-  outputCacheStoreIdOrName: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
+  outputCacheStoreId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
   outputCachePrimaryKeys: Joi.array().items(Joi.string().min(1)).optional(),
   outputCacheActionOnResult: Joi.string().min(1).allow('add', 'remove', 'overwrite').optional(), // prettier-ignore
 
-  outputDatasetIdOrName: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
+  outputDatasetId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
 } satisfies Record<keyof OutputActorInput, Joi.Schema>;
 
 export const metamorphInputValidationFields = {

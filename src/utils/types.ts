@@ -11,3 +11,6 @@ export const enumFromArray = <T extends readonly any[]>(arr: T) => {
 
 export type PickPartial<T extends object, Keys extends keyof T> = Omit<T, Keys> &
   Partial<Pick<T, Keys>>;
+
+export type PickRequired<T extends object, Keys extends keyof T> = Omit<T, Keys> &
+  Required<Pick<T, Keys>>;

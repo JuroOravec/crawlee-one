@@ -11,12 +11,12 @@ import type {
   Request as CrawlerRequest,
 } from 'crawlee';
 import type { CommonPage } from '@crawlee/browser-pool';
-import { Actor } from 'apify';
 import type { Page } from 'playwright';
 
 import type { MaybePromise } from '../utils/types';
 import { serialAsyncFind, serialAsyncMap, wait } from '../utils/async';
 import type { PerfActorInput, RequestActorInput } from './config';
+import type { CrawleeOneIO } from './integrations/types';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
 
@@ -217,6 +217,7 @@ export const setupDefaultRoute = async <
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>
 >({
+  io,
   router,
   routerWrappers,
   routerContext,
@@ -224,6 +225,7 @@ export const setupDefaultRoute = async <
   routeHandlers,
   input,
 }: {
+  io: CrawleeOneIO;
   router: CrawlerRouter<CrawlerCtx>;
   routerWrappers?: CrawlerRouterWrapper<CrawlerCtx, RouterCtx>[];
   routerContext?: RouterCtx;
@@ -250,7 +252,7 @@ export const setupDefaultRoute = async <
     const { page, log: parentLog } = ctx;
     const log = parentLog.child({ prefix: '[Router] ' });
 
-    const reqQueue = await Actor.openRequestQueue(requestQueueId);
+    const reqQueue = await io.openRequestQueue(requestQueueId);
 
     let handledRequestsCount = 0;
     let req: CrawlerRequest | null = ctx.request;
