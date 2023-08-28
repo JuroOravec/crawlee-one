@@ -1,6 +1,6 @@
 # Crawlee One
 
-_The crawler template you can't refuse._
+_The crawler framework you can't refuse._
 
 Crawlee One is a framework built on top of Crawlee and Apify\* for writing robust and highly configurable web scrapers.
 
