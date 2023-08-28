@@ -22,3 +22,5 @@ export * from './lib/log';
 export * from './lib/test/actor';
 export * from './lib/test/mockApifyClient';
 export type { CrawlerUrl, CrawlerType } from './types';
+export * from './lib/integrations/apify';
+export * from './lib/integrations/types';
