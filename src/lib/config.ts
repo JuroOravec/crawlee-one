@@ -1025,6 +1025,19 @@ export const metamorphInput = {
   }),
 } satisfies Record<keyof MetamorphActorInput, Field>;
 
+export const allActorInputs = {
+  ...inputInput,
+  ...startUrlsInput,
+  ...proxyInput,
+  ...privacyInput,
+  ...requestInput,
+  ...outputInput,
+  ...crawlerInput,
+  ...perfInput,
+  ...loggingInput,
+  ...metamorphInput,
+} satisfies Record<keyof AllActorInputs, Field>;
+
 export const crawlerInputValidationFields = {
   navigationTimeoutSecs: Joi.number().integer().min(0).optional(),
   ignoreSslErrors: Joi.boolean().optional(),
@@ -1109,3 +1122,16 @@ export const metamorphInputValidationFields = {
   metamorphActorBuild: Joi.string().min(1).optional(),
   metamorphActorInput: Joi.object().unknown(true).optional(),
 } satisfies Record<keyof MetamorphActorInput, Joi.Schema>;
+
+export const allActorInputValidationFields = {
+  ...inputInputValidationFields,
+  ...startUrlsInputValidationFields,
+  ...proxyInputValidationFields,
+  ...privacyInputValidationFields,
+  ...requestInputValidationFields,
+  ...outputInputValidationFields,
+  ...crawlerInputValidationFields,
+  ...perfInputValidationFields,
+  ...loggingInputValidationFields,
+  ...metamorphInputValidationFields,
+} satisfies Record<keyof AllActorInputs, Joi.Schema>;

@@ -1,4 +1,4 @@
-export * from './lib/actor/actor';
+export { createAndRunCrawleeOne, createHttpCrawlerOptions } from './lib/actor/actor';
 export * from './lib/actor/types';
 export * from './lib/actorSpec';
 export * from './lib/config';
@@ -21,3 +21,4 @@ export * from './lib/router';
 export * from './lib/log';
 export * from './lib/test/actor';
 export * from './lib/test/mockApifyClient';
+export type { CrawlerUrl, CrawlerType } from './types';

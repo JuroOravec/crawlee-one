@@ -1,8 +1,8 @@
 {
   "name": "crawlee-one",
-  "version": "0.22.1",
+  "version": "1.0.0",
   "private": false,
-  "description": "Most comprehensive template for scraping with Crawlee. Write crawlers that remain flexible amd configurable.",
+  "description": "Crawlee One is a framework built on top of Crawlee and Apify for writing robust and highly configurable web scrapers",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
   "homepage": "https://github.com/jurooravec/crawlee-one#readme",
   "repository": {
@@ -25,7 +25,10 @@
   "files": [
     "dist"
   ],
-  "main": "dist/cjs/index.js",
+  "exports": {
+    ".": "./dist/cjs/index.js",
+    "./apify": "./dist/cjs/lib/integrations/apify.js"
+  },
   "module": "dist/esm/index.js",
   "types": "dist/cjs/index.d.js",
   "bin": "dist/cjs/cli/index.js",
