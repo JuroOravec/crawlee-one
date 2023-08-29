@@ -9,6 +9,8 @@ import {
   JSDOMCrawler,
   PlaywrightCrawler,
   PuppeteerCrawler,
+  Log,
+  Request as CrawleeRequest,
 } from 'crawlee';
 import { omitBy, pick, defaults } from 'lodash';
 import * as Sentry from '@sentry/node';
@@ -34,8 +36,9 @@ import {
   InputActorInput,
   RequestActorInput,
   AllActorInputs,
+  LoggingActorInput,
 } from '../config';
-import { logLevelHandlerWrapper } from '../log';
+import { logLevelHandlerWrapper, logLevelToCrawlee } from '../log';
 import type {
   ActorContext,
   ActorDefinition,
@@ -101,7 +104,7 @@ export const createAndRunCrawleeOne = async <
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>,
   TIO extends CrawleeOneIO = CrawleeOneIO
->(input: {
+>(args: {
   /** String idetifying the actor class, e.g. `'cheerio'` */
   actorType: TCrawlerType;
   actorName: string;
@@ -143,7 +146,7 @@ export const createAndRunCrawleeOne = async <
     crawlerConfigOverrides,
     sentryOptions,
     onActorReady,
-  } = input;
+  } = args;
 
   const { io = apifyIO as any as TIO } = actorConfig;
 
@@ -252,8 +255,11 @@ export const createCrawleeOne = async <
 
   if (config.validateInput) await config.validateInput(input);
 
+  const { logLevel } = (input ?? {}) as LoggingActorInput;
+  const log = new Log({ level: logLevel ? logLevelToCrawlee[logLevel] : undefined });
+
   // This is context that is available to options that use initialization function
-  const getConfig = () => ({ ...config, input, state, io });
+  const getConfig = () => ({ ...config, input, state, io, log });
 
   // Set up proxy
   const defaultProxy =
@@ -283,6 +289,7 @@ export const createCrawleeOne = async <
     config,
     input,
     state,
+    log,
   });
   const crawler = await config.createCrawler(getActorCtx());
 
@@ -323,6 +330,9 @@ export const createCrawleeOne = async <
     routerContext,
     routeHandlers,
   });
+
+  // Now that the actor is ready, enqueue the URLs right away
+  await scopedPushRequest(startUrls as CrawleeRequest[]);
 
   return actor;
 };
@@ -423,7 +433,7 @@ const createScopedMetamorph = (actor: Pick<ActorContext, 'input' | 'io'>) => {
 };
 
 /** pushData wrapper that pre-populates options based on actor input */
-const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state' | 'io'>) => {
+const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state' | 'io' | 'log'>) => {
   const {
     includePersonalData,
     requestQueueId,
@@ -444,6 +454,7 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state' | 'io'
 
     const mergedOptions = {
       io: actor.io,
+      log: actor.log,
       showPrivate: includePersonalData,
       maxCount: outputMaxEntries,
       pickKeys: outputPickFields,
@@ -465,16 +476,17 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state' | 'io'
 };
 
 /** pushRequests wrapper that pre-populates options based on actor input */
-const createScopedPushRequests = (actor: Pick<ActorContext, 'input' | 'state' | 'io'>) => {
+const createScopedPushRequests = (actor: Pick<ActorContext, 'input' | 'state' | 'io' | 'log'>) => {
   const { requestQueueId, requestMaxEntries, requestTransform, requestFilter } = (actor.input ??
     {}) as RequestActorInput;
 
-  const scopedPushRequest: ActorContext['pushRequests'] = async (entries, ctx, options) => {
+  const scopedPushRequest: ActorContext['pushRequests'] = async (entries, options) => {
     const transformFn = genHookFn(actor, requestTransform);
     const filterFn = genHookFn(actor, requestFilter);
 
     const mergedOptions = {
       io: actor.io,
+      log: actor.log,
       maxCount: requestMaxEntries,
       transform: transformFn ? (item) => transformFn(item) : undefined,
       filter: filterFn ? (item) => filterFn(item) : undefined,
@@ -482,7 +494,7 @@ const createScopedPushRequests = (actor: Pick<ActorContext, 'input' | 'state' | 
       ...options,
     } satisfies PushRequestsOptions<any>;
 
-    return pushRequests(entries, ctx, mergedOptions);
+    return pushRequests(entries, mergedOptions);
   };
 
   return scopedPushRequest;
@@ -523,19 +535,23 @@ export const createHttpCrawlerOptions = <
   } satisfies Partial<TOpts>;
 };
 
-const getStartUrlsFromInput = async (actor: Pick<ActorContext, 'input' | 'state' | 'io'>) => {
+const getStartUrlsFromInput = async (
+  actor: Pick<ActorContext, 'input' | 'state' | 'io' | 'log'>
+) => {
   const { startUrls, startUrlsFromDataset, startUrlsFromFunction } = (actor.input ??
     {}) as StartUrlsActorInput;
 
   const urlsAgg = [...(startUrls ?? [])];
 
   if (startUrlsFromDataset) {
+    actor.log.debug(`Loading start URLs from Dataset ${startUrlsFromDataset}`);
     const [datasetId, field] = startUrlsFromDataset.split('#');
     const urlsFromDataset = await getColumnFromDataset<any>(datasetId, field, { io: actor.io });
     urlsAgg.push(...urlsFromDataset);
   }
 
   if (startUrlsFromFunction) {
+    actor.log.debug(`Loading start URLs from function`);
     const urlsFromFn = await genHookFn(actor, startUrlsFromFunction)?.();
     urlsAgg.push(...urlsFromFn);
   }

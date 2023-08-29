@@ -1,4 +1,10 @@
-import type { BasicCrawler, CrawlingContext, ProxyConfiguration, RouterHandler } from 'crawlee';
+import type {
+  BasicCrawler,
+  CrawlingContext,
+  Log,
+  ProxyConfiguration,
+  RouterHandler,
+} from 'crawlee';
 import type { gotScraping } from 'got-scraping';
 
 import type { MaybePromise, PickPartial } from '../../utils/types';
@@ -205,4 +211,5 @@ export interface ActorContext<
    * This is modelled and similar to Apify's `Actor` static class.
    */
   io: TIO;
+  log: Log;
 }

@@ -1,9 +1,4 @@
-import type {
-  CrawlingContext,
-  Log,
-  Request as CrawleeRequest,
-  RequestQueueOperationOptions,
-} from 'crawlee';
+import { Log, Request as CrawleeRequest, RequestQueueOperationOptions } from 'crawlee';
 
 import { requestQueueSizeMonitor } from './requestQueue';
 import type { CrawleeOneIO } from '../integrations/types';
@@ -11,6 +6,7 @@ import { apifyIO } from '../integrations/apify';
 
 export interface PushRequestsOptions<T extends CrawleeRequest = CrawleeRequest> {
   io?: CrawleeOneIO<any, any>;
+  log?: Log;
   /**
    * If set, only at most this many requests will be added to the RequestQueue.
    *
@@ -43,7 +39,7 @@ export interface PushRequestsOptions<T extends CrawleeRequest = CrawleeRequest> 
 const shortenToSize = async <T>(
   entries: T[],
   maxCount: number,
-  options?: { io?: CrawleeOneIO; requestQueueId?: string; log: Log }
+  options?: { io?: CrawleeOneIO; requestQueueId?: string; log?: Log }
 ) => {
   const { requestQueueId, log } = options ?? {};
 
@@ -75,30 +71,27 @@ const shortenToSize = async <T>(
  * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
  * - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
  */
-export const pushRequests = async <
-  Ctx extends CrawlingContext,
-  T extends CrawleeRequest = CrawleeRequest
->(
+export const pushRequests = async <T extends CrawleeRequest = CrawleeRequest>(
   oneOrManyItems: T | T[],
-  ctx: Ctx,
-  options: PushRequestsOptions<T>
+  options?: PushRequestsOptions<T>
 ) => {
   const {
     io = apifyIO as CrawleeOneIO,
+    log = new Log(),
     maxCount,
     transform,
     filter,
     requestQueueId,
     queueOptions,
-  } = options;
+  } = options ?? {};
 
   const manyItems = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
   const items =
     maxCount != null
-      ? await shortenToSize(manyItems, maxCount, { io, requestQueueId, log: ctx.log })
+      ? await shortenToSize(manyItems, maxCount, { io, requestQueueId, log })
       : manyItems;
 
-  ctx.log.debug(`Preparing to push ${items.length} requests to queue`); // prettier-ignore
+  log.debug(`Preparing to push ${items.length} requests to queue`); // prettier-ignore
 
   const adjustedItems = await items.reduce(async (aggPromise, item) => {
     const agg = await aggPromise;
@@ -112,10 +105,10 @@ export const pushRequests = async <
   }, Promise.resolve([] as unknown[]));
 
   // Push requests to primary RequestQueue
-  ctx.log.info(`Pushing ${adjustedItems.length} requests to queue`);
+  log.info(`Pushing ${adjustedItems.length} requests to queue`);
   const reqQueue = await io.openRequestQueue(requestQueueId);
   await reqQueue.addRequests(adjustedItems as any[], queueOptions);
-  ctx.log.info(`Done pushing ${adjustedItems.length} requests to queue`);
+  log.info(`Done pushing ${adjustedItems.length} requests to queue`);
 
   return adjustedItems;
 };

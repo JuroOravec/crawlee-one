@@ -1,4 +1,4 @@
-import type { CrawlingContext, Log } from 'crawlee';
+import { CrawlingContext, Log } from 'crawlee';
 import { get, pick, set, unset, uniq, sortBy, isPlainObject, fromPairs } from 'lodash';
 
 import { serialAsyncMap } from '../../utils/async';
@@ -46,6 +46,7 @@ export type PrivacyMask<T extends object> = {
 
 export interface PushDataOptions<T extends object> {
   io?: CrawleeOneIO<any, any>;
+  log?: Log;
   /**
    * If set, only at most this many entries will be scraped.
    *
@@ -302,6 +303,7 @@ export const pushData = async <
 ) => {
   const {
     io = apifyIO as CrawleeOneIO,
+    log = new Log(),
     maxCount,
     includeMetadata,
     showPrivate,
@@ -320,10 +322,10 @@ export const pushData = async <
   const manyItems = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
   const items =
     maxCount != null
-      ? await shortenToSize(manyItems, maxCount, { io, datasetId, requestQueueId, log: ctx.log })
+      ? await shortenToSize(manyItems, maxCount, { io, datasetId, requestQueueId, log })
       : manyItems;
 
-  ctx.log.debug(`Preparing to push ${items.length} entries to dataset`); // prettier-ignore
+  log.debug(`Preparing to push ${items.length} entries to dataset`); // prettier-ignore
   const addMetadataToData = await createMetadataMapper(ctx, { io });
 
   const adjustedItems = await items.reduce(async (aggPromise, item) => {
@@ -348,14 +350,14 @@ export const pushData = async <
   }, Promise.resolve([] as unknown[]));
 
   // Push entries to primary dataset
-  ctx.log.info(`Pushing ${adjustedItems.length} entries to dataset`);
+  log.info(`Pushing ${adjustedItems.length} entries to dataset`);
   const dataset = await io.openDataset(datasetId);
   await dataset.pushData(adjustedItems);
-  ctx.log.info(`Done pushing ${adjustedItems.length} entries to dataset`);
+  log.info(`Done pushing ${adjustedItems.length} entries to dataset`);
 
   // Update entries in cache
   if (cacheStoreId && cacheActionOnResult) {
-    ctx.log.info(`Update ${adjustedItems.length} entries in cache`);
+    log.info(`Update ${adjustedItems.length} entries in cache`);
     const store = await io.openKeyValueStore(cacheStoreId);
     await serialAsyncMap(adjustedItems, async (item: any) => {
       const cacheId = itemCacheKey(item, cachePrimaryKeys);
@@ -366,7 +368,7 @@ export const pushData = async <
         await store.setValue(cacheId, null);
       }
     });
-    ctx.log.info(`Done updating ${adjustedItems.length} entries in cache`);
+    log.info(`Done updating ${adjustedItems.length} entries in cache`);
   }
 
   return adjustedItems;
