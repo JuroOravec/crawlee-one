@@ -187,6 +187,23 @@ export interface CrawleeOneDataset<T extends object = object> {
  */
 export interface CrawleeOneKeyValueStore {
   /**
+   * Gets a value from the key-value store.
+   *
+   * The function returns a `Promise` that resolves to the record value.
+   *
+   * If the record does not exist, the function resolves to `null`.
+   *
+   * To save or delete a value in the key-value store, use the
+   * {@link CrawleeOneKeyValueStore.setValue} function.
+   *
+   * @param key
+   *   Unique key of the record. It can be at most 256 characters long and only consist
+   *   of the following characters: `a`-`z`, `A`-`Z`, `0`-`9` and `!-_.'()`
+   * @returns
+   *   Returns a promise that resolves to the value, or the default value if the key is missing from the store.
+   */
+  getValue<T = unknown>(key: string, defaultValue: T): Promise<T>;
+  /**
    * Saves or deletes a record in the key-value store. The function returns a promise that
    * resolves once the record has been saved or deleted.
    *
@@ -212,6 +229,8 @@ export interface CrawleeOneKeyValueStore {
    * depending on the mode of operation.
    */
   drop: () => MaybePromise<void>;
+  /** Removes all entries from the store. */
+  clear: () => MaybePromise<void>;
 }
 
 /**
@@ -286,6 +305,8 @@ export interface CrawleeOneRequestQueue {
   isFinished: () => MaybePromise<boolean>;
   /** Removes the queue from the storage. */
   drop: () => MaybePromise<void>;
+  /** Removes all entries from the queue. */
+  clear: () => MaybePromise<void>;
   /** Returns the number of handled requests. */
   handledCount: () => MaybePromise<number | null>;
 }

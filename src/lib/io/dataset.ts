@@ -103,7 +103,7 @@ export const datasetSizeMonitor = (maxSize: number, options?: DatasetSizeMonitor
   // When we've reached the Dataset's max size, then remove all remaining Requests
   const onMaxSizeReached = async () => {
     const reqQueue = await io.openRequestQueue(options?.requestQueueId);
-    await reqQueue.drop();
+    await reqQueue.clear();
   };
 
   return createSizeMonitor(maxSize, getSize, onMaxSizeReached, options);

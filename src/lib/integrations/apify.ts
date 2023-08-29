@@ -1,5 +1,5 @@
 import { Actor, ApifyEnv } from 'apify';
-import { CrawlingContext, playwrightUtils } from 'crawlee';
+import { CrawlingContext, Request as CrawleeRequest, playwrightUtils } from 'crawlee';
 
 import type { CrawleeOneDataset, CrawleeOneIO } from './types';
 
@@ -114,7 +114,7 @@ const generateApifyEntryMetadata = <Ctx extends CrawlingContext>(ctx: Ctx) => {
  *
  * This is the default integration.
  */
-export const apifyIO = {
+export const apifyIO: ApifyCrawleeOneIO = {
   openDataset: async (...args) => {
     const dataset = await Actor.openDataset(...args);
     const getItemCount = async () => (await dataset.getInfo())?.itemCount ?? null;
@@ -132,8 +132,39 @@ export const apifyIO = {
       getItemCount,
     };
   },
-  openRequestQueue: (...args) => Actor.openRequestQueue(...args),
-  openKeyValueStore: (...args) => Actor.openKeyValueStore(...args),
+  openRequestQueue: async (...args) => {
+    const queue = await Actor.openRequestQueue(...args);
+    const clear = async () => {
+      let req: CrawleeRequest | null;
+      do {
+        req = await queue.fetchNextRequest();
+      } while (req);
+    };
+
+    return {
+      addRequests: (...args) => queue.addRequests(...args),
+      markRequestHandled: (...args) => queue.markRequestHandled(...args),
+      fetchNextRequest: (...args) => queue.fetchNextRequest(...args),
+      reclaimRequest: (...args) => queue.reclaimRequest(...args),
+      isFinished: (...args) => queue.isFinished(...args),
+      handledCount: (...args) => queue.handledCount(...args),
+      drop: (...args) => queue.drop(...args),
+      clear,
+    };
+  },
+  openKeyValueStore: async (...args) => {
+    const store = await Actor.openKeyValueStore(...args);
+    const clear = async () => {
+      await store.forEachKey((key) => store.setValue(key, null));
+    };
+
+    return {
+      getValue: (...args) => store.getValue(...args),
+      setValue: (...args) => store.setValue(...args),
+      drop: (...args) => store.drop(...args),
+      clear,
+    };
+  },
   getEnv: (...args) => Actor.getEnv(...args),
   getInput: (...args) => Actor.getInput(...args),
   runInContext: async (...args) => {
