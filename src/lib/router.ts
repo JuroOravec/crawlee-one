@@ -252,13 +252,16 @@ export const setupDefaultRoute = async <
     const { page, log: parentLog } = ctx;
     const log = parentLog.child({ prefix: '[Router] ' });
 
-    const reqQueue = await io.openRequestQueue(requestQueueId);
+    // NOTE: Because we "clear" the queue by replacing it,
+    // we need to always call `openRequestQueue` to ensure we use the latest instance
+    const openQueue = () => io.openRequestQueue(requestQueueId);
 
     let handledRequestsCount = 0;
     let req: CrawlerRequest | null = ctx.request;
 
     const closeRequest = async () => {
       if (!req) return;
+      const reqQueue = await openQueue();
       await reqQueue.markRequestHandled(req);
       handledRequestsCount++;
     };
@@ -267,6 +270,7 @@ export const setupDefaultRoute = async <
       log.debug(`Checking for new Request in the queue. ${suffix}`);
 
       if (perfBatchWaitSecs) await wait(perfBatchWaitSecs);
+      const reqQueue = await openQueue();
       const newReq = await reqQueue.fetchNextRequest();
       req = newReq ?? null;
 
@@ -313,7 +317,10 @@ export const setupDefaultRoute = async <
       log.error(`Failed to process a request, returning it to the queue. URL: ${req?.loadedUrl || req?.url}.`); // prettier-ignore
       log.error(err);
       // Reinsert the request into the queue if we failed to process it due to an error
-      if (req) await reqQueue.reclaimRequest(req, { forefront: true });
+      if (req) {
+        const reqQueue = await openQueue();
+        await reqQueue.reclaimRequest(req, { forefront: true });
+      }
     }
   };
 
