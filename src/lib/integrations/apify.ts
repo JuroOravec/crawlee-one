@@ -133,12 +133,10 @@ export const apifyIO: ApifyCrawleeOneIO = {
     };
   },
   openRequestQueue: async (...args) => {
-    const queue = await Actor.openRequestQueue(...args);
+    let queue = await Actor.openRequestQueue(...args);
     const clear = async () => {
-      let req: CrawleeRequest | null;
-      do {
-        req = await queue.fetchNextRequest();
-      } while (req);
+      await queue.drop();
+      queue = await Actor.openRequestQueue(...args);
     };
 
     return {
