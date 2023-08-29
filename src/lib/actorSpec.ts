@@ -5,19 +5,19 @@ import type { DatasetPerfStat, ScraperActorSpec, ScraperDataset } from 'actor-sp
  *
  * See {@link ScraperActorSpec}
  */
-export interface CrawleeOneScraperActorSpec extends ScraperActorSpec {
-  datasets: CrawleeOneScraperDataset[];
+export interface ApifyScraperActorSpec extends ScraperActorSpec {
+  datasets: ApifyScraperDataset[];
 }
 
 /** Dataset with additional perf stats info for formatting in tables */
-export interface CrawleeOneScraperDataset extends ScraperDataset {
-  perfStats: CrawleeOneDatasetPerfStat[];
+export interface ApifyScraperDataset extends ScraperDataset {
+  perfStats: ApifyDatasetPerfStat[];
   /** Specify which perfTable should render this data */
   perfTable: string;
 }
 
 /** Dataset perf stats with additional info for formatting in tables */
-export interface CrawleeOneDatasetPerfStat extends DatasetPerfStat {
+export interface ApifyDatasetPerfStat extends DatasetPerfStat {
   rowId: string;
   colId: string;
 }

@@ -1,5 +1,5 @@
-import { ArrVal, enumFromArray } from '../../utils/types';
-import type { CrawleeOneScraperActorSpec } from '../actorSpec';
+import { ArrVal, enumFromArray } from '../../../utils/types';
+import type { ApifyScraperActorSpec } from '../../actorSpec';
 
 export const README_FEATURE = [
   'datasets',
@@ -229,7 +229,7 @@ export interface PerfTable {
 }
 
 /** Defines how to render the crawler README. */
-export interface CrawleeOneReadmeTemplates {
+export interface ApifyReadmeTemplates {
   input: {
     /**
      * ID (key on input JSON) of the actor input that sets the max number of entries.
@@ -262,6 +262,6 @@ export interface CrawleeOneReadmeTemplates {
 /** Context available inside the rendering via `it` */
 export interface RenderContext {
   fn: Record<string, any>;
-  t: CrawleeOneReadmeTemplates;
-  a: CrawleeOneScraperActorSpec;
+  t: ApifyReadmeTemplates;
+  a: ApifyScraperActorSpec;
 }

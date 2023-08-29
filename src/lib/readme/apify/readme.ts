@@ -6,17 +6,16 @@ import { capitalize, cloneDeep, defaults, round, uniqBy } from 'lodash';
 import type { DatasetPerfStat } from 'actor-spec';
 
 import {
-  CrawleeOneReadmeTemplates,
+  ApifyReadmeTemplates,
   README_HOOK,
   README_HOOK_ENUM,
   ReadmeFeature,
   ReadmeFeatureType,
   RenderContext,
 } from './types';
-import type { CrawleeOneScraperActorSpec } from '../actorSpec';
+import type { ApifyScraperActorSpec } from '../../actorSpec';
 
-export interface CrawleeOneReadmeTemplatesOverrides
-  extends Omit<CrawleeOneReadmeTemplates, 'features'> {
+export interface ApifyReadmeTemplatesOverrides extends Omit<ApifyReadmeTemplates, 'features'> {
   features?: Partial<Record<ReadmeFeatureType, Partial<ReadmeFeature>>>;
 }
 
@@ -102,7 +101,7 @@ const collectModes = (it: any) => uniqBy(it.a.datasets.flatMap((d) => d.modes), 
 const collectEmails = (it: any) => uniqBy(it.a.authors.flatMap((a) => a.email), e => e); // prettier-ignore
 
 /** Define the texts in features sections that are, by default, common across all actors */
-export const defaultFeatureTexts: CrawleeOneReadmeTemplates['features'] = {
+export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
   datasets: {
     supported: (it) => it.a.datasets.length > 1,
     title: '<%~ it.a.datasets.length %> kinds of datasets',
@@ -523,7 +522,7 @@ export const renderApifyReadme = async (input: {
    * Inside the template during rendering, this object
    * can be accessed as `<%~ it.a.platform.actorId %>`
    */
-  actorSpec: CrawleeOneScraperActorSpec;
+  actorSpec: ApifyScraperActorSpec;
   /**
    * Custom eta template strings that plug into different
    * parts of the README template.
@@ -531,7 +530,7 @@ export const renderApifyReadme = async (input: {
    * Inside the template during rendering, these templates
    * can be accessed as `<%~ it.t.someTemplate %>`
    */
-  templates: CrawleeOneReadmeTemplatesOverrides;
+  templates: ApifyReadmeTemplatesOverrides;
   /**
    * Functions to be made available in the template.
    *
@@ -541,7 +540,7 @@ export const renderApifyReadme = async (input: {
   fn?: Record<string, (...args: any[]) => any>;
 }) => {
   // Assign the default values to a clone
-  const templates = cloneDeep(input.templates) as CrawleeOneReadmeTemplates;
+  const templates = cloneDeep(input.templates) as ApifyReadmeTemplates;
   templates.features = templates.features || {};
   Object.entries(defaultFeatureTexts).forEach(([key, feat]) => {
     templates.features[key] = defaults(templates.features[key] || {}, feat);
