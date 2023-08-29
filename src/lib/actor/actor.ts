@@ -25,7 +25,7 @@ import { getColumnFromDataset } from '../io/dataset';
 import { PushRequestsOptions, pushRequests } from '../io/pushRequests';
 import type { CrawleeOneIO } from '../integrations/types';
 import { apifyIO } from '../integrations/apify';
-import { registerHandlers, setupDefaultRoute } from '../router';
+import { registerHandlers, setupDefaultRoute } from '../router/router';
 import {
   CrawlerConfigActorInput,
   OutputActorInput,

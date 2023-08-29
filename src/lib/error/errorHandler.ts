@@ -12,7 +12,7 @@ import * as Sentry from '@sentry/node';
 import type { Page } from 'playwright';
 
 import type { MaybePromise, PickRequired } from '../../utils/types';
-import type { RouteHandler, RouterHandlerCtx } from '../router';
+import type { RouteHandler, RouterHandlerCtx } from '../router/types';
 import type {
   CrawleeOneErrorHandlerInput,
   CrawleeOneErrorHandlerOptions,

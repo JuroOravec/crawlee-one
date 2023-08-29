@@ -11,7 +11,7 @@ import type { MaybePromise, PickPartial } from '../../utils/types';
 import type { CrawlerUrl } from '../../types';
 import type { itemCacheKey, pushData } from '../io/pushData';
 import type { pushRequests } from '../io/pushRequests';
-import type { RouteHandler, RouteMatcher, CrawlerRouterWrapper } from '../router';
+import type { RouteHandler, RouteMatcher, CrawlerRouterWrapper } from '../router/types';
 import type { MetamorphActorInput } from '../config';
 import type { CrawleeOneIO } from '../integrations/types';
 
