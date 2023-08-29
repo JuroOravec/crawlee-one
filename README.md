@@ -17,6 +17,19 @@ Conversely, Crawlee One is NOT suitable for:
 
 [Read here](./docs/scraping-workflow-summary.md) for the recap of how Crawlee and Apify work.
 
+### What can Crawlee One do?
+
+Crawlee One supports many common and advanced web scraping use cases. See the [Table of Content](#table-of-content) for the overview of the use cases.
+
+See the section [How to use](#how-to-use) for how Crawlee One looks from user's perspective.
+
+## Pre-requirements
+
+- Familiarity with Apify platform
+- For advanced use cases:
+  - Basic familiarity with web scraping
+  - Basic familiarity with JavaScript
+
 ## Use cases
 
 Web crawlers written with Crawlee One can be configured via their input to handle following advanced use cases:
@@ -33,6 +46,12 @@ Web crawlers written with Crawlee One can be configured via their input to handl
 - [10. Privacy compliance: Include or omit personal data](./docs/playbook-10-privacy-compliance.md)
 - [11. Capture errors](./docs/playbook-11-errors.md)
 - [12. Source control: Keep scraper configuration in sync](./docs/playbook-12-source-control.md)
+
+## How to use
+
+[See here](./docs/user-guide.md) for how to use a Crawlee One web scraper through Apify platform.
+
+![](./docs/user-guide-input-ui-open.png)
 
 ## Library contents
 
@@ -72,9 +91,9 @@ Crawlee One allows you to configure the following via the input:
 - [Logging & Error handling](./docs/reference-input.md#logging--error-handling-advanced)
 - [Integrations (Metamorphing)](./docs/reference-input.md#integrations-metamorphing-advanced)
 
-## Example project
+## Example projects
 
-TODO
+- [SKCRIS Scraper](https://github.com/JuroOravec/apify-actor-skcris)
 
 ---
 
