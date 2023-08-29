@@ -94,6 +94,7 @@ Crawlee One allows you to configure the following via the input:
 ## Example projects
 
 - [SKCRIS Scraper](https://github.com/JuroOravec/apify-actor-skcris)
+- [Profesia.sk Scraper](https://github.com/JuroOravec/apify-actor-profesia-sk)
 
 ---
 
