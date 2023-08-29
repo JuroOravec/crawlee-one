@@ -553,7 +553,7 @@ const getStartUrlsFromInput = async (
   if (startUrlsFromFunction) {
     actor.log.debug(`Loading start URLs from function`);
     const urlsFromFn = await genHookFn(actor, startUrlsFromFunction)?.();
-    urlsAgg.push(...urlsFromFn);
+    if (urlsFromFn) urlsAgg.push(...urlsFromFn);
   }
 
   return urlsAgg;
