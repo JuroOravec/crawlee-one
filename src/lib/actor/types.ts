@@ -13,7 +13,7 @@ import type { itemCacheKey, pushData } from '../io/pushData';
 import type { pushRequests } from '../io/pushRequests';
 import type {
   CrawleeOneRouteHandler,
-  CrawleeOneRouteMatcher,
+  CrawleeOneRoute,
   CrawleeOneRouteWrapper,
 } from '../router/types';
 import type { MetamorphActorInput } from '../config';
@@ -122,7 +122,7 @@ export interface CrawleeOneActorDef<
    * })
    */
   routes: MaybeAsyncFn<
-    CrawleeOneRouteMatcher<Labels, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Ctx>[],
+    CrawleeOneRoute<Labels, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Ctx>[],
     [CrawleeOneActorDefWithInput<Labels, Input, TIO, Telem, Ctx>]
   >;
   /** Handlers for the labelled requests. The object keys are the labels. */
@@ -223,11 +223,7 @@ export interface CrawleeOneActorCtx<
   startUrls: CrawlerUrl[];
   proxy?: ProxyConfiguration;
   router: RouterHandler<Ctx>;
-  routes: CrawleeOneRouteMatcher<
-    Labels,
-    CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>,
-    Ctx
-  >[];
+  routes: CrawleeOneRoute<Labels, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Ctx>[];
   routeHandlers: Record<
     Labels,
     CrawleeOneRouteHandler<Ctx, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>>

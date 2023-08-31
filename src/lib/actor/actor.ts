@@ -367,7 +367,7 @@ const createCrawleeOne = async <
   });
 
   // Register labelled handlers
-  await registerHandlers<Ctx, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Labels>(
+  await registerHandlers<Labels, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Ctx>(
     router,
     routeHandlers,
     { routerContext, handlerWrappers: routeHandlerWrappers }

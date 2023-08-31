@@ -14,8 +14,9 @@ import type { CrawleeOneIO } from '../integrations/types';
 import type {
   CrawleeOneRouteWrapper,
   CrawleeOneRouteHandler,
-  CrawleeOneRouteMatcher,
+  CrawleeOneRoute,
   CrawleeOneRouteCtx,
+  CrawleeOneRouteMatcherFn,
 } from './types';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
@@ -39,6 +40,35 @@ const applyWrappersRight = <
     return wrapper(interimFn);
   }, Promise.resolve(fn));
 };
+
+const resolveRoutes = <
+  Labels extends string = string,
+  RouterCtx extends Record<string, any> = Record<string, any>,
+  CrawlerCtx extends CrawlingContext = CrawlingContext
+>(
+  routes: CrawleeOneRoute<Labels, RouterCtx, CrawlerCtx>[]
+) =>
+  routes.map((route) => {
+    const matchers = Array.isArray(route.match) ? route.match : [route.match];
+    if (!matchers.length) {
+      throw Error(`Route ${route.name} (label: ${route.handlerLabel}) has NO "match" item. It can be a RegExp, function, or array of the two.`); // prettier-ignore
+    }
+
+    const resolvedMatchers = matchers.map<CrawleeOneRouteMatcherFn<Labels, RouterCtx, CrawlerCtx>>(
+      (matcher) => {
+        if (typeof matcher === 'function') return matcher;
+        if (typeof matcher === 'string' || matcher instanceof RegExp) {
+          const newMatcherFn: CrawleeOneRouteMatcherFn<Labels, RouterCtx, CrawlerCtx> = (url) =>
+            !!url.match(matcher);
+          return newMatcherFn;
+        }
+        // We shouldn't get here!
+        throw Error(`Route ${route.name} (label: ${route.handlerLabel}) has INVALID "match" item. It can be only RegExp, function, or array of the two. Got ${matcher}`); // prettier-ignore
+      }
+    );
+
+    return { ...route, match: resolvedMatchers };
+  });
 
 /**
  * Register many handlers at once onto the Crawlee's RouterHandler.
@@ -66,9 +96,9 @@ const applyWrappersRight = <
  * The entries on the `routerContext` object will be made available to all handlers.
  */
 export const registerHandlers = async <
-  CrawlerCtx extends CrawlingContext,
+  Labels extends string = string,
   RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
+  CrawlerCtx extends CrawlingContext = CrawlingContext
 >(
   router: CrawlerRouter<CrawlerCtx>,
   routeHandlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>,
@@ -95,18 +125,20 @@ export const registerHandlers = async <
 };
 
 const createDefaultHandler = <
-  CrawlerCtx extends CrawlingContext,
+  Labels extends string = string,
   RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
+  CrawlerCtx extends CrawlingContext = CrawlingContext
 >(
   input: {
     io: CrawleeOneIO;
-    routes: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[];
+    routes: CrawleeOneRoute<Labels, RouterCtx, CrawlerCtx>[];
     routeHandlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>;
   } & PerfActorInput &
     Pick<RequestActorInput, 'requestQueueId'>
 ) => {
   const { io, routes, routeHandlers, requestQueueId, perfBatchSize, perfBatchWaitSecs } = input;
+
+  const resolvedRoutes = resolveRoutes(routes);
 
   // NOTE: Because we "clear" the queue by replacing it,
   // we need to always call `openRequestQueue` to ensure we use the latest instance
@@ -152,7 +184,7 @@ const createDefaultHandler = <
 
   /** Redirect the URL to the labelled route identical to route's name */
   // prettier-ignore
-  const defaultAction: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>['action'] = async (url, ctx, route) => {
+  const defaultAction: CrawleeOneRoute<Labels, RouterCtx, CrawlerCtx>['action'] = async (url, ctx, route) => {
     const handler = route.handlerLabel != null && routeHandlers[route.handlerLabel];
     if (!handler) {
       ctx.log.error(`No handler found for route ${route.name} (${route.handlerLabel}). URL will not be processed. URL: ${url}`); // prettier-ignore
@@ -182,8 +214,10 @@ const createDefaultHandler = <
 
       // Find route handler for given URL
       log.debug(`Searching for a handler for given Request. ${logSuffix}`);
-      const route = await serialAsyncFind(routes, async (currRoute) => {
-        const isMatch = await currRoute.match(url, ctx, currRoute, routeHandlers);
+      const route = await serialAsyncFind(resolvedRoutes, async (currRoute) => {
+        const isMatch = await serialAsyncFind(currRoute.match, async (matchFn) => {
+          return matchFn(url, ctx, currRoute, routeHandlers);
+        });
         return isMatch;
       });
 
@@ -282,7 +316,7 @@ export const setupDefaultHandlers = async <
   router: CrawlerRouter<CrawlerCtx>;
   routeHandlerWrappers?: CrawleeOneRouteWrapper<CrawlerCtx, RouterCtx>[];
   routerContext?: RouterCtx;
-  routes: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[];
+  routes: CrawleeOneRoute<Labels, RouterCtx, CrawlerCtx>[];
   routeHandlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>;
   input?: Input | null;
 }) => {
