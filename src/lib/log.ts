@@ -1,7 +1,7 @@
 import { type CrawlingContext, LogLevel as CrawleeLogLevel } from 'crawlee';
 
 import type { ArrVal } from '../utils/types';
-import type { CrawlerRouterWrapper } from './router/types';
+import type { CrawleeOneRouteWrapper } from './router/types';
 
 export const LOG_LEVEL = ['debug', 'info', 'warn', 'error', 'off'] as const; // prettier-ignore
 export type LogLevel = ArrVal<typeof LOG_LEVEL>;
@@ -38,7 +38,7 @@ export const logLevelToCrawlee: Record<LogLevel, CrawleeLogLevel> = {
  *   router: createCheerioRouter(),
  *   routes,
  *   routeHandlers: ({ input }) => createHandlers(input!),
- *   routerWrappers: ({ input }) => [
+ *   routeHandlerWrappers: ({ input }) => [
  *     logLevelHandlerWrapper<CheerioCrawlingContext<any, any>>(input?.logLevel ?? 'info'),
  *   ],
  *   createCrawler: ({ router, input }) => createCrawler({ router, input, crawlerConfig }),
@@ -50,7 +50,7 @@ export const logLevelHandlerWrapper = <
   RouterCtx extends Record<string, any> = Record<string, any>
 >(
   logLevel: LogLevel
-): CrawlerRouterWrapper<T, RouterCtx> => {
+): CrawleeOneRouteWrapper<T, RouterCtx> => {
   return (handler) => {
     return (ctx, ...args) => {
       ctx.log.info(`Setting log level to ${logLevel}`);

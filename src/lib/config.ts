@@ -120,12 +120,12 @@ export interface StartUrlsActorInput {
 export interface LoggingActorInput {
   logLevel?: LogLevel;
   /**
-   * Whether to send actor error reports to <a href="https://sentry.io/">Sentry</a>.
+   * Whether to report actor errors to telemetry such as <a href="https://sentry.io/">Sentry</a>.
    *
    * This info is used by the author of this actor to identify broken integrations,
    * and track down and fix issues.
    */
-  errorSendToSentry?: boolean;
+  errorSendToTelemetry?: boolean;
   /**
    * Dataset ID to which errors should be captured.
    *
@@ -717,11 +717,11 @@ export const loggingInput = {
     pattern: datasetIdPattern,
     nullable: true,
   }),
-  errorSendToSentry: createBooleanField({
+  errorSendToTelemetry: createBooleanField({
     title: 'Send errors to Sentry',
     type: 'boolean',
     editor: 'checkbox',
-    description: `Whether to send actor error reports to <a href="https://sentry.io/">Sentry</a>.${newLine(1)}
+    description: `Whether to report actor errors to telemetry such as <a href="https://sentry.io/">Sentry</a>.${newLine(1)}
     This info is used by the author of this actor to identify broken integrations,
     and track down and fix issues.`,
     example: true,
@@ -1072,7 +1072,7 @@ export const startUrlsInputValidationFields = {
 export const loggingInputValidationFields = {
   logLevel: Joi.string().valid(...LOG_LEVEL).optional(), // prettier-ignore
   errorReportingDatasetId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
-  errorSendToSentry: Joi.boolean().optional(),
+  errorSendToTelemetry: Joi.boolean().optional(),
 } satisfies Record<keyof LoggingActorInput, Joi.Schema>;
 
 export const proxyInputValidationFields = {

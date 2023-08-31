@@ -8,16 +8,18 @@ import type {
   PlaywrightCrawlingContext,
   PuppeteerCrawlingContext,
 } from 'crawlee';
-import * as Sentry from '@sentry/node';
 import type { Page } from 'playwright';
 
 import type { MaybePromise, PickRequired } from '../../utils/types';
-import type { RouteHandler, RouterHandlerCtx } from '../router/types';
+import type { CrawleeOneRouteHandler, CrawleeOneRouteCtx } from '../router/types';
 import type {
   CrawleeOneErrorHandlerInput,
   CrawleeOneErrorHandlerOptions,
   CrawleeOneIO,
+  ExtractIOReport,
 } from '../integrations/types';
+import type { CrawleeOneTelemetry } from '../telemetry/types';
+import type { CrawleeOneActorDef } from '../actor/types';
 import { apifyIO } from '../integrations/apify';
 
 export type CaptureErrorInput = PickRequired<Partial<CrawleeOneErrorHandlerInput>, 'error'>;
@@ -30,16 +32,12 @@ export type CaptureError = (input: CaptureErrorInput) => MaybePromise<void>;
  *
  * See https://docs.apify.com/academy/node-js/analyzing-pages-and-fixing-errors#error-reporting
  */
-export const captureError = async <TEnv extends object = object, TReport extends object = object>(
+export const captureError = async <TIO extends CrawleeOneIO = CrawleeOneIO>(
   input: CaptureErrorInput,
-  options: CrawleeOneErrorHandlerOptions<TEnv, TReport>
+  options: CrawleeOneErrorHandlerOptions<TIO>
 ) => {
   const { error, log: parentLog } = input;
-  const {
-    io = apifyIO as any as CrawleeOneIO<TEnv, TReport>,
-    reportingDatasetId,
-    onErrorCapture,
-  } = options;
+  const { io = apifyIO as any as TIO, reportingDatasetId, onErrorCapture } = options;
 
   const log = parentLog?.child({ prefix: '[Error capture] ' }) ?? null;
 
@@ -51,7 +49,7 @@ export const captureError = async <TEnv extends object = object, TReport extends
   const reportingDataset = reportingDatasetId ? await io.openDataset(reportingDatasetId) : null;
   const report = await io.generateErrorReport(
     { error, page: input.page ?? null, url: input.url ?? null, log },
-    { ...options, io }
+    { ...options, io, onErrorCapture: onErrorCapture as any }
   );
 
   log?.error('[Error capture] Error captured', report);
@@ -64,7 +62,7 @@ export const captureError = async <TEnv extends object = object, TReport extends
   }
 
   log?.error('[Error capture] Calling onErrorCapture');
-  await onErrorCapture?.({ error, report });
+  await onErrorCapture?.({ error, report: report as ExtractIOReport<TIO> });
   log?.error('[Error capture] Done calling onErrorCapture');
 
   // @ts-expect-error Tag the error, so we don't capture it twice.
@@ -78,12 +76,9 @@ export const captureError = async <TEnv extends object = object, TReport extends
  *
  * By default, error reports are saved to Apify Dataset.
  */
-export const captureErrorWrapper = async <
-  TEnv extends object = object,
-  TReport extends object = object
->(
+export const captureErrorWrapper = async <TIO extends CrawleeOneIO = CrawleeOneIO>(
   fn: (input: { captureError: CaptureError }) => MaybePromise<void>,
-  options: CrawleeOneErrorHandlerOptions<TEnv, TReport>
+  options: CrawleeOneErrorHandlerOptions<TIO>
 ) => {
   const captureErrorWithArgs: CaptureError = (input) => captureError(input, options);
 
@@ -116,14 +111,13 @@ export const captureErrorWrapper = async <
  */
 export const captureErrorRouteHandler = <
   Ctx extends CrawlingContext,
-  TEnv extends object = object,
-  TReport extends object = object
+  TIO extends CrawleeOneIO = CrawleeOneIO
 >(
-  handler: (ctx: RouterHandlerCtx<Ctx> & { captureError: CaptureError }) => MaybePromise<void>,
-  options: CrawleeOneErrorHandlerOptions<TEnv, TReport>
+  handler: (ctx: CrawleeOneRouteCtx<Ctx> & { captureError: CaptureError }) => MaybePromise<void>,
+  options: CrawleeOneErrorHandlerOptions<TIO>
 ) => {
   // Wrap the original handler, so we can additionally pass it the captureError function
-  const wrapperHandler = (ctx: Parameters<RouteHandler<Ctx>>[0]) => {
+  const wrapperHandler = (ctx: Parameters<CrawleeOneRouteHandler<Ctx>>[0]) => {
     return captureErrorWrapper(({ captureError }) => {
       return handler({
         ...(ctx as any),
@@ -157,9 +151,17 @@ export const puppeteerCaptureErrorRouteHandler = <Ctx extends PuppeteerCrawlingC
  * By default, error reports are saved to Apify Dataset.
  */
 export const createErrorHandler = <Ctx extends CrawlingContext>(
-  options: CrawleeOneErrorHandlerOptions & { sendToSentry?: boolean }
+  options: CrawleeOneErrorHandlerOptions & {
+    sendToTelemetry?: boolean;
+    onSendErrorToTelemetry?: CrawleeOneTelemetry<
+      CrawleeOneActorDef,
+      CrawleeOneErrorHandlerOptions,
+      Ctx
+    >['onSendErrorToTelemetry'];
+  }
 ): ErrorHandler<Ctx> => {
-  return async ({ request, log, page }, error) => {
+  return async (ctx, error) => {
+    const { request, log, page } = ctx;
     const url = request.loadedUrl || request.url;
     captureError(
       { error, url, log, page: page as Page },
@@ -167,10 +169,10 @@ export const createErrorHandler = <Ctx extends CrawlingContext>(
         io: options.io,
         reportingDatasetId: options.reportingDatasetId,
         allowScreenshot: options.allowScreenshot ?? true,
-        onErrorCapture: ({ error, report }) => {
-          if (!options.sendToSentry) return;
+        onErrorCapture: async ({ error, report }) => {
+          if (!options.sendToTelemetry) return;
 
-          Sentry.captureException(error, { extra: report as any });
+          await options.onSendErrorToTelemetry?.(error, { report, options, ctx });
         },
       }
     );

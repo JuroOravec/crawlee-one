@@ -13,19 +13,17 @@ import {
   Request as CrawleeRequest,
 } from 'crawlee';
 import { omitBy, pick, defaults } from 'lodash';
-import * as Sentry from '@sentry/node';
 import { gotScraping } from 'got-scraping';
 
 import type { CrawlerMeta, CrawlerType } from '../../types';
 import type { MaybePromise, PickPartial } from '../../utils/types';
 import { createErrorHandler } from '../error/errorHandler';
-import { setupSentry } from '../error/sentry';
 import { type PushDataOptions, itemCacheKey, pushData } from '../io/pushData';
 import { getColumnFromDataset } from '../io/dataset';
 import { PushRequestsOptions, pushRequests } from '../io/pushRequests';
 import type { CrawleeOneIO } from '../integrations/types';
 import { apifyIO } from '../integrations/apify';
-import { registerHandlers, setupDefaultRoute } from '../router/router';
+import { registerHandlers, setupDefaultHandlers } from '../router/router';
 import {
   CrawlerConfigActorInput,
   OutputActorInput,
@@ -39,11 +37,12 @@ import {
   LoggingActorInput,
 } from '../config';
 import { logLevelHandlerWrapper, logLevelToCrawlee } from '../log';
+import type { CrawleeOneTelemetry } from '../telemetry/types';
 import type {
-  ActorContext,
-  ActorDefinition,
-  ActorHookContext,
-  ActorRouterContext,
+  CrawleeOneActorCtx,
+  CrawleeOneActorDef,
+  CrawleeOneHookCtx,
+  CrawleeOneActorRouterCtx,
   Metamorph,
   RunCrawler,
 } from './types';
@@ -58,20 +57,19 @@ const actorClassByType = {
 } satisfies Record<CrawlerType, { new (options: Record<string, any>): any }>;
 
 const isRouter = (r: any): r is RouterHandler<any> => {
-  return !!((r as RouterHandler).addHandler && (r as RouterHandler).addDefaultHandler);
+  return !!((r as RouterHandler)?.addHandler && (r as RouterHandler)?.addDefaultHandler);
 };
+
 const isFunc = (f: any): f is (...args: any[]) => any => {
   return typeof f === 'function';
 };
 
 /** Run a function that was defined as a string via Actor input */
 const genHookFn = <
-  Ctx extends CrawlingContext<any> = CrawlingContext<BasicCrawler>,
-  Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>,
   TIO extends CrawleeOneIO = CrawleeOneIO
 >(
-  actor: Pick<ActorContext<Ctx, Labels, Input, TIO>, 'input' | 'state' | 'io'>,
+  actor: Pick<CrawleeOneActorCtx<any, Input, TIO, any, any>, 'input' | 'state' | 'io'>,
   fnStr?: string
 ) => {
   if (!fnStr) return null;
@@ -82,7 +80,7 @@ const genHookFn = <
     state: actor.state,
     itemCacheKey,
     sendRequest: gotScraping,
-  } satisfies ActorHookContext<TIO>;
+  } satisfies CrawleeOneHookCtx<Input, TIO>;
 
   const hookFn = eval(fnStr);
   if (!hookFn) return null;
@@ -91,27 +89,28 @@ const genHookFn = <
 };
 
 /**
- * Create default configuration for an opinionated Crawlee actor,
- * and run the actor within Apify's `Actor.main()` context.
+ * Options available when creating default configuration for an opinionated Crawlee actor,
+ * which is then run within Apify's `Actor.main()` context.
  *
  * Apify context can be replaced with custom implementation using the `actorConfig.io` option.
  *
  * Read more about what this actor does at {@link createCrawleeOne}.
  */
-export const createAndRunCrawleeOne = async <
+export interface RunCrawleeOneOptions<
   TCrawlerType extends CrawlerType,
-  Ctx extends CrawlerMeta<TCrawlerType, any>['context'] = CrawlingContext<BasicCrawler>,
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>,
-  TIO extends CrawleeOneIO = CrawleeOneIO
->(args: {
+  TIO extends CrawleeOneIO = CrawleeOneIO,
+  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>,
+  Ctx extends CrawlerMeta<TCrawlerType, any>['context'] = CrawlingContext<BasicCrawler>
+> {
   /** String idetifying the actor class, e.g. `'cheerio'` */
   actorType: TCrawlerType;
   actorName: string;
   /** Config passed to the {@link createCrawleeOne} */
   actorConfig: PickPartial<
-    ActorDefinition<Ctx, Labels, Input, TIO>,
-    'router' | 'createCrawler' | 'io'
+    CrawleeOneActorDef<Labels, Input, TIO, Telem, Ctx>,
+    'router' | 'createCrawler' | 'io' | 'telemetry'
   >;
   /**
    * If using default `createCrawler` implementation, these are crawler options
@@ -126,31 +125,62 @@ export const createAndRunCrawleeOne = async <
    */
   crawlerConfigOverrides?: CrawlerMeta<TCrawlerType, any>['options'];
   /**
-   * Sentry configuration. If using default `createCrawler` implementation,
-   * failed requests are optionally reported to Sentry.
-   *
-   * To disable Sentry, set `"enabled": false`.
-   */
-  sentryOptions?: Sentry.NodeOptions;
-  /**
    * Callback with the created actor. The callback is called within
    * the `Actor.main()` context.
    */
-  onActorReady?: (actor: ActorContext<Ctx, Labels, Input, TIO>) => MaybePromise<void>;
-}): Promise<void> => {
+  onActorReady?: (actor: CrawleeOneActorCtx<Labels, Input, TIO, Telem, Ctx>) => MaybePromise<void>;
+}
+
+/**
+ * Create opinionated Crawlee crawler that uses, and run it within Apify's `Actor.main()` context.
+ *
+ * Apify context can be replaced with custom implementation using the `actorConfig.io` option.
+ *
+ * This function does the following for you:
+ *
+ * 1) Full TypeScript coverage - Ensure all components use the same Crawler / CrawlerContext.
+ *
+ * 2) Get Actor input from `Actor.getInput` if not given.
+ *
+ * 3) (Optional) Validate Actor input
+ *
+ * 4) Set up router such that requests that reach default route are
+ * redirected to labelled routes based on which item from "routes" they match.
+ *
+ * 5) Register all route handlers for you.
+ *
+ * 6) (Optional) Wrap all route handlers in a wrapper. Use this e.g.
+ * if you want to add a field to the context object, or handle errors
+ * from a single place.
+ *
+ * 7) (Optional) Support transformation and filtering of (scraped) entries,
+ * configured via Actor input.
+ *
+ * 8) (Optional) Support Actor metamorphing, configured via Actor input.
+ *
+ * 9) Apify context (e.g. calling `Actor.getInput`) can be replaced with custom
+ *  implementation using the `io` option.
+ */
+export const runCrawleeOne = async <
+  TType extends CrawlerType,
+  Labels extends string = string,
+  Input extends Record<string, any> = Record<string, any>,
+  TIO extends CrawleeOneIO = CrawleeOneIO,
+  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>,
+  Ctx extends CrawlerMeta<TType, any>['context'] = CrawlerMeta<TType, any>['context']
+>(
+  args: RunCrawleeOneOptions<TType, Labels, Input, TIO, Telem, Ctx>
+): Promise<void> => {
   const {
     actorType,
     actorName,
     actorConfig,
     crawlerConfigDefaults,
     crawlerConfigOverrides,
-    sentryOptions,
     onActorReady,
   } = args;
 
-  const { io = apifyIO as any as TIO } = actorConfig;
-
-  await setupSentry({ ...sentryOptions, serverName: actorName }, { io });
+  const { io = apifyIO as any as TIO, telemetry } = actorConfig;
 
   // See docs:
   // - https://docs.apify.com/sdk/js/
@@ -158,27 +188,29 @@ export const createAndRunCrawleeOne = async <
   // - https://docs.apify.com/sdk/js/docs/upgrading/upgrading-to-v3#apify-sdk
   await io.runInContext(
     async () => {
-      const actorDefaults: ActorDefinition<Ctx, Labels, Input & AllActorInputs, TIO> = {
-        io,
+      await telemetry?.setup({ actorType, actorName, actorConfig: { ...actorConfig, io } });
+
+      const actorDefaults: Pick<
+        CrawleeOneActorDef<Labels, Input & AllActorInputs, TIO, Telem, Ctx>,
+        'router' | 'routeHandlerWrappers' | 'createCrawler'
+      > = {
         router: Router.create<Ctx>(),
-        routerWrappers: ({ input }) => [
+        routeHandlerWrappers: ({ input }) => [
           logLevelHandlerWrapper<Ctx, any>(input?.logLevel ?? 'info'),
         ],
         createCrawler: ({ router, proxy, input }) => {
-          const options = createHttpCrawlerOptions<
-            CrawlerMeta<TCrawlerType, any>['options'],
-            Input
-          >({
+          const options = createHttpCrawlerOptions<CrawlerMeta<TType, any>['options'], Input>({
             input,
             defaults: crawlerConfigDefaults,
             overrides: {
               requestHandler: router,
               proxyConfiguration: proxy,
-              // Capture errors in a separate (Apify) Dataset and pass errors to Sentry
+              // Capture errors in a separate (Apify) Dataset and pass errors to telemetry
               failedRequestHandler: createErrorHandler({
                 io,
                 reportingDatasetId: input?.errorReportingDatasetId ?? 'REPORTING',
-                sendToSentry: input?.errorSendToSentry ?? true,
+                sendToTelemetry: input?.errorSendToTelemetry ?? true,
+                onSendErrorToTelemetry: telemetry?.onSendErrorToTelemetry,
               }),
               ...crawlerConfigOverrides,
             },
@@ -186,15 +218,14 @@ export const createAndRunCrawleeOne = async <
           const CrawlerClass = actorClassByType[actorType] as any;
           return new CrawlerClass(options);
         },
-        routes: [],
-        routeHandlers: {} as any,
       };
 
-      const actor = await createCrawleeOne<Ctx, Labels, Input, TIO>({
+      const actor = await createCrawleeOne<Labels, Input, TIO, Telem, Ctx>({
         ...actorConfig,
         io,
         router: actorConfig.router ?? (actorDefaults.router as any),
-        routerWrappers: actorConfig.routerWrappers ?? (actorDefaults.routerWrappers as any),
+        routeHandlerWrappers:
+          actorConfig.routeHandlerWrappers ?? (actorDefaults.routeHandlerWrappers as any),
         createCrawler: actorConfig.createCrawler ?? (actorDefaults.createCrawler as any),
       });
 
@@ -205,6 +236,9 @@ export const createAndRunCrawleeOne = async <
 };
 
 /**
+ * NOTE: If you want to run a scraper, see {@link runCrawleeOne}. This is lower-level
+ * function that should be used only if you want to override the default behaviour of runCrawleeOne.
+ *
  * Create opinionated Crawlee crawler that uses router for handling requests.
  *
  * This is a quality-of-life function that does the following for you:
@@ -232,15 +266,16 @@ export const createAndRunCrawleeOne = async <
  * 9) Apify context (e.g. calling `Actor.getInput`) can be replaced with custom
  *  implementation using the `io` option.
  */
-export const createCrawleeOne = async <
-  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+const createCrawleeOne = async <
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>,
-  TIO extends CrawleeOneIO = CrawleeOneIO
+  TIO extends CrawleeOneIO = CrawleeOneIO,
+  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>,
+  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>
 >(
-  config: PickPartial<ActorDefinition<Ctx, Labels, Input, TIO>, 'io'>
-): Promise<ActorContext<Ctx, Labels, Input, TIO>> => {
-  const { io = apifyIO as any as TIO } = config;
+  config: PickPartial<CrawleeOneActorDef<Labels, Input, TIO, Telem, Ctx>, 'io'>
+): Promise<CrawleeOneActorCtx<Labels, Input, TIO, Telem, Ctx>> => {
+  const { io = apifyIO as any as TIO, telemetry } = config;
 
   // Mutable state that is available to the actor hooks
   const state = {};
@@ -277,11 +312,12 @@ export const createCrawleeOne = async <
     : await (config.router as any)(getConfig());
   const routes = isFunc(config.routes) ? await config.routes(getConfig()) : config.routes; // prettier-ignore
   const routeHandlers = isFunc(config.routeHandlers) ? await config.routeHandlers(getConfig()) : config.routeHandlers; // prettier-ignore
-  const routerWrappers = isFunc(config.routerWrappers) ? await config.routerWrappers(getConfig()) : config.routerWrappers; // prettier-ignore
+  const routeHandlerWrappers = isFunc(config.routeHandlerWrappers) ? await config.routeHandlerWrappers(getConfig()) : config.routeHandlerWrappers; // prettier-ignore
 
   // Create Crawlee crawler
   const getActorCtx = () => ({
     io,
+    telemetry,
     router,
     routes,
     routeHandlers,
@@ -309,27 +345,33 @@ export const createCrawleeOne = async <
     pushData: scopedPushData,
     pushRequests: scopedPushRequest,
     startUrls,
-  } satisfies ActorContext<Ctx, Labels, Input, TIO>;
+  } satisfies CrawleeOneActorCtx<Labels, Input, TIO, Telem, Ctx>;
 
   // Extra data that we make available to the route handlers
   const routerContext = { actor, pushData: scopedPushData };
 
   // Set up router
-  await setupDefaultRoute<Ctx, ActorRouterContext<Ctx, Labels, Input, TIO>, Labels, Input>({
+  await setupDefaultHandlers<
+    Ctx,
+    CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>,
+    Labels,
+    Input
+  >({
     io,
     router,
-    routerWrappers,
+    routeHandlerWrappers,
     routerContext,
     routes,
     routeHandlers,
     input,
   });
-  await registerHandlers<Ctx, ActorRouterContext<Ctx, Labels, Input, TIO>, Labels>({
+
+  // Register labelled handlers
+  await registerHandlers<Ctx, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Labels>(
     router,
-    routerWrappers,
-    routerContext,
     routeHandlers,
-  });
+    { routerContext, handlerWrappers: routeHandlerWrappers }
+  );
 
   // Now that the actor is ready, enqueue the URLs right away
   await scopedPushRequest(startUrls as CrawleeRequest[]);
@@ -362,10 +404,11 @@ const createScopedCrawlerRun = <
   Ctx extends CrawlingContext<any> = CrawlingContext<BasicCrawler>,
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>,
-  TIO extends CrawleeOneIO = CrawleeOneIO
+  TIO extends CrawleeOneIO = CrawleeOneIO,
+  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>
 >(
   actor: Omit<
-    ActorContext<Ctx, Labels, Input, TIO>,
+    CrawleeOneActorCtx<Labels, Input, TIO, Telem, Ctx>,
     'runCrawler' | 'metamorph' | 'pushData' | 'pushRequests' | 'startUrls'
   >
 ) => {
@@ -413,7 +456,7 @@ const createScopedCrawlerRun = <
 };
 
 /** Create a function that triggers metamorph, using Actor's inputs as defaults. */
-const createScopedMetamorph = (actor: Pick<ActorContext, 'input' | 'io'>) => {
+const createScopedMetamorph = (actor: Pick<CrawleeOneActorCtx, 'input' | 'io'>) => {
   // Trigger metamorph if it was set from the input
   const metamorph: Metamorph = async (overrides?: MetamorphActorInput) => {
     const {
@@ -433,7 +476,9 @@ const createScopedMetamorph = (actor: Pick<ActorContext, 'input' | 'io'>) => {
 };
 
 /** pushData wrapper that pre-populates options based on actor input */
-const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state' | 'io' | 'log'>) => {
+const createScopedPushData = (
+  actor: Pick<CrawleeOneActorCtx, 'input' | 'state' | 'io' | 'log'>
+) => {
   const {
     includePersonalData,
     requestQueueId,
@@ -448,7 +493,7 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state' | 'io'
     outputCacheActionOnResult,
   } = (actor.input ?? {}) as OutputActorInput & PrivacyActorInput & RequestActorInput;
 
-  const scopedPushData: ActorContext['pushData'] = async (entries, ctx, options) => {
+  const scopedPushData: CrawleeOneActorCtx['pushData'] = async (entries, ctx, options) => {
     const transformFn = genHookFn(actor, outputTransform);
     const filterFn = genHookFn(actor, outputFilter);
 
@@ -476,11 +521,13 @@ const createScopedPushData = (actor: Pick<ActorContext, 'input' | 'state' | 'io'
 };
 
 /** pushRequests wrapper that pre-populates options based on actor input */
-const createScopedPushRequests = (actor: Pick<ActorContext, 'input' | 'state' | 'io' | 'log'>) => {
+const createScopedPushRequests = (
+  actor: Pick<CrawleeOneActorCtx, 'input' | 'state' | 'io' | 'log'>
+) => {
   const { requestQueueId, requestMaxEntries, requestTransform, requestFilter } = (actor.input ??
     {}) as RequestActorInput;
 
-  const scopedPushRequest: ActorContext['pushRequests'] = async (entries, options) => {
+  const scopedPushRequest: CrawleeOneActorCtx['pushRequests'] = async (entries, options) => {
     const transformFn = genHookFn(actor, requestTransform);
     const filterFn = genHookFn(actor, requestFilter);
 
@@ -536,7 +583,7 @@ export const createHttpCrawlerOptions = <
 };
 
 const getStartUrlsFromInput = async (
-  actor: Pick<ActorContext, 'input' | 'state' | 'io' | 'log'>
+  actor: Pick<CrawleeOneActorCtx, 'input' | 'state' | 'io' | 'log'>
 ) => {
   const { startUrls, startUrlsFromDataset, startUrlsFromFunction } = (actor.input ??
     {}) as StartUrlsActorInput;

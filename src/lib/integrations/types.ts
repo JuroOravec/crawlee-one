@@ -142,7 +142,7 @@ export interface CrawleeOneIO<
   /** Generate object with info on current context, which will be send to the error Dataset */
   generateErrorReport: (
     input: CrawleeOneErrorHandlerInput,
-    options: PickRequired<CrawleeOneErrorHandlerOptions<TEnv, TReport>, 'io'>
+    options: PickRequired<CrawleeOneErrorHandlerOptions<CrawleeOneIO<TEnv, TReport>>, 'io'>
   ) => MaybePromise<TReport>;
   /** Generate object with info on current context, which will be appended to the scraped entry */
   generateEntryMetadata: <Ctx extends CrawlingContext>(ctx: Ctx) => MaybePromise<TMetadata>;
@@ -322,12 +322,19 @@ export interface CrawleeOneErrorHandlerInput {
 }
 
 /** User-configurable options passed to the error handler */
-export interface CrawleeOneErrorHandlerOptions<
-  TEnv extends object = object,
-  TReport extends object = object
-> {
-  io?: CrawleeOneIO<TEnv, TReport>;
+export interface CrawleeOneErrorHandlerOptions<TIO extends CrawleeOneIO = CrawleeOneIO> {
+  io?: TIO;
   allowScreenshot?: boolean;
   reportingDatasetId?: string;
-  onErrorCapture?: (input: { error: Error; report: TReport }) => MaybePromise<void>;
+  onErrorCapture?: (input: { error: Error; report: ExtractIOReport<TIO> }) => MaybePromise<void>;
 }
+
+export type ExtractErrorHandlerOptionsReport<T extends CrawleeOneErrorHandlerOptions<any>> =
+  T extends CrawleeOneErrorHandlerOptions<infer U> ? ExtractIOReport<U> : never;
+
+export type ExtractIOReport<T extends CrawleeOneIO<object, object>> = T extends CrawleeOneIO<
+  object,
+  infer U
+>
+  ? U
+  : never;
