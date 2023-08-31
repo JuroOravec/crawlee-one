@@ -38,9 +38,9 @@ export type CrawleeOneRouteWrapper<
  * the request is passed to the `action` function for processing.
  */
 export interface CrawleeOneRouteMatcher<
-  CrawlerCtx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  Labels extends string = string,
   RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
+  CrawlerCtx extends CrawlingContext = CrawlingContext<BasicCrawler>
 > {
   /** Human readable name */
   name: string;
@@ -67,7 +67,7 @@ export interface CrawleeOneRouteMatcher<
   match: (
     url: string,
     ctx: CrawleeOneRouteCtx<CrawlerCtx & RouterCtx>,
-    route: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>,
+    route: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>,
     handlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>
   ) => unknown;
   /**
@@ -85,52 +85,52 @@ export interface CrawleeOneRouteMatcher<
   action?: (
     url: string,
     ctx: CrawleeOneRouteCtx<CrawlerCtx>,
-    route: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>,
+    route: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>,
     handlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>
   ) => MaybePromise<void>;
 }
 
 /** Utility function that helps with typing the route definitions. */
 export const createRouteMatchers = <
-  CrawlerCtx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+  Labels extends string = string,
   RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
->(matchers: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
+  CrawlerCtx extends CrawlingContext = CrawlingContext<BasicCrawler>
+>(matchers: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[]) => matchers; // prettier-ignore
 
 // Context-specific variants
 /** Utility function that helps with typing the route definitions. */
 export const createBasicRouteMatchers = <
-  CrawlerCtx extends BasicCrawlingContext = BasicCrawlingContext,
+  Labels extends string = string,
   RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
->(matchers: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
+  CrawlerCtx extends BasicCrawlingContext = BasicCrawlingContext,
+>(matchers: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[]) => matchers; // prettier-ignore
 /** Utility function that helps with typing the route definitions. */
 export const createHttpRouteMatchers = <
-  CrawlerCtx extends HttpCrawlingContext = HttpCrawlingContext,
+  Labels extends string = string,
   RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
->(matchers: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
+  CrawlerCtx extends HttpCrawlingContext = HttpCrawlingContext,
+>(matchers: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[]) => matchers; // prettier-ignore
 /** Utility function that helps with typing the route definitions. */
 export const createJsdomRouteMatchers = <
-  CrawlerCtx extends JSDOMCrawlingContext = JSDOMCrawlingContext,
+  Labels extends string = string,
   RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
->(matchers: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
+  CrawlerCtx extends JSDOMCrawlingContext = JSDOMCrawlingContext,
+>(matchers: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[]) => matchers; // prettier-ignore
 /** Utility function that helps with typing the route definitions. */
 export const createCheerioRouteMatchers = <
+Labels extends string = string,
+RouterCtx extends Record<string, any> = Record<string, any>,
 CrawlerCtx extends CheerioCrawlingContext = CheerioCrawlingContext,
-  RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
->(matchers: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
+>(matchers: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[]) => matchers; // prettier-ignore
 /** Utility function that helps with typing the route definitions. */
 export const createPlaywrightRouteMatchers = <
+Labels extends string = string,
+RouterCtx extends Record<string, any> = Record<string, any>,
   CrawlerCtx extends PlaywrightCrawlingContext = PlaywrightCrawlingContext,
-  RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
->(matchers: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
+>(matchers: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[]) => matchers; // prettier-ignore
 /** Utility function that helps with typing the route definitions. */
 export const createPuppeteerRouteMatchers = <
-  CrawlerCtx extends PuppeteerCrawlingContext = PuppeteerCrawlingContext,
-  RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string
->(matchers: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>[]) => matchers; // prettier-ignore
+Labels extends string = string,
+RouterCtx extends Record<string, any> = Record<string, any>,
+CrawlerCtx extends PuppeteerCrawlingContext = PuppeteerCrawlingContext,
+>(matchers: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[]) => matchers; // prettier-ignore

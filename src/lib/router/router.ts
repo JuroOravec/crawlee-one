@@ -101,7 +101,7 @@ const createDefaultHandler = <
 >(
   input: {
     io: CrawleeOneIO;
-    routes: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>[];
+    routes: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[];
     routeHandlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>;
   } & PerfActorInput &
     Pick<RequestActorInput, 'requestQueueId'>
@@ -152,7 +152,7 @@ const createDefaultHandler = <
 
   /** Redirect the URL to the labelled route identical to route's name */
   // prettier-ignore
-  const defaultAction: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>['action'] = async (url, ctx, route) => {
+  const defaultAction: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>['action'] = async (url, ctx, route) => {
     const handler = route.handlerLabel != null && routeHandlers[route.handlerLabel];
     if (!handler) {
       ctx.log.error(`No handler found for route ${route.name} (${route.handlerLabel}). URL will not be processed. URL: ${url}`); // prettier-ignore
@@ -282,7 +282,7 @@ export const setupDefaultHandlers = async <
   router: CrawlerRouter<CrawlerCtx>;
   routeHandlerWrappers?: CrawleeOneRouteWrapper<CrawlerCtx, RouterCtx>[];
   routerContext?: RouterCtx;
-  routes: CrawleeOneRouteMatcher<CrawlerCtx, RouterCtx, Labels>[];
+  routes: CrawleeOneRouteMatcher<Labels, RouterCtx, CrawlerCtx>[];
   routeHandlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>;
   input?: Input | null;
 }) => {

@@ -122,7 +122,7 @@ export interface CrawleeOneActorDef<
    * })
    */
   routes: MaybeAsyncFn<
-    CrawleeOneRouteMatcher<Ctx, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Labels>[],
+    CrawleeOneRouteMatcher<Labels, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Ctx>[],
     [CrawleeOneActorDefWithInput<Labels, Input, TIO, Telem, Ctx>]
   >;
   /** Handlers for the labelled requests. The object keys are the labels. */
@@ -224,9 +224,9 @@ export interface CrawleeOneActorCtx<
   proxy?: ProxyConfiguration;
   router: RouterHandler<Ctx>;
   routes: CrawleeOneRouteMatcher<
-    Ctx,
+    Labels,
     CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>,
-    Labels
+    Ctx
   >[];
   routeHandlers: Record<
     Labels,
