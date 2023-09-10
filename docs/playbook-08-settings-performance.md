@@ -87,7 +87,7 @@ Example scraper input:
 
 ### CrawleeOne options
 
-CrawleeOne also exposes a lot of its own options. Most of them are described in other sections dedicated to these options
+CrawleeOne also exposes a lot of its own options. Most of them are described in other sections dedicated to these options.
 
 #### Batching
 

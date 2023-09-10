@@ -367,7 +367,7 @@ Configure the proxy
 
 ### Output Dataset & Caching (L in ETL) (Advanced)
 
-#### outputDatasetIdOrName
+#### outputDatasetId
 
 - **Type:** string
 - **Description:** By default, data is written to Default dataset.
@@ -379,7 +379,7 @@ Configure the proxy
   'mIJVZsRQrDQf4rUAf';
   ```
 
-#### outputCacheStoreIdOrName
+#### outputCacheStoreId
 
 - **Type:** string
 - **Description:** Set this option if you want to cache scraped entries in <a href="https://docs.apify.com/sdk/js/docs/guides/result-storage#key-value-store">Apify's Key-value store</a>.<br/>

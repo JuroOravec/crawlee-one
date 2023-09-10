@@ -42,8 +42,8 @@ const input = {
   outputRenameFields: {
     oldFieldName: 'newFieldName',
   },
-  // outputDatasetIdOrName: 'mIJVZsRQrDQf4rUAf',
-  // outputCacheStoreIdOrName: 'mIJVZsRQrDQf4rUAf',
+  // outputDatasetId: 'mIJVZsRQrDQf4rUAf',
+  // outputCacheStoreId: 'mIJVZsRQrDQf4rUAf',
   // outputCachePrimaryKeys: ['name', 'city'],
   // outputCacheActionOnResult: 'add',
   maxRequestRetries: 3,

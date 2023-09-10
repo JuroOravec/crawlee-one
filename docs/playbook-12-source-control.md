@@ -24,9 +24,9 @@
 
 As you've seen, we can solve most of our data processing needs without having to spin up another server. What's more, we can even do it all through a single UI.
 
-While that's great, you may wonder - if we keep all our transformation and filtering logic inside the scrapers, then how do we maintain the logic? What if we need to change or copy something? Won't it be a pain to manually update all logic for each single scraper instance I have?
+While that's great, you may wonder - if we keep all our transformation and filtering logic inside the scrapers, then how do we maintain the logic? What if we need to change or copy something? Won't it be a pain to manually update all logic for each single scraper instance we have?
 
-The short answer is: No. We can store and import the scraper config from a source control like git (GitHub, GitLab).
+The short answer is: No. We can store and import the scraper config from a source control like git (GitHub, GitLab, BitBucket).
 
 With this approach, we can reuse a single config file for multiple scrapers. Or we can write the logic in TypeScript, compile it to JS, and import that as the config.
 
@@ -70,7 +70,7 @@ Let's go through an example:
    }
    ```
 
-   Or if we need more control, or need to make a POST request, we can use `inputExtendFromFunction`:
+   Or if we need more control, or we need to make a POST request or include auth credentials, we can use `inputExtendFromFunction`:
 
    ```json
    {

@@ -67,7 +67,7 @@ So if we can store, retrieve, and compare scraped entries, then we can define a 
 
 For this purpose, we've defined following Actor input options:
 
-- `outputCacheStoreIdOrName` - ID of the KeyValueStore that's used for caching scraped entries
+- `outputCacheStoreId` - ID of the KeyValueStore that's used for caching scraped entries
 - `outputCachePrimaryKeys` - List of property names of the scraped entries that are used for generating cache key.
 - `outputCacheActionOnResult` - Specifies whether scraped results should be added to (`"add"`), removed from (`"remove"`), or overwrite (`"overwrite"`) the cache.
 
@@ -83,7 +83,7 @@ async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
   //    that we specified via Apify UI.
   const entryCacheKey = itemCacheKey(entry, input.outputCachePrimaryKeys);
   // 2. Load the KeyValueStore dedicated as our cache.
-  const store = await Actor.openKeyValueStore(input.outputCacheStoreIdOrName);
+  const store = await Actor.openKeyValueStore(input.outputCacheStoreId);
   // 3. Save the entry to the store.
   await store.setValue(entryCacheKey, entry);
   // ...
@@ -98,7 +98,7 @@ async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
   //    that we specified via Apify UI.
   const entryCacheKey = itemCacheKey(entry, input.outputCachePrimaryKeys);
   // 2. Load the KeyValueStore dedicated as our cache.
-  const store = await Actor.openKeyValueStore(input.outputCacheStoreIdOrName);
+  const store = await Actor.openKeyValueStore(input.outputCacheStoreId);
   // 3. Check the store for the entry.
   const cacheHasEntry = !!(await store.getValue(entryCacheKey));
 
@@ -136,7 +136,7 @@ This already depends on your setup, but let's have a look at an example:
 {
   outputFilterBefore: async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
     // 1. Load the KeyValueStore dedicated as our cache.
-    state.store = await Actor.openKeyValueStore(input.outputCacheStoreIdOrName);
+    state.store = await Actor.openKeyValueStore(input.outputCacheStoreId);
     // 2. Load the RequestQueue that holds not-yet-processed
     //    URLs.
     state.queue = await Actor.openRequestQueue(input.requestQueueId);

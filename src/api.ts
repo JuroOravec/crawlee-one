@@ -11,7 +11,7 @@ import type { CrawleeOneRouteHandler, CrawleeOneRoute } from './lib/router/types
 import type { CrawlerMeta, CrawlerType } from './types';
 import type { MaybePromise } from './utils/types';
 
-/** Args obbject passed to `crawleeOne` */
+/** Args object passed to `crawleeOne` */
 export interface CrawleeOneArgs<
   TType extends CrawlerType,
   T extends CrawleeOneCtx<CrawlerMeta<TType>['context']>
