@@ -1,6 +1,28 @@
 # 7. Caching: Extract only new or only previously-seen entries
 
-Seeing how custom transformations and filtering work, now let's put the two together to learn how to set up Crawlee One to scrape *only new* or *only "old"* entries.
+> NOTE:
+>
+> In these examples, the input is mostly shown as a JSON, e.g.:
+>
+> ```json
+> {
+>   "startUrls": ["https://www.example.com/path/1"]
+> }
+> ```
+>
+> If you are using the `crawlee-one` package directly, then that is the same as:
+>
+> ```ts
+> import { crawleeOne } from 'crawlee-one';
+> await crawleeOne({
+>   type: '...',
+>   input: {
+>     startUrls: ['https://www.example.com/path/1'],
+>   },
+> });
+> ```
+
+Seeing how custom transformations and filtering work, now let's put the two together to learn how to set up CrawleeOne to scrape _only new_ or _only "old"_ entries.
 
 ### Scenario
 
@@ -10,7 +32,7 @@ Why would you do that?
 >
 > All of these work with time-sensitive data - job offers are eventually filled, and items on ads are sold.
 >
-> You don't know *when* a new post will be added. Only way to know is to check the website.
+> You don't know _when_ a new post will be added. Only way to know is to check the website.
 >
 > You can decide to check the website every 5-15 minutes. But if you fully scrape the website every 5-15 minutes, it will be costly for you, and a heavy load for the scraped website.
 >
@@ -35,6 +57,7 @@ Our general strategy is following:
 5. Then, when we run the scraper the next time, we reuse the same cache. Since the cache is no longer empty, then only those entries will be scraped, which ARE/ARE NOT in the cache already.
 
 Before we get ahead, let's review what we need for this to work:
+
 1. ✅ Request filtering
 2. ⚠️ Knowing which entries were scraped in previous run:
    1. Storing and retrieval of scraped entries based on unambiguous ID.
@@ -43,6 +66,7 @@ Before we get ahead, let's review what we need for this to work:
 So if we can store, retrieve, and compare scraped entries, then we can define a flow to scrape only new or only "old" entries. 🤔
 
 For this purpose, we've defined following Actor input options:
+
 - `outputCacheStoreIdOrName` - ID of the KeyValueStore that's used for caching scraped entries
 - `outputCachePrimaryKeys` - List of property names of the scraped entries that are used for generating cache key.
 - `outputCacheActionOnResult` - Specifies whether scraped results should be added to (`"add"`), removed from (`"remove"`), or overwrite (`"overwrite"`) the cache.
@@ -89,22 +113,22 @@ async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
 ```
 
 > IMPORTANT NOTES:
+>
 > - If `outputCachePrimaryKeys` is not set, then the object passed to `itemCacheKey` is serialized as a whole.
 >
->     Generally, you do NOT want this, because some fields may change with each run (e.g. timestamp capturing the time of scraping). Hence, even repeatedly scraped entries would be always considered as unique entries to the cache.
+>   Generally, you do NOT want this, because some fields may change with each run (e.g. timestamp capturing the time of scraping). Hence, even repeatedly scraped entries would be always considered as unique entries to the cache.
 >
 > - Similarly, when you specify `outputCachePrimaryKeys`, these must be fields that do NOT change across multiple scraper runs.
 >
->    - Item's ID is GREAT - ID shouldn't change.
->    - Item's Title is OK, BUT NOT GREAT - The title *may* change
->    - Item's timestamp, description, or other prone-to-change fields are BAD - These will change often, generating false negatives.
-
+>   - Item's ID is GREAT - ID shouldn't change.
+>   - Item's Title is OK, BUT NOT GREAT - The title _may_ change
+>   - Item's timestamp, description, or other prone-to-change fields are BAD - These will change often, generating false negatives.
 
 ### Scraping only new or only old entries
 
 We're almost there. We know how to decipher whether the entry is already in cache or not. One more thing remains:
 
-Let's say that we want to scrape ONLY NEW entries - *Then, assuming that we run a scraper that eventually comes across entries which will be already found in the cache, then how do we **STOP** the process in order to not scrape any further entries?*
+Let's say that we want to scrape ONLY NEW entries - _Then, assuming that we run a scraper that eventually comes across entries which will be already found in the cache, then how do we **STOP** the process in order to not scrape any further entries?_
 
 This already depends on your setup, but let's have a look at an example:
 
@@ -144,28 +168,30 @@ This already depends on your setup, but let's have a look at an example:
     // And save this entry only if not yet in cache
     return !cacheHasEntry;
     // ...
-  }; 
+  };
 }
 ```
 
 With the above configuration we achieved the following:
+
 - New entries will be saved, old will be skipped
 - If entry was already found in cache, all Requests that follow are dropped and will not be processed
 
 > NOTE: This setup made a few assumptions, which may be different in your case:
+>
 > - We assumed that the Requests in RequestQueue are orderly - That is, that the newest entries are grouped together.
 >
->    This is a sane assumption - If we scrape time-sensitive data
->    then we usually them by their age. So newest entries should be together, and ordered by age.
+>   This is a sane assumption - If we scrape time-sensitive data
+>   then we usually them by their age. So newest entries should be together, and ordered by age.
 >
->    However, for websites like Facebook, Instagram, LinkedIn, and others, which sort posts by custom metrics and not necessarily by age, this strategy would not work!
+>   However, for websites like Facebook, Instagram, LinkedIn, and others, which sort posts by custom metrics and not necessarily by age, this strategy would not work!
 >
->    On pages where this does not hold, we should NOT call the `RequestQueue.drop()`, because we cannot ensure that there aren't any not-yet-seen entries in the remaining queue.
+>   On pages where this does not hold, we should NOT call the `RequestQueue.drop()`, because we cannot ensure that there aren't any not-yet-seen entries in the remaining queue.
 >
 > - The setup assumed NO concurrency. if you had multiple instances of the scraper processing Requests, one scraper may "jump" ahead, and come across "old" entries sooner than before all "not-yet-seen" entries are processed. So our setup may break, and you would need to configure a more heuristic way of detecting when to call `RequestQueue.drop()`. E.g. to call it after 10-20 entries have been marked as "already-seen".
 >
 > - The setup assumed that the order in which requests are taken from the RequestQueue is the same order with which we've enqueued them.
 >
->    E.g. imagine you have a page with 10 entries, half of which are "new" and half "old". Since they are on a single page, they are all enqueued together. Since they are enqueued together, they may have same time of addition, and so it can happen that the order in which they are retrieved is different (e.g. simply because one request might have taken longer to process than other).
+>   E.g. imagine you have a page with 10 entries, half of which are "new" and half "old". Since they are on a single page, they are all enqueued together. Since they are enqueued together, they may have same time of addition, and so it can happen that the order in which they are retrieved is different (e.g. simply because one request might have taken longer to process than other).
 
-> *Congrats! This was by far the most complex use of Crawlee One. You learnt how to scrape only newest or to exclude newest entries. You can now work well with the hooks that Crawlee One offers, and can do advanced setups. All of that without needing anything else than the scraper itself. 🚀*
+> _Congrats! This was by far the most complex use of CrawleeOne. You learnt how to scrape only newest or to exclude newest entries. You can now work well with the hooks that CrawleeOne offers, and can do advanced setups. All of that without needing anything else than the scraper itself. 🚀_

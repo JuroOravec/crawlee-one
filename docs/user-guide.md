@@ -1,4 +1,4 @@
-# How to use a Crawlee One scraper
+# How to use a CrawleeOne scraper
 
 For this section, we'll work with Apify platform. If you're not familiar with it, see their
 documentation:
@@ -6,12 +6,12 @@ documentation:
 - [Web scraping in 2023: the beginner's guide](https://blog.apify.com/web-scraping-guide/)
 - [Introduction to Apify Platform](https://docs.apify.com/academy/apify-platform)
 
-Let's assume you have a scraper that was written with Crawlee One, and you're using it through the Apify platform.
+Let's assume you have a scraper that was written with CrawleeOne, and you're using it through the Apify platform.
 
 ### Via Apify Platform
 
 If everything is configured right, then for your scraper, you should see all
-inputs that are made available thanks to Crawlee One:
+inputs that are made available thanks to CrawleeOne:
 
 ![user-guide-input-ui-closed](./user-guide-input-ui-closed.png)
 
@@ -54,7 +54,7 @@ const input = {
   perfBatchSize: 20,
   logLevel: 'info',
   errorReportingDatasetId: 'REPORTING',
-  errorSendToSentry: true,
+  errorTelemetry: true,
   // metamorphActorId: 'apify/web-scraper',
   // metamorphActorBuild: '1.2.345',
   // metamorphActorInput: {

@@ -1,5 +1,27 @@
 # 12. Source control: Keep scraper configuration in sync
 
+> NOTE:
+>
+> In these examples, the input is mostly shown as a JSON, e.g.:
+>
+> ```json
+> {
+>   "startUrls": ["https://www.example.com/path/1"]
+> }
+> ```
+>
+> If you are using the `crawlee-one` package directly, then that is the same as:
+>
+> ```ts
+> import { crawleeOne } from 'crawlee-one';
+> await crawleeOne({
+>   type: '...',
+>   input: {
+>     startUrls: ['https://www.example.com/path/1'],
+>   },
+> });
+> ```
+
 As you've seen, we can solve most of our data processing needs without having to spin up another server. What's more, we can even do it all through a single UI.
 
 While that's great, you may wonder - if we keep all our transformation and filtering logic inside the scrapers, then how do we maintain the logic? What if we need to change or copy something? Won't it be a pain to manually update all logic for each single scraper instance I have?
@@ -10,7 +32,7 @@ With this approach, we can reuse a single config file for multiple scrapers. Or 
 
 So, how do we do that?
 
-Crawlee One defines 2 input fields: `inputExtendUrl` and `inputExtendFromFunction`:
+CrawleeOne defines 2 input fields: `inputExtendUrl` and `inputExtendFromFunction`:
 
 - `inputExtendUrl` takes a plain URL, and sends a GET request to download remote config.
 - `inputExtendFromFunction` gives you freedom to download or generate the config however you wish.

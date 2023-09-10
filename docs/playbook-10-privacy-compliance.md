@@ -1,16 +1,38 @@
 # 10. Privacy compliance: Include or omit personal data
 
+> NOTE:
+>
+> In these examples, the input is mostly shown as a JSON, e.g.:
+>
+> ```json
+> {
+>   "startUrls": ["https://www.example.com/path/1"]
+> }
+> ```
+>
+> If you are using the `crawlee-one` package directly, then that is the same as:
+>
+> ```ts
+> import { crawleeOne } from 'crawlee-one';
+> await crawleeOne({
+>   type: '...',
+>   input: {
+>     startUrls: ['https://www.example.com/path/1'],
+>   },
+> });
+> ```
+
 What's the difference between scraping e-commerce products vs scraping people's profiles from social media?
 
 The second dataset includes personal information, which needs to be handled carefully.
 
 When scraping data, you should always be wary of privacy regulations like GDPR. Even when you use platforms like Apify, the onus is on you. Not the platform, and not the developer of the scraper.
 
-Crawlee One simplifies the compliance with privacy regulations - you can decide whether to include or exclude personal data with a simple toggle (`true` / `false`).
+CrawleeOne simplifies the compliance with privacy regulations - you can decide whether to include or exclude personal data with a simple toggle (`true` / `false`).
 
 This is set via the `includePersonalData` input option.
 
-A well-configured Crawlee One scraper has identified which fields include personal data. If `includePersonalData` is not enabled, then the fields with PII will be redacted. Redacted fields may look like this:
+A well-configured CrawleeOne scraper has identified which fields include personal data. If `includePersonalData` is not enabled, then the fields with PII will be redacted. Redacted fields may look like this:
 
 With `includePersonalData: false`
 

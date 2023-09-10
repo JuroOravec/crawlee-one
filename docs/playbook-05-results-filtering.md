@@ -1,22 +1,44 @@
 # 5. Filtering results
 
+> NOTE:
+>
+> In these examples, the input is mostly shown as a JSON, e.g.:
+>
+> ```json
+> {
+>   "startUrls": ["https://www.example.com/path/1"]
+> }
+> ```
+>
+> If you are using the `crawlee-one` package directly, then that is the same as:
+>
+> ```ts
+> import { crawleeOne } from 'crawlee-one';
+> await crawleeOne({
+>   type: '...',
+>   input: {
+>     startUrls: ['https://www.example.com/path/1'],
+>   },
+> });
+> ```
+
 Before you proceed, make sure to go over the previous section on advanced transformations.
 
 This section is very similar to advanced transformations, but examples and notes included are in their entirety for if you're starting to read from here.
 
 Filtering works very similarly to advanced transfomations, but with 2 differences:
 
-  1. Meaning of returned values:
+1. Meaning of returned values:
 
-      - In `outputTransform` we returned the transformed value.
+   - In `outputTransform` we returned the transformed value.
 
-      - In `outputFilter` we return the decision whether to include (truthy) or exclude (falsy) the entry at hand from the dataset.
+   - In `outputFilter` we return the decision whether to include (truthy) or exclude (falsy) the entry at hand from the dataset.
 
-  2. Names of Actor inputs:
+2. Names of Actor inputs:
 
-      - For transformations, you use input fields `outputTransform`, `outputTransformBefore`, and `outputTransformAfter`.
+   - For transformations, you use input fields `outputTransform`, `outputTransformBefore`, and `outputTransformAfter`.
 
-      - For filtering, you use input fields `outputFilter`, `outputFilterBefore`, and `outputFilterAfter`.
+   - For filtering, you use input fields `outputFilter`, `outputFilterBefore`, and `outputFilterAfter`.
 
 Other than that's it's very similar.
 
@@ -35,7 +57,7 @@ NOTE: For clarity, following code examples for Actor inputs are formatted as Jav
 {
   outputFilter: (entry) => {
     return entry.someValue > 10;
-  }
+  };
 }
 ```
 
@@ -51,125 +73,125 @@ what I really mean is:
 
 1. Plain filtering
 
-    In this example, we filter entries based on the count of images.
+   In this example, we filter entries based on the count of images.
 
-    ```js
-    {
-      outputFilter: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
-        const { images } = entry || {};
-        const imagesWithTextCount = images.filter((img) => img.alt != null).length;
-        return imagesWithTextCount > 3;
-      }
-    }
-    ```
+   ```js
+   {
+     outputFilter: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
+       const { images } = entry || {};
+       const imagesWithTextCount = images.filter((img) => img.alt != null).length;
+       return imagesWithTextCount > 3;
+     };
+   }
+   ```
 
 2. Filter entries with remote data
 
-    In this example, we call the RANDOM.ORG API to generate random numbers, and decide based on them whether to include the entry or not.
+   In this example, we call the RANDOM.ORG API to generate random numbers, and decide based on them whether to include the entry or not.
 
-    For this, we use the `sendRequest` argument available to the function. `sendRequest` is actually an instance of [`got-scraping`](https://github.com/apify/got-scraping).
+   For this, we use the `sendRequest` argument available to the function. `sendRequest` is actually an instance of [`got-scraping`](https://github.com/apify/got-scraping).
 
-    ```js
-    {
-      // Define what happens for each entry
-      outputFilter: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
-        // Use `sendRequest` to get data from the internet:
-        // Docs: https://github.com/apify/got-scraping
-        // We make a GET request to the given URL, and parse the response as TEXT
-        const randomNumStr = await sendRequest.get('https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new').text();
-        
-        const randomNum = Number.parseInt(randomNumStr);
+   ```js
+   {
+     // Define what happens for each entry
+     outputFilter: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
+       // Use `sendRequest` to get data from the internet:
+       // Docs: https://github.com/apify/got-scraping
+       // We make a GET request to the given URL, and parse the response as TEXT
+       const randomNumStr = await sendRequest.get('https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new').text();
 
-        return randomNum > 5;
-      },
-    }
-    ```
+       const randomNum = Number.parseInt(randomNumStr);
+
+       return randomNum > 5;
+     },
+   }
+   ```
 
 3. Aggregate with KeyValueStore
 
-    In this example, we capture the category of each entry,
-    and allow to scrape only the first 5 entries from each category.
+   In this example, we capture the category of each entry,
+   and allow to scrape only the first 5 entries from each category.
 
-    Futher, we also make use of the `outputFilterBefore` and `outputFilterAfter` to prepare and cleanup the environment.
+   Futher, we also make use of the `outputFilterBefore` and `outputFilterAfter` to prepare and cleanup the environment.
 
-    ```js
-    {
-      // Initialize the cache during scraper startup
-      outputFilterBefore: async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
-        // Use the cache/store associated with this scraper run
-        const store = await Actor.openKeyValueStore();
+   ```js
+   {
+     // Initialize the cache during scraper startup
+     outputFilterBefore: async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
+       // Use the cache/store associated with this scraper run
+       const store = await Actor.openKeyValueStore();
 
-        // Persist the store instance, so we can use it in `outputTransform`
-        state.store = store;
-        
-        // Create the cache entry that will hold aggregate data
-        const data = (await store.getValue('idsByCategories'));
-        if (!data) {
-          await store.setValue('idsByCategories', {});
-        }
-      },
+       // Persist the store instance, so we can use it in `outputTransform`
+       state.store = store;
 
-      // Define what happens for each entry
-      outputFilter: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
-        // Leave early if invalid entry
-        if (!entry.category) return true;
+       // Create the cache entry that will hold aggregate data
+       const data = (await store.getValue('idsByCategories'));
+       if (!data) {
+         await store.setValue('idsByCategories', {});
+       }
+     },
 
-        const data = (await state.store.getValue('idsByCategories')) || {};
+     // Define what happens for each entry
+     outputFilter: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
+       // Leave early if invalid entry
+       if (!entry.category) return true;
 
-        // Update stats
-        const idList = data[entry.category] || [];
-        idList.push(entry.id);
-        
-        // Mark the entry to NOT pass the filter if there is already at least 5 entries.
-        if (idList.length >= 5) return false;
+       const data = (await state.store.getValue('idsByCategories')) || {};
 
-        // And if there is less than 5 entries, update the
-        // cache
-        data[entry.category] = idList;
-        const newData = { ...data, [entry.category]: idList };
+       // Update stats
+       const idList = data[entry.category] || [];
+       idList.push(entry.id);
 
-        // Save to cache again
-        await store.setValue('idsByCategories', newData);
+       // Mark the entry to NOT pass the filter if there is already at least 5 entries.
+       if (idList.length >= 5) return false;
 
-        return entry;
-      },
+       // And if there is less than 5 entries, update the
+       // cache
+       data[entry.category] = idList;
+       const newData = { ...data, [entry.category]: idList };
 
-      // Do... nothing during scraper shutdown
-      outputFilterAfter: async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
-        // NOTE: KeyValueStore doesn't need to be closed/disposed
-        // there's not much for us to do here
-      },
-    }
-    ```
+       // Save to cache again
+       await store.setValue('idsByCategories', newData);
 
-    Did you notice the following about the example above?
+       return entry;
+     },
 
-    1. While the `outputFilter` function has an "entry" argument, `outputFilterBefore` and `outputFilterAfter` don't, because:
-      
-        - `outputFilterBefore` is run before any scraping begins.
+     // Do... nothing during scraper shutdown
+     outputFilterAfter: async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
+       // NOTE: KeyValueStore doesn't need to be closed/disposed
+       // there's not much for us to do here
+     },
+   }
+   ```
 
-        - `outputFilterAfter` is run after all scraping is done.
+   Did you notice the following about the example above?
 
-    2. `outputFilter` has to return whether the entry passed the filter (truthy) or not (falsy). But `outputFilterBefore` and `outputFilterAfter` don't return anything.
+   1. While the `outputFilter` function has an "entry" argument, `outputFilterBefore` and `outputFilterAfter` don't, because:
 
-    3. We passed the KeyValueStore from `outputFilterBefore` to `outputFilter` via the `state` object.
+      - `outputFilterBefore` is run before any scraping begins.
 
-    > IMPORTANT 1: Note that `outputFilterBefore` and `outputFilterAfter` are ran for EACH scraper instance.
-    >
-    > What this means is that if you set the Actor input `maxConcurrency` to anything beyond 1, then you may have multiple instances running at the same time.
-    >
-    > Then, `outputFilterBefore` and `outputFilterAfter` will run for both of them!
+      - `outputFilterAfter` is run after all scraping is done.
 
-    > IMPORTANT 2: Likewise, the `state` object is INSTANCE-SPECIFIC!
-    >
-    > What this means is that if you set the Actor input `maxConcurrency` to anything beyond 1, then you may have multiple instances running at the same time.
-    >
-    > Then, they will each have their own `state` object. Instead, if you want to share data between all instances, use the KeyValueStore.
+   2. `outputFilter` has to return whether the entry passed the filter (truthy) or not (falsy). But `outputFilterBefore` and `outputFilterAfter` don't return anything.
 
-    > NOTE: Although possible, the example above is open to concurrency issues. In other words, if the KeyValueStore is opened by two different entries at the same time, and they both update it at the same time, then the change coming from one of them might be lost!
-    >
-    > To avoid concurrency issues, either set `maxConcurrency: 1`, so all entries are processed one by one. Or store the data for each entry under a different key in the KeyValueStore.
+   3. We passed the KeyValueStore from `outputFilterBefore` to `outputFilter` via the `state` object.
+
+   > IMPORTANT 1: Note that `outputFilterBefore` and `outputFilterAfter` are ran for EACH scraper instance.
+   >
+   > What this means is that if you set the Actor input `maxConcurrency` to anything beyond 1, then you may have multiple instances running at the same time.
+   >
+   > Then, `outputFilterBefore` and `outputFilterAfter` will run for both of them!
+
+   > IMPORTANT 2: Likewise, the `state` object is INSTANCE-SPECIFIC!
+   >
+   > What this means is that if you set the Actor input `maxConcurrency` to anything beyond 1, then you may have multiple instances running at the same time.
+   >
+   > Then, they will each have their own `state` object. Instead, if you want to share data between all instances, use the KeyValueStore.
+
+   > NOTE: Although possible, the example above is open to concurrency issues. In other words, if the KeyValueStore is opened by two different entries at the same time, and they both update it at the same time, then the change coming from one of them might be lost!
+   >
+   > To avoid concurrency issues, either set `maxConcurrency: 1`, so all entries are processed one by one. Or store the data for each entry under a different key in the KeyValueStore.
 
 That's all for advanced filtering!
 
-  > *Congrats! Now you know how to filter scraper data using Crawlee One. 🚀*
+> _Congrats! Now you know how to filter scraper data using CrawleeOne. 🚀_

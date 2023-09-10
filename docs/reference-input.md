@@ -1,10 +1,11 @@
 # Actor Input Reference
 
-Overview of the inputs supported by Crawlee One that can be passed to Apify/Crawlee Actors.
+Overview of the inputs supported by CrawleeOne that can be passed to Apify/Crawlee Actors.
 
 The options are auto-generated from the source code.
 
 ## ToC
+
 - [Programmatic Input (Advanced)](#programmatic-input-advanced)
 - [Starting URLs](#starting-urls)
 - [Proxy](#proxy)
@@ -40,14 +41,14 @@ console.log(Object.entries(o).reduce((str, [key, val]) => {
 ${inlineMultistring(formattedVal, 4)}
     \`\`\`
 `;
-    
+
     const newStr = `#### ${key}
-    
+
 - **Type:** ${val.type}
 - **Description:** ${val.description}
 ${exampleStr}
 `;
-    return str + '\n' + sectionStr + newStr; 
+    return str + '\n' + sectionStr + newStr;
 }, ''))
 ```
 -->
@@ -77,6 +78,7 @@ With these options you can configure other Actor options programmatically or fro
   In case of a conflict (if a field is defined both in Actor input and in imported input) the Actor input overwrites the imported fields.<br/>
   The function must return an object (the config).
 - **Example:**
+
   ```js
   "async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
     // Example: Load Actor config from GitHub URL (public)
@@ -539,10 +541,10 @@ Configure how to handle errors or what should be displayed in the log console.
   'REPORTING';
   ```
 
-#### errorSendToSentry
+#### errorTelemetry
 
 - **Type:** boolean
-- **Description:** Whether to send actor error reports to <a href="https://sentry.io/">Sentry</a>.<br/>
+- **Description:** Whether to send actor error reports to a telemery services like <a href="https://sentry.io/">Sentry</a>.<br/>
   This info is used by the author of this actor to identify broken integrations,
   and track down and fix issues.
 - **Example:**

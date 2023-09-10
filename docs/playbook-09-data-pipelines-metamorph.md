@@ -1,5 +1,27 @@
 # 9. Create data pipelines from scrapers using metamorph
 
+> NOTE:
+>
+> In these examples, the input is mostly shown as a JSON, e.g.:
+>
+> ```json
+> {
+>   "startUrls": ["https://www.example.com/path/1"]
+> }
+> ```
+>
+> If you are using the `crawlee-one` package directly, then that is the same as:
+>
+> ```ts
+> import { crawleeOne } from 'crawlee-one';
+> await crawleeOne({
+>   type: '...',
+>   input: {
+>     startUrls: ['https://www.example.com/path/1'],
+>   },
+> });
+> ```
+
 ### Rationale
 
 If you need a dataset for a one-off analysis, you can get by with manual cleanup and
@@ -7,7 +29,7 @@ post-processing.
 
 However, if you want to use the data in your app, for training a ML/AI
 model, or otherwise programmatically post-process the data, then you will inevitably need
-a *data pipeline* - a step-wise process of handling large amounts of data.
+a _data pipeline_ - a step-wise process of handling large amounts of data.
 
 A web scraping data pipeline can by as simple as:
 
@@ -23,9 +45,9 @@ flowchart LR
   Website -- 1. Extract data --> data[Data] -- 3. Upload data --> Database
 ```
 
-As we've seen before, with Crawlee One, we can take care of *data transformation* from within the scraper.
+As we've seen before, with CrawleeOne, we can take care of _data transformation_ from within the scraper.
 
-**However, we still need to send the data *somewhere* after it's scraped.**
+**However, we still need to send the data _somewhere_ after it's scraped.**
 
 Usually this is left up to the user of the scraper. Either they have to manually trigger the data movement, or, on platforms like Apify, they can use a webhook to detect when a scraper has finished.
 
@@ -33,7 +55,8 @@ Either way, they have to define the post-processing in a separate step. This ine
 
 ### Metamorph inputs
 
-That's why Crawlee One has integrated and exposed options that allow you to specify the downstream step via the scraper/actor input:
+That's why CrawleeOne has integrated and exposed options that allow you to specify the downstream step via the scraper/actor input:
+
 - `metamorphActorId` - ID of the service / Apify actor to trigger.
 - `metamorphActorBuild` - Build ID of the service / Apify actor to trigger.
 - `metamorphActorInput` - Input to the downstream service / Apify actor.
@@ -53,7 +76,7 @@ These options are based on the [Apify's metamorph feature](https://docs.apify.co
 
 ### Chaining
 
-If you have several Crawlee One crawlers/actors then you can chain several of them together, all done by configuring the first one:
+If you have several CrawleeOne crawlers/actors then you can chain several of them together, all done by configuring the first one:
 
 ```json
 {
@@ -75,6 +98,6 @@ If you have several Crawlee One crawlers/actors then you can chain several of th
 
 ### Overriding metamorph behaviour
 
-By default, the "metamorph" options relate to the Apify's feature. However, when writing a scraper with Crawlee One, you can override this behaviour. So, if you have a custom scraper, it's possible to specify the options `metamorphActorId` and `metamorphActorInput` to trigger your own services.
+By default, the "metamorph" options relate to the Apify's feature. However, when writing a scraper with CrawleeOne, you can override this behaviour. So, if you have a custom scraper, it's possible to specify the options `metamorphActorId` and `metamorphActorInput` to trigger your own services.
 
 > Congrats! With metamorphs, you've learnt how to create simple data pipelines per-crawler, with no need to run an own orchestration layer on top. 🚀

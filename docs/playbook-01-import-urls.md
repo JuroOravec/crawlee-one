@@ -1,5 +1,24 @@
 # 1. Import URLs to scrape from your database (or elsewhere)
 
+> NOTE:
+>
+> In these examples, the input is mostly shown as a JSON, e.g.:
+> ```json
+> {
+>   "startUrls": ["https://www.example.com/path/1"],
+> }
+> ```
+> If you are using the `crawlee-one` package directly, then that is the same as:
+> ```ts
+> import { crawleeOne } from 'crawlee-one';
+> await crawleeOne({
+>   type: '...',
+>   input: {
+>     startUrls: ['https://www.example.com/path/1'],
+>   },
+> });
+> ```
+
 Let's start our examples at the beginning of the scraping lifecycle:
 
 There are website(s) from which you want to extract data, and you have URLs to those websites.
@@ -13,7 +32,7 @@ So you haven't even started, and you already need to run 2 programs:
 1. A loader script
 2. The scraper itself
 
-**To avoid this, Crawlee One has the loader script integrated.** Let's see how it works:
+**To avoid this, CrawleeOne has the loader script integrated.** Let's see how it works:
 
 You have 3 ways of defining the URLs to scrape:
 
@@ -38,7 +57,7 @@ Let's show the 3 ways on the following scenario:
 
 ...1 milion is a lot, but let's not get ahead of ourselves. At first, you may want to use just 2-3 URLs to verify validity of your approach.
 
-In that, you can use a Crawlee One Apify actor and pass it a static list of URLs:
+In that, you can use a CrawleeOne Apify actor and pass it a static list of URLs:
 
 ```json
 {
@@ -93,8 +112,8 @@ async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
 
 (NOTE: Of course, in reality you should download the dataset in smaller batches.)
 
-And just like that, you've loaded the 1M URLs from one Apify Dataset, and passed it to a scraper that uses Crawlee One.
+And just like that, you've loaded the 1M URLs from one Apify Dataset, and passed it to a scraper that uses CrawleeOne.
 
 Also, notice how the function returned the list of URLs. The function also received current context in `state` and `input`, and helper methods in `Actor`, `sendRequest`, `itemCacheKey`.
 
-> _Congrats! With Crawlee One, you were able to scrape reviews for all your 1M products using an Apify Actor. And you didn't even need to spin up a separate server just for loading the URLs to the scraper. 🚀_
+> _Congrats! With CrawleeOne, you were able to scrape reviews for all your 1M products using an Apify Actor. And you didn't even need to spin up a separate server just for loading the URLs to the scraper. 🚀_

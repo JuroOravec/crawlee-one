@@ -1,5 +1,27 @@
 # 11. Capture errors
 
+> NOTE:
+>
+> In these examples, the input is mostly shown as a JSON, e.g.:
+>
+> ```json
+> {
+>   "startUrls": ["https://www.example.com/path/1"]
+> }
+> ```
+>
+> If you are using the `crawlee-one` package directly, then that is the same as:
+>
+> ```ts
+> import { crawleeOne } from 'crawlee-one';
+> await crawleeOne({
+>   type: '...',
+>   input: {
+>     startUrls: ['https://www.example.com/path/1'],
+>   },
+> });
+> ```
+
 ### Scenario
 
 > Imagine you're scraping Amazon products in large quantities and daily. One day, something changed, and you start getting a lot of errors. Something in the integration broke.
@@ -13,7 +35,8 @@
 
 ### Error Dataset
 
-Crawlee One helps to manage this issue out of the box. Errors are tracked in a separate Dataset. When an error occurs, it's automatically recorded. This can help you in several ways:
+CrawleeOne helps to manage this issue out of the box. Errors are tracked in a separate Dataset. When an error occurs, it's automatically recorded. This can help you in several ways:
+
 - The errors are persisted, so they can be re-visited later.
 - The errors can be pooled from multiple scrapers into a single Dataset.
 
