@@ -46,7 +46,8 @@
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext .ts --fix",
     "test": "vitest run",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "gen:docs": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.base.json --out ./docs/typedoc"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.194",
@@ -58,6 +59,8 @@
     "playwright": "^1.32.3",
     "prettier": "^2.5.1",
     "ts-node": "^10.9.1",
+    "typedoc": "^0.25.1",
+    "typedoc-plugin-markdown": "^3.16.0",
     "typescript": "^5.0.4",
     "vitest": "^0.30.1"
   },
