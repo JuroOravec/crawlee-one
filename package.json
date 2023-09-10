@@ -78,11 +78,10 @@
   },
   "dependencies": {
     "commander": "^10.0.1",
+    "cosmiconfig": "^8.3.4",
     "dotenv": "^16.0.3",
-    "eta": "^2.0.1",
     "glob": "^10.2.2",
     "lodash": "^4.17.21",
-    "millify": "^6.1.0",
     "pkginfo": "^0.4.1"
   }
 }

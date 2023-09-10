@@ -3,6 +3,7 @@ import path from 'path';
 
 import { getPackageJsonInfo } from '../utils/package';
 import { createLocalMigrator } from '../lib/migrate/localMigrator';
+import { loadConfig, validateConfig } from './commands/config';
 
 const pkgJson = getPackageJsonInfo(module, ['name', 'version']);
 
@@ -10,6 +11,23 @@ program //
   .name(pkgJson.name)
   .description('CLI to run crawlee-one tools')
   .version(pkgJson.version);
+
+program
+  .command('validate')
+  .description('Validate CrawleeOne config')
+  .requiredOption('-c --config <config-file>', 'path to config file')
+  .addHelpText(
+    'after',
+    `
+
+Example call:
+  $ crawlee-one validate -c ./path/to/config`
+  )
+  .action(async ({ config: configPath }) => {
+    const config = await loadConfig(configPath);
+    validateConfig(config);
+    console.log('CrawleeOne config is OK!');
+  });
 
 program
   .command('migrate')

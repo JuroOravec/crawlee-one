@@ -32,3 +32,6 @@ export type {
   MaybePromise,
   MaybeAsyncFn,
 } from './utils/types';
+
+export * from './types/config';
+export * from './cli/commands/config';
