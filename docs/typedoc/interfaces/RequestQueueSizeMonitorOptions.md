@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[src/lib/io/requestQueue.ts:6](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/requestQueue.ts#L6)
+[src/lib/io/requestQueue.ts:6](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/requestQueue.ts#L6)
 
 ___
 
@@ -38,7 +38,7 @@ If omitted, the default RequestQueue is used.
 
 #### Defined in
 
-[src/lib/io/requestQueue.ts:12](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/requestQueue.ts#L12)
+[src/lib/io/requestQueue.ts:12](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/requestQueue.ts#L12)
 
 ___
 
@@ -54,4 +54,4 @@ ValueMonitorOptions.ttlInMs
 
 #### Defined in
 
-[src/utils/valueMonitor.ts:6](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/utils/valueMonitor.ts#L6)
+[src/utils/valueMonitor.ts:6](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/utils/valueMonitor.ts#L6)

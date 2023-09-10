@@ -21,7 +21,7 @@ Input passed to the error handler
 
 #### Defined in
 
-[src/lib/integrations/types.ts:306](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L306)
+[src/lib/integrations/types.ts:306](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L306)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/types.ts:311](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L311)
+[src/lib/integrations/types.ts:311](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L311)
 
 ___
 
@@ -43,7 +43,7 @@ Page instance if we used PlaywrightCrawler
 
 #### Defined in
 
-[src/lib/integrations/types.ts:308](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L308)
+[src/lib/integrations/types.ts:308](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L308)
 
 ___
 
@@ -55,4 +55,4 @@ URL where the error happened. If not given URL is taken from the Page object
 
 #### Defined in
 
-[src/lib/integrations/types.ts:310](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L310)
+[src/lib/integrations/types.ts:310](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L310)

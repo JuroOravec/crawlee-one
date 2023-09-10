@@ -34,7 +34,7 @@
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:10](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L10)
+[src/lib/actions/scrapeListing.ts:10](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L10)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:13](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L13)
+[src/lib/actions/scrapeListing.ts:13](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L13)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:11](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L11)
+[src/lib/actions/scrapeListing.ts:11](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L11)
 
 ___
 
@@ -109,4 +109,4 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:12](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L12)
+[src/lib/actions/scrapeListing.ts:12](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L12)

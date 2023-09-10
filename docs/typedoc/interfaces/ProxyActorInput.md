@@ -18,4 +18,4 @@ Common input fields related to proxy setup
 
 #### Defined in
 
-src/lib/input.ts:140
+[src/lib/input.ts:140](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L140)

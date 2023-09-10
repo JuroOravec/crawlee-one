@@ -47,7 +47,7 @@
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:55](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L55)
+[src/lib/actions/scrapeListing.ts:55](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L55)
 
 ___
 
@@ -74,7 +74,7 @@ Main logic to extract entries from a page
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:84](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L84)
+[src/lib/actions/scrapeListing.ts:84](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L84)
 
 ___
 
@@ -86,7 +86,7 @@ How many attempts are retried after failed to scrape entries from a listing. Def
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:86](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L86)
+[src/lib/actions/scrapeListing.ts:86](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L86)
 
 ___
 
@@ -100,7 +100,7 @@ Omit.filters
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:29](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L29)
+[src/lib/actions/scrapeListing.ts:29](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L29)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:57](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L57)
+[src/lib/actions/scrapeListing.ts:57](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L57)
 
 ___
 
@@ -122,7 +122,7 @@ How many attempts are retried after filters failed to load. Defaults to 3
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:71](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L71)
+[src/lib/actions/scrapeListing.ts:71](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L71)
 
 ___
 
@@ -136,7 +136,7 @@ Omit.log
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:60](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L60)
+[src/lib/actions/scrapeListing.ts:60](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L60)
 
 ___
 
@@ -148,7 +148,7 @@ How long to wait after we've navigated to the next page and before we start extr
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:111](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L111)
+[src/lib/actions/scrapeListing.ts:111](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L111)
 
 ___
 
@@ -176,7 +176,7 @@ One use of this hook is to conditionally disable/enable filters based on the pag
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:68](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L68)
+[src/lib/actions/scrapeListing.ts:68](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L68)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:97](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L97)
+[src/lib/actions/scrapeListing.ts:97](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L97)
 
 ___
 
@@ -231,7 +231,7 @@ One use of this hook is to reload the page on failed attemp in case something di
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:92](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L92)
+[src/lib/actions/scrapeListing.ts:92](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L92)
 
 ___
 
@@ -259,7 +259,7 @@ Omit.onFiltersLoaded
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:36](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L36)
+[src/lib/actions/scrapeListing.ts:36](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L36)
 
 ___
 
@@ -287,7 +287,7 @@ pages left, throw an error.
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:106](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L106)
+[src/lib/actions/scrapeListing.ts:106](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L106)
 
 ___
 
@@ -317,7 +317,7 @@ One use of this hook is to reload the page on failed attemp in case something di
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:77](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L77)
+[src/lib/actions/scrapeListing.ts:77](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L77)
 
 ___
 
@@ -342,7 +342,7 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:62](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L62)
+[src/lib/actions/scrapeListing.ts:62](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L62)
 
 ___
 
@@ -370,7 +370,7 @@ Omit.onResetFilters
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:35](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L35)
+[src/lib/actions/scrapeListing.ts:35](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L35)
 
 ___
 
@@ -396,7 +396,7 @@ Get ID of the current page in the pagination, so it can be logged
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:59](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L59)
+[src/lib/actions/scrapeListing.ts:59](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L59)
 
 ___
 
@@ -426,7 +426,7 @@ Omit.shouldApplyFilter
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:30](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L30)
+[src/lib/actions/scrapeListing.ts:30](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L30)
 
 ___
 
@@ -436,4 +436,4 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:56](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L56)
+[src/lib/actions/scrapeListing.ts:56](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L56)

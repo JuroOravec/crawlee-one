@@ -35,7 +35,7 @@ have to pass through many times, but only one that describes them all.
 
 #### Defined in
 
-[src/lib/actor/types.ts:67](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L67)
+[src/lib/actor/types.ts:67](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L67)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:69](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L69)
+[src/lib/actor/types.ts:69](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L69)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:70](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L70)
+[src/lib/actor/types.ts:70](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L70)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:68](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L68)
+[src/lib/actor/types.ts:68](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L68)
 
 ___
 
@@ -75,4 +75,4 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:71](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L71)
+[src/lib/actor/types.ts:71](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L71)

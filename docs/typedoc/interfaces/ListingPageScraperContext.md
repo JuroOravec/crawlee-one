@@ -38,7 +38,7 @@ Call this function from any callback to stop scraping
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:50](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L50)
+[src/lib/actions/scrapeListing.ts:50](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L50)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:43](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L43)
+[src/lib/actions/scrapeListing.ts:43](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L43)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:46](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L46)
+[src/lib/actions/scrapeListing.ts:46](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L46)
 
 ___
 
@@ -78,7 +78,7 @@ Use this if you need to load filters again (eg after reloading page manually)
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:48](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L48)
+[src/lib/actions/scrapeListing.ts:48](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L48)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:44](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L44)
+[src/lib/actions/scrapeListing.ts:44](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L44)
 
 ___
 
@@ -98,4 +98,4 @@ ___
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:45](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L45)
+[src/lib/actions/scrapeListing.ts:45](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L45)

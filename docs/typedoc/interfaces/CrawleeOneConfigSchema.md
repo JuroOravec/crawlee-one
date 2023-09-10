@@ -31,4 +31,4 @@ E.g.
 
 #### Defined in
 
-src/types/config.ts:25
+[src/types/config.ts:25](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/types/config.ts#L25)

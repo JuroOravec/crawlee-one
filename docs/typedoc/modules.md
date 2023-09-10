@@ -157,7 +157,7 @@
 
 #### Defined in
 
-src/lib/input.ts:17
+[src/lib/input.ts:17](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L17)
 
 ___
 
@@ -171,7 +171,7 @@ This is the default integration.
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:39](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/apify.ts#L39)
+[src/lib/integrations/apify.ts:39](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L39)
 
 ___
 
@@ -189,7 +189,7 @@ Unwrap Array to its item(s)
 
 #### Defined in
 
-[src/utils/types.ts:9](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/utils/types.ts#L9)
+[src/utils/types.ts:9](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/utils/types.ts#L9)
 
 ___
 
@@ -213,7 +213,7 @@ ___
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:24](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L24)
+[src/lib/error/errorHandler.ts:24](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L24)
 
 ___
 
@@ -223,7 +223,7 @@ ___
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:23](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L23)
+[src/lib/error/errorHandler.ts:23](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L23)
 
 ___
 
@@ -241,7 +241,7 @@ CrawleeOneActorDef object where the input is already resolved
 
 #### Defined in
 
-[src/lib/actor/types.ts:280](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L280)
+[src/lib/actor/types.ts:280](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L280)
 
 ___
 
@@ -268,7 +268,7 @@ Context passed from actor to route handlers
 
 #### Defined in
 
-[src/lib/actor/types.ts:75](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L75)
+[src/lib/actor/types.ts:75](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L75)
 
 ___
 
@@ -286,7 +286,7 @@ Context passed to user-defined functions passed from input
 
 #### Defined in
 
-[src/lib/actor/types.ts:104](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L104)
+[src/lib/actor/types.ts:104](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L104)
 
 ___
 
@@ -318,7 +318,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:129](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L129)
+[src/lib/actor/types.ts:129](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L129)
 
 ___
 
@@ -337,7 +337,7 @@ Context object provided in CrawlerRouter
 
 #### Defined in
 
-[src/lib/router/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/router/types.ts#L7)
+[src/lib/router/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/router/types.ts#L7)
 
 ___
 
@@ -356,7 +356,7 @@ Function that's passed to `router.addHandler(label, handler)`
 
 #### Defined in
 
-[src/lib/router/types.ts:13](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/router/types.ts#L13)
+[src/lib/router/types.ts:13](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/router/types.ts#L13)
 
 ___
 
@@ -384,7 +384,7 @@ The Matcher can be:
 
 #### Defined in
 
-[src/lib/router/types.ts:56](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/router/types.ts#L56)
+[src/lib/router/types.ts:56](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/router/types.ts#L56)
 
 ___
 
@@ -424,7 +424,7 @@ function of the same CrawleeOneRoute.
 
 #### Defined in
 
-[src/lib/router/types.ts:68](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/router/types.ts#L68)
+[src/lib/router/types.ts:68](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/router/types.ts#L68)
 
 ___
 
@@ -457,7 +457,7 @@ Wrapper that modifies behavior of CrawleeOneRouteHandler
 
 #### Defined in
 
-[src/lib/router/types.ts:19](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/router/types.ts#L19)
+[src/lib/router/types.ts:19](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/router/types.ts#L19)
 
 ___
 
@@ -469,7 +469,7 @@ Crawler config fields that can be overriden from the actor input
 
 #### Defined in
 
-src/lib/input.ts:29
+[src/lib/input.ts:29](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L29)
 
 ___
 
@@ -479,7 +479,7 @@ ___
 
 #### Defined in
 
-src/types/index.ts:35
+[src/types/index.ts:35](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/types/index.ts#L35)
 
 ___
 
@@ -491,7 +491,7 @@ URL string or object passed to Crawler.run
 
 #### Defined in
 
-src/types/index.ts:80
+[src/types/index.ts:80](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/types/index.ts#L80)
 
 ___
 
@@ -507,7 +507,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/types.ts:322](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L322)
+[src/lib/integrations/types.ts:322](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L322)
 
 ___
 
@@ -523,7 +523,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/types.ts:325](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L325)
+[src/lib/integrations/types.ts:325](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L325)
 
 ___
 
@@ -561,7 +561,7 @@ If you pass it a Promise, it will be resolved.
 
 #### Defined in
 
-[src/lib/io/pushData.ts:15](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L15)
+[src/lib/io/pushData.ts:15](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L15)
 
 ___
 
@@ -571,7 +571,7 @@ ___
 
 #### Defined in
 
-[src/lib/log.ts:8](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/log.ts#L8)
+[src/lib/log.ts:8](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/log.ts#L8)
 
 ___
 
@@ -589,7 +589,7 @@ Value or an array thereof
 
 #### Defined in
 
-[src/utils/types.ts:4](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/utils/types.ts#L4)
+[src/utils/types.ts:4](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/utils/types.ts#L4)
 
 ___
 
@@ -608,7 +608,7 @@ Value or (a)sync func that returns thereof
 
 #### Defined in
 
-[src/utils/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/utils/types.ts#L6)
+[src/utils/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/utils/types.ts#L6)
 
 ___
 
@@ -626,7 +626,7 @@ Value or a promise thereof
 
 #### Defined in
 
-[src/utils/types.ts:2](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/utils/types.ts#L2)
+[src/utils/types.ts:2](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/utils/types.ts#L2)
 
 ___
 
@@ -652,7 +652,7 @@ Trigger actor metamorph, using actor's inputs as defaults.
 
 #### Defined in
 
-[src/lib/actor/types.ts:38](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L38)
+[src/lib/actor/types.ts:38](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L38)
 
 ___
 
@@ -676,7 +676,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/mockApifyClient.ts:31](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/mockApifyClient.ts#L31)
+[src/lib/test/mockApifyClient.ts:31](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/mockApifyClient.ts#L31)
 
 ___
 
@@ -686,7 +686,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/mockApifyClient.ts:27](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/mockApifyClient.ts#L27)
+[src/lib/test/mockApifyClient.ts:27](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/mockApifyClient.ts#L27)
 
 ___
 
@@ -705,7 +705,7 @@ Pick properties that should be optional
 
 #### Defined in
 
-[src/utils/types.ts:18](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/utils/types.ts#L18)
+[src/utils/types.ts:18](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/utils/types.ts#L18)
 
 ___
 
@@ -724,7 +724,7 @@ Pick properties that should be required
 
 #### Defined in
 
-[src/utils/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/utils/types.ts#L21)
+[src/utils/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/utils/types.ts#L21)
 
 ___
 
@@ -756,7 +756,7 @@ If the function returns a Promise, it will be awaited.
 
 #### Defined in
 
-[src/lib/io/pushData.ts:32](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L32)
+[src/lib/io/pushData.ts:32](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L32)
 
 ___
 
@@ -783,7 +783,7 @@ If the function returns a Promise, it will be awaited.
 
 #### Defined in
 
-[src/lib/io/pushData.ts:55](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L55)
+[src/lib/io/pushData.ts:55](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L55)
 
 ___
 
@@ -816,7 +816,7 @@ Extended type of `crawler.run()` function
 
 #### Defined in
 
-[src/lib/actor/types.ts:32](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/types.ts#L32)
+[src/lib/actor/types.ts:32](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L32)
 
 ## Variables
 
@@ -826,7 +826,7 @@ Extended type of `crawler.run()` function
 
 #### Defined in
 
-[src/lib/log.ts:7](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/log.ts#L7)
+[src/lib/log.ts:7](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/log.ts#L7)
 
 ___
 
@@ -889,7 +889,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1129
+[src/lib/input.ts:1129](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1129)
 
 ___
 
@@ -952,7 +952,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1031
+[src/lib/input.ts:1031](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1031)
 
 ___
 
@@ -966,7 +966,7 @@ This is the default integration.
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:117](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/apify.ts#L117)
+[src/lib/integrations/apify.ts:117](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L117)
 
 ___
 
@@ -995,7 +995,7 @@ Common input fields related to crawler setup
 
 #### Defined in
 
-src/lib/input.ts:523
+[src/lib/input.ts:523](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L523)
 
 ___
 
@@ -1022,7 +1022,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1044
+[src/lib/input.ts:1044](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1044)
 
 ___
 
@@ -1041,7 +1041,7 @@ Common input fields related to actor input
 
 #### Defined in
 
-src/lib/input.ts:491
+[src/lib/input.ts:491](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L491)
 
 ___
 
@@ -1058,7 +1058,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1064
+[src/lib/input.ts:1064](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1064)
 
 ___
 
@@ -1070,7 +1070,7 @@ Map log levels of `crawlee-one` to log levels of `crawlee`
 
 #### Defined in
 
-[src/lib/log.ts:11](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/log.ts#L11)
+[src/lib/log.ts:11](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/log.ts#L11)
 
 ___
 
@@ -1090,7 +1090,7 @@ Common input fields related to logging setup
 
 #### Defined in
 
-src/lib/input.ts:688
+[src/lib/input.ts:688](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L688)
 
 ___
 
@@ -1108,7 +1108,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1075
+[src/lib/input.ts:1075](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1075)
 
 ___
 
@@ -1128,7 +1128,7 @@ Common input fields related to actor metamorphing
 
 #### Defined in
 
-src/lib/input.ts:1002
+[src/lib/input.ts:1002](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1002)
 
 ___
 
@@ -1146,7 +1146,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1123
+[src/lib/input.ts:1123](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1123)
 
 ___
 
@@ -1176,7 +1176,7 @@ Common input fields related to actor output
 
 #### Defined in
 
-src/lib/input.ts:851
+[src/lib/input.ts:851](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L851)
 
 ___
 
@@ -1204,7 +1204,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1102
+[src/lib/input.ts:1102](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1102)
 
 ___
 
@@ -1223,7 +1223,7 @@ Common input fields related to performance which are not part of the CrawlerConf
 
 #### Defined in
 
-src/lib/input.ts:631
+[src/lib/input.ts:631](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L631)
 
 ___
 
@@ -1240,7 +1240,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1059
+[src/lib/input.ts:1059](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1059)
 
 ___
 
@@ -1258,7 +1258,7 @@ Common input fields related to proxy setup
 
 #### Defined in
 
-src/lib/input.ts:749
+[src/lib/input.ts:749](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L749)
 
 ___
 
@@ -1274,7 +1274,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1085
+[src/lib/input.ts:1085](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1085)
 
 ___
 
@@ -1292,7 +1292,7 @@ Common input fields related to proxy setup
 
 #### Defined in
 
-src/lib/input.ts:737
+[src/lib/input.ts:737](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L737)
 
 ___
 
@@ -1308,7 +1308,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1081
+[src/lib/input.ts:1081](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1081)
 
 ___
 
@@ -1333,7 +1333,7 @@ Common input fields related to actor request
 
 #### Defined in
 
-src/lib/input.ts:763
+[src/lib/input.ts:763](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L763)
 
 ___
 
@@ -1356,7 +1356,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1089
+[src/lib/input.ts:1089](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1089)
 
 ___
 
@@ -1376,7 +1376,7 @@ Common input fields for defining URLs to scrape
 
 #### Defined in
 
-src/lib/input.ts:657
+[src/lib/input.ts:657](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L657)
 
 ___
 
@@ -1394,7 +1394,7 @@ ___
 
 #### Defined in
 
-src/lib/input.ts:1069
+[src/lib/input.ts:1069](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L1069)
 
 ## Functions
 
@@ -1420,7 +1420,7 @@ src/lib/input.ts:1069
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:133](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L133)
+[src/lib/error/errorHandler.ts:133](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L133)
 
 ___
 
@@ -1453,7 +1453,7 @@ See https://docs.apify.com/academy/node-js/analyzing-pages-and-fixing-errors#err
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:33](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L33)
+[src/lib/error/errorHandler.ts:33](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L33)
 
 ___
 
@@ -1497,7 +1497,7 @@ router.addDefaultHandler(
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:110](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L110)
+[src/lib/error/errorHandler.ts:110](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L110)
 
 ___
 
@@ -1528,7 +1528,7 @@ By default, error reports are saved to Apify Dataset.
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:77](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L77)
+[src/lib/error/errorHandler.ts:77](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L77)
 
 ___
 
@@ -1554,7 +1554,7 @@ ___
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:136](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L136)
+[src/lib/error/errorHandler.ts:136](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L136)
 
 ___
 
@@ -1581,7 +1581,7 @@ ___
 
 #### Defined in
 
-src/api.ts:124
+[src/api.ts:124](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L124)
 
 ___
 
@@ -1614,7 +1614,7 @@ By default, error reports are saved to Apify Dataset.
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:148](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L148)
+[src/lib/error/errorHandler.ts:148](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L148)
 
 ___
 
@@ -1646,7 +1646,7 @@ Given the actor input, create common crawler options.
 
 #### Defined in
 
-[src/lib/actor/actor.ts:584](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/actor.ts#L584)
+[src/lib/actor/actor.ts:584](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/actor.ts#L584)
 
 ___
 
@@ -1672,7 +1672,7 @@ ___
 
 #### Defined in
 
-[src/lib/migrate/localState.ts:5](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/migrate/localState.ts#L5)
+[src/lib/migrate/localState.ts:5](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/migrate/localState.ts#L5)
 
 ___
 
@@ -1700,7 +1700,7 @@ ___
 
 #### Defined in
 
-[src/lib/migrate/localMigrator.ts:8](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/migrate/localMigrator.ts#L8)
+[src/lib/migrate/localMigrator.ts:8](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/migrate/localMigrator.ts#L8)
 
 ___
 
@@ -1720,7 +1720,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/mockApifyClient.ts:33](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/mockApifyClient.ts#L33)
+[src/lib/test/mockApifyClient.ts:33](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/mockApifyClient.ts#L33)
 
 ___
 
@@ -1740,7 +1740,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/mockApifyClient.ts:50](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/mockApifyClient.ts#L50)
+[src/lib/test/mockApifyClient.ts:50](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/mockApifyClient.ts#L50)
 
 ___
 
@@ -1761,7 +1761,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/mockApifyClient.ts:195](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/mockApifyClient.ts#L195)
+[src/lib/test/mockApifyClient.ts:195](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/mockApifyClient.ts#L195)
 
 ___
 
@@ -1782,7 +1782,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/mockApifyClient.ts:71](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/mockApifyClient.ts#L71)
+[src/lib/test/mockApifyClient.ts:71](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/mockApifyClient.ts#L71)
 
 ___
 
@@ -1804,7 +1804,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/mockApifyClient.ts:98](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/mockApifyClient.ts#L98)
+[src/lib/test/mockApifyClient.ts:98](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/mockApifyClient.ts#L98)
 
 ___
 
@@ -1826,7 +1826,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/mockApifyClient.ts:227](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/mockApifyClient.ts#L227)
+[src/lib/test/mockApifyClient.ts:227](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/mockApifyClient.ts#L227)
 
 ___
 
@@ -1846,7 +1846,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/mockApifyClient.ts:252](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/mockApifyClient.ts#L252)
+[src/lib/test/mockApifyClient.ts:252](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/mockApifyClient.ts#L252)
 
 ___
 
@@ -1872,7 +1872,7 @@ ___
 
 #### Defined in
 
-[src/lib/telemetry/sentry.ts:24](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/telemetry/sentry.ts#L24)
+[src/lib/telemetry/sentry.ts:24](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/telemetry/sentry.ts#L24)
 
 ___
 
@@ -1911,7 +1911,7 @@ By default uses Apify Dataset.
 
 #### Defined in
 
-[src/lib/io/dataset.ts:94](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/dataset.ts#L94)
+[src/lib/io/dataset.ts:94](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/dataset.ts#L94)
 
 ___
 
@@ -1937,7 +1937,7 @@ If the config is omitted, it is automatically searched for using CosmicConfig.
 
 #### Defined in
 
-src/cli/commands/codegen.ts:251
+[src/cli/commands/codegen.ts:251](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/cli/commands/codegen.ts#L251)
 
 ___
 
@@ -1983,7 +1983,7 @@ console.log(results)
 
 #### Defined in
 
-[src/lib/io/dataset.ts:48](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/dataset.ts#L48)
+[src/lib/io/dataset.ts:48](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/dataset.ts#L48)
 
 ___
 
@@ -2010,7 +2010,7 @@ By default uses Apify Dataset.
 
 #### Defined in
 
-[src/lib/io/dataset.ts:12](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/dataset.ts#L12)
+[src/lib/io/dataset.ts:12](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/dataset.ts#L12)
 
 ___
 
@@ -2036,7 +2036,7 @@ ___
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:134](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L134)
+[src/lib/error/errorHandler.ts:134](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L134)
 
 ___
 
@@ -2063,7 +2063,7 @@ NOTE: Apify (around which this lib is designed) allows the key-value store key
 
 #### Defined in
 
-[src/lib/io/pushData.ts:245](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L245)
+[src/lib/io/pushData.ts:245](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L245)
 
 ___
 
@@ -2089,7 +2089,7 @@ ___
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:135](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L135)
+[src/lib/error/errorHandler.ts:135](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L135)
 
 ___
 
@@ -2115,7 +2115,7 @@ Learn more: https://github.com/cosmiconfig/cosmiconfig
 
 #### Defined in
 
-src/cli/commands/config.ts:51
+[src/cli/commands/config.ts:51](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/cli/commands/config.ts#L51)
 
 ___
 
@@ -2170,7 +2170,7 @@ const actor = await createCrawleeOne<CheerioCrawlingContext>({
 
 #### Defined in
 
-[src/lib/log.ts:49](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/log.ts#L49)
+[src/lib/log.ts:49](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/log.ts#L49)
 
 ___
 
@@ -2196,7 +2196,7 @@ ___
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:137](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L137)
+[src/lib/error/errorHandler.ts:137](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L137)
 
 ___
 
@@ -2222,7 +2222,7 @@ ___
 
 #### Defined in
 
-[src/lib/error/errorHandler.ts:138](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/error/errorHandler.ts#L138)
+[src/lib/error/errorHandler.ts:138](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/error/errorHandler.ts#L138)
 
 ___
 
@@ -2261,7 +2261,7 @@ Apify's `Actor.pushData` with extra features:
 
 #### Defined in
 
-[src/lib/io/pushData.ts:319](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L319)
+[src/lib/io/pushData.ts:319](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L319)
 
 ___
 
@@ -2294,7 +2294,7 @@ Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
 #### Defined in
 
-[src/lib/io/pushRequests.ts:78](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushRequests.ts#L78)
+[src/lib/io/pushRequests.ts:78](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushRequests.ts#L78)
 
 ___
 
@@ -2350,7 +2350,7 @@ The entries on the `routerContext` object will be made available to all handlers
 
 #### Defined in
 
-[src/lib/router/router.ts:89](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/router/router.ts#L89)
+[src/lib/router/router.ts:89](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/router/router.ts#L89)
 
 ___
 
@@ -2388,7 +2388,7 @@ By default uses Apify RequestQueue.
 
 #### Defined in
 
-[src/lib/io/requestQueue.ts:24](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/requestQueue.ts#L24)
+[src/lib/io/requestQueue.ts:24](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/requestQueue.ts#L24)
 
 ___
 
@@ -2445,7 +2445,7 @@ configured via Actor input.
 
 #### Defined in
 
-[src/lib/actor/actor.ts:155](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/actor.ts#L155)
+[src/lib/actor/actor.ts:155](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/actor.ts#L155)
 
 ___
 
@@ -2479,7 +2479,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/actor.ts:61](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/actor.ts#L61)
+[src/lib/test/actor.ts:61](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/actor.ts#L61)
 
 ___
 
@@ -2508,7 +2508,7 @@ Get entries from a listing page (eg URLs to profiles that should be scraped late
 
 #### Defined in
 
-[src/lib/actions/scrapeListing.ts:229](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actions/scrapeListing.ts#L229)
+[src/lib/actions/scrapeListing.ts:229](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actions/scrapeListing.ts#L229)
 
 ___
 
@@ -2592,7 +2592,7 @@ await router.addHandler(routeLabels.JOB_LISTING, async (ctx) => { ... }
 
 #### Defined in
 
-[src/lib/router/router.ts:306](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/router/router.ts#L306)
+[src/lib/router/router.ts:306](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/router/router.ts#L306)
 
 ___
 
@@ -2625,7 +2625,7 @@ ___
 
 #### Defined in
 
-[src/lib/test/actor.ts:12](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/test/actor.ts#L12)
+[src/lib/test/actor.ts:12](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/test/actor.ts#L12)
 
 ___
 
@@ -2650,4 +2650,4 @@ For the latter, the config will be loaded using [loadConfig](modules.md#loadconf
 
 #### Defined in
 
-src/cli/commands/config.ts:40
+[src/cli/commands/config.ts:40](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/cli/commands/config.ts#L40)

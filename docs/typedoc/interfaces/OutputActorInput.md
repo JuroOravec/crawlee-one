@@ -32,7 +32,7 @@ Define whether we want to add, remove, or overwrite cached entries with results 
 
 #### Defined in
 
-src/lib/input.ts:330
+[src/lib/input.ts:330](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L330)
 
 ___
 
@@ -44,7 +44,7 @@ Define fields that will be used for cache key
 
 #### Defined in
 
-src/lib/input.ts:328
+[src/lib/input.ts:328](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L328)
 
 ___
 
@@ -56,7 +56,7 @@ ID or name of the key-value store used as cache
 
 #### Defined in
 
-src/lib/input.ts:326
+[src/lib/input.ts:326](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L326)
 
 ___
 
@@ -68,7 +68,7 @@ ID or name of the dataset to which the data should be pushed
 
 #### Defined in
 
-src/lib/input.ts:323
+[src/lib/input.ts:323](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L323)
 
 ___
 
@@ -89,7 +89,7 @@ and a shared state in the second argument.
 
 #### Defined in
 
-src/lib/input.ts:302
+[src/lib/input.ts:302](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L302)
 
 ___
 
@@ -106,7 +106,7 @@ and a shared state in the first argument.
 
 #### Defined in
 
-src/lib/input.ts:320
+[src/lib/input.ts:320](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L320)
 
 ___
 
@@ -123,7 +123,7 @@ and a shared state in the first argument.
 
 #### Defined in
 
-src/lib/input.ts:311
+[src/lib/input.ts:311](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L311)
 
 ___
 
@@ -141,7 +141,7 @@ will be saved.
 
 #### Defined in
 
-src/lib/input.ts:235
+[src/lib/input.ts:235](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L235)
 
 ___
 
@@ -161,7 +161,7 @@ resolved using Lodash.get().
 
 #### Defined in
 
-src/lib/input.ts:247
+[src/lib/input.ts:247](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L247)
 
 ___
 
@@ -178,7 +178,7 @@ resolved using Lodash.get().
 
 #### Defined in
 
-src/lib/input.ts:256
+[src/lib/input.ts:256](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L256)
 
 ___
 
@@ -199,7 +199,7 @@ and a shared state in the second argument.
 
 #### Defined in
 
-src/lib/input.ts:270
+[src/lib/input.ts:270](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L270)
 
 ___
 
@@ -216,7 +216,7 @@ and a shared state in the first argument.
 
 #### Defined in
 
-src/lib/input.ts:288
+[src/lib/input.ts:288](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L288)
 
 ___
 
@@ -233,4 +233,4 @@ and a shared state in the first argument.
 
 #### Defined in
 
-src/lib/input.ts:279
+[src/lib/input.ts:279](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L279)

@@ -39,7 +39,7 @@ Crawlee crawler configuration that CANNOT be overriden via `input` and `crawlerC
 
 #### Defined in
 
-src/api.ts:25
+[src/api.ts:25](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L25)
 
 ___
 
@@ -51,7 +51,7 @@ Crawlee crawler configuration that CAN be overriden via `input` and `crawlerConf
 
 #### Defined in
 
-src/api.ts:27
+[src/api.ts:27](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L27)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-src/api.ts:115
+[src/api.ts:115](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L115)
 
 ___
 
@@ -82,7 +82,7 @@ Input configuration that CANNOT be overriden via `inputDefaults` and `io.getInpu
 
 #### Defined in
 
-src/api.ts:67
+[src/api.ts:67](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L67)
 
 ___
 
@@ -94,7 +94,7 @@ Input configuration that CAN be overriden via `input` and `io.getInput()`
 
 #### Defined in
 
-src/api.ts:69
+[src/api.ts:69](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L69)
 
 ___
 
@@ -120,7 +120,7 @@ See [CrawleeOneIO](CrawleeOneIO.md)
 
 #### Defined in
 
-src/api.ts:101
+[src/api.ts:101](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L101)
 
 ___
 
@@ -161,7 +161,7 @@ Alternatively, you can supply your own function that merges the sources:
 
 #### Defined in
 
-src/api.ts:61
+[src/api.ts:61](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L61)
 
 ___
 
@@ -173,7 +173,7 @@ Unique name of the crawler instance. The name may be used in codegen and logging
 
 #### Defined in
 
-src/api.ts:22
+[src/api.ts:22](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L22)
 
 ___
 
@@ -187,7 +187,7 @@ See ProxyConfiguration
 
 #### Defined in
 
-src/api.ts:77
+[src/api.ts:77](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L77)
 
 ___
 
@@ -207,7 +207,7 @@ See Router
 
 #### Defined in
 
-src/api.ts:113
+[src/api.ts:113](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L113)
 
 ___
 
@@ -217,7 +217,7 @@ ___
 
 #### Defined in
 
-src/api.ts:121
+[src/api.ts:121](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L121)
 
 ___
 
@@ -231,7 +231,7 @@ See [CrawleeOneTelemetry](CrawleeOneTelemetry.md)
 
 #### Defined in
 
-src/api.ts:83
+[src/api.ts:83](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L83)
 
 ___
 
@@ -243,4 +243,4 @@ Type specifying the Crawlee crawler class, input options, and more.
 
 #### Defined in
 
-src/api.ts:20
+[src/api.ts:20](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/api.ts#L20)

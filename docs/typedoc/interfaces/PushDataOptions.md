@@ -38,7 +38,7 @@ Define whether we want to add, remove, or overwrite cached entries with results 
 
 #### Defined in
 
-[src/lib/io/pushData.ts:138](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L138)
+[src/lib/io/pushData.ts:138](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L138)
 
 ___
 
@@ -50,7 +50,7 @@ Define fields that uniquely identify entries for caching
 
 #### Defined in
 
-[src/lib/io/pushData.ts:136](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L136)
+[src/lib/io/pushData.ts:136](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L136)
 
 ___
 
@@ -62,7 +62,7 @@ ID or name of the key-value store used as cache
 
 #### Defined in
 
-[src/lib/io/pushData.ts:134](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L134)
+[src/lib/io/pushData.ts:134](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L134)
 
 ___
 
@@ -74,7 +74,7 @@ ID or name of the dataset to which the data should be pushed
 
 #### Defined in
 
-[src/lib/io/pushData.ts:130](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L130)
+[src/lib/io/pushData.ts:130](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L130)
 
 ___
 
@@ -102,7 +102,7 @@ This serves mainly to allow users to filter the entries from actor input UI.
 
 #### Defined in
 
-[src/lib/io/pushData.ts:128](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L128)
+[src/lib/io/pushData.ts:128](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L128)
 
 ___
 
@@ -116,7 +116,7 @@ If truthy, the metadata is set under the `metadata` property.
 
 #### Defined in
 
-[src/lib/io/pushData.ts:81](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L81)
+[src/lib/io/pushData.ts:81](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L81)
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-[src/lib/io/pushData.ts:64](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L64)
+[src/lib/io/pushData.ts:64](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L64)
 
 ___
 
@@ -136,7 +136,7 @@ ___
 
 #### Defined in
 
-[src/lib/io/pushData.ts:65](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L65)
+[src/lib/io/pushData.ts:65](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L65)
 
 ___
 
@@ -154,7 +154,7 @@ will be saved.
 
 #### Defined in
 
-[src/lib/io/pushData.ts:75](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L75)
+[src/lib/io/pushData.ts:75](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L75)
 
 ___
 
@@ -174,7 +174,7 @@ resolved using Lodash.get().
 
 #### Defined in
 
-[src/lib/io/pushData.ts:107](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L107)
+[src/lib/io/pushData.ts:107](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L107)
 
 ___
 
@@ -188,7 +188,7 @@ See [PrivacyMask](../modules.md#privacymask).
 
 #### Defined in
 
-[src/lib/io/pushData.ts:95](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L95)
+[src/lib/io/pushData.ts:95](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L95)
 
 ___
 
@@ -205,7 +205,7 @@ resolved using Lodash.get().
 
 #### Defined in
 
-[src/lib/io/pushData.ts:116](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L116)
+[src/lib/io/pushData.ts:116](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L116)
 
 ___
 
@@ -217,7 +217,7 @@ ID of the RequestQueue that stores remaining requests
 
 #### Defined in
 
-[src/lib/io/pushData.ts:132](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L132)
+[src/lib/io/pushData.ts:132](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L132)
 
 ___
 
@@ -233,7 +233,7 @@ Which properties are personal data is determined by `privacyMask`.
 
 #### Defined in
 
-[src/lib/io/pushData.ts:89](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L89)
+[src/lib/io/pushData.ts:89](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L89)
 
 ___
 
@@ -261,4 +261,4 @@ This serves mainly to allow users to transform the entries from actor input UI.
 
 #### Defined in
 
-[src/lib/io/pushData.ts:122](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/io/pushData.ts#L122)
+[src/lib/io/pushData.ts:122](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/io/pushData.ts#L122)

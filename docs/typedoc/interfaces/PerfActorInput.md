@@ -25,7 +25,7 @@ Example: If set to 20, then up to 20 requests will be handled in a single "go".
 
 #### Defined in
 
-src/lib/input.ts:80
+[src/lib/input.ts:80](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L80)
 
 ___
 
@@ -41,4 +41,4 @@ Example: If set to 1, then after each entry in a batch, wait 1 second before con
 
 #### Defined in
 
-src/lib/input.ts:88
+[src/lib/input.ts:88](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L88)

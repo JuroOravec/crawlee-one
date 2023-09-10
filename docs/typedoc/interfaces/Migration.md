@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[src/lib/migrate/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/migrate/types.ts#L6)
+[src/lib/migrate/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/migrate/types.ts#L6)
 
 ___
 
@@ -55,4 +55,4 @@ ___
 
 #### Defined in
 
-[src/lib/migrate/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/migrate/types.ts#L7)
+[src/lib/migrate/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/migrate/types.ts#L7)

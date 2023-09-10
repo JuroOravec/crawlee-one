@@ -24,7 +24,7 @@ See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actor
 
 #### Defined in
 
-src/lib/input.ts:348
+[src/lib/input.ts:348](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L348)
 
 ___
 
@@ -40,7 +40,7 @@ See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actor
 
 #### Defined in
 
-src/lib/input.ts:342
+[src/lib/input.ts:342](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L342)
 
 ___
 
@@ -54,4 +54,4 @@ See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actor
 
 #### Defined in
 
-src/lib/input.ts:354
+[src/lib/input.ts:354](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L354)

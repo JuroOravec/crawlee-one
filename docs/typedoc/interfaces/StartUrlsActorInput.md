@@ -22,7 +22,7 @@ URLs to start with, defined manually as a list of strings or crawler requests
 
 #### Defined in
 
-src/lib/input.ts:94
+[src/lib/input.ts:94](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L94)
 
 ___
 
@@ -36,7 +36,7 @@ String is in the format `datasetID#field` (e.g. `datasetid123#url`).
 
 #### Defined in
 
-src/lib/input.ts:100
+[src/lib/input.ts:100](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L100)
 
 ___
 
@@ -61,4 +61,4 @@ async ({ io, input, state, itemCacheKey }) => {
 
 #### Defined in
 
-src/lib/input.ts:117
+[src/lib/input.ts:117](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L117)

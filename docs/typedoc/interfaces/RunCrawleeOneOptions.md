@@ -37,7 +37,7 @@ Config passed to the createCrawleeOne
 
 #### Defined in
 
-[src/lib/actor/actor.ts:104](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/actor.ts#L104)
+[src/lib/actor/actor.ts:104](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/actor.ts#L104)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/actor.ts:102](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/actor.ts#L102)
+[src/lib/actor/actor.ts:102](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/actor.ts#L102)
 
 ___
 
@@ -59,7 +59,7 @@ String idetifying the actor class, e.g. `'cheerio'`
 
 #### Defined in
 
-[src/lib/actor/actor.ts:101](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/actor.ts#L101)
+[src/lib/actor/actor.ts:101](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/actor.ts#L101)
 
 ___
 
@@ -72,7 +72,7 @@ that may be overriden by user input.
 
 #### Defined in
 
-[src/lib/actor/actor.ts:109](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/actor.ts#L109)
+[src/lib/actor/actor.ts:109](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/actor.ts#L109)
 
 ___
 
@@ -87,7 +87,7 @@ This is useful for testing env.
 
 #### Defined in
 
-[src/lib/actor/actor.ts:116](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/actor.ts#L116)
+[src/lib/actor/actor.ts:116](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/actor.ts#L116)
 
 ___
 
@@ -114,4 +114,4 @@ the `Actor.main()` context.
 
 #### Defined in
 
-[src/lib/actor/actor.ts:121](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/actor/actor.ts#L121)
+[src/lib/actor/actor.ts:121](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/actor.ts#L121)

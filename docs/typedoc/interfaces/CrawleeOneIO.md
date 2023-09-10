@@ -71,7 +71,7 @@ For more details and code examples, see ProxyConfiguration.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:128](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L128)
+[src/lib/integrations/types.ts:128](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L128)
 
 ___
 
@@ -103,7 +103,7 @@ Generate object with info on current context, which will be appended to the scra
 
 #### Defined in
 
-[src/lib/integrations/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L138)
+[src/lib/integrations/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L138)
 
 ___
 
@@ -130,7 +130,7 @@ Generate object with info on current context, which will be send to the error Da
 
 #### Defined in
 
-[src/lib/integrations/types.ts:133](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L133)
+[src/lib/integrations/types.ts:133](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L133)
 
 ___
 
@@ -157,7 +157,7 @@ the default KeyValueStore associated with the current actor run.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:57](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L57)
+[src/lib/integrations/types.ts:57](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L57)
 
 ___
 
@@ -175,7 +175,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/types.ts:131](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L131)
+[src/lib/integrations/types.ts:131](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L131)
 
 ___
 
@@ -205,7 +205,7 @@ the local filesystem or in the cloud.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:35](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L35)
+[src/lib/integrations/types.ts:35](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L35)
 
 ___
 
@@ -235,7 +235,7 @@ either on a local filesystem or in the cloud.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:52](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L52)
+[src/lib/integrations/types.ts:52](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L52)
 
 ___
 
@@ -266,7 +266,7 @@ breadth-first and depth-first crawling orders.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:44](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L44)
+[src/lib/integrations/types.ts:44](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L44)
 
 ___
 
@@ -319,7 +319,7 @@ The `Actor.main()` function performs the following actions:
 
 #### Defined in
 
-[src/lib/integrations/types.ts:116](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L116)
+[src/lib/integrations/types.ts:116](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L116)
 
 ___
 
@@ -367,4 +367,4 @@ default key-value store.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:74](https://github.com/JuroOravec/crawlee-one/blob/708935c/src/lib/integrations/types.ts#L74)
+[src/lib/integrations/types.ts:74](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L74)
