@@ -33,5 +33,7 @@ export type {
   MaybeAsyncFn,
 } from './utils/types';
 
+// Codegen
 export * from './types/config';
 export * from './cli/commands/config';
+export * from './cli/commands/codegen';

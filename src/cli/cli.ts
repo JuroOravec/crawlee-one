@@ -4,6 +4,7 @@ import path from 'path';
 import { getPackageJsonInfo } from '../utils/package';
 import { createLocalMigrator } from '../lib/migrate/localMigrator';
 import { loadConfig, validateConfig } from './commands/config';
+import { generateTypes } from './commands/codegen';
 
 const pkgJson = getPackageJsonInfo(module, ['name', 'version']);
 
@@ -11,6 +12,22 @@ program //
   .name(pkgJson.name)
   .description('CLI to run crawlee-one tools')
   .version(pkgJson.version);
+
+program
+  .command('generate')
+  .description('Generate CrawleeOne types based on config')
+  .option('-c --config [config-file]', 'path to config file')
+  .requiredOption('-o --out <output-file>', 'path to output file')
+  .addHelpText(
+    'after',
+    `
+
+Example call:
+  $ crawlee-one generate -c ./path/to/config-file -o ./path/to/output.ts`
+  )
+  .action(async ({ config: configFile, out: outFile }) => {
+    await generateTypes(outFile, configFile);
+  });
 
 program
   .command('validate')
