@@ -175,7 +175,7 @@ This already depends on your setup, but let's have a look at an example:
 With the above configuration we achieved the following:
 
 - New entries will be saved, old will be skipped
-- If entry was already found in cache, all Requests that follow are dropped and will not be processed
+- If entry was already found in cache, all Requests that follow are skipped and will not be processed
 
 > NOTE: This setup made a few assumptions, which may be different in your case:
 >
@@ -186,9 +186,9 @@ With the above configuration we achieved the following:
 >
 >   However, for websites like Facebook, Instagram, LinkedIn, and others, which sort posts by custom metrics and not necessarily by age, this strategy would not work!
 >
->   On pages where this does not hold, we should NOT call the `RequestQueue.drop()`, because we cannot ensure that there aren't any not-yet-seen entries in the remaining queue.
+>   On pages where this does not hold, we should NOT call the `RequestQueue.clear()`, because we cannot ensure that there aren't any not-yet-seen entries in the remaining queue.
 >
-> - The setup assumed NO concurrency. if you had multiple instances of the scraper processing Requests, one scraper may "jump" ahead, and come across "old" entries sooner than before all "not-yet-seen" entries are processed. So our setup may break, and you would need to configure a more heuristic way of detecting when to call `RequestQueue.drop()`. E.g. to call it after 10-20 entries have been marked as "already-seen".
+> - The setup assumed NO concurrency. if you had multiple instances of the scraper processing Requests, one scraper may "jump" ahead, and come across "old" entries sooner than before all "not-yet-seen" entries are processed. So our setup may break, and you would need to configure a more heuristic way of detecting when to call `RequestQueue.clear()`. E.g. to call it after 10-20 entries have been marked as "already-seen".
 >
 > - The setup assumed that the order in which requests are taken from the RequestQueue is the same order with which we've enqueued them.
 >

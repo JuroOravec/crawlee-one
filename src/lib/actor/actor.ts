@@ -452,7 +452,7 @@ const createScopedCrawlerRun = <T extends CrawleeOneCtx>(
     // Clear cache if it was set from the input
     if (outputCacheStoreId && outputCacheActionOnResult === 'overwrite') {
       const store = await actor.io.openKeyValueStore(outputCacheStoreId);
-      await store.drop();
+      await store.clear();
     }
 
     await genHookFn(actor, outputTransformBefore, 'outputTransformBefore')?.(); // prettier-ignore
