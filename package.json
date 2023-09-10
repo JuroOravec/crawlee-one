@@ -1,6 +1,6 @@
 {
   "name": "crawlee-one",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": false,
   "description": "CrawleeOne is a framework built on top of Crawlee and Apify for writing robust and highly configurable web scrapers",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
