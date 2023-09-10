@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/node';
 
 import type { CrawleeOneTelemetry } from './types';
-import { apifyIO } from '../integrations/apify';
+import type { CrawleeOneCtx } from '../actor/types';
 
 /**
  * Sentry configuration common to all crawlers.
@@ -21,21 +21,14 @@ const setupSentry = async (sentryOptions?: Sentry.NodeOptions) => {
   Sentry.init(sentryOptions);
 };
 
-export const createSentryTelemetry = <T extends CrawleeOneTelemetry>(
+export const createSentryTelemetry = <T extends CrawleeOneTelemetry<CrawleeOneCtx>>(
   sentryOptions?: Sentry.NodeOptions
 ) => {
   return {
-    setup: async (ctx) => {
-      const { actorConfig } = ctx;
-      const { io = apifyIO } = actorConfig;
-
-      const isEnabled = await io.isTelemetryEnabled();
-      if (!isEnabled) return;
-
+    setup: async (actor) => {
       await setupSentry(sentryOptions);
     },
-    onSendErrorToTelemetry: (error, ctx) => {
-      const { report } = ctx;
+    onSendErrorToTelemetry: (error, report, options, ctx) => {
       Sentry.captureException(error, { extra: report as any });
     },
   } as T;
