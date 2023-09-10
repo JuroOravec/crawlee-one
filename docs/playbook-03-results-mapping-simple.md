@@ -21,7 +21,7 @@
 
 To start off this section, let's consider this scenario:
 
-> _Imagine you are software developer who's making a payment gateway solution tailored to SaaS businesses. Your colleague Curt is in charge of sales and marketing. To get a sense of the market, Curt found a web scraper that downloads companies and user profiles from [ProductHunt](producthunt.com). ProductHunt is full of SaaS products, so this is a great start!_
+> _Imagine you are software developer who's making a payment gateway solution tailored to SaaS businesses. Your colleague Curt is in charge of sales and marketing. To get a sense of the market, Curt found a web scraper that downloads companies and user profiles from [ProductHunt](https://producthunt.com). ProductHunt is full of SaaS products, so this is a great start!_
 >
 > _Curt intends to import the data as JSON and into a CRM. But, uh-oh, the data from the web scraper is in a wrong format. The data is too large to be modified in a text editor or online tools, and Curt is not very tech-savvy, so he asks you to modify the data so it can be imported into the CRM._
 >

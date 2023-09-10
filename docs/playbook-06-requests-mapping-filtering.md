@@ -22,8 +22,8 @@
 > });
 > ```
 
-IMPORTANT: This section builds on top of the previous 2 sections ([4. Advanced transformations](#4-advanced-transformations--aggregations)
-& [5. Filtering results](#5-filtering-results)). Please read them first.
+IMPORTANT: This section builds on top of the previous 2 sections ([4. Advanced transformations](./playbook-04-results-mapping-advanced.md)
+& [5. Filtering results](./playbook-05-results-filtering.md)). Please read them first.
 
 In the previous section, we've learnt how to filter out entries from our dataset.
 

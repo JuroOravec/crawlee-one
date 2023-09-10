@@ -183,7 +183,7 @@ CrawleeOne also includes helpers and types for:
 - Privacy compliance
 - Metamorphing
 
-CrawleeOne supports many common and advanced web scraping use cases. See the [Use cases](#use-cases) for the overview of the use cases.
+CrawleeOne supports many common and advanced web scraping use cases. See the [Use cases](#playbook--use-cases) for the overview of the use cases.
 
 See the section [Usage (for end users)](#usage-for-end-users) for how CrawleeOne looks from user's perspective.
 
@@ -260,6 +260,7 @@ await crawleeOne({
   // - Downstream crawler with Apify's "metamorph".
   //
   // See the Actor input reference for all input fields.
+  // https://github.com/JuroOravec/crawlee-one/blob/main/docs/reference-input.md
   //
   // Specify input if you plan to use the crawler yourself,
   // otherwise use `inputDefaults` or set `mergeInput`.
@@ -287,9 +288,9 @@ await crawleeOne({
   // E.g. if `type: 'playwright'`, then this config is used as:
   // `new PlaywrightCrawler(crawlerConfig);`
   //
-  // Set `crawlerConfig` for config that cannot be configured via `input`,
+  // Use `crawlerConfig` for config that cannot be configured via `input`,
   // or when you need the crawler to use specific settings and you don't
-  // want users to override that.
+  // want users to override.
   crawlerConfig: {
     maxRequestsPerMinute: 120,
     requestHandlerTimeoutSecs: 180,
@@ -314,9 +315,7 @@ await crawleeOne({
       handler: async (ctx) => {
         const { $, request, pushData, pushRequests } = ctx;
         // Scrape data from the page
-        const data = [
-          /* ... */
-        ];
+        const data = [ ... ];
 
         // Save the scraped data. When you save data with `ctx.pushData`,
         // then you can filter, transform, limit, redact, and more.
@@ -338,8 +337,8 @@ await crawleeOne({
   },
 
   hooks: {
-    // By default, CrawleeOne calls `Crawler.run()` once ready.
-    // If you override it, you have to call it yourself.
+    // By default, once ready, CrawleeOne calls `actor.runCrawler` (which calls `Crawler.run()`)
+    // If you supply your own `onReady` callback, you have to call `actor.runCrawler` yourself.
     onReady: async (inst) => {
       // E.g. in this example, user can select to scrape all entries
       // or a certain kind by setting a custom `datasetType` input field.
@@ -357,7 +356,7 @@ await crawleeOne({
     onAfterHandler: (ctx) => { /* ... */ },
 
     // If you run the crawler on Apify, or otherwise provide the crawler to others,
-    // tehn it's a good practice to validate their input.
+    // then it's a good practice to validate their input.
     validateInput: (input) => {
       const schema = Joi.object({ ... });
       Joi.assert(input, schema);
@@ -367,7 +366,7 @@ await crawleeOne({
   // Configure the Crawlee proxy. See Crawlee's `ProxyConfiguration`
   // By default, no proxy is used.
   //
-  // NOTE: DO NOT set proxy if you are deploying the crawler in Apify,
+  // NOTE: DO NOT set proxy here if you are deploying the crawler to Apify
   // and you want the user to specify the proxy!
   proxy: Actor.createProxyConfiguration({ ... }),
 
@@ -393,8 +392,9 @@ await crawleeOne({
   //
   // You don't need to override this in most of the cases.
   //
-  // By default, the data is saved and kept locally in `./storage` directory.
-  // And if the cralwer runs in Apify's platform then it uses
+  // By default, Apify saves the data locally in `./storage` directory, for
+  // as long as the crawler is not running from within the Apify's platform.
+  // And if the crawler runs in Apify's platform then it uses
   // Apify's cloud storage.
   //
   // See the docs for `CrawleeOneIO`.
@@ -406,16 +406,14 @@ await crawleeOne({
 });
 ```
 
-> You can find the full type definition of `crawleeOne` and its arguments here:
->
-> - [crawleeOne](./docs/typedoc/modules.md#crawleeone)
-> - [CrawleeOneArgs](./docs/typedoc/interfaces/CrawleeOneArgs.md)
->
-> To learn more about `pushData` and `pushRequests`, see:
->
-> - [pushData](./docs/typedoc/modules.md#pushdata)
->   - NOTE: When you use `pushData` from within a handler, you omit the first argument (`ctx`).
-> - [pushRequests](./docs/typedoc/modules.md#pushrequests)
+You can find the full type definition of `crawleeOne` and its arguments here:
+- [crawleeOne](./docs/typedoc/modules.md#crawleeone)
+- [CrawleeOneArgs](./docs/typedoc/interfaces/CrawleeOneArgs.md)
+
+To learn more about `pushData` and `pushRequests`, see:
+- [pushData](./docs/typedoc/modules.md#pushdata)
+  - NOTE: When you use `pushData` from within a handler, you omit the first argument (`ctx`).
+- [pushRequests](./docs/typedoc/modules.md#pushrequests)
 
 ### Route handler context
 
@@ -442,13 +440,13 @@ await crawleeOne({
         ctx.response
         const $ = ctx.parseWithCheerio();
         // And more...
-        
+
         // Extra props
-        
+
         // 1. CrawleeOne instance (type: CrawleeOneActorInst):
         // - Save scraped items
         await ctx.actor.pushData(scrapedItems);
-        
+
         // - Enqueue more URLs to scrape
         const id = Math.floor(Math.random() * 100);
         const url = `https://example.com/resource/${id}`;
@@ -493,7 +491,6 @@ See either of the two projects as examples:
 - [SKCRIS Scraper](https://github.com/JuroOravec/apify-actor-skcris)
 - [Profesia.sk Scraper](https://github.com/JuroOravec/apify-actor-profesia-sk)
 
-
 #### 1. Write the crawler with CrawleeOne
 
 Either use the example projects above or use your own boilerplate project, but remember that Apify requires you to Dockerize the
@@ -518,9 +515,9 @@ For that, you will need to:
    ```
 
    [`apify-actor-config`](https://github.com/JuroOravec/apify-actor-config) is a sister package focused solely on working with and generating
-    Apify's `actor.json` config files.
+   Apify's `actor.json` config files.
 
-2. Write a JS/TS file where you will only define your config and export it as the *default* export.
+2. Write a JS/TS file where you will only define your config and export it as the _default_ export.
 
    [See here the example config file from Profesia.sk Scraper](https://github.com/JuroOravec/apify-actor-profesia-sk/blob/main/src/config.ts).
 
@@ -545,7 +542,7 @@ For that, you will need to:
      // ...
      input: inputSchema,
    });
-   
+
    export default config;
    ```
 
@@ -559,7 +556,7 @@ For that, you will need to:
 3. Build / transpile the config to vanilla JS if necessary.
 
    In Profesia.sk Scraper, the config is defined as a TypeScript file, but `apify-actor-config` currently supports only JS files.
-   
+
    So if you are also using anything other than plain JavaScript, then you will need to build / transpile your project. Do so only once you're happy with the input fields and their defaults.
 
 4. Generate `actor.json` file
@@ -792,6 +789,7 @@ interface CrawleeOneTelemetry {
 ```
 
 See existing integrations for inspiration:
+
 - [Sentry](./src/lib/telemetry/sentry.ts)
 
 Based on the above, here's an example of a custom telemetry implementation
@@ -871,10 +869,11 @@ interface CrawleeOneIO {
 ```
 
 See existing integrations for inspiration:
+
 - [Apify](./src/lib/integrations/apify.ts)
 
 Based on the above, here's an example of a custom CrawleeOneIO implementation
-that overrides the datasets to send them to a custom HTTP endpoint. 
+that overrides the datasets to send them to a custom HTTP endpoint.
 
 ```ts
 import type { CrawleeOneIO, apifyIO } from 'crawlee-one';

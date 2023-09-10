@@ -152,7 +152,7 @@ This already depends on your setup, but let's have a look at an example:
 
     // 3. Define helper that clears remaining Requests/URLs from the queue
     state.emptyRequestQueue = async () => {
-      await state.queue.drop();
+      await state.queue.clear();
     };
   },
 
