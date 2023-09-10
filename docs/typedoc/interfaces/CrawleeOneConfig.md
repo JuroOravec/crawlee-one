@@ -19,7 +19,7 @@ Schema defining the crawlers in this project. This schema is used for code gener
 
 #### Defined in
 
-[src/types/config.ts:7](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/types/config.ts#L7)
+[src/types/config.ts:7](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/types/config.ts#L7)
 
 ___
 
@@ -31,4 +31,4 @@ Version of the CrawleeOne config.
 
 #### Defined in
 
-[src/types/config.ts:5](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/types/config.ts#L5)
+[src/types/config.ts:5](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/types/config.ts#L5)

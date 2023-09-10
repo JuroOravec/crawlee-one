@@ -28,7 +28,7 @@ The URL must point to a JSON file containing a single object (the config).
 
 #### Defined in
 
-[src/lib/input.ts:68](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L68)
+[src/lib/input.ts:68](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L68)
 
 ___
 
@@ -47,4 +47,4 @@ The URL must point to a JSON file containing a single object (the config).
 
 #### Defined in
 
-[src/lib/input.ts:57](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L57)
+[src/lib/input.ts:57](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L57)

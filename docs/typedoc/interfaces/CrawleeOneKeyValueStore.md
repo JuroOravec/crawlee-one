@@ -40,7 +40,7 @@ Removes all entries from the store.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:223](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L223)
+[src/lib/integrations/types.ts:223](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L223)
 
 ___
 
@@ -61,7 +61,7 @@ depending on the mode of operation.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:221](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L221)
+[src/lib/integrations/types.ts:221](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L221)
 
 ___
 
@@ -100,7 +100,7 @@ function.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:209](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L209)
+[src/lib/integrations/types.ts:209](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L209)
 
 ## Methods
 
@@ -138,4 +138,4 @@ Returns a promise that resolves to the value, or the default value if the key is
 
 #### Defined in
 
-[src/lib/integrations/types.ts:195](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L195)
+[src/lib/integrations/types.ts:195](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L195)

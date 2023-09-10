@@ -24,7 +24,7 @@ Default: `'REPORTING'`.
 
 #### Defined in
 
-[src/lib/input.ts:135](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L135)
+[src/lib/input.ts:135](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L135)
 
 ___
 
@@ -39,7 +39,7 @@ and track down and fix issues.
 
 #### Defined in
 
-[src/lib/input.ts:129](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L129)
+[src/lib/input.ts:129](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L129)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[src/lib/input.ts:122](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L122)
+[src/lib/input.ts:122](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L122)

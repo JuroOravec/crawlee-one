@@ -49,7 +49,7 @@ being the same, it will not be updated.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:239](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L239)
+[src/lib/integrations/types.ts:239](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L239)
 
 ___
 
@@ -69,7 +69,7 @@ Removes all entries from the queue.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:299](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L299)
+[src/lib/integrations/types.ts:299](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L299)
 
 ___
 
@@ -89,7 +89,7 @@ Removes the queue from the storage.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:297](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L297)
+[src/lib/integrations/types.ts:297](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L297)
 
 ___
 
@@ -122,7 +122,7 @@ were finished, use [CrawleeOneRequestQueue.isFinished](CrawleeOneRequestQueue.md
 
 #### Defined in
 
-[src/lib/integrations/types.ts:274](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L274)
+[src/lib/integrations/types.ts:274](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L274)
 
 ___
 
@@ -142,7 +142,7 @@ Returns the number of handled requests.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:301](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L301)
+[src/lib/integrations/types.ts:301](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L301)
 
 ___
 
@@ -163,7 +163,7 @@ of distributed storage used by the queue, the function might occasionally return
 
 #### Defined in
 
-[src/lib/integrations/types.ts:295](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L295)
+[src/lib/integrations/types.ts:295](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L295)
 
 ___
 
@@ -191,7 +191,7 @@ processing. Handled requests will never again be returned by the fetchNextReques
 
 #### Defined in
 
-[src/lib/integrations/types.ts:257](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L257)
+[src/lib/integrations/types.ts:257](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L257)
 
 ___
 
@@ -220,4 +220,4 @@ for processing later again by another call to [CrawleeOneRequestQueue.fetchNextR
 
 #### Defined in
 
-[src/lib/integrations/types.ts:279](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L279)
+[src/lib/integrations/types.ts:279](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L279)

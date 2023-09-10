@@ -48,7 +48,7 @@ All that's necessary to define a single CrawleeOne actor/crawler.
 
 #### Defined in
 
-[src/lib/actor/types.ts:271](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L271)
+[src/lib/actor/types.ts:271](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L271)
 
 ___
 
@@ -65,7 +65,7 @@ If `input` is defined, then `io.getInput()` is ignored.
 
 #### Defined in
 
-[src/lib/actor/types.ts:149](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L149)
+[src/lib/actor/types.ts:149](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L149)
 
 ___
 
@@ -77,7 +77,7 @@ Default input that may be overriden by `input` and `io.getInput()`.
 
 #### Defined in
 
-[src/lib/actor/types.ts:151](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L151)
+[src/lib/actor/types.ts:151](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L151)
 
 ___
 
@@ -89,7 +89,7 @@ Client for communicating with cloud/local storage.
 
 #### Defined in
 
-[src/lib/actor/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L138)
+[src/lib/actor/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L138)
 
 ___
 
@@ -130,7 +130,7 @@ Alternatively, you can supply your own function that merges the sources:
 
 #### Defined in
 
-[src/lib/actor/types.ts:184](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L184)
+[src/lib/actor/types.ts:184](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L184)
 
 ___
 
@@ -140,7 +140,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:262](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L262)
+[src/lib/actor/types.ts:262](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L262)
 
 ___
 
@@ -166,7 +166,7 @@ Default `routeHandlerWrappers`:
 
 #### Defined in
 
-[src/lib/actor/types.ts:256](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L256)
+[src/lib/actor/types.ts:256](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L256)
 
 ___
 
@@ -189,7 +189,7 @@ import { createCheerioRouter } from 'crawlee';
 
 #### Defined in
 
-[src/lib/actor/types.ts:205](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L205)
+[src/lib/actor/types.ts:205](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L205)
 
 ___
 
@@ -230,7 +230,7 @@ the request is passed to the `action` function for processing.
 
 #### Defined in
 
-[src/lib/actor/types.ts:235](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L235)
+[src/lib/actor/types.ts:235](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L235)
 
 ___
 
@@ -242,7 +242,7 @@ Client for telemetry like tracking errors.
 
 #### Defined in
 
-[src/lib/actor/types.ts:268](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L268)
+[src/lib/actor/types.ts:268](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L268)
 
 ___
 
@@ -268,4 +268,4 @@ Validation for the actor input. Should throw error if validation fails.
 
 #### Defined in
 
-[src/lib/actor/types.ts:192](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L192)
+[src/lib/actor/types.ts:192](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L192)

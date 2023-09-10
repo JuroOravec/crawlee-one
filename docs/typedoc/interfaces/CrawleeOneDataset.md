@@ -39,7 +39,7 @@ Returns the count of items in the dataset.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:166](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L166)
+[src/lib/integrations/types.ts:166](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L166)
 
 ___
 
@@ -65,7 +65,7 @@ Returns the items in the dataset based on the provided parameters.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:162](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L162)
+[src/lib/integrations/types.ts:162](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L162)
 
 ___
 
@@ -93,4 +93,4 @@ or other errors.
 
 #### Defined in
 
-[src/lib/integrations/types.ts:153](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L153)
+[src/lib/integrations/types.ts:153](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L153)

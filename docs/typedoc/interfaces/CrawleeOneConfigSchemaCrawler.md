@@ -19,7 +19,7 @@ Part of the schema that defines a single crawler.
 
 #### Defined in
 
-[src/types/config.ts:37](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/types/config.ts#L37)
+[src/types/config.ts:37](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/types/config.ts#L37)
 
 ___
 
@@ -34,4 +34,4 @@ E.g. type `cheerio` will use `CheerioCrawler` class.
 
 #### Defined in
 
-[src/types/config.ts:36](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/types/config.ts#L36)
+[src/types/config.ts:36](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/types/config.ts#L36)

@@ -49,7 +49,7 @@ drop-in replacement with other integrations.
 
 #### Defined in
 
-[src/lib/telemetry/types.ts:22](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/telemetry/types.ts#L22)
+[src/lib/telemetry/types.ts:22](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/telemetry/types.ts#L22)
 
 ___
 
@@ -73,4 +73,4 @@ ___
 
 #### Defined in
 
-[src/lib/telemetry/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/telemetry/types.ts#L21)
+[src/lib/telemetry/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/telemetry/types.ts#L21)

@@ -36,7 +36,7 @@ and a shared state in the second argument.
 
 #### Defined in
 
-[src/lib/input.ts:200](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L200)
+[src/lib/input.ts:200](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L200)
 
 ___
 
@@ -53,7 +53,7 @@ and a shared state in the first argument.
 
 #### Defined in
 
-[src/lib/input.ts:218](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L218)
+[src/lib/input.ts:218](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L218)
 
 ___
 
@@ -70,7 +70,7 @@ and a shared state in the first argument.
 
 #### Defined in
 
-[src/lib/input.ts:209](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L209)
+[src/lib/input.ts:209](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L209)
 
 ___
 
@@ -88,7 +88,7 @@ will be handled.
 
 #### Defined in
 
-[src/lib/input.ts:154](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L154)
+[src/lib/input.ts:154](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L154)
 
 ___
 
@@ -100,7 +100,7 @@ ID of the RequestQueue to which the requests should be pushed
 
 #### Defined in
 
-[src/lib/input.ts:221](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L221)
+[src/lib/input.ts:221](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L221)
 
 ___
 
@@ -119,7 +119,7 @@ and a shared state in the second argument.
 
 #### Defined in
 
-[src/lib/input.ts:166](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L166)
+[src/lib/input.ts:166](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L166)
 
 ___
 
@@ -136,7 +136,7 @@ and a shared state in the first argument.
 
 #### Defined in
 
-[src/lib/input.ts:186](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L186)
+[src/lib/input.ts:186](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L186)
 
 ___
 
@@ -153,4 +153,4 @@ and a shared state in the first argument.
 
 #### Defined in
 
-[src/lib/input.ts:177](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/input.ts#L177)
+[src/lib/input.ts:177](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L177)

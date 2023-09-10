@@ -27,7 +27,7 @@ User-configurable options passed to the error handler
 
 #### Defined in
 
-[src/lib/integrations/types.ts:317](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L317)
+[src/lib/integrations/types.ts:317](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L317)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/types.ts:316](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L316)
+[src/lib/integrations/types.ts:316](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L316)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/types.ts:319](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L319)
+[src/lib/integrations/types.ts:319](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L319)
 
 ___
 
@@ -73,4 +73,4 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/types.ts#L318)
+[src/lib/integrations/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L318)

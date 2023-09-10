@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:7](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L7)
+[src/lib/integrations/apify.ts:7](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L7)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:8](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L8)
+[src/lib/integrations/apify.ts:8](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L8)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:9](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L9)
+[src/lib/integrations/apify.ts:9](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L9)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:11](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L11)
+[src/lib/integrations/apify.ts:11](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L11)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:10](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L10)
+[src/lib/integrations/apify.ts:10](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L10)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:13](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L13)
+[src/lib/integrations/apify.ts:13](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L13)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:14](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L14)
+[src/lib/integrations/apify.ts:14](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L14)
 
 ___
 
@@ -93,4 +93,4 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:12](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L12)
+[src/lib/integrations/apify.ts:12](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L12)

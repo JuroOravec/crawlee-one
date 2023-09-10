@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:18](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L18)
+[src/lib/integrations/apify.ts:18](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L18)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:19](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L19)
+[src/lib/integrations/apify.ts:19](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L19)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:20](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L20)
+[src/lib/integrations/apify.ts:20](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L20)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:21](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L21)
+[src/lib/integrations/apify.ts:21](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L21)
 
 ___
 
@@ -66,7 +66,7 @@ ISO datetime string that indicates the time when the request has been processed.
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:30](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L30)
+[src/lib/integrations/apify.ts:30](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L30)
 
 ___
 
@@ -78,7 +78,7 @@ The URL given to the crawler after possible redirects
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:27](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L27)
+[src/lib/integrations/apify.ts:27](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L27)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:31](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L31)
+[src/lib/integrations/apify.ts:31](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L31)
 
 ___
 
@@ -100,7 +100,7 @@ The URL given to the crawler
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:25](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L25)
+[src/lib/integrations/apify.ts:25](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L25)
 
 ___
 
@@ -110,4 +110,4 @@ ___
 
 #### Defined in
 
-[src/lib/integrations/apify.ts:22](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/integrations/apify.ts#L22)
+[src/lib/integrations/apify.ts:22](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L22)

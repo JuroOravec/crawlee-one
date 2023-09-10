@@ -47,7 +47,7 @@ a request will process that request.
 
 #### Defined in
 
-[src/lib/router/types.ts:41](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/router/types.ts#L41)
+[src/lib/router/types.ts:41](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/router/types.ts#L41)
 
 ___
 
@@ -57,4 +57,4 @@ ___
 
 #### Defined in
 
-[src/lib/router/types.ts:40](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/router/types.ts#L40)
+[src/lib/router/types.ts:40](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/router/types.ts#L40)

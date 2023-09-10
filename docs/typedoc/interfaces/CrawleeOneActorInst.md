@@ -41,7 +41,7 @@ Original config from which this actor context was created
 
 #### Defined in
 
-[src/lib/actor/types.ts:337](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L337)
+[src/lib/actor/types.ts:337](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L337)
 
 ___
 
@@ -53,7 +53,7 @@ The Crawlee crawler instance used by this instance of CrawleeOne
 
 #### Defined in
 
-[src/lib/actor/types.ts:291](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L291)
+[src/lib/actor/types.ts:291](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L291)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:353](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L353)
+[src/lib/actor/types.ts:353](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L353)
 
 ___
 
@@ -75,7 +75,7 @@ Read-only inputs passed to the actor
 
 #### Defined in
 
-[src/lib/actor/types.ts:339](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L339)
+[src/lib/actor/types.ts:339](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L339)
 
 ___
 
@@ -90,7 +90,7 @@ This is modelled and similar to Apify's `Actor` static class.
 
 #### Defined in
 
-[src/lib/actor/types.ts:348](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L348)
+[src/lib/actor/types.ts:348](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L348)
 
 ___
 
@@ -102,7 +102,7 @@ Crawlee Log instance.
 
 #### Defined in
 
-[src/lib/actor/types.ts:352](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L352)
+[src/lib/actor/types.ts:352](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L352)
 
 ___
 
@@ -114,7 +114,7 @@ Trigger actor metamorph, using actor's inputs as defaults.
 
 #### Defined in
 
-[src/lib/actor/types.ts:299](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L299)
+[src/lib/actor/types.ts:299](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L299)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:332](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L332)
+[src/lib/actor/types.ts:332](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L332)
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:308](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L308)
+[src/lib/actor/types.ts:308](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L308)
 
 ___
 
@@ -198,7 +198,7 @@ Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
 #### Defined in
 
-[src/lib/actor/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L318)
+[src/lib/actor/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L318)
 
 ___
 
@@ -208,7 +208,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:334](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L334)
+[src/lib/actor/types.ts:334](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L334)
 
 ___
 
@@ -218,7 +218,7 @@ ___
 
 #### Defined in
 
-[src/lib/actor/types.ts:335](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L335)
+[src/lib/actor/types.ts:335](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L335)
 
 ___
 
@@ -232,7 +232,7 @@ features:
 
 #### Defined in
 
-[src/lib/actor/types.ts:297](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L297)
+[src/lib/actor/types.ts:297](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L297)
 
 ___
 
@@ -249,7 +249,7 @@ This list is a combination of 3 Actor inputs:
 
 #### Defined in
 
-[src/lib/actor/types.ts:330](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L330)
+[src/lib/actor/types.ts:330](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L330)
 
 ___
 
@@ -261,7 +261,7 @@ Mutable state that is shared across setup and teardown hooks
 
 #### Defined in
 
-[src/lib/actor/types.ts:341](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L341)
+[src/lib/actor/types.ts:341](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L341)
 
 ___
 
@@ -273,4 +273,4 @@ Instance managing telemetry like tracking errors.
 
 #### Defined in
 
-[src/lib/actor/types.ts:350](https://github.com/JuroOravec/crawlee-one/blob/a1c29c5/src/lib/actor/types.ts#L350)
+[src/lib/actor/types.ts:350](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/types.ts#L350)
