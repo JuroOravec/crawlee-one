@@ -1,23 +1,18 @@
-import type {
-  CrawlingContext,
-  RouterHandler as CrawlerRouter,
-  Request as CrawlerRequest,
-  Log,
-} from 'crawlee';
+import type { RouterHandler as CrawlerRouter, Request as CrawlerRequest, Log } from 'crawlee';
 import type { CommonPage } from '@crawlee/browser-pool';
 import type { Page } from 'playwright';
 
 import { serialAsyncFind, wait } from '../../utils/async';
 import type { MaybePromise } from '../../utils/types';
-import type { PerfActorInput, RequestActorInput } from '../config';
-import type { CrawleeOneIO } from '../integrations/types';
+import type { PerfActorInput, RequestActorInput } from '../input';
 import type {
   CrawleeOneRouteWrapper,
   CrawleeOneRouteHandler,
-  CrawleeOneRoute,
   CrawleeOneRouteCtx,
   CrawleeOneRouteMatcherFn,
+  CrawleeOneRoute,
 } from './types';
+import type { CrawleeOneCtx } from '../actor/types';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
 
@@ -28,12 +23,9 @@ import type {
  * That is, the wrappers on the left side of the array (start)
  * wrap those on the right side of the array (end).
  */
-const applyWrappersRight = <
-  TFn extends (...args: any[]) => any,
-  TWrap extends (fn: TFn) => MaybePromise<TFn>
->(
+const applyWrappersRight = <TFn extends (...args: any[]) => any>(
   fn: TFn,
-  wrappers: TWrap[] = []
+  wrappers: ((fn: TFn) => MaybePromise<TFn>)[] = []
 ) => {
   return wrappers.reduceRight<Promise<TFn>>(async (interimFnPromise, wrapper) => {
     const interimFn = await interimFnPromise;
@@ -42,33 +34,32 @@ const applyWrappersRight = <
 };
 
 const resolveRoutes = <
-  Labels extends string = string,
-  RouterCtx extends Record<string, any> = Record<string, any>,
-  CrawlerCtx extends CrawlingContext = CrawlingContext
+  T extends CrawleeOneCtx,
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
 >(
-  routes: CrawleeOneRoute<Labels, RouterCtx, CrawlerCtx>[]
+  routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>
 ) =>
-  routes.map((route) => {
+  Object.entries<CrawleeOneRoute<T, RouterCtx>>(routes).reduce<
+    Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>
+  >((agg, [key, route]) => {
     const matchers = Array.isArray(route.match) ? route.match : [route.match];
     if (!matchers.length) {
-      throw Error(`Route ${route.name} (label: ${route.handlerLabel}) has NO "match" item. It can be a RegExp, function, or array of the two.`); // prettier-ignore
+      throw Error(`Route "${key}" has NO "match" item. It can be a RegExp, function, or array of the two.`); // prettier-ignore
     }
 
-    const resolvedMatchers = matchers.map<CrawleeOneRouteMatcherFn<Labels, RouterCtx, CrawlerCtx>>(
-      (matcher) => {
-        if (typeof matcher === 'function') return matcher;
-        if (typeof matcher === 'string' || matcher instanceof RegExp) {
-          const newMatcherFn: CrawleeOneRouteMatcherFn<Labels, RouterCtx, CrawlerCtx> = (url) =>
-            !!url.match(matcher);
-          return newMatcherFn;
-        }
-        // We shouldn't get here!
-        throw Error(`Route ${route.name} (label: ${route.handlerLabel}) has INVALID "match" item. It can be only RegExp, function, or array of the two. Got ${matcher}`); // prettier-ignore
+    const resolvedMatchers = matchers.map<CrawleeOneRouteMatcherFn<T, RouterCtx>>((matcher) => {
+      if (typeof matcher === 'function') return matcher;
+      if (typeof matcher === 'string' || matcher instanceof RegExp) {
+        const newMatcherFn: CrawleeOneRouteMatcherFn<T, RouterCtx> = (url) => !!url.match(matcher);
+        return newMatcherFn;
       }
-    );
+      // We shouldn't get here!
+      throw Error(`Route "${key}" has INVALID "match" item. It can be only RegExp, function, or array of the two. Got ${matcher}`); // prettier-ignore
+    });
 
-    return { ...route, match: resolvedMatchers };
-  });
+    agg[key as T['labels']] = { ...route, match: resolvedMatchers };
+    return agg;
+  }, {} as any);
 
 /**
  * Register many handlers at once onto the Crawlee's RouterHandler.
@@ -96,47 +87,51 @@ const resolveRoutes = <
  * The entries on the `routerContext` object will be made available to all handlers.
  */
 export const registerHandlers = async <
-  Labels extends string = string,
-  RouterCtx extends Record<string, any> = Record<string, any>,
-  CrawlerCtx extends CrawlingContext = CrawlingContext
+  T extends CrawleeOneCtx,
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
 >(
-  router: CrawlerRouter<CrawlerCtx>,
-  routeHandlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>,
+  router: CrawlerRouter<T['context']>,
+  routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>,
   options?: {
     routerContext?: RouterCtx;
-    handlerWrappers?: CrawleeOneRouteWrapper<CrawlerCtx, RouterCtx>[];
+    handlerWrappers?: CrawleeOneRouteWrapper<T, RouterCtx>[];
+    onSetCtx?: (ctx: Parameters<CrawleeOneRouteHandler<T, RouterCtx>>[0] | null) => void;
   }
 ) => {
-  const { routerContext, handlerWrappers } = options ?? {};
+  const { routerContext, handlerWrappers, onSetCtx } = options ?? {};
 
   // For each handler
-  for (const [key, handler] of Object.entries(routeHandlers)) {
+  for (const [key, route] of Object.entries<CrawleeOneRoute<T, RouterCtx>>(routes)) {
     // First apply all wrappers onto the handler
-    const wrappedHandler = await applyWrappersRight(
-      handler as (ctx: CrawleeOneRouteCtx<CrawlerCtx & RouterCtx>) => Promise<void>,
-      handlerWrappers ?? []
-    );
+    const wrappedHandler = await applyWrappersRight(route.handler, handlerWrappers ?? []);
 
     // Then register the composite handler
-    await router.addHandler<CrawlerCtx>(key, async (ctx) =>
-      wrappedHandler({ ...routerContext, ...ctx } as any)
-    );
+    await router.addHandler<T['context']>(key, async (ctx) => {
+      // For the duration of the handler execution, set the actor.handlerCtx to the value of `ctx`,
+      // and then set it back to null;
+      onSetCtx?.(ctx as any);
+      let result;
+      try {
+        result = await wrappedHandler({ ...routerContext, ...ctx } as any);
+      } finally {
+        onSetCtx?.(null);
+      }
+      return result;
+    });
   }
 };
 
 const createDefaultHandler = <
-  Labels extends string = string,
-  RouterCtx extends Record<string, any> = Record<string, any>,
-  CrawlerCtx extends CrawlingContext = CrawlingContext
+  T extends CrawleeOneCtx,
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
 >(
   input: {
-    io: CrawleeOneIO;
-    routes: CrawleeOneRoute<Labels, RouterCtx, CrawlerCtx>[];
-    routeHandlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>;
+    io: T['io'];
+    routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>;
   } & PerfActorInput &
     Pick<RequestActorInput, 'requestQueueId'>
 ) => {
-  const { io, routes, routeHandlers, requestQueueId, perfBatchSize, perfBatchWaitSecs } = input;
+  const { io, routes, requestQueueId, perfBatchSize, perfBatchWaitSecs } = input;
 
   const resolvedRoutes = resolveRoutes(routes);
 
@@ -183,19 +178,22 @@ const createDefaultHandler = <
   };
 
   /** Redirect the URL to the labelled route identical to route's name */
-  // prettier-ignore
-  const defaultAction: CrawleeOneRoute<Labels, RouterCtx, CrawlerCtx>['action'] = async (url, ctx, route) => {
-    const handler = route.handlerLabel != null && routeHandlers[route.handlerLabel];
-    if (!handler) {
-      ctx.log.error(`No handler found for route ${route.name} (${route.handlerLabel}). URL will not be processed. URL: ${url}`); // prettier-ignore
+  const defaultAction = async (
+    ctx: CrawleeOneRouteCtx<T, RouterCtx>,
+    url: string,
+    routeName: string,
+    route: CrawleeOneRoute<T, RouterCtx>
+  ) => {
+    if (!route.handler) {
+      ctx.log.error(`No handler found for route "${routeName}". URL will not be processed. URL: ${url}`); // prettier-ignore
       return;
     }
-    ctx.log.info(`Passing URL to handler ${route.handlerLabel}. URL: ${url}`);
-    await handler(ctx as any);
+    ctx.log.info(`Passing URL to handler for route "${routeName}". URL: ${url}`);
+    await route.handler(ctx);
   };
 
-  const defaultHandler = async <T extends CrawleeOneRouteCtx<CrawlerCtx & RouterCtx>>(
-    ctx: T
+  const defaultHandler = async <TCtx extends CrawleeOneRouteCtx<T, RouterCtx>>(
+    ctx: TCtx
   ): Promise<void> => {
     const { page, log: parentLog } = ctx;
     const log = parentLog.child({ prefix: '[Router] ' });
@@ -206,6 +204,7 @@ const createDefaultHandler = <
     const hasBatchReqs = () =>
       perfBatchSize != null && req != null && handledRequestsCount < perfBatchSize;
 
+    /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
     const getUrl = () => (page ? (page as any as CommonPage).url() : req!.loadedUrl || req!.url);
 
     const onRequest = async () => {
@@ -214,18 +213,24 @@ const createDefaultHandler = <
 
       // Find route handler for given URL
       log.debug(`Searching for a handler for given Request. ${logSuffix}`);
-      const route = await serialAsyncFind(resolvedRoutes, async (currRoute) => {
-        const isMatch = await serialAsyncFind(currRoute.match, async (matchFn) => {
-          return matchFn(url, ctx, currRoute, routeHandlers);
-        });
-        return isMatch;
-      });
+      const [routeName, route] =
+        (await serialAsyncFind(
+          Object.entries<CrawleeOneRoute<T, RouterCtx>>(resolvedRoutes),
+          async ([key, currRoute]) => {
+            const isMatch = await serialAsyncFind(
+              currRoute.match as CrawleeOneRouteMatcherFn<T, RouterCtx>[],
+              async (matchFn) => {
+                return matchFn(url, ctx, currRoute, routes);
+              }
+            );
+            return isMatch;
+          }
+        )) ?? [];
 
       // Run the handler
       if (route) {
-        log.info(`URL matched route ${route.name} (handlerLabel: ${route.handlerLabel}). ${logSuffix}`); // prettier-ignore
-        const action = route.action ?? defaultAction;
-        await action(url, ctx, route, routeHandlers);
+        log.info(`URL matched route "${routeName}". ${logSuffix}`);
+        await defaultAction(ctx, url, routeName ?? '', route);
       } else {
         log.error(`No route matched URL. URL will not be processed. ${logSuffix}`);
       }
@@ -299,26 +304,24 @@ const createDefaultHandler = <
  * await router.addHandler(routeLabels.JOB_LISTING, async (ctx) => { ... }
  */
 export const setupDefaultHandlers = async <
-  CrawlerCtx extends CrawlingContext,
-  RouterCtx extends Record<string, any> = Record<string, any>,
-  Labels extends string = string,
-  Input extends Record<string, any> = Record<string, any>
+  T extends CrawleeOneCtx,
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
 >({
   io,
   router,
   routeHandlerWrappers,
   routerContext,
   routes,
-  routeHandlers,
   input,
+  onSetCtx,
 }: {
-  io: CrawleeOneIO;
-  router: CrawlerRouter<CrawlerCtx>;
-  routeHandlerWrappers?: CrawleeOneRouteWrapper<CrawlerCtx, RouterCtx>[];
+  io: T['io'];
+  router: CrawlerRouter<T['context']>;
+  routeHandlerWrappers?: CrawleeOneRouteWrapper<T, RouterCtx>[];
   routerContext?: RouterCtx;
-  routes: CrawleeOneRoute<Labels, RouterCtx, CrawlerCtx>[];
-  routeHandlers: Record<Labels, CrawleeOneRouteHandler<CrawlerCtx, RouterCtx>>;
-  input?: Input | null;
+  routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>;
+  input?: T['input'] | null;
+  onSetCtx?: (ctx: Parameters<CrawleeOneRouteHandler<T, RouterCtx>>[0] | null) => void;
 }) => {
   const { perfBatchSize, perfBatchWaitSecs, requestQueueId } = (input || {}) as PerfActorInput &
     RequestActorInput;
@@ -326,14 +329,22 @@ export const setupDefaultHandlers = async <
   const defaultHandler = createDefaultHandler({
     io,
     routes,
-    routeHandlers,
     requestQueueId,
     perfBatchSize,
     perfBatchWaitSecs,
   });
 
   const wrappedHandler = await applyWrappersRight(defaultHandler, routeHandlerWrappers ?? []);
-  await router.addDefaultHandler<CrawlerCtx>((ctx) =>
-    wrappedHandler({ ...routerContext, ...ctx } as any)
-  );
+  await router.addDefaultHandler<T['context']>(async (ctx) => {
+    // For the duration of the handler execution, set the actor.handlerCtx to the value of `ctx`,
+    // and then set it back to null;
+    onSetCtx?.(ctx as any);
+    let result;
+    try {
+      result = await wrappedHandler({ ...routerContext, ...ctx } as any);
+    } finally {
+      onSetCtx?.(null);
+    }
+    return result;
+  });
 };

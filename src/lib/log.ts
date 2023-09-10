@@ -1,7 +1,8 @@
-import { type CrawlingContext, LogLevel as CrawleeLogLevel } from 'crawlee';
+import { LogLevel as CrawleeLogLevel } from 'crawlee';
 
 import type { ArrVal } from '../utils/types';
-import type { CrawleeOneRouteWrapper } from './router/types';
+import type { CrawleeOneRouteCtx, CrawleeOneRouteWrapper } from './router/types';
+import type { CrawleeOneCtx } from './actor/types';
 
 export const LOG_LEVEL = ['debug', 'info', 'warn', 'error', 'off'] as const; // prettier-ignore
 export type LogLevel = ArrVal<typeof LOG_LEVEL>;
@@ -46,8 +47,8 @@ export const logLevelToCrawlee: Record<LogLevel, CrawleeLogLevel> = {
  * ```
  */
 export const logLevelHandlerWrapper = <
-  T extends CrawlingContext,
-  RouterCtx extends Record<string, any> = Record<string, any>
+  T extends CrawleeOneCtx,
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
 >(
   logLevel: LogLevel
 ): CrawleeOneRouteWrapper<T, RouterCtx> => {

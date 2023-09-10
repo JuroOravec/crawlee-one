@@ -1,7 +1,6 @@
 import type {
   BasicCrawlingContext,
   CheerioCrawlingContext,
-  CrawlingContext,
   ErrorHandler,
   HttpCrawlingContext,
   JSDOMCrawlingContext,
@@ -18,8 +17,7 @@ import type {
   CrawleeOneIO,
   ExtractIOReport,
 } from '../integrations/types';
-import type { CrawleeOneTelemetry } from '../telemetry/types';
-import type { CrawleeOneActorDef } from '../actor/types';
+import type { CrawleeOneCtx } from '../actor/types';
 import { apifyIO } from '../integrations/apify';
 
 export type CaptureErrorInput = PickRequired<Partial<CrawleeOneErrorHandlerInput>, 'error'>;
@@ -109,15 +107,12 @@ export const captureErrorWrapper = async <TIO extends CrawleeOneIO = CrawleeOneI
  *  })
  * );
  */
-export const captureErrorRouteHandler = <
-  Ctx extends CrawlingContext,
-  TIO extends CrawleeOneIO = CrawleeOneIO
->(
-  handler: (ctx: CrawleeOneRouteCtx<Ctx> & { captureError: CaptureError }) => MaybePromise<void>,
-  options: CrawleeOneErrorHandlerOptions<TIO>
+export const captureErrorRouteHandler = <T extends CrawleeOneCtx>(
+  handler: (ctx: CrawleeOneRouteCtx<T> & { captureError: CaptureError }) => MaybePromise<void>,
+  options: CrawleeOneErrorHandlerOptions<T['io']>
 ) => {
   // Wrap the original handler, so we can additionally pass it the captureError function
-  const wrapperHandler = (ctx: Parameters<CrawleeOneRouteHandler<Ctx>>[0]) => {
+  const wrapperHandler: CrawleeOneRouteHandler<T, CrawleeOneRouteCtx<T>> = (ctx) => {
     return captureErrorWrapper(({ captureError }) => {
       return handler({
         ...(ctx as any),
@@ -125,7 +120,7 @@ export const captureErrorRouteHandler = <
         captureError: (input) =>
           captureError({
             error: input.error,
-            page: input.page ?? ctx.page,
+            page: input.page ?? (ctx.page as any),
             url: input.url || ctx.request.url,
             log: input.log ?? ctx.log,
           }),
@@ -135,12 +130,12 @@ export const captureErrorRouteHandler = <
   return wrapperHandler;
 };
 
-export const basicCaptureErrorRouteHandler = <Ctx extends BasicCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
-export const httpCaptureErrorRouteHandler = <Ctx extends HttpCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
-export const jsdomCaptureErrorRouteHandler = <Ctx extends JSDOMCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
-export const playwrightCaptureErrorRouteHandler = <Ctx extends PlaywrightCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
-export const cheerioCaptureErrorRouteHandler = <Ctx extends CheerioCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
-export const puppeteerCaptureErrorRouteHandler = <Ctx extends PuppeteerCrawlingContext>(...args: Parameters<typeof captureErrorRouteHandler<Ctx>>) => captureErrorRouteHandler<Ctx>(...args); // prettier-ignore
+export const basicCaptureErrorRouteHandler = <T extends CrawleeOneCtx<BasicCrawlingContext>,>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
+export const httpCaptureErrorRouteHandler = <T extends CrawleeOneCtx<HttpCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
+export const jsdomCaptureErrorRouteHandler = <T extends CrawleeOneCtx<JSDOMCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
+export const cheerioCaptureErrorRouteHandler = <T extends CrawleeOneCtx<CheerioCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
+export const playwrightCaptureErrorRouteHandler = <T extends CrawleeOneCtx<PlaywrightCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
+export const puppeteerCaptureErrorRouteHandler = <T extends CrawleeOneCtx<PuppeteerCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
 
 /**
  * Create an `ErrorHandler` function that can be assigned to
@@ -150,29 +145,29 @@ export const puppeteerCaptureErrorRouteHandler = <Ctx extends PuppeteerCrawlingC
  *
  * By default, error reports are saved to Apify Dataset.
  */
-export const createErrorHandler = <Ctx extends CrawlingContext>(
-  options: CrawleeOneErrorHandlerOptions & {
+export const createErrorHandler = <T extends CrawleeOneCtx>(
+  options: CrawleeOneErrorHandlerOptions<T['io']> & {
     sendToTelemetry?: boolean;
-    onSendErrorToTelemetry?: CrawleeOneTelemetry<
-      CrawleeOneActorDef,
-      CrawleeOneErrorHandlerOptions,
-      Ctx
-    >['onSendErrorToTelemetry'];
+    onSendErrorToTelemetry?: T['telemetry']['onSendErrorToTelemetry'];
   }
-): ErrorHandler<Ctx> => {
+): ErrorHandler<T['context']> => {
+  const optionsWithDefaults = {
+    io: options.io,
+    reportingDatasetId: options.reportingDatasetId,
+    allowScreenshot: options.allowScreenshot ?? true,
+  };
+
   return async (ctx, error) => {
     const { request, log, page } = ctx;
     const url = request.loadedUrl || request.url;
     captureError(
       { error, url, log, page: page as Page },
       {
-        io: options.io,
-        reportingDatasetId: options.reportingDatasetId,
-        allowScreenshot: options.allowScreenshot ?? true,
+        ...optionsWithDefaults,
         onErrorCapture: async ({ error, report }) => {
           if (!options.sendToTelemetry) return;
 
-          await options.onSendErrorToTelemetry?.(error, { report, options, ctx });
+          await options.onSendErrorToTelemetry?.(error, report, optionsWithDefaults, ctx);
         },
       }
     );

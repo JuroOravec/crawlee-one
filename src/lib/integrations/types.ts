@@ -11,12 +11,6 @@ import type { Page } from 'playwright';
 
 import type { MaybeArray, MaybePromise, PickRequired } from '../../utils/types';
 
-export type UnwrapCrawleeOneIO<T extends CrawleeOneIO<any, any, any>> = {
-  env: T extends CrawleeOneIO<infer U, any, any> ? U : never;
-  report: T extends CrawleeOneIO<any, infer U, any> ? U : never;
-  metadata: T extends CrawleeOneIO<any, any, infer U> ? U : never;
-};
-
 /**
  * Interface for storing and retrieving:
  * - Scraped data
@@ -56,10 +50,6 @@ export interface CrawleeOneIO<
    * either on a local filesystem or in the cloud.
    */
   openKeyValueStore: (id?: string | null) => MaybePromise<CrawleeOneKeyValueStore>;
-  /**
-   * Returns an object which contains information parsed from relevant environment variables.
-   */
-  getEnv: () => MaybePromise<TEnv>;
   /**
    * Returns a promise of an object with the crawler input. E.g. In Apify, retrieves the actor input value from
    * the default {@link KeyValueStore} associated with the current actor run.
@@ -113,7 +103,7 @@ export interface CrawleeOneIO<
    * - When running on the Apify platform (i.e. `APIFY_IS_AT_HOME` environment variable is set),
    *   it sets up a connection to listen for platform events.
    *   For example, to get a notification about an imminent migration to another server.
-   *   See {@apilink Actor.events} for details.
+   *   See {@link Actor.events} for details.
    * - It checks that either `APIFY_TOKEN` or `APIFY_LOCAL_STORAGE_DIR` environment variable
    *   is defined. If not, the functions sets `APIFY_LOCAL_STORAGE_DIR` to `./apify_storage`
    *   inside the current working directory. This is to simplify running code examples.

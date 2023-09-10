@@ -24,12 +24,11 @@ import type { StorageClient } from 'crawlee';
 
 import type { MaybePromise } from '../../utils/types';
 
-type BatchAddRequestsArgs = [
+export type OnBatchAddRequestsArgs = [
   requests: Omit<RequestQueueClientRequestSchema, 'id'>[],
   options?: RequestQueueClientBatchAddRequestWithRetriesOptions
 ];
-
-export type OnBatchAddRequests = (...args: BatchAddRequestsArgs) => MaybePromise<void>;
+export type OnBatchAddRequests = (...args: OnBatchAddRequestsArgs) => MaybePromise<void>;
 
 export const createMockClientDataset = (overrides?: ClientDataset): ClientDataset => ({
   id: 'MockClientDataset.id',
@@ -107,7 +106,7 @@ export const createMockRequestQueueClient = ({
 
   return {
     batchAddRequests: async (
-      ...args: BatchAddRequestsArgs
+      ...args: OnBatchAddRequestsArgs
     ): Promise<RequestQueueClientBatchRequestsOperationResult> => {
       const [requests, options] = args;
       log?.(`Called MockRequestQueueClient.batchAddRequests with ${JSON.stringify(args)}`);

@@ -1,5 +1,6 @@
 import { Log, RequestQueueOperationOptions } from 'crawlee';
 
+import type { MaybePromise } from '../../utils/types';
 import type { CrawlerUrl } from '../../types';
 import type { CrawleeOneIO } from '../integrations/types';
 import { apifyIO } from '../integrations/apify';
@@ -25,13 +26,13 @@ export interface PushRequestsOptions<
    *
    * This serves mainly to allow users to transform the requests from actor input UI.
    */
-  transform?: (req: T) => any;
+  transform?: (req: T) => MaybePromise<T>;
   /**
    * Option to filter a request before pushing it to the RequestQueue.
    *
    * This serves mainly to allow users to filter the requests from actor input UI.
    */
-  filter?: (req: T) => any;
+  filter?: (req: T) => MaybePromise<unknown>;
   /** ID of the RequestQueue to which the data should be pushed */
   requestQueueId?: string;
 

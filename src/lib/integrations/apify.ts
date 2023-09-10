@@ -43,12 +43,12 @@ const generateApifyErrorReport: ApifyCrawleeOneIO['generateErrorReport'] = async
   options
 ) => {
   const { error, page, url, log } = input;
-  const { io, allowScreenshot } = options;
+  const { allowScreenshot } = options;
 
   // storeId is ID of current key-value store, where we save snapshots
   // We can also capture actor and run IDs
   // to have easy access in the reporting dataset
-  const { actorId, actorRunId, defaultKeyValueStoreId: storeId } = await io.getEnv();
+  const { actorId, actorRunId, defaultKeyValueStoreId: storeId } = await Actor.getEnv();
 
   const actorRunUrl = `https://console.apify.com/actors/${actorId}/runs/${actorRunId}`;
 
@@ -166,7 +166,6 @@ export const apifyIO: ApifyCrawleeOneIO = {
       clear,
     };
   },
-  getEnv: (...args) => Actor.getEnv(...args),
   getInput: (...args) => Actor.getInput(...args),
   runInContext: async (...args) => {
     await Actor.main(...args);

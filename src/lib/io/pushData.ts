@@ -5,26 +5,40 @@ import { serialAsyncMap } from '../../utils/async';
 import type { CrawleeOneIO } from '../integrations/types';
 import { ApifyCrawleeOneIO, apifyIO } from '../integrations/apify';
 import { datasetSizeMonitor } from './dataset';
-
-/** Functions that generates a "redacted" version of a value */
-export type PrivateValueGen<V, K, O> = (val: V, key: K, obj: O) => any;
+import type { MaybePromise } from '../../utils/types';
 
 /**
- * Given a property value (and its position) this function
- * determines if the property is considered private (and
- * hence should be hidden for privacy reasons).
+ * Functions that generates a "redacted" version of a value.
  *
- * Property is private if the function returns truthy value.
+ * If you pass it a Promise, it will be resolved.
  */
-export type PrivacyFilter<V, K, O> = (
-  val: V,
-  key: K,
-  obj: O,
-  options?: {
-    setCustomPrivateValue: (val: V) => any;
-    privateValueGen: PrivateValueGen<V, K, O>;
-  }
-) => any;
+export type GenRedactedValue<V, K, O> = (val: V, key: K, obj: O) => MaybePromise<any>;
+
+/**
+ * Determine if the property is considered private (and hence may be hidden for privacy reasons).
+ *
+ * `PrivacyFilter` may be either boolean, or a function that returns truthy/falsy value.
+ *
+ * Property is private if `true` or if the function returns truthy value.
+ *
+ * The function receives the property value, its position, and parent object.
+ *
+ * By default, when a property is redacted, its value is replaced with a string
+ * that informs about the redaction. If you want different text or value to be used instead,
+ * supply it to `setCustomRedactedValue`.
+ *
+ * If the function returns a Promise, it will be awaited.
+ */
+export type PrivacyFilter<V, K, O> =
+  | boolean
+  | ((
+      val: V,
+      key: K,
+      obj: O,
+      options?: {
+        setCustomRedactedValue: (val: V) => any;
+      }
+    ) => any);
 
 /**
  * PrivacyMask determines which (potentally nested) properties
@@ -35,9 +49,11 @@ export type PrivacyFilter<V, K, O> = (
  * that determines if the property is considered private.
  *
  * Property is private if the function returns truthy value.
+ *
+ * If the function returns a Promise, it will be awaited.
  */
 export type PrivacyMask<T extends object> = {
-  [Key in keyof T]?: T[Key] extends Date | any[] // Consider Data and Array as non-objects
+  [Key in keyof T]?: T[Key] extends Date | any[] // Consider Date and Array as non-objects
     ? PrivacyFilter<T[Key], Key, T>
     : T[Key] extends object
     ? PrivacyMask<T[Key]>
@@ -103,13 +119,13 @@ export interface PushDataOptions<T extends object> {
    *
    * This serves mainly to allow users to transform the entries from actor input UI.
    */
-  transform?: (item: any) => any;
+  transform?: (item: any) => MaybePromise<any>;
   /**
    * Option to filter an entry before pushing it to the dataset.
    *
    * This serves mainly to allow users to filter the entries from actor input UI.
    */
-  filter?: (item: any) => any;
+  filter?: (item: any) => MaybePromise<unknown>;
   /** ID or name of the dataset to which the data should be pushed */
   datasetId?: string;
   /** ID of the RequestQueue that stores remaining requests */
@@ -136,34 +152,37 @@ const createMetadataMapper = async <
   return addMetadataToData;
 };
 
-const applyPrivacyMask = <T extends Record<any, any> = Record<any, any>>(
+const applyPrivacyMask = async <T extends Record<any, any> = Record<any, any>>(
   item: T,
   options: {
     showPrivate?: boolean;
     privacyMask: PrivacyMask<T>;
-    privateValueGen?: (val: any, key: string, item: T) => any;
+    genRedactedValue?: GenRedactedValue<any, string, T>;
   }
 ) => {
   const {
     showPrivate,
     privacyMask,
-    privateValueGen = (_, key) => `<Redacted property "${key}">`,
+    genRedactedValue = (_, key) => `<Redacted property "${key}">`,
   } = options;
 
-  const resolvePrivateValue = (key: string, val: any) => {
+  const resolvePrivateValue = async (key: string, val: any) => {
     // Allow to set custom "redacted" value by calling
-    // `setCustomPrivateValue` from inside the filter function.
+    // `setCustomRedactedValue` from inside the filter function.
     let customPrivateValue;
     let setCustomPrivateValueCalled = false;
-    const setCustomPrivateValue = (val: any) => {
-      customPrivateValue = val;
+    const setCustomRedactedValue = async (val: any) => {
+      customPrivateValue = await val;
       setCustomPrivateValueCalled = true;
     };
 
     const privacyFilter = privacyMask[key] as PrivacyFilter<any, any, any> | undefined;
-    const isPrivate = privacyFilter
-      ? privacyFilter(val, key, item, { setCustomPrivateValue, privateValueGen })
-      : false;
+    const isPrivate =
+      typeof privacyFilter === 'boolean'
+        ? privacyFilter
+        : !!privacyFilter
+        ? await privacyFilter(val, key, item, { setCustomRedactedValue })
+        : false;
 
     // prettier-ignore
     const privateValue = (
@@ -172,28 +191,32 @@ const applyPrivacyMask = <T extends Record<any, any> = Record<any, any>>(
       // Otherwise, if custom value was given, use that
       : setCustomPrivateValueCalled ? customPrivateValue
       // Otherwise, decide based on filter truthiness
-      : isPrivate ? privateValueGen(val, key, item) : val
+      : isPrivate ? await genRedactedValue(val, key, item) : val
     );
     return privateValue;
   };
 
-  const redactedObj = Object.entries(item).reduce((agg, [key, val]) => {
-    const isNestedObj =
-      typeof val === 'object' && val != null && !(val instanceof Date) && !Array.isArray(val);
+  const redactedObj = await Object.entries(item).reduce<Promise<T>>(
+    async (aggPromise, [key, val]) => {
+      const agg = await aggPromise;
+      const isNestedObj =
+        typeof val === 'object' && val != null && !(val instanceof Date) && !Array.isArray(val);
 
-    if (isNestedObj) {
-      // Recursively process nested objects
-      const subObj = applyPrivacyMask(val, {
-        showPrivate,
-        privacyMask: (privacyMask[key] ?? {}) as any,
-        privateValueGen,
-      });
-      agg[key as keyof T] = subObj as any;
-    } else {
-      agg[key as keyof T] = resolvePrivateValue(key, val);
-    }
-    return agg;
-  }, {} as T);
+      if (isNestedObj) {
+        // Recursively process nested objects
+        const subObj = await applyPrivacyMask(val, {
+          showPrivate,
+          privacyMask: (privacyMask[key] ?? {}) as any,
+          genRedactedValue,
+        });
+        agg[key as keyof T] = subObj as any;
+      } else {
+        agg[key as keyof T] = await resolvePrivateValue(key, val);
+      }
+      return agg;
+    },
+    Promise.resolve({} as T)
+  );
 
   return redactedObj;
 };
@@ -297,8 +320,8 @@ export const pushData = async <
   Ctx extends CrawlingContext,
   T extends Record<any, any> = Record<any, any>
 >(
-  oneOrManyItems: T | T[],
   ctx: Ctx,
+  oneOrManyItems: T | T[],
   options: PushDataOptions<T>
 ) => {
   const {
@@ -332,10 +355,10 @@ export const pushData = async <
     const agg = await aggPromise;
 
     const itemWithMetadata = includeMetadata ? addMetadataToData(item) : item;
-    const maskedItem = applyPrivacyMask(itemWithMetadata, {
+    const maskedItem = await applyPrivacyMask(itemWithMetadata, {
       showPrivate,
       privacyMask,
-      privateValueGen: (val, key) =>
+      genRedactedValue: (val, key) =>
         `<Redacted property "${key}". To include the actual value, toggle ON the input option "Include personal data">`,
     });
 

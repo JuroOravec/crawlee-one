@@ -1,26 +1,30 @@
 import type {
   BasicCrawler,
+  CheerioCrawler,
   CrawlingContext,
+  HttpCrawler,
+  InternalHttpCrawlingContext,
+  JSDOMCrawler,
   Log,
+  PlaywrightCrawler,
   ProxyConfiguration,
+  PuppeteerCrawler,
   RouterHandler,
 } from 'crawlee';
 import type { gotScraping } from 'got-scraping';
 
-import type { MaybePromise, PickPartial } from '../../utils/types';
+import type { MaybeAsyncFn, MaybePromise, PickPartial } from '../../utils/types';
 import type { CrawlerUrl } from '../../types';
-import type { itemCacheKey, pushData } from '../io/pushData';
-import type { pushRequests } from '../io/pushRequests';
+import type { PushDataOptions, itemCacheKey } from '../io/pushData';
+import type { PushRequestsOptions } from '../io/pushRequests';
 import type {
-  CrawleeOneRouteHandler,
   CrawleeOneRoute,
+  CrawleeOneRouteHandler,
   CrawleeOneRouteWrapper,
 } from '../router/types';
-import type { MetamorphActorInput } from '../config';
+import type { MetamorphActorInput } from '../input';
 import type { CrawleeOneIO } from '../integrations/types';
 import type { CrawleeOneTelemetry } from '../telemetry/types';
-
-type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybePromise<R>);
 
 type OrigRunCrawler<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
 
@@ -33,49 +37,159 @@ export type RunCrawler<Ctx extends CrawlingContext = CrawlingContext<BasicCrawle
 /** Trigger actor metamorph, using actor's inputs as defaults. */
 export type Metamorph = (overrides?: MetamorphActorInput) => Promise<void>;
 
-/** Context passed from actor to route handlers */
-export type CrawleeOneActorRouterCtx<
-  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>,
+/**
+ * Abstract type that holds all variable (generic) types used in CrawleeOne.
+ *
+ * This type is not constructed anywhere. It is simply a shorthand, so we don't
+ * have to pass through many times, but only one that describes them all.
+ */
+export interface CrawleeOneCtx<
+  Ctx extends CrawlingContext<
+    | BasicCrawler
+    | HttpCrawler<InternalHttpCrawlingContext>
+    | JSDOMCrawler
+    | CheerioCrawler
+    | PlaywrightCrawler
+    | PuppeteerCrawler
+  > = CrawlingContext<
+    | BasicCrawler
+    | HttpCrawler<InternalHttpCrawlingContext>
+    | JSDOMCrawler
+    | CheerioCrawler
+    | PlaywrightCrawler
+    | PuppeteerCrawler
+  >,
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>,
   TIO extends CrawleeOneIO = CrawleeOneIO,
   Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>
-> = {
-  actor: CrawleeOneActorCtx<Labels, Input, TIO, Telem, Ctx>;
+> {
+  context: Ctx;
+  labels: Labels;
+  input: Input;
+  io: TIO;
+  telemetry: Telem;
+}
+
+/** Context passed from actor to route handlers */
+export type CrawleeOneActorRouterCtx<T extends CrawleeOneCtx> = {
+  actor: CrawleeOneActorInst<T>;
+  /** Trigger actor metamorph, using actor's inputs as defaults. */
+  metamorph: Metamorph;
+  /**
+   * `Actor.pushData` with extra optional features:
+   *
+   * - Limit the number of entries pushed to the Dataset based on the Actor input
+   * - Transform and filter entries via Actor input.
+   * - Add metadata to entries before they are pushed to Dataset.
+   * - Set which (nested) properties are personal data optionally redact them for privacy compliance.
+   */
+  pushData: <T extends Record<any, any> = Record<any, any>>(
+    oneOrManyItems: T | T[],
+    options: PushDataOptions<T>
+  ) => Promise<any[]>;
+  /**
+   * Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
+   *
+   * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
+   * - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
+   */
+  pushRequests: <T extends Exclude<CrawlerUrl, string>>(
+    oneOrManyItems: T | T[],
+    options?: PushRequestsOptions<T>
+  ) => Promise<any[]>;
 };
 
 /** Context passed to user-defined functions passed from input */
-export type CrawleeOneHookCtx<
-  Input extends Record<string, any> = Record<string, any>,
-  TIO extends CrawleeOneIO = CrawleeOneIO
-> = Pick<CrawleeOneActorCtx<any, Input>, 'input' | 'state'> & {
-  io: TIO;
+export type CrawleeOneHookCtx<T extends CrawleeOneCtx> = Pick<
+  CrawleeOneActorInst<T>,
+  'input' | 'state'
+> & {
+  /**
+   * Instance of {@link CrawleeOneIO} that manages results (Dataset), Requests (RequestQueue), and cache (KeyValueStore).
+   *
+   * By default this is the Apify Actor class, see https://docs.apify.com/sdk/js/reference/class/Actor.
+   */
+  io: T['io'];
+  /**
+   * A function you can use to get cacheID for current `entry`.
+   * It takes the entry itself, and a list of properties to be used for hashing.
+   *
+   * By default, you should pass `input.cachePrimaryKeys` to it.
+   */
   itemCacheKey: typeof itemCacheKey;
+  /**
+   * Fetch remote data. Uses 'got-scraping', same as Apify's \`sendRequest\`.
+   *
+   * See https://crawlee.dev/docs/guides/got-scraping
+   */
   sendRequest: typeof gotScraping;
 };
 
+export type CrawleeOneHookFn<
+  TArgs extends any[] = [],
+  TReturn = void,
+  T extends CrawleeOneCtx = CrawleeOneCtx
+> = (...args: [...TArgs, CrawleeOneHookCtx<T>]) => MaybePromise<TReturn>;
+
 /** All that's necessary to define a single CrawleeOne actor/crawler. */
-export interface CrawleeOneActorDef<
-  Labels extends string = string,
-  Input extends Record<string, any> = Record<string, any>,
-  TIO extends CrawleeOneIO = CrawleeOneIO,
-  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>,
-  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>
-> {
+export interface CrawleeOneActorDef<T extends CrawleeOneCtx> {
   /** Client for communicating with cloud/local storage. */
-  io: TIO;
-  /** Client for telemetry like tracking errors. */
-  telemetry?: Telem;
+  io: T['io'];
 
   // Actor input
   /**
-   * Actor input which you can get e.g. via `Actor.getInput()`
+   * Supply actor input via this field instead of from `io.getInput()`.
    *
-   * Input is automatically retrieved if undefined.
+   * If `input` is NOT defined, the Actor input is obtained from `io.getInput()`,
+   * which by default corresponds to Apify's `Actor.getInput()`.
+   *
+   * If `input` is defined, then `io.getInput()` is ignored.
    */
-  input?: MaybeAsyncFn<Input, [CrawleeOneActorDef<Labels, Input, TIO, Telem, Ctx>]>;
+  input?: MaybeAsyncFn<T['input'], [CrawleeOneActorDef<T>]>;
+  /** Default input that may be overriden by `input` and `io.getInput()`. */
+  inputDefaults?: MaybeAsyncFn<T['input'], [CrawleeOneActorDef<T>]>;
+  /**
+   * If `mergeInput` is truthy, will merge input settings from `inputDefaults`, `input`,
+   * and `io.getInput()`.
+   *
+   * ```js
+   * { ...inputDefaults, ...io.getInput(), ...input }
+   * ```
+   *
+   * If `mergeInput` is falsy, `io.getInput()` is ignored if `input` is provided. So the input is either:
+   *
+   * ```js
+   * { ...inputDefaults, ...io.getInput() } // If `input` is not defined
+   * ```
+   *
+   * OR
+   *
+   * ```js
+   * { ...inputDefaults, ...input } // If `input` is defined
+   * ```
+   *
+   * Alternatively, you can supply your own function that merges the sources:
+   *
+   * ```js
+   * {
+   *   // `mergeInput` can be also async
+   *   mergeInput: ({ defaults, overrides, env }) => {
+   *     // This is same as `mergeInput: true`
+   *     return { ...defaults, ...env, ...overrides };
+   *   },
+   * }
+   * ```
+   */
+  mergeInput?:
+    | boolean
+    | ((sources: {
+        defaults: Partial<T['input']>;
+        overrides: Partial<T['input']>;
+        env: Partial<T['input']>;
+      }) => MaybePromise<T['input']>);
   /** Validation for the actor input. Should throw error if validation fails. */
-  validateInput?: (input: Input | null) => MaybePromise<void>;
+  validateInput?: (input: T['input'] | null) => MaybePromise<void>;
 
   // Router setup
   /**
@@ -88,10 +202,7 @@ export interface CrawleeOneActorDef<
    *   router: createCheerioRouter(),
    * })
    */
-  router: MaybeAsyncFn<
-    RouterHandler<Ctx>,
-    [CrawleeOneActorDefWithInput<Labels, Input, TIO, Telem, Ctx>]
-  >;
+  router: MaybeAsyncFn<RouterHandler<T['context']>, [CrawleeOneActorDefWithInput<T>]>;
   /**
    * Criteria that un-labelled requests are matched against.
    *
@@ -105,14 +216,14 @@ export interface CrawleeOneActorDef<
    *     // If match returns true, the request is forwarded to handler
    *     // with label JOB_DETAIL.
    *     name: 'Job detail',
-   *     handlerLabel: routeLabels.JOB_DETAIL,
+   *     label: routeLabels.JOB_DETAIL,
    *     match: (url) => isUrlOfJobOffer(url),
    *   }, {
    *     // Define custom action function:
    *     // If match returns true, we replace this request with new one
    *     // pointing to new domain.
    *     name: 'Main page',
-   *     handlerLabel: null,
+   *     label: null,
    *     match: (url) => url.match(/example\.com\/?(?:[?#~]|$)/i),
    *     action: async (url, ctx, _, handlers) => {
    *       ctx.log.info(`Redirecting to https://www.new-domain.com`);
@@ -122,14 +233,9 @@ export interface CrawleeOneActorDef<
    * })
    */
   routes: MaybeAsyncFn<
-    CrawleeOneRoute<Labels, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Ctx>[],
-    [CrawleeOneActorDefWithInput<Labels, Input, TIO, Telem, Ctx>]
+    Record<T['labels'], CrawleeOneRoute<T, CrawleeOneActorRouterCtx<T>>>,
+    [CrawleeOneActorDefWithInput<T>]
   >;
-  /** Handlers for the labelled requests. The object keys are the labels. */
-  routeHandlers: MaybeAsyncFn<
-    Record<Labels, CrawleeOneRouteHandler<Ctx, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>>>,
-    [CrawleeOneActorDefWithInput<Labels, Input, TIO, Telem, Ctx>]
-  >; // prettier-ignore
   /**
    * Provides the option to modify or extend all router handlers by wrapping
    * them in these functions.
@@ -148,52 +254,47 @@ export interface CrawleeOneActorDef<
    * ```
    */
   routeHandlerWrappers?: MaybeAsyncFn<
-    CrawleeOneRouteWrapper<Ctx, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>>[],
-    [CrawleeOneActorDefWithInput<Labels, Input, TIO, Telem, Ctx>]
+    CrawleeOneRouteWrapper<T, CrawleeOneActorRouterCtx<T>>[],
+    [CrawleeOneActorDefWithInput<T>]
   >; // prettier-ignore
 
   // Proxy setup
   proxy?: MaybeAsyncFn<
     ProxyConfiguration,
-    [CrawleeOneActorDefWithInput<Labels, Input, TIO, Telem, Ctx>]
+    [CrawleeOneActorDefWithInput<T>]
   >; // prettier-ignore
+
+  /** Client for telemetry like tracking errors. */
+  telemetry?: MaybeAsyncFn<T['telemetry'], [CrawleeOneActorDefWithInput<T>]>;
 
   // Crawler setup
   createCrawler: (
     actorCtx: Omit<
-      CrawleeOneActorCtx<Labels, Input, TIO, Telem, Ctx>,
+      CrawleeOneActorInst<T>,
       'crawler' | 'runCrawler' | 'metamorph' | 'pushData' | 'pushRequests' | 'startUrls'
     >
-  ) => MaybePromise<Ctx['crawler']>;
+  ) => MaybePromise<T['context']['crawler']>;
 }
 
 /** CrawleeOneActorDef object where the input is already resolved */
-export type CrawleeOneActorDefWithInput<
-  Labels extends string = string,
-  Input extends Record<string, any> = Record<string, any>,
-  TIO extends CrawleeOneIO = CrawleeOneIO,
-  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>,
-  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>
-> = Omit<CrawleeOneActorDef<Labels, Input, TIO, Telem, Ctx>, 'input'> & {
-  input: Input | null;
+export type CrawleeOneActorDefWithInput<T extends CrawleeOneCtx> = Omit<
+  CrawleeOneActorDef<T>,
+  'input'
+> & {
+  input: T['input'] | null;
   state: Record<string, unknown>;
 };
 
 /** Context available while creating a Crawlee crawler/actor */
-export interface CrawleeOneActorCtx<
-  Labels extends string = string,
-  Input extends Record<string, any> = Record<string, any>,
-  TIO extends CrawleeOneIO = CrawleeOneIO,
-  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>,
-  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>
-> {
-  crawler: Ctx['crawler'];
+export interface CrawleeOneActorInst<T extends CrawleeOneCtx> {
+  /** The Crawlee crawler instance used by this instance of CrawleeOne  */
+  crawler: T['context']['crawler'];
   /**
    * This function wraps `crawler.run(requests, runOtions)` with additional
    * features:
-   * - Automatically metamorph into another actor after the run finishes
+   * - Optionally metamorph into another actor after the run finishes
    */
-  runCrawler: RunCrawler<Ctx>;
+  runCrawler: RunCrawler<T['context']>;
   /** Trigger actor metamorph, using actor's inputs as defaults. */
   metamorph: Metamorph;
   /**
@@ -204,14 +305,20 @@ export interface CrawleeOneActorCtx<
    * - Add metadata to entries before they are pushed to Dataset.
    * - Set which (nested) properties are personal data optionally redact them for privacy compliance.
    */
-  pushData: typeof pushData;
+  pushData: <T extends Record<any, any> = Record<any, any>>(
+    oneOrManyItems: T | T[],
+    options: PushDataOptions<T>
+  ) => Promise<any[]>;
   /**
    * Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
    *
    * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
    * - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
    */
-  pushRequests: typeof pushRequests;
+  pushRequests: <T extends Exclude<CrawlerUrl, string>>(
+    oneOrManyItems: T | T[],
+    options?: PushRequestsOptions<T>
+  ) => Promise<any[]>;
   /**
    * A list of resolved Requests to be scraped.
    *
@@ -221,17 +328,15 @@ export interface CrawleeOneActorCtx<
    * - `startUrlsFromFunction` - A function that is evaulated to generate the Requests.
    */
   startUrls: CrawlerUrl[];
+  /* The resolved Crawlee proxy configuration */
   proxy?: ProxyConfiguration;
-  router: RouterHandler<Ctx>;
-  routes: CrawleeOneRoute<Labels, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>, Ctx>[];
-  routeHandlers: Record<
-    Labels,
-    CrawleeOneRouteHandler<Ctx, CrawleeOneActorRouterCtx<Ctx, Labels, Input, TIO, Telem>>
-  >;
+  /* The resolved Crawlee Router */
+  router: RouterHandler<T['context']>;
+  routes: Record<T['labels'], CrawleeOneRoute<T, CrawleeOneActorRouterCtx<T>>>;
   /** Original config from which this actor context was created */
-  config: PickPartial<CrawleeOneActorDef<Labels, Input, TIO, Telem, Ctx>, 'io'>;
+  config: PickPartial<CrawleeOneActorDef<T>, 'io'>;
   /** Read-only inputs passed to the actor */
-  input: Input | null;
+  input: T['input'] | null;
   /** Mutable state that is shared across setup and teardown hooks */
   state: Record<string, unknown>;
   /**
@@ -240,9 +345,10 @@ export interface CrawleeOneActorCtx<
    *
    * This is modelled and similar to Apify's `Actor` static class.
    */
-  io: TIO;
+  io: T['io'];
   /** Instance managing telemetry like tracking errors. */
-  telemetry?: Telem;
+  telemetry?: T['telemetry'];
   /** Crawlee Log instance. */
   log: Log;
+  handlerCtx: null | Parameters<CrawleeOneRouteHandler<T, CrawleeOneActorRouterCtx<T>>>[0];
 }

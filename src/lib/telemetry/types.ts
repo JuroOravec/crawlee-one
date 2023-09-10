@@ -1,12 +1,9 @@
-import type { BasicCrawler, CrawlingContext } from 'crawlee';
-
-import type { MaybePromise, PickPartial } from '../../utils/types';
+import type { MaybePromise } from '../../utils/types';
 import type {
   CrawleeOneErrorHandlerOptions,
   ExtractErrorHandlerOptionsReport,
 } from '../integrations/types';
-import type { CrawlerType } from '../../types';
-import type { CrawleeOneActorDef } from '../actor/types';
+import type { CrawleeOneActorInst, CrawleeOneCtx } from '../actor/types';
 
 /**
  * Interface for storing and retrieving:
@@ -18,23 +15,14 @@ import type { CrawleeOneActorDef } from '../actor/types';
  * drop-in replacement with other integrations.
  */
 export interface CrawleeOneTelemetry<
-  TActorDef extends CrawleeOneActorDef<any, any, any, any, any> = CrawleeOneActorDef,
-  THandlerOptions extends CrawleeOneErrorHandlerOptions<any> = CrawleeOneErrorHandlerOptions,
-  Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>
+  T extends CrawleeOneCtx,
+  THandlerOptions extends CrawleeOneErrorHandlerOptions<any> = CrawleeOneErrorHandlerOptions
 > {
-  setup: (context: {
-    /** String idetifying the actor class, e.g. `'cheerio'` */
-    actorType: CrawlerType;
-    actorName: string;
-    /** Config passed to the {@link createCrawleeOne} */
-    actorConfig: PickPartial<TActorDef, 'router' | 'createCrawler' | 'io'>;
-  }) => MaybePromise<void>;
+  setup: (actor: CrawleeOneActorInst<T>) => MaybePromise<void>;
   onSendErrorToTelemetry: (
     error: Error,
-    context: {
-      report: ExtractErrorHandlerOptionsReport<THandlerOptions>;
-      options: THandlerOptions;
-      ctx: Ctx;
-    }
+    report: ExtractErrorHandlerOptionsReport<THandlerOptions>,
+    options: Omit<THandlerOptions, 'onErrorCapture'>,
+    ctx: T['context']
   ) => MaybePromise<void>;
 }

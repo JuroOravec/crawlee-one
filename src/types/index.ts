@@ -21,8 +21,18 @@ import type {
   PuppeteerCrawlingContext,
 } from 'crawlee';
 
+import type { ArrVal } from '../utils/types';
+
 /** Available Crawlee crawler types. */
-export type CrawlerType = 'basic' | 'http' | 'jsdom' | 'cheerio' | 'playwright' | 'puppeteer';
+export const CRAWLER_TYPE = [
+  'basic',
+  'http',
+  'jsdom',
+  'cheerio',
+  'playwright',
+  'puppeteer',
+] as const;
+export type CrawlerType = ArrVal<typeof CRAWLER_TYPE>;
 
 /**
  * Type utility that retrieves types related to specific Crawlee crawlers.

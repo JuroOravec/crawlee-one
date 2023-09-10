@@ -12,6 +12,7 @@ import Joi from 'joi';
 
 import type { CrawlerUrl } from '../types';
 import { LOG_LEVEL, LogLevel } from './log';
+import type { CrawleeOneHookFn } from './actor/types';
 
 export type AllActorInputs = InputActorInput &
   CrawlerConfigActorInput &
@@ -64,7 +65,7 @@ export interface InputActorInput {
    *
    * The URL must point to a JSON file containing a single object (the config).
    */
-  inputExtendFromFunction?: string;
+  inputExtendFromFunction?: string | CrawleeOneHookFn<[], AllActorInputs>;
 }
 
 /** Common input fields related to performance which are not part of the CrawlerConfig */
@@ -113,7 +114,7 @@ export interface StartUrlsActorInput {
    * }
    * ```
    */
-  startUrlsFromFunction?: string;
+  startUrlsFromFunction?: string | CrawleeOneHookFn<[], CrawlerUrl[]>;
 }
 
 /** Common input fields related to logging setup */
@@ -125,7 +126,7 @@ export interface LoggingActorInput {
    * This info is used by the author of this actor to identify broken integrations,
    * and track down and fix issues.
    */
-  errorSendToTelemetry?: boolean;
+  errorTelemetry?: boolean;
   /**
    * Dataset ID to which errors should be captured.
    *
@@ -162,7 +163,9 @@ export interface RequestActorInput {
    *
    * `async (entry, { io, input, state, itemCacheKey }) => { ... }`
    */
-  requestTransform?: string;
+  requestTransform?:
+    | string
+    | CrawleeOneHookFn<[Exclude<CrawlerUrl, string>], Exclude<CrawlerUrl, string>>;
   /**
    * Use this if you need to run one-time initialization code before `requestTransform`.
    *
@@ -171,7 +174,7 @@ export interface RequestActorInput {
    *
    * `async ({ io, input, state, itemCacheKey }) => { ... }`
    */
-  requestTransformBefore?: string;
+  requestTransformBefore?: string | CrawleeOneHookFn;
   /**
    * Use this if you need to run one-time teardown code after `requestTransform`.
    *
@@ -180,7 +183,7 @@ export interface RequestActorInput {
    *
    * `async ({ io, input, state, itemCacheKey }) => { ... }`
    */
-  requestTransformAfter?: string;
+  requestTransformAfter?: string | CrawleeOneHookFn;
 
   /**
    * Option to filter a request using a custom function before pushing it to the RequestQueue.
@@ -194,7 +197,7 @@ export interface RequestActorInput {
    *
    * `async (entry, { io, input, state, itemCacheKey }) => boolean`
    */
-  requestFilter?: string;
+  requestFilter?: string | CrawleeOneHookFn<[Exclude<CrawlerUrl, string>], unknown>;
   /**
    * Use this if you need to run one-time initialization code before `requestFilter`.
    *
@@ -203,7 +206,7 @@ export interface RequestActorInput {
    *
    * `async ({ io, input, state, itemCacheKey }) => boolean`
    */
-  requestFilterBefore?: string;
+  requestFilterBefore?: string | CrawleeOneHookFn;
   /**
    * Use this if you need to run one-time initialization code after `requestFilter`.
    *
@@ -212,7 +215,7 @@ export interface RequestActorInput {
    *
    * `async ({ io, input, state, itemCacheKey }) => boolean`
    */
-  requestFilterAfter?: string;
+  requestFilterAfter?: string | CrawleeOneHookFn;
 
   /** ID of the RequestQueue to which the requests should be pushed */
   requestQueueId?: string;
@@ -264,7 +267,7 @@ export interface OutputActorInput {
    *
    * `async (entry, { io, input, state, itemCacheKey }) => { ... }`
    */
-  outputTransform?: string;
+  outputTransform?: string | CrawleeOneHookFn<[item: any], any>;
   /**
    * Use this if you need to run one-time initialization code before `outputTransform`.
    *
@@ -273,7 +276,7 @@ export interface OutputActorInput {
    *
    * `async ({ io, input, state, itemCacheKey }) => { ... }`
    */
-  outputTransformBefore?: string;
+  outputTransformBefore?: string | CrawleeOneHookFn;
   /**
    * Use this if you need to run one-time teardown code after `outputTransform`.
    *
@@ -282,7 +285,7 @@ export interface OutputActorInput {
    *
    * `async ({ io, input, state, itemCacheKey }) => { ... }`
    */
-  outputTransformAfter?: string;
+  outputTransformAfter?: string | CrawleeOneHookFn;
 
   /**
    * Option to filter out the data using a custom function before pushing it to the dataset.
@@ -296,7 +299,7 @@ export interface OutputActorInput {
    *
    * `async (entry, { io, input, state, itemCacheKey }) => boolean`
    */
-  outputFilter?: string;
+  outputFilter?: string | CrawleeOneHookFn<[item: any], any>;
   /**
    * Use this if you need to run one-time initialization code before `outputFilter`.
    *
@@ -305,7 +308,7 @@ export interface OutputActorInput {
    *
    * `async ({ io, input, state, itemCacheKey }) => boolean`
    */
-  outputFilterBefore?: string;
+  outputFilterBefore?: string | CrawleeOneHookFn;
   /**
    * Use this if you need to run one-time initialization code after `outputFilter`.
    *
@@ -314,7 +317,7 @@ export interface OutputActorInput {
    *
    * `async ({ io, input, state, itemCacheKey }) => boolean`
    */
-  outputFilterAfter?: string;
+  outputFilterAfter?: string | CrawleeOneHookFn;
 
   /** ID or name of the dataset to which the data should be pushed */
   outputDatasetId?: string;
@@ -414,7 +417,7 @@ const createHookFnExample = (
 /**
  * Inputs:
 ${formattedArgDesc}
- * \`ctx.io\` - Apify Actor class, see https://docs.apify.com/sdk/js/reference/class/Actor.
+ * \`ctx.io\` - Instance of CrawleeOneIO that manages results (Dataset), Requests (RequestQueue), and cache (KeyValueStore). By default this is the Apify Actor class, see https://docs.apify.com/sdk/js/reference/class/Actor.
  * \`ctx.input\` - The input object that was passed to this Actor.
  * \`ctx.state\` - An object you can use to persist state across all your custom functions.
  * \`ctx.sendRequest\` - Fetch remote data. Uses 'got-scraping', same as Apify's \`sendRequest\`.
@@ -717,8 +720,8 @@ export const loggingInput = {
     pattern: datasetIdPattern,
     nullable: true,
   }),
-  errorSendToTelemetry: createBooleanField({
-    title: 'Send errors to Sentry',
+  errorTelemetry: createBooleanField({
+    title: 'Send errors to telemetry service like Sentry',
     type: 'boolean',
     editor: 'checkbox',
     description: `Whether to report actor errors to telemetry such as <a href="https://sentry.io/">Sentry</a>.${newLine(1)}
@@ -1072,7 +1075,7 @@ export const startUrlsInputValidationFields = {
 export const loggingInputValidationFields = {
   logLevel: Joi.string().valid(...LOG_LEVEL).optional(), // prettier-ignore
   errorReportingDatasetId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
-  errorSendToTelemetry: Joi.boolean().optional(),
+  errorTelemetry: Joi.boolean().optional(),
 } satisfies Record<keyof LoggingActorInput, Joi.Schema>;
 
 export const proxyInputValidationFields = {
