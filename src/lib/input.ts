@@ -1069,8 +1069,8 @@ export const inputInputValidationFields = {
 export const startUrlsInputValidationFields = {
   startUrls: Joi.array().items(Joi.string().min(1), Joi.object()).optional(),
   startUrlsFromDataset: Joi.string().min(1).pattern(new RegExp(datasetIdWithFieldPattern)).optional(), // prettier-ignore
-  startUrlsFromFunction: Joi.string().min(1).optional(),
-} satisfies Record<keyof StartUrlsActorInput, Joi.Schema>;
+  startUrlsFromFunction: [Joi.string().min(1).optional(), Joi.func().optional()],
+} satisfies Record<keyof StartUrlsActorInput, Joi.Schema | Joi.Schema[]>;
 
 export const loggingInputValidationFields = {
   logLevel: Joi.string().valid(...LOG_LEVEL).optional(), // prettier-ignore
@@ -1137,4 +1137,4 @@ export const allActorInputValidationFields = {
   ...perfInputValidationFields,
   ...loggingInputValidationFields,
   ...metamorphInputValidationFields,
-} satisfies Record<keyof AllActorInputs, Joi.Schema>;
+} satisfies Record<keyof AllActorInputs, Joi.Schema | Joi.Schema[]>;
