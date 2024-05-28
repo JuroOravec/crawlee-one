@@ -670,11 +670,11 @@ version: 1
 schema:
   crawlers:
     main:
-      type: 'playwright',
-      routes: ['listingPage', 'detailPage'],
+      type: 'playwright'
+      routes: ['listingPage', 'detailPage']
     other:
-      type: 'cheerio',
-      routes: ['someNoJSPage'],
+      type: 'cheerio'
+      routes: ['someNoJSPage']
 ```
 
 CrawleeOne uses
