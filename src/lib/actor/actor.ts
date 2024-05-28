@@ -3,6 +3,7 @@ import {
   BasicCrawlerOptions,
   Router,
   Log,
+  LogLevel,
   Request as CrawleeRequest,
 } from 'crawlee';
 import { omitBy, pick, defaults } from 'lodash';
@@ -257,7 +258,7 @@ const createCrawleeOne = async <T extends CrawleeOneCtx>(
   if (config.validateInput) await config.validateInput(input);
 
   const { logLevel } = (input ?? {}) as LoggingActorInput;
-  const log = new Log({ level: logLevel ? logLevelToCrawlee[logLevel] : undefined });
+  const log = new Log({ level: logLevel ? logLevelToCrawlee[logLevel] : LogLevel.INFO });
 
   // This is context that is available to options that use initialization function
   const getConfig = () =>
