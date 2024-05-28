@@ -60,7 +60,7 @@ export const getColumnFromDataset = async <T>(
     ...dataOptions,
     fields: [field],
   });
-  const data = items.map((d) => d[field] as T);
+  const data = items.map((d) => (d as any)[field] as T);
   return data;
 };
 

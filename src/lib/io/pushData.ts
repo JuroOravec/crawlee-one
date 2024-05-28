@@ -233,7 +233,7 @@ const renameKeys = <T extends object>(item: T, keyNameMap: Record<string, string
 };
 
 const sortObjectKeys = <T extends object>(obj: T) =>
-  fromPairs(sortBy(Object.keys(obj)).map((key) => [key, obj[key]]));
+  fromPairs(sortBy(Object.keys(obj)).map((key) => [key, (obj as any)[key]]));
 
 /**
  * Serialize dataset item to fixed-length hash.
@@ -262,7 +262,7 @@ export const itemCacheKey = (item: any, primaryKeys?: string[]) => {
  *
  * See https://stackoverflow.com/a/52171480/9788634.
  */
-const cyrb53 = (str, seed = 0) => {
+const cyrb53 = (str: string, seed = 0) => {
   let h1 = 0xdeadbeef ^ seed,
     h2 = 0x41c6ce57 ^ seed;
   for (let i = 0, ch; i < str.length; i++) {

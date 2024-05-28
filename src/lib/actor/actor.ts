@@ -392,10 +392,10 @@ const createActorInput = async <T extends CrawleeOneCtx>(
   const inputMergeFn = config.mergeInput
     ? typeof config.mergeInput === 'function'
       ? config.mergeInput
-      : ({ defaults, overrides, env }) => ({ ...defaults, ...env, ...overrides })
+      : ({ defaults, overrides, env }: any) => ({ ...defaults, ...env, ...overrides })
     : config.input
-    ? ({ defaults, overrides }) => ({ ...defaults, ...overrides })
-    : ({ defaults, env }) => ({ ...defaults, ...env });
+    ? ({ defaults, overrides }: any) => ({ ...defaults, ...overrides })
+    : ({ defaults, env }: any) => ({ ...defaults, ...env });
 
   const mergedInput = inputMergeFn({ defaults: rawInputDefaults, env: inputFromIO ?? {}, overrides: rawInput ?? {} }); // prettier-ignore
 

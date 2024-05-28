@@ -130,7 +130,7 @@ export const crawleeOne = <
   args: CrawleeOneArgs<TType, T>
 ) => {
   const hookHandlerWrapper = (handler: CrawleeOneRouteHandler<T, CrawleeOneActorRouterCtx<T>>) => {
-    const innerHandler = async (ctx) => {
+    const innerHandler = async (ctx: any) => {
       await args.hooks?.onBeforeHandler?.(ctx as any);
       await handler(ctx);
       await args.hooks?.onAfterHandler?.(ctx as any);

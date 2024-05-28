@@ -128,7 +128,7 @@ export const createMockRequestQueueClient = ({
       });
     },
 
-    get: (...args) => {
+    get: (...args: any[]) => {
       log?.(`Called MockRequestQueueClient.get with ${JSON.stringify(args)}`);
       return Promise.resolve(createMockClientRequestQueue());
     },
@@ -195,7 +195,7 @@ export const createMockRequestQueueClient = ({
 export const createMockDatasetCollectionClient = ({
   log,
 }: { log?: (args: any) => void } = {}): DatasetCollectionClient => {
-  const dataset = [];
+  const dataset: any[] = [];
 
   return {
     list: (
@@ -232,15 +232,15 @@ export const createMockStorageClient = ({
   onBatchAddRequests?: OnBatchAddRequests;
 } = {}): StorageClient => {
   return {
-    datasets: (...args): DatasetCollectionClient => {
+    datasets: (...args: any[]): DatasetCollectionClient => {
       log?.(`Called MockStorageClient.datasets with ${JSON.stringify(args)}`);
       return createMockDatasetCollectionClient({ log });
     },
-    requestQueue: (...args) => {
+    requestQueue: (...args: any[]) => {
       log?.(`Called MockStorageClient.requestQueue with ${JSON.stringify(args)}`);
       return createMockRequestQueueClient({ log, onBatchAddRequests });
     },
-    keyValueStore: (...args) => {
+    keyValueStore: (...args: any[]) => {
       log?.(`Called MockStorageClient.keyValueStore with ${JSON.stringify(args)}`);
       return createMockKeyValueStoreClient({ log });
     },

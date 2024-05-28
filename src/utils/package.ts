@@ -19,6 +19,6 @@ export const getPackageJsonInfo = <TFields extends string = string>(
     id: filenameOrModule?.id,
     exports: {}, // This is where the fields will be written
   };
-  pkginfo(obj, { include: fields });
+  pkginfo(obj as any, { include: fields });
   return obj.exports as Record<TFields, any>;
 };
