@@ -150,7 +150,7 @@ const createDefaultHandler = <
 
     log?.debug(`Checking for new Request in the queue. ${suffix}`);
 
-    if (perfBatchWaitSecs) await wait(perfBatchWaitSecs);
+    if (perfBatchWaitSecs && perfBatchWaitSecs > 0) await wait(perfBatchWaitSecs);
     const reqQueue = await openQueue();
     const newReq = (await reqQueue.fetchNextRequest()) ?? null;
 
@@ -198,6 +198,12 @@ const createDefaultHandler = <
     const { page, log: parentLog } = ctx;
     const log = parentLog.child({ prefix: '[Router] ' });
 
+    if (!page && perfBatchSize != null && perfBatchSize !== 1) {
+      throw Error(
+        'Request batching is supported only for browser-based crawlers like PlaywrightCrawler or PuppeteerCrawler'
+      );
+    }
+
     let handledRequestsCount = 0;
     let req: CrawlerRequest | null = ctx.request ?? null;
 
@@ -235,6 +241,8 @@ const createDefaultHandler = <
         log.error(`No route matched URL. URL will not be processed. ${logSuffix}`);
       }
 
+      if (!page) return;
+
       // Clean up and move onto another request
       await closeRequest(req);
       handledRequestsCount++;
@@ -245,7 +253,7 @@ const createDefaultHandler = <
     try {
       do {
         await onRequest();
-      } while (hasBatchReqs());
+      } while (hasBatchReqs() && page);
     } catch (err) {
       await onError(err, req, log);
     }

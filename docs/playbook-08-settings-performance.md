@@ -108,3 +108,7 @@ The following config would handle 20 Requests in a single session, and wait 1.5 
   "perfBatchWaitSecs": 1.5
 }
 ```
+
+NOTE: Request batching is supported only for browser-based crawlers like `PlaywrightCrawler` or `PuppeteerCrawler`.
+if you want to use request batching with a custom Crawler class, the class needs to have a `page` property,
+with methods `page.goto` and `page.url`.
