@@ -1,4 +1,8 @@
-import type { RouterHandler as CrawlerRouter, Request as CrawlerRequest, Log } from 'crawlee';
+import {
+  type RouterHandler as CrawlerRouter,
+  type Request as CrawlerRequest,
+  type Log,
+} from 'crawlee';
 import type { CommonPage } from '@crawlee/browser-pool';
 import type { Page } from 'playwright';
 
@@ -223,11 +227,17 @@ const createDefaultHandler = <
         (await serialAsyncFind(
           Object.entries<CrawleeOneRoute<T, RouterCtx>>(resolvedRoutes),
           async ([key, currRoute]) => {
+            log.debug(`Testing Request against handler ${key}. ${logSuffix}`);
             const isMatch = await serialAsyncFind(
               currRoute.match as CrawleeOneRouteMatcherFn<T, RouterCtx>[],
               async (matchFn) => {
                 return matchFn(url, ctx, currRoute, routes);
               }
+            );
+            log.debug(
+              `Testing Request against handler ${key}: ${
+                isMatch ? 'MATCH' : 'NOT MATCH'
+              }. ${logSuffix}`
             );
             return isMatch;
           }
@@ -247,13 +257,16 @@ const createDefaultHandler = <
       await closeRequest(req);
       handledRequestsCount++;
 
+      log.debug(`Loading next request.  ${logSuffix}`);
       req = await loadNextRequest(logSuffix, { page: page as Page, log });
+      log.debug(`Next request loaded.  ${logSuffix}`);
     };
 
     try {
       do {
         await onRequest();
       } while (hasBatchReqs() && page);
+      log.info(`Batch of ${perfBatchSize ?? 1} finished.`);
     } catch (err) {
       await onError(err, req, log);
     }
