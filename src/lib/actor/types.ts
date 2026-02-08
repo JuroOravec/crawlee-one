@@ -62,7 +62,7 @@ export interface CrawleeOneCtx<
   Labels extends string = string,
   Input extends Record<string, any> = Record<string, any>,
   TIO extends CrawleeOneIO = CrawleeOneIO,
-  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>
+  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>,
 > {
   context: Ctx;
   labels: Labels;
@@ -129,7 +129,7 @@ export type CrawleeOneHookCtx<T extends CrawleeOneCtx> = Pick<
 export type CrawleeOneHookFn<
   TArgs extends any[] = [],
   TReturn = void,
-  T extends CrawleeOneCtx = CrawleeOneCtx
+  T extends CrawleeOneCtx = CrawleeOneCtx,
 > = (...args: [...TArgs, CrawleeOneHookCtx<T>]) => MaybePromise<TReturn>;
 
 /** All that's necessary to define a single CrawleeOne actor/crawler. */

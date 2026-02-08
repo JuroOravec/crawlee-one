@@ -58,7 +58,7 @@ export const setupMockApifyActor = async <
   await Actor.init();
 };
 
-export const runCrawlerTest = async <TData extends MaybeArray<Dictionary>, TInput>({
+export const runCrawlerTest = <TData extends MaybeArray<Dictionary>, TInput>({
   vi: viInstance,
   input,
   runCrawler,
@@ -75,16 +75,16 @@ export const runCrawlerTest = async <TData extends MaybeArray<Dictionary>, TInpu
   onBatchAddRequests?: OnBatchAddRequests;
   onDone?: (done: () => void) => MaybePromise<void>;
 }) => {
-  await new Promise<void>(async (done) => {
+  return new Promise<void>(async (resolve) => {
     await setupMockApifyActor<TInput, TData>({
       vi: viInstance,
       actorInput: { ...input },
       log,
-      onPushData: (data) => onPushData?.(data, done),
+      onPushData: (data) => onPushData?.(data, resolve),
       onBatchAddRequests,
     });
 
     await runCrawler();
-    await onDone?.(done);
+    await onDone?.(resolve);
   });
 };

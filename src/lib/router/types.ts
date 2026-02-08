@@ -6,7 +6,7 @@ import type { CrawleeOneCtx } from '../actor/types';
 /** Context object provided in CrawlerRouter */
 export type CrawleeOneRouteCtx<
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = {}
+  RouterCtx extends Record<string, any> = {},
 > = Parameters<Parameters<CrawlerRouter<T['context'] & RouterCtx>['addHandler']>[1]>[0];
 
 /** Function that's passed to `router.addHandler(label, handler)` */
@@ -18,7 +18,7 @@ export type CrawleeOneRouteHandler<
 /** Wrapper that modifies behavior of CrawleeOneRouteHandler */
 export type CrawleeOneRouteWrapper<
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 > = (
   handler: (ctx: CrawleeOneRouteCtx<T, RouterCtx>) => Promise<void> | Awaitable<void>
 ) => MaybePromise<(ctx: CrawleeOneRouteCtx<T, RouterCtx>) => Promise<void> | Awaitable<void>>;
@@ -35,7 +35,7 @@ export type CrawleeOneRouteWrapper<
  */
 export interface CrawleeOneRoute<
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 > {
   match: CrawleeOneRouteMatcher<T, RouterCtx>;
   handler: CrawleeOneRouteHandler<T, RouterCtx>;
@@ -55,7 +55,7 @@ export interface CrawleeOneRoute<
  */
 export type CrawleeOneRouteMatcher<
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 > = MaybeArray<RegExp | CrawleeOneRouteMatcherFn<T, RouterCtx>>;
 
 /**
@@ -67,7 +67,7 @@ export type CrawleeOneRouteMatcher<
  */
 export type CrawleeOneRouteMatcherFn<
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 > = (
   url: string,
   ctx: CrawleeOneRouteCtx<T, RouterCtx>,

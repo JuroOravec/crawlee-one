@@ -7,7 +7,7 @@ import { apifyIO } from '../integrations/apify';
 import { requestQueueSizeMonitor } from './requestQueue';
 
 export interface PushRequestsOptions<
-  T extends Exclude<CrawlerUrl, string> = Exclude<CrawlerUrl, string>
+  T extends Exclude<CrawlerUrl, string> = Exclude<CrawlerUrl, string>,
 > {
   io?: CrawleeOneIO<any, any>;
   log?: Log;
@@ -97,16 +97,19 @@ export const pushRequests = async <T extends Exclude<CrawlerUrl, string>>(
 
   log.debug(`Preparing to push ${items.length} requests to queue`); // prettier-ignore
 
-  const adjustedItems = await items.reduce(async (aggPromise, item) => {
-    const agg = await aggPromise;
+  const adjustedItems = await items.reduce(
+    async (aggPromise, item) => {
+      const agg = await aggPromise;
 
-    const transformedItem = transform ? await transform(item) : item;
-    const passedFilter = filter ? await filter(transformedItem) : true;
+      const transformedItem = transform ? await transform(item) : item;
+      const passedFilter = filter ? await filter(transformedItem) : true;
 
-    if (passedFilter) agg.push(transformedItem);
+      if (passedFilter) agg.push(transformedItem);
 
-    return agg;
-  }, Promise.resolve([] as unknown[]));
+      return agg;
+    },
+    Promise.resolve([] as unknown[])
+  );
 
   // Push requests to primary RequestQueue
   log.info(`Pushing ${adjustedItems.length} requests to queue`);

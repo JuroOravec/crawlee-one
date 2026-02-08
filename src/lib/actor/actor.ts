@@ -55,7 +55,7 @@ const isFunc = (f: any): f is (...args: any[]) => any => {
 const genHookFn = <
   TArgs extends any[] = [],
   TReturn = unknown,
-  T extends CrawleeOneCtx = CrawleeOneCtx
+  T extends CrawleeOneCtx = CrawleeOneCtx,
 >(
   actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io'>,
   fnOrStr: string | CrawleeOneHookFn<TArgs, TReturn, T> | undefined | null,
@@ -96,7 +96,7 @@ const genHookFn = <
  */
 export interface RunCrawleeOneOptions<
   TType extends CrawlerType,
-  T extends CrawleeOneCtx<CrawlerMeta<TType>['context']>
+  T extends CrawleeOneCtx<CrawlerMeta<TType>['context']>,
 > {
   /** String idetifying the actor class, e.g. `'cheerio'` */
   actorType: TType;
@@ -155,7 +155,7 @@ export interface RunCrawleeOneOptions<
  */
 export const runCrawleeOne = async <
   TType extends CrawlerType,
-  T extends CrawleeOneCtx<CrawlerMeta<TType>['context']>
+  T extends CrawleeOneCtx<CrawlerMeta<TType>['context']>,
 >(
   args: RunCrawleeOneOptions<TType, T>
 ): Promise<void> => {
@@ -262,7 +262,7 @@ const createCrawleeOne = async <T extends CrawleeOneCtx>(
 
   // This is context that is available to options that use initialization function
   const getConfig = () =>
-    ({ ...config, input, state, io } satisfies CrawleeOneActorDefWithInput<T>);
+    ({ ...config, input, state, io }) satisfies CrawleeOneActorDefWithInput<T>;
 
   // Set up proxy
   const defaultProxy =
@@ -271,8 +271,8 @@ const createCrawleeOne = async <T extends CrawleeOneCtx>(
     config.proxy == null
       ? defaultProxy
       : isFunc(config.proxy)
-      ? await config.proxy(getConfig())
-      : config.proxy;
+        ? await config.proxy(getConfig())
+        : config.proxy;
 
   // Run initialization functions
   const router: RouterHandler<T['context']> = isRouter(config.router)
@@ -306,7 +306,10 @@ const createCrawleeOne = async <T extends CrawleeOneCtx>(
     state,
     log,
     handlerCtx: null,
-  } satisfies Omit<CrawleeOneActorInst<T>, 'crawler' | 'runCrawler' | 'metamorph' | 'pushData' | 'pushRequests' | 'startUrls'>);
+  } satisfies Omit<
+    CrawleeOneActorInst<T>,
+    'crawler' | 'runCrawler' | 'metamorph' | 'pushData' | 'pushRequests' | 'startUrls'
+  >);
 
   // Create Crawlee crawler
   const crawler = await config.createCrawler(getPreActorNoCrawler());
@@ -372,14 +375,14 @@ const createActorInput = async <T extends CrawleeOneCtx>(
   const rawInput = !config.input
     ? {}
     : isFunc(config.input)
-    ? await config.input(config)
-    : config.input;
+      ? await config.input(config)
+      : config.input;
 
   const rawInputDefaults = !config.inputDefaults
     ? {}
     : isFunc(config.inputDefaults)
-    ? await config.inputDefaults(config)
-    : config.inputDefaults;
+      ? await config.inputDefaults(config)
+      : config.inputDefaults;
 
   // This is equivalent to Apify's `Actor.getInput()` and it is used so that
   // input can be configured not only by scraper developers, but also scraper users,
@@ -395,8 +398,8 @@ const createActorInput = async <T extends CrawleeOneCtx>(
       ? config.mergeInput
       : ({ defaults, overrides, env }: any) => ({ ...defaults, ...env, ...overrides })
     : config.input
-    ? ({ defaults, overrides }: any) => ({ ...defaults, ...overrides })
-    : ({ defaults, env }: any) => ({ ...defaults, ...env });
+      ? ({ defaults, overrides }: any) => ({ ...defaults, ...overrides })
+      : ({ defaults, env }: any) => ({ ...defaults, ...env });
 
   const mergedInput = inputMergeFn({ defaults: rawInputDefaults, env: inputFromIO ?? {}, overrides: rawInput ?? {} }); // prettier-ignore
 
@@ -584,7 +587,7 @@ const createScopedPushRequests = <T extends CrawleeOneCtx>(
 /** Given the actor input, create common crawler options. */
 export const createHttpCrawlerOptions = <
   T extends CrawleeOneCtx,
-  TOpts extends BasicCrawlerOptions<T['context']>
+  TOpts extends BasicCrawlerOptions<T['context']>,
 >({
   input,
   defaults,

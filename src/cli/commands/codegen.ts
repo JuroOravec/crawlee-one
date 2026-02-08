@@ -255,7 +255,6 @@ export const generateTypes = async (outfile: string, configOrPath?: CrawleeOneCo
       : configOrPath;
   validateConfig(config);
 
-  /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
   const { imports, definitions } = await parseTypesFromSchema(config!.schema);
   const fileContent =
     Object.values(imports).join('\n') + '\n\n\n' + Object.values(definitions).join('\n\n');

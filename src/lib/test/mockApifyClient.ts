@@ -154,7 +154,7 @@ export const createMockRequestQueueClient = ({
         options?: RequestQueueClientAddRequestOptions,
       ]
     ): Promise<RequestQueueClientAddRequestResult> => {
-      const [request, options] = args;
+      const [request, _options] = args;
       log?.(`Called MockRequestQueueClient.updateRequest with ${JSON.stringify(args)}`);
       log?.(`requestQueue: ${JSON.stringify(requestQueue)}`);
 

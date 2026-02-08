@@ -16,7 +16,7 @@ import type { CrawleeOneActorInst, CrawleeOneCtx } from '../actor/types';
  */
 export interface CrawleeOneTelemetry<
   T extends CrawleeOneCtx,
-  THandlerOptions extends CrawleeOneErrorHandlerOptions<any> = CrawleeOneErrorHandlerOptions
+  THandlerOptions extends CrawleeOneErrorHandlerOptions<any> = CrawleeOneErrorHandlerOptions,
 > {
   setup: (actor: CrawleeOneActorInst<T>) => MaybePromise<void>;
   onSendErrorToTelemetry: (

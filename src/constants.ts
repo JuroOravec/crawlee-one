@@ -26,7 +26,6 @@ export const actorClassByType = {
   puppeteer: PuppeteerCrawler,
 } as const satisfies Record<CrawlerType, { new (options: Record<string, any>): any }>;
 
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 type CrawlingContextName = keyof {
   BasicCrawlingContext: BasicCrawlingContext;
   HttpCrawlingContext: HttpCrawlingContext;

@@ -23,7 +23,7 @@ import type { MaybeArray, MaybePromise, PickRequired } from '../../utils/types';
 export interface CrawleeOneIO<
   TEnv extends object = object,
   TReport extends object = object,
-  TMetadata extends object = object
+  TMetadata extends object = object,
 > {
   /**
    * Opens a dataset and returns a promise resolving to an instance of the {@link CrawleeOneDataset}.
@@ -322,9 +322,5 @@ export interface CrawleeOneErrorHandlerOptions<TIO extends CrawleeOneIO = Crawle
 export type ExtractErrorHandlerOptionsReport<T extends CrawleeOneErrorHandlerOptions<any>> =
   T extends CrawleeOneErrorHandlerOptions<infer U> ? ExtractIOReport<U> : never;
 
-export type ExtractIOReport<T extends CrawleeOneIO<object, object>> = T extends CrawleeOneIO<
-  object,
-  infer U
->
-  ? U
-  : never;
+export type ExtractIOReport<T extends CrawleeOneIO<object, object>> =
+  T extends CrawleeOneIO<object, infer U> ? U : never;

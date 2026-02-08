@@ -352,8 +352,9 @@ export const scrapeListingEntries = async <Ctx extends object, UrlType>(
         // Leave after printing the count or on abort
         if (listingCountOnly || userAskedToStop) {
           nextPageAvailable = false;
-          if (listingCountOnly) log.info(`Debugging mode. Entries are not scraped. Leaving now. URL ${pageLogId}`); // prettier-ignore
-          else if (userAskedToStop) log.info(`Aborting. URL ${pageLogId}`);
+          if (listingCountOnly) {
+            log.info(`Debugging mode. Entries are not scraped. Leaving now. URL ${pageLogId}`); // prettier-ignore
+          } else if (userAskedToStop) log.info(`Aborting. URL ${pageLogId}`);
           continue;
         }
 

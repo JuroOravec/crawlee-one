@@ -39,7 +39,7 @@ const applyWrappersRight = <TFn extends (...args: any[]) => any>(
 
 const resolveRoutes = <
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 >(
   routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>
 ) =>
@@ -92,7 +92,7 @@ const resolveRoutes = <
  */
 export const registerHandlers = async <
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 >(
   router: CrawlerRouter<T['context']>,
   routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>,
@@ -127,7 +127,7 @@ export const registerHandlers = async <
 
 const createDefaultHandler = <
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 >(
   input: {
     io: T['io'];
@@ -214,7 +214,6 @@ const createDefaultHandler = <
     const hasBatchReqs = () =>
       perfBatchSize != null && req != null && handledRequestsCount < perfBatchSize;
 
-    /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
     const getUrl = () => (page ? (page as any as CommonPage).url() : req!.loadedUrl || req!.url);
 
     const onRequest = async () => {
@@ -326,7 +325,7 @@ const createDefaultHandler = <
  */
 export const setupDefaultHandlers = async <
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 >({
   io,
   router,

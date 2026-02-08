@@ -48,7 +48,7 @@ export const logLevelToCrawlee: Record<LogLevel, CrawleeLogLevel> = {
  */
 export const logLevelHandlerWrapper = <
   T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>
+  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 >(
   logLevel: LogLevel
 ): CrawleeOneRouteWrapper<T, RouterCtx> => {

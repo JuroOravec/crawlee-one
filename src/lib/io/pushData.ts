@@ -56,8 +56,8 @@ export type PrivacyMask<T extends object> = {
   [Key in keyof T]?: T[Key] extends Date | any[] // Consider Date and Array as non-objects
     ? PrivacyFilter<T[Key], Key, T>
     : T[Key] extends object
-    ? PrivacyMask<T[Key]>
-    : PrivacyFilter<T[Key], Key, T>;
+      ? PrivacyMask<T[Key]>
+      : PrivacyFilter<T[Key], Key, T>;
 };
 
 export interface PushDataOptions<T extends object> {
@@ -140,7 +140,7 @@ export interface PushDataOptions<T extends object> {
 
 const createMetadataMapper = async <
   Ctx extends CrawlingContext,
-  TIO extends CrawleeOneIO<any, any> = ApifyCrawleeOneIO
+  TIO extends CrawleeOneIO<any, any> = ApifyCrawleeOneIO,
 >(
   ctx: Ctx,
   options: { io: TIO }
@@ -180,9 +180,9 @@ const applyPrivacyMask = async <T extends Record<any, any> = Record<any, any>>(
     const isPrivate =
       typeof privacyFilter === 'boolean'
         ? privacyFilter
-        : !!privacyFilter
-        ? await privacyFilter(val, key, item, { setCustomRedactedValue })
-        : false;
+        : privacyFilter
+          ? await privacyFilter(val, key, item, { setCustomRedactedValue })
+          : false;
 
     // prettier-ignore
     const privateValue = (
@@ -250,8 +250,8 @@ export const itemCacheKey = (item: any, primaryKeys?: string[]) => {
   const serializedItem = thePrimaryKeys
     ? thePrimaryKeys.map((k) => item?.[k]).join(':')
     : item && isPlainObject(item)
-    ? JSON.stringify(sortObjectKeys(item)) // If possible sort the object's keys
-    : JSON.stringify(item);
+      ? JSON.stringify(sortObjectKeys(item)) // If possible sort the object's keys
+      : JSON.stringify(item);
 
   const cacheId = cyrb53(serializedItem);
   return cacheId.toString();
@@ -318,7 +318,7 @@ const shortenToSize = async <T>(
  */
 export const pushData = async <
   Ctx extends CrawlingContext,
-  T extends Record<any, any> = Record<any, any>
+  T extends Record<any, any> = Record<any, any>,
 >(
   ctx: Ctx,
   oneOrManyItems: T | T[],
@@ -351,26 +351,29 @@ export const pushData = async <
   log.debug(`Preparing to push ${items.length} entries to dataset`); // prettier-ignore
   const addMetadataToData = await createMetadataMapper(ctx, { io });
 
-  const adjustedItems = await items.reduce(async (aggPromise, item) => {
-    const agg = await aggPromise;
+  const adjustedItems = await items.reduce(
+    async (aggPromise, item) => {
+      const agg = await aggPromise;
 
-    const itemWithMetadata = includeMetadata ? addMetadataToData(item) : item;
-    const maskedItem = await applyPrivacyMask(itemWithMetadata, {
-      showPrivate,
-      privacyMask,
-      genRedactedValue: (val, key) =>
-        `<Redacted property "${key}". To include the actual value, toggle ON the input option "Include personal data">`,
-    });
+      const itemWithMetadata = includeMetadata ? addMetadataToData(item) : item;
+      const maskedItem = await applyPrivacyMask(itemWithMetadata, {
+        showPrivate,
+        privacyMask,
+        genRedactedValue: (val, key) =>
+          `<Redacted property "${key}". To include the actual value, toggle ON the input option "Include personal data">`,
+      });
 
-    const renamedItem = remapKeys ? renameKeys(maskedItem, remapKeys) : maskedItem;
-    const pickedItem = pickKeys ? pick(renamedItem, pickKeys) : renamedItem;
-    const transformedItem = transform ? await transform(pickedItem) : pickedItem;
-    const passedFilter = filter ? await filter(transformedItem) : true;
+      const renamedItem = remapKeys ? renameKeys(maskedItem, remapKeys) : maskedItem;
+      const pickedItem = pickKeys ? pick(renamedItem, pickKeys) : renamedItem;
+      const transformedItem = transform ? await transform(pickedItem) : pickedItem;
+      const passedFilter = filter ? await filter(transformedItem) : true;
 
-    if (passedFilter) agg.push(transformedItem);
+      if (passedFilter) agg.push(transformedItem);
 
-    return agg;
-  }, Promise.resolve([] as unknown[]));
+      return agg;
+    },
+    Promise.resolve([] as unknown[])
+  );
 
   // Push entries to primary dataset
   log.info(`Pushing ${adjustedItems.length} entries to dataset`);

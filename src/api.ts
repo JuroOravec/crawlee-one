@@ -125,7 +125,7 @@ export const crawleeOne = <
   TType extends CrawlerType,
   T extends CrawleeOneCtx<CrawlerMeta<TType>['context']> = CrawleeOneCtx<
     CrawlerMeta<TType>['context']
-  >
+  >,
 >(
   args: CrawleeOneArgs<TType, T>
 ) => {
