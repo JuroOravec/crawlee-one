@@ -51,21 +51,22 @@
     "gen:docs": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.base.json --out ./docs/typedoc"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
     "@types/lodash": "^4.17.4",
     "@types/pkginfo": "^0.4.3",
-    "@eslint/js": "^9.0.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "crawlee": "^3.16.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "typescript-eslint": "^8.0.0",
     "playwright": "^1.44.1",
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typedoc": "^0.25.13",
     "typedoc-plugin-markdown": "^4.0.3",
     "typescript": "^5.4.5",
-    "vitest": "^1.6.0"
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "@sentry/node": "^7.50.0",
@@ -78,7 +79,7 @@
     "got-scraping": "^4.0.0",
     "joi": "^17.9.2",
     "playwright": "^1.44.0",
-    "vitest": "^1.6.0"
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "commander": "^12.1.0",
