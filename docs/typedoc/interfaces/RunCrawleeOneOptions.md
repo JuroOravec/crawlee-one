@@ -1,6 +1,10 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / RunCrawleeOneOptions
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: RunCrawleeOneOptions<TType, T\>
+***
+
+[crawlee-one](../globals.md) / RunCrawleeOneOptions
+
+# Interface: RunCrawleeOneOptions\<TType, T\>
 
 Options available when creating default configuration for an opinionated Crawlee actor,
 which is then run within Apify's `Actor.main()` context.
@@ -11,107 +15,89 @@ Read more about what this actor does at createCrawleeOne.
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `TType` | extends [`CrawlerType`](../modules.md#crawlertype) |
-| `T` | extends [`CrawleeOneCtx`](CrawleeOneCtx.md)<`CrawlerMeta`<`TType`\>[``"context"``]\> |
+• **TType** *extends* [`CrawlerType`](../type-aliases/CrawlerType.md)
 
-## Table of contents
-
-### Properties
-
-- [actorConfig](RunCrawleeOneOptions.md#actorconfig)
-- [actorName](RunCrawleeOneOptions.md#actorname)
-- [actorType](RunCrawleeOneOptions.md#actortype)
-- [crawlerConfigDefaults](RunCrawleeOneOptions.md#crawlerconfigdefaults)
-- [crawlerConfigOverrides](RunCrawleeOneOptions.md#crawlerconfigoverrides)
-- [onReady](RunCrawleeOneOptions.md#onready)
+• **T** *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)\<`CrawlerMeta`\<`TType`\>\[`"context"`\]\>
 
 ## Properties
 
 ### actorConfig
 
-• **actorConfig**: [`PickPartial`](../modules.md#pickpartial)<[`CrawleeOneActorDef`](CrawleeOneActorDef.md)<`T`\>, ``"io"`` \| ``"telemetry"`` \| ``"router"`` \| ``"createCrawler"``\>
+> **actorConfig**: [`PickPartial`](../type-aliases/PickPartial.md)\<[`CrawleeOneActorDef`](CrawleeOneActorDef.md)\<`T`\>, `"io"` \| `"telemetry"` \| `"router"` \| `"createCrawler"`\>
 
 Config passed to the createCrawleeOne
 
-#### Defined in
+#### Source
 
-[src/lib/actor/actor.ts:104](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/actor.ts#L104)
+[src/lib/actor/actor.ts:105](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/actor.ts#L105)
 
-___
+***
 
-### actorName
+### actorName?
 
-• `Optional` **actorName**: `string`
+> `optional` **actorName**: `string`
 
-#### Defined in
+#### Source
 
-[src/lib/actor/actor.ts:102](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/actor.ts#L102)
+[src/lib/actor/actor.ts:103](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/actor.ts#L103)
 
-___
+***
 
 ### actorType
 
-• **actorType**: `TType`
+> **actorType**: `TType`
 
 String idetifying the actor class, e.g. `'cheerio'`
 
-#### Defined in
+#### Source
 
-[src/lib/actor/actor.ts:101](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/actor.ts#L101)
+[src/lib/actor/actor.ts:102](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/actor.ts#L102)
 
-___
+***
 
-### crawlerConfigDefaults
+### crawlerConfigDefaults?
 
-• `Optional` **crawlerConfigDefaults**: `Omit`<`CrawlerMeta`<`TType`, `CrawlingContext`<`unknown`, `Dictionary`\>, `Record`<`string`, `any`\>\>[``"options"``], ``"requestHandler"``\>
+> `optional` **crawlerConfigDefaults**: `Omit`\<`CrawlerMeta`\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
 If using default `createCrawler` implementation, these are crawler options
 that may be overriden by user input.
 
-#### Defined in
+#### Source
 
-[src/lib/actor/actor.ts:109](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/actor.ts#L109)
+[src/lib/actor/actor.ts:110](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/actor.ts#L110)
 
-___
+***
 
-### crawlerConfigOverrides
+### crawlerConfigOverrides?
 
-• `Optional` **crawlerConfigOverrides**: `Omit`<`CrawlerMeta`<`TType`, `CrawlingContext`<`unknown`, `Dictionary`\>, `Record`<`string`, `any`\>\>[``"options"``], ``"requestHandler"``\>
+> `optional` **crawlerConfigOverrides**: `Omit`\<`CrawlerMeta`\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
 If using default `createCrawler` implementation, these are crawler options
 that will override user input.
 
 This is useful for testing env.
 
-#### Defined in
+#### Source
 
-[src/lib/actor/actor.ts:116](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/actor.ts#L116)
+[src/lib/actor/actor.ts:117](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/actor.ts#L117)
 
-___
+***
 
-### onReady
+### onReady()?
 
-• `Optional` **onReady**: (`actor`: [`CrawleeOneActorInst`](CrawleeOneActorInst.md)<`T`\>) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (`actor`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onReady**: (`actor`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Callback with the created actor. The callback is called within
 the `Actor.main()` context.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `actor` | [`CrawleeOneActorInst`](CrawleeOneActorInst.md)<`T`\> |
+• **actor**: [`CrawleeOneActorInst`](CrawleeOneActorInst.md)\<`T`\>
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Defined in
+#### Source
 
-[src/lib/actor/actor.ts:121](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actor/actor.ts#L121)
+[src/lib/actor/actor.ts:122](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/actor.ts#L122)

@@ -1,58 +1,43 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / Migration
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / Migration
 
 # Interface: Migration
 
-## Table of contents
-
-### Properties
-
-- [migrate](Migration.md#migrate)
-- [unmigrate](Migration.md#unmigrate)
-
 ## Properties
 
-### migrate
+### migrate()
 
-• **migrate**: (`client`: `ApifyClient`) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> **migrate**: (`client`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Type declaration
+#### Parameters
 
-▸ (`client`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **client**: `ApifyClient`
 
-##### Parameters
+#### Returns
 
-| Name | Type |
-| :------ | :------ |
-| `client` | `ApifyClient` |
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-##### Returns
+#### Source
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[src/lib/migrate/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/migrate/types.ts#L6)
 
-#### Defined in
+***
 
-[src/lib/migrate/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/migrate/types.ts#L6)
+### unmigrate()
 
-___
+> **unmigrate**: (`client`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-### unmigrate
+#### Parameters
 
-• **unmigrate**: (`client`: `ApifyClient`) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **client**: `ApifyClient`
 
-#### Type declaration
+#### Returns
 
-▸ (`client`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-##### Parameters
+#### Source
 
-| Name | Type |
-| :------ | :------ |
-| `client` | `ApifyClient` |
-
-##### Returns
-
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Defined in
-
-[src/lib/migrate/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/migrate/types.ts#L7)
+[src/lib/migrate/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/migrate/types.ts#L7)

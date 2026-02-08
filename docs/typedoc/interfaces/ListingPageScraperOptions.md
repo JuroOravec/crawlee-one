@@ -1,439 +1,360 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / ListingPageScraperOptions
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: ListingPageScraperOptions<Ctx, UrlType\>
+***
+
+[crawlee-one](../globals.md) / ListingPageScraperOptions
+
+# Interface: ListingPageScraperOptions\<Ctx, UrlType\>
+
+## Extends
+
+- `Omit`\<[`ListingFiltersSetupOptions`](ListingFiltersSetupOptions.md)\<`Ctx`, `UrlType`\>, `"context"`\>
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `Ctx` | extends `object` |
-| `UrlType` | `UrlType` |
+• **Ctx** *extends* `object`
 
-## Hierarchy
-
-- `Omit`<[`ListingFiltersSetupOptions`](ListingFiltersSetupOptions.md)<`Ctx`, `UrlType`\>, ``"context"``\>
-
-  ↳ **`ListingPageScraperOptions`**
-
-## Table of contents
-
-### Properties
-
-- [context](ListingPageScraperOptions.md#context)
-- [extractEntries](ListingPageScraperOptions.md#extractentries)
-- [extractEntriesRetries](ListingPageScraperOptions.md#extractentriesretries)
-- [filters](ListingPageScraperOptions.md#filters)
-- [listingCountOnly](ListingPageScraperOptions.md#listingcountonly)
-- [loadFiltersRetries](ListingPageScraperOptions.md#loadfiltersretries)
-- [log](ListingPageScraperOptions.md#log)
-- [nextPageWait](ListingPageScraperOptions.md#nextpagewait)
-- [onAfterNavigation](ListingPageScraperOptions.md#onafternavigation)
-- [onExtractEntriesDone](ListingPageScraperOptions.md#onextractentriesdone)
-- [onExtractEntriesError](ListingPageScraperOptions.md#onextractentrieserror)
-- [onFiltersLoaded](ListingPageScraperOptions.md#onfiltersloaded)
-- [onGoToNextPage](ListingPageScraperOptions.md#ongotonextpage)
-- [onLoadFiltersError](ListingPageScraperOptions.md#onloadfilterserror)
-- [onNavigate](ListingPageScraperOptions.md#onnavigate)
-- [onResetFilters](ListingPageScraperOptions.md#onresetfilters)
-- [pageId](ListingPageScraperOptions.md#pageid)
-- [shouldApplyFilter](ListingPageScraperOptions.md#shouldapplyfilter)
-- [startUrls](ListingPageScraperOptions.md#starturls)
+• **UrlType**
 
 ## Properties
 
 ### context
 
-• **context**: `Ctx`
+> **context**: `Ctx`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:55](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L55)
+[src/lib/actions/scrapeListing.ts:55](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L55)
 
-___
+***
 
-### extractEntries
+### extractEntries()
 
-• **extractEntries**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>, `retryIndex`: `number`) => [`MaybePromise`](../modules.md#maybepromise)<`UrlType`[]\>
-
-#### Type declaration
-
-▸ (`context`, `retryIndex`): [`MaybePromise`](../modules.md#maybepromise)<`UrlType`[]\>
+> **extractEntries**: (`context`, `retryIndex`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`UrlType`[]\>
 
 Main logic to extract entries from a page
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
-| `retryIndex` | `number` |
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Returns
+• **retryIndex**: `number`
 
-[`MaybePromise`](../modules.md#maybepromise)<`UrlType`[]\>
+#### Returns
 
-#### Defined in
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`UrlType`[]\>
 
-[src/lib/actions/scrapeListing.ts:84](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L84)
+#### Source
 
-___
+[src/lib/actions/scrapeListing.ts:84](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L84)
 
-### extractEntriesRetries
+***
 
-• `Optional` **extractEntriesRetries**: `number`
+### extractEntriesRetries?
+
+> `optional` **extractEntriesRetries**: `number`
 
 How many attempts are retried after failed to scrape entries from a listing. Defaults to 3
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:86](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L86)
+[src/lib/actions/scrapeListing.ts:86](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L86)
 
-___
+***
 
-### filters
+### filters?
 
-• `Optional` **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
+> `optional` **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
 
 #### Inherited from
 
-Omit.filters
+`Omit.filters`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:29](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L29)
+[src/lib/actions/scrapeListing.ts:29](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L29)
 
-___
+***
 
-### listingCountOnly
+### listingCountOnly?
 
-• `Optional` **listingCountOnly**: `boolean`
+> `optional` **listingCountOnly**: `boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:57](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L57)
+[src/lib/actions/scrapeListing.ts:57](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L57)
 
-___
+***
 
-### loadFiltersRetries
+### loadFiltersRetries?
 
-• `Optional` **loadFiltersRetries**: `number`
+> `optional` **loadFiltersRetries**: `number`
 
 How many attempts are retried after filters failed to load. Defaults to 3
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:71](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L71)
+[src/lib/actions/scrapeListing.ts:71](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L71)
 
-___
+***
 
 ### log
 
-• **log**: [`ListingLogger`](ListingLogger.md)
+> **log**: [`ListingLogger`](ListingLogger.md)
 
 #### Overrides
 
-Omit.log
+`Omit.log`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:60](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L60)
+[src/lib/actions/scrapeListing.ts:60](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L60)
 
-___
+***
 
-### nextPageWait
+### nextPageWait?
 
-• `Optional` **nextPageWait**: `number`
+> `optional` **nextPageWait**: `number`
 
 How long to wait after we've navigated to the next page and before we start extracting?
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:111](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L111)
+[src/lib/actions/scrapeListing.ts:111](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L111)
 
-___
+***
 
-### onAfterNavigation
+### onAfterNavigation()?
 
-• `Optional` **onAfterNavigation**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (`context`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onAfterNavigation**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Hook triggered after navigating to the url using Page.goto().
 
 One use of this hook is to conditionally disable/enable filters based on the page content.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:68](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L68)
+[src/lib/actions/scrapeListing.ts:68](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L68)
 
-___
+***
 
-### onExtractEntriesDone
+### onExtractEntriesDone()?
 
-• `Optional` **onExtractEntriesDone**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>, `entries`: ``null`` \| `UrlType`[]) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onExtractEntriesDone**: (`context`, `entries`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Type declaration
+#### Parameters
 
-▸ (`context`, `entries`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Parameters
+• **entries**: `null` \| `UrlType`[]
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
-| `entries` | ``null`` \| `UrlType`[] |
+#### Returns
 
-##### Returns
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+#### Source
 
-#### Defined in
+[src/lib/actions/scrapeListing.ts:97](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L97)
 
-[src/lib/actions/scrapeListing.ts:97](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L97)
+***
 
-___
+### onExtractEntriesError()?
 
-### onExtractEntriesError
-
-• `Optional` **onExtractEntriesError**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>, `error`: `any`, `retryIndex`: `number`) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (`context`, `error`, `retryIndex`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onExtractEntriesError**: (`context`, `error`, `retryIndex`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Hook triggered after a failed attempt at scraping entries from a listing.
 
 One use of this hook is to reload the page on failed attemp in case something didn't load correctly.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
-| `error` | `any` |
-| `retryIndex` | `number` |
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Returns
+• **error**: `any`
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **retryIndex**: `number`
 
-#### Defined in
+#### Returns
 
-[src/lib/actions/scrapeListing.ts:92](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L92)
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-___
+#### Source
 
-### onFiltersLoaded
+[src/lib/actions/scrapeListing.ts:92](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L92)
 
-• `Optional` **onFiltersLoaded**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+***
 
-#### Type declaration
+### onFiltersLoaded()?
 
-▸ (`context`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onFiltersLoaded**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 #### Inherited from
 
-Omit.onFiltersLoaded
+`Omit.onFiltersLoaded`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:36](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L36)
+[src/lib/actions/scrapeListing.ts:36](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L36)
 
-___
+***
 
-### onGoToNextPage
+### onGoToNextPage()?
 
-• `Optional` **onGoToNextPage**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>, `entries`: ``null`` \| `UrlType`[]) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (`context`, `entries`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onGoToNextPage**: (`context`, `entries`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 If goToNextPage hook is defined, it will be called after each page. To indicate that there's no more
 pages left, throw an error.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
-| `entries` | ``null`` \| `UrlType`[] |
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Returns
+• **entries**: `null` \| `UrlType`[]
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+#### Returns
 
-#### Defined in
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-[src/lib/actions/scrapeListing.ts:106](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L106)
+#### Source
 
-___
+[src/lib/actions/scrapeListing.ts:106](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L106)
 
-### onLoadFiltersError
+***
 
-• `Optional` **onLoadFiltersError**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>, `error`: `any`, `retryIndex`: `number`) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+### onLoadFiltersError()?
 
-#### Type declaration
-
-▸ (`context`, `error`, `retryIndex`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onLoadFiltersError**: (`context`, `error`, `retryIndex`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Hook triggered after a failed attempt at loading listings page filters.
 
 One use of this hook is to reload the page on failed attemp in case something didn't load correctly.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
-| `error` | `any` |
-| `retryIndex` | `number` |
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Returns
+• **error**: `any`
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **retryIndex**: `number`
 
-#### Defined in
+#### Returns
 
-[src/lib/actions/scrapeListing.ts:77](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L77)
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-___
+#### Source
 
-### onNavigate
+[src/lib/actions/scrapeListing.ts:77](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L77)
 
-• `Optional` **onNavigate**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>, `url`: `UrlType`) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+***
 
-#### Type declaration
+### onNavigate()?
 
-▸ (`context`, `url`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onNavigate**: (`context`, `url`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
-| `url` | `UrlType` |
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Returns
+• **url**: `UrlType`
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+#### Returns
 
-#### Defined in
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-[src/lib/actions/scrapeListing.ts:62](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L62)
+#### Source
 
-___
+[src/lib/actions/scrapeListing.ts:62](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L62)
 
-### onResetFilters
+***
 
-• `Optional` **onResetFilters**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+### onResetFilters()?
 
-#### Type declaration
+> `optional` **onResetFilters**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-▸ (`context`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+#### Parameters
 
-##### Parameters
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
+#### Returns
 
-##### Returns
-
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 #### Inherited from
 
-Omit.onResetFilters
+`Omit.onResetFilters`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:35](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L35)
+[src/lib/actions/scrapeListing.ts:35](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L35)
 
-___
+***
 
-### pageId
+### pageId()?
 
-• `Optional` **pageId**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>) => [`MaybePromise`](../modules.md#maybepromise)<`string`\>
-
-#### Type declaration
-
-▸ (`context`): [`MaybePromise`](../modules.md#maybepromise)<`string`\>
+> `optional` **pageId**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`string`\>
 
 Get ID of the current page in the pagination, so it can be logged
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`string`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`string`\>
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:59](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L59)
+[src/lib/actions/scrapeListing.ts:59](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L59)
 
-___
+***
 
-### shouldApplyFilter
+### shouldApplyFilter()?
 
-• `Optional` **shouldApplyFilter**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>, `filter`: [`ListingPageFilter`](ListingPageFilter.md), `filters`: [`ListingPageFilter`](ListingPageFilter.md)[]) => [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+> `optional` **shouldApplyFilter**: (`context`, `filter`, `filters`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-#### Type declaration
+#### Parameters
 
-▸ (`context`, `filter`, `filters`): [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Parameters
+• **filter**: [`ListingPageFilter`](ListingPageFilter.md)
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
-| `filter` | [`ListingPageFilter`](ListingPageFilter.md) |
-| `filters` | [`ListingPageFilter`](ListingPageFilter.md)[] |
+• **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
 #### Inherited from
 
-Omit.shouldApplyFilter
+`Omit.shouldApplyFilter`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:30](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L30)
+[src/lib/actions/scrapeListing.ts:30](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L30)
 
-___
+***
 
 ### startUrls
 
-• **startUrls**: `UrlType`[]
+> **startUrls**: `UrlType`[]
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:56](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L56)
+[src/lib/actions/scrapeListing.ts:56](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L56)

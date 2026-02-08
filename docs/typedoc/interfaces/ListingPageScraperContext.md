@@ -1,101 +1,85 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / ListingPageScraperContext
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: ListingPageScraperContext<Ctx, UrlType\>
+***
+
+[crawlee-one](../globals.md) / ListingPageScraperContext
+
+# Interface: ListingPageScraperContext\<Ctx, UrlType\>
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `Ctx` | extends `object` |
-| `UrlType` | `UrlType` |
+• **Ctx** *extends* `object`
 
-## Table of contents
-
-### Properties
-
-- [abort](ListingPageScraperContext.md#abort)
-- [context](ListingPageScraperContext.md#context)
-- [filters](ListingPageScraperContext.md#filters)
-- [loadFilterState](ListingPageScraperContext.md#loadfilterstate)
-- [log](ListingPageScraperContext.md#log)
-- [startUrl](ListingPageScraperContext.md#starturl)
+• **UrlType**
 
 ## Properties
 
-### abort
+### abort()
 
-• **abort**: () => `void`
-
-#### Type declaration
-
-▸ (): `void`
+> **abort**: () => `void`
 
 Call this function from any callback to stop scraping
 
-##### Returns
+#### Returns
 
 `void`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:50](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L50)
+[src/lib/actions/scrapeListing.ts:50](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L50)
 
-___
+***
 
 ### context
 
-• **context**: `Ctx`
+> **context**: `Ctx`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:43](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L43)
+[src/lib/actions/scrapeListing.ts:43](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L43)
 
-___
+***
 
 ### filters
 
-• **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
+> **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:46](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L46)
+[src/lib/actions/scrapeListing.ts:46](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L46)
 
-___
+***
 
-### loadFilterState
+### loadFilterState()
 
-• **loadFilterState**: () => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> **loadFilterState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Use this if you need to load filters again (eg after reloading page manually)
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:48](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L48)
+[src/lib/actions/scrapeListing.ts:48](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L48)
 
-___
+***
 
 ### log
 
-• **log**: [`ListingLogger`](ListingLogger.md)
+> **log**: [`ListingLogger`](ListingLogger.md)
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:44](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L44)
+[src/lib/actions/scrapeListing.ts:44](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L44)
 
-___
+***
 
 ### startUrl
 
-• **startUrl**: `UrlType`
+> **startUrl**: `UrlType`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:45](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L45)
+[src/lib/actions/scrapeListing.ts:45](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L45)

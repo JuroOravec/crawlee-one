@@ -1,80 +1,66 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / OutputActorInput
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / OutputActorInput
 
 # Interface: OutputActorInput
 
 Common input fields related to actor output
 
-## Table of contents
-
-### Properties
-
-- [outputCacheActionOnResult](OutputActorInput.md#outputcacheactiononresult)
-- [outputCachePrimaryKeys](OutputActorInput.md#outputcacheprimarykeys)
-- [outputCacheStoreId](OutputActorInput.md#outputcachestoreid)
-- [outputDatasetId](OutputActorInput.md#outputdatasetid)
-- [outputFilter](OutputActorInput.md#outputfilter)
-- [outputFilterAfter](OutputActorInput.md#outputfilterafter)
-- [outputFilterBefore](OutputActorInput.md#outputfilterbefore)
-- [outputMaxEntries](OutputActorInput.md#outputmaxentries)
-- [outputPickFields](OutputActorInput.md#outputpickfields)
-- [outputRenameFields](OutputActorInput.md#outputrenamefields)
-- [outputTransform](OutputActorInput.md#outputtransform)
-- [outputTransformAfter](OutputActorInput.md#outputtransformafter)
-- [outputTransformBefore](OutputActorInput.md#outputtransformbefore)
-
 ## Properties
 
-### outputCacheActionOnResult
+### outputCacheActionOnResult?
 
-• `Optional` **outputCacheActionOnResult**: ``null`` \| ``"add"`` \| ``"remove"`` \| ``"overwrite"``
+> `optional` **outputCacheActionOnResult**: `null` \| `"add"` \| `"remove"` \| `"overwrite"`
 
 Define whether we want to add, remove, or overwrite cached entries with results from the actor run
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:330](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L330)
+[src/lib/input.ts:331](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L331)
 
-___
+***
 
-### outputCachePrimaryKeys
+### outputCachePrimaryKeys?
 
-• `Optional` **outputCachePrimaryKeys**: `string`[]
+> `optional` **outputCachePrimaryKeys**: `string`[]
 
 Define fields that will be used for cache key
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:328](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L328)
+[src/lib/input.ts:329](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L329)
 
-___
+***
 
-### outputCacheStoreId
+### outputCacheStoreId?
 
-• `Optional` **outputCacheStoreId**: `string`
+> `optional` **outputCacheStoreId**: `string`
 
 ID or name of the key-value store used as cache
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:326](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L326)
+[src/lib/input.ts:327](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L327)
 
-___
+***
 
-### outputDatasetId
+### outputDatasetId?
 
-• `Optional` **outputDatasetId**: `string`
+> `optional` **outputDatasetId**: `string`
 
 ID or name of the dataset to which the data should be pushed
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:323](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L323)
+[src/lib/input.ts:324](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L324)
 
-___
+***
 
-### outputFilter
+### outputFilter?
 
-• `Optional` **outputFilter**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)<[item: any], `any`\>
+> `optional` **outputFilter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<[`any`], `any`\>
 
 Option to filter out the data using a custom function before pushing it to the dataset.
 
@@ -87,15 +73,15 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:302](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L302)
+[src/lib/input.ts:303](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L303)
 
-___
+***
 
-### outputFilterAfter
+### outputFilterAfter?
 
-• `Optional` **outputFilterAfter**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)
+> `optional` **outputFilterAfter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
 
 Use this if you need to run one-time initialization code after `outputFilter`.
 
@@ -104,15 +90,15 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:320](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L320)
+[src/lib/input.ts:321](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L321)
 
-___
+***
 
-### outputFilterBefore
+### outputFilterBefore?
 
-• `Optional` **outputFilterBefore**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)
+> `optional` **outputFilterBefore**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
 
 Use this if you need to run one-time initialization code before `outputFilter`.
 
@@ -121,15 +107,15 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:311](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L311)
+[src/lib/input.ts:312](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L312)
 
-___
+***
 
-### outputMaxEntries
+### outputMaxEntries?
 
-• `Optional` **outputMaxEntries**: `number`
+> `optional` **outputMaxEntries**: `number`
 
 If set, only at most this many entries will be scraped.
 
@@ -139,15 +125,15 @@ This means that if `outputMaxEntries` is set to 50, but the
 associated Dataset already has 40 items in it, then only 10 new entries
 will be saved.
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:235](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L235)
+[src/lib/input.ts:236](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L236)
 
-___
+***
 
-### outputPickFields
+### outputPickFields?
 
-• `Optional` **outputPickFields**: `string`[]
+> `optional` **outputPickFields**: `string`[]
 
 Option to select a subset of keys/fields of an entry that
 will be pushed to the dataset.
@@ -159,15 +145,15 @@ This is done after `outputRenameFields`.
 Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
 resolved using Lodash.get().
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:247](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L247)
+[src/lib/input.ts:248](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L248)
 
-___
+***
 
-### outputRenameFields
+### outputRenameFields?
 
-• `Optional` **outputRenameFields**: `Record`<`string`, `string`\>
+> `optional` **outputRenameFields**: `Record`\<`string`, `string`\>
 
 Option to remap the keys before pushing the entries to the dataset.
 
@@ -176,15 +162,15 @@ This is done before `outputRenameFields`.
 Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
 resolved using Lodash.get().
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:256](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L256)
+[src/lib/input.ts:257](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L257)
 
-___
+***
 
-### outputTransform
+### outputTransform?
 
-• `Optional` **outputTransform**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)<[item: any], `any`\>
+> `optional` **outputTransform**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<[`any`], `any`\>
 
 Option to freely transform the output data object using a custom function before pushing it to the dataset.
 
@@ -197,15 +183,15 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => { ... }`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:270](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L270)
+[src/lib/input.ts:271](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L271)
 
-___
+***
 
-### outputTransformAfter
+### outputTransformAfter?
 
-• `Optional` **outputTransformAfter**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)
+> `optional` **outputTransformAfter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
 
 Use this if you need to run one-time teardown code after `outputTransform`.
 
@@ -214,15 +200,15 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => { ... }`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:288](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L288)
+[src/lib/input.ts:289](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L289)
 
-___
+***
 
-### outputTransformBefore
+### outputTransformBefore?
 
-• `Optional` **outputTransformBefore**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)
+> `optional` **outputTransformBefore**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
 
 Use this if you need to run one-time initialization code before `outputTransform`.
 
@@ -231,6 +217,6 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => { ... }`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:279](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L279)
+[src/lib/input.ts:280](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L280)

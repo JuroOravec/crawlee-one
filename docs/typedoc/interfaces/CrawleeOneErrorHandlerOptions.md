@@ -1,76 +1,65 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / CrawleeOneErrorHandlerOptions
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: CrawleeOneErrorHandlerOptions<TIO\>
+***
+
+[crawlee-one](../globals.md) / CrawleeOneErrorHandlerOptions
+
+# Interface: CrawleeOneErrorHandlerOptions\<TIO\>
 
 User-configurable options passed to the error handler
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `TIO` | extends [`CrawleeOneIO`](CrawleeOneIO.md) = [`CrawleeOneIO`](CrawleeOneIO.md) |
-
-## Table of contents
-
-### Properties
-
-- [allowScreenshot](CrawleeOneErrorHandlerOptions.md#allowscreenshot)
-- [io](CrawleeOneErrorHandlerOptions.md#io)
-- [onErrorCapture](CrawleeOneErrorHandlerOptions.md#onerrorcapture)
-- [reportingDatasetId](CrawleeOneErrorHandlerOptions.md#reportingdatasetid)
+• **TIO** *extends* [`CrawleeOneIO`](CrawleeOneIO.md) = [`CrawleeOneIO`](CrawleeOneIO.md)
 
 ## Properties
 
-### allowScreenshot
+### allowScreenshot?
 
-• `Optional` **allowScreenshot**: `boolean`
+> `optional` **allowScreenshot**: `boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:317](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L317)
+[src/lib/integrations/types.ts:317](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L317)
 
-___
+***
 
-### io
+### io?
 
-• `Optional` **io**: `TIO`
+> `optional` **io**: `TIO`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:316](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L316)
+[src/lib/integrations/types.ts:316](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L316)
 
-___
+***
 
-### onErrorCapture
+### onErrorCapture()?
 
-• `Optional` **onErrorCapture**: (`input`: { `error`: `Error` ; `report`: [`ExtractIOReport`](../modules.md#extractioreport)<`TIO`\>  }) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onErrorCapture**: (`input`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Type declaration
+#### Parameters
 
-▸ (`input`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **input**
 
-##### Parameters
+• **input.error**: `Error`
 
-| Name | Type |
-| :------ | :------ |
-| `input` | `Object` |
-| `input.error` | `Error` |
-| `input.report` | [`ExtractIOReport`](../modules.md#extractioreport)<`TIO`\> |
+• **input.report**: [`ExtractIOReport`](../type-aliases/ExtractIOReport.md)\<`TIO`\>
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:319](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L319)
+[src/lib/integrations/types.ts:319](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L319)
 
-___
+***
 
-### reportingDatasetId
+### reportingDatasetId?
 
-• `Optional` **reportingDatasetId**: `string`
+> `optional` **reportingDatasetId**: `string`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L318)
+[src/lib/integrations/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L318)

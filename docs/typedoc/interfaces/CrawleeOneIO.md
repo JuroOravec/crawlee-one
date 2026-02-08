@@ -1,6 +1,10 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / CrawleeOneIO
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: CrawleeOneIO<TEnv, TReport, TMetadata\>
+***
+
+[crawlee-one](../globals.md) / CrawleeOneIO
+
+# Interface: CrawleeOneIO\<TEnv, TReport, TMetadata\>
 
 Interface for storing and retrieving:
 - Scraped data
@@ -12,36 +16,17 @@ drop-in replacement with other integrations.
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `TEnv` | extends `object` = `object` |
-| `TReport` | extends `object` = `object` |
-| `TMetadata` | extends `object` = `object` |
+• **TEnv** *extends* `object` = `object`
 
-## Table of contents
+• **TReport** *extends* `object` = `object`
 
-### Properties
-
-- [createDefaultProxyConfiguration](CrawleeOneIO.md#createdefaultproxyconfiguration)
-- [generateEntryMetadata](CrawleeOneIO.md#generateentrymetadata)
-- [generateErrorReport](CrawleeOneIO.md#generateerrorreport)
-- [getInput](CrawleeOneIO.md#getinput)
-- [isTelemetryEnabled](CrawleeOneIO.md#istelemetryenabled)
-- [openDataset](CrawleeOneIO.md#opendataset)
-- [openKeyValueStore](CrawleeOneIO.md#openkeyvaluestore)
-- [openRequestQueue](CrawleeOneIO.md#openrequestqueue)
-- [runInContext](CrawleeOneIO.md#runincontext)
-- [triggerDownstreamCrawler](CrawleeOneIO.md#triggerdownstreamcrawler)
+• **TMetadata** *extends* `object` = `object`
 
 ## Properties
 
-### createDefaultProxyConfiguration
+### createDefaultProxyConfiguration()
 
-• **createDefaultProxyConfiguration**: <T\>(`input`: `undefined` \| `T` \| `Readonly`<`T`\>) => [`MaybePromise`](../modules.md#maybepromise)<`undefined` \| `ProxyConfiguration`\>
-
-#### Type declaration
-
-▸ <`T`\>(`input`): [`MaybePromise`](../modules.md#maybepromise)<`undefined` \| `ProxyConfiguration`\>
+> **createDefaultProxyConfiguration**: \<`T`\>(`input`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`undefined` \| `ProxyConfiguration`\>
 
 Creates a proxy configuration and returns a promise resolving to an instance of
 ProxyConfiguration that is already initialized.
@@ -53,139 +38,108 @@ use the selected proxies for all connections.
 
 For more details and code examples, see ProxyConfiguration.
 
-##### Type parameters
+#### Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `object` |
+• **T** *extends* `object`
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `input` | `undefined` \| `T` \| `Readonly`<`T`\> |
+• **input**: `undefined` \| `T` \| `Readonly`\<`T`\>
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`undefined` \| `ProxyConfiguration`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`undefined` \| `ProxyConfiguration`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:128](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L128)
+[src/lib/integrations/types.ts:128](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L128)
 
-___
+***
 
-### generateEntryMetadata
+### generateEntryMetadata()
 
-• **generateEntryMetadata**: <Ctx\>(`ctx`: `Ctx`) => [`MaybePromise`](../modules.md#maybepromise)<`TMetadata`\>
-
-#### Type declaration
-
-▸ <`Ctx`\>(`ctx`): [`MaybePromise`](../modules.md#maybepromise)<`TMetadata`\>
+> **generateEntryMetadata**: \<`Ctx`\>(`ctx`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`TMetadata`\>
 
 Generate object with info on current context, which will be appended to the scraped entry
 
-##### Type parameters
+#### Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `Ctx` | extends `CrawlingContext`<`unknown`, `Dictionary`, `Ctx`\> |
+• **Ctx** *extends* `CrawlingContext`\<`unknown`, `Dictionary`\>
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `ctx` | `Ctx` |
+• **ctx**: `Ctx`
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`TMetadata`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`TMetadata`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L138)
+[src/lib/integrations/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L138)
 
-___
+***
 
-### generateErrorReport
+### generateErrorReport()
 
-• **generateErrorReport**: (`input`: [`CrawleeOneErrorHandlerInput`](CrawleeOneErrorHandlerInput.md), `options`: [`PickRequired`](../modules.md#pickrequired)<[`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)<[`CrawleeOneIO`](CrawleeOneIO.md)<`TEnv`, `TReport`, `object`\>\>, ``"io"``\>) => [`MaybePromise`](../modules.md#maybepromise)<`TReport`\>
-
-#### Type declaration
-
-▸ (`input`, `options`): [`MaybePromise`](../modules.md#maybepromise)<`TReport`\>
+> **generateErrorReport**: (`input`, `options`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`TReport`\>
 
 Generate object with info on current context, which will be send to the error Dataset
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `input` | [`CrawleeOneErrorHandlerInput`](CrawleeOneErrorHandlerInput.md) |
-| `options` | [`PickRequired`](../modules.md#pickrequired)<[`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)<[`CrawleeOneIO`](CrawleeOneIO.md)<`TEnv`, `TReport`, `object`\>\>, ``"io"``\> |
+• **input**: [`CrawleeOneErrorHandlerInput`](CrawleeOneErrorHandlerInput.md)
 
-##### Returns
+• **options**: [`PickRequired`](../type-aliases/PickRequired.md)\<[`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)\<[`CrawleeOneIO`](CrawleeOneIO.md)\<`TEnv`, `TReport`, `object`\>\>, `"io"`\>
 
-[`MaybePromise`](../modules.md#maybepromise)<`TReport`\>
+#### Returns
 
-#### Defined in
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`TReport`\>
 
-[src/lib/integrations/types.ts:133](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L133)
+#### Source
 
-___
+[src/lib/integrations/types.ts:133](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L133)
 
-### getInput
+***
 
-• **getInput**: <Input\>() => `Promise`<``null`` \| `Input`\>
+### getInput()
 
-#### Type declaration
-
-▸ <`Input`\>(): `Promise`<``null`` \| `Input`\>
+> **getInput**: \<`Input`\>() => `Promise`\<`null` \| `Input`\>
 
 Returns a promise of an object with the crawler input. E.g. In Apify, retrieves the actor input value from
 the default KeyValueStore associated with the current actor run.
 
-##### Type parameters
+#### Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `Input` | extends `object` |
+• **Input** *extends* `object`
 
-##### Returns
+#### Returns
 
-`Promise`<``null`` \| `Input`\>
+`Promise`\<`null` \| `Input`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:57](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L57)
+[src/lib/integrations/types.ts:57](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L57)
 
-___
+***
 
-### isTelemetryEnabled
+### isTelemetryEnabled()
 
-• **isTelemetryEnabled**: () => [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+> **isTelemetryEnabled**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-#### Type declaration
+#### Returns
 
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-##### Returns
+#### Source
 
-[`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[src/lib/integrations/types.ts:131](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L131)
 
-#### Defined in
+***
 
-[src/lib/integrations/types.ts:131](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L131)
+### openDataset()
 
-___
-
-### openDataset
-
-• **openDataset**: (`id?`: ``null`` \| `string`) => [`MaybePromise`](../modules.md#maybepromise)<[`CrawleeOneDataset`](CrawleeOneDataset.md)<`object`\>\>
-
-#### Type declaration
-
-▸ (`id?`): [`MaybePromise`](../modules.md#maybepromise)<[`CrawleeOneDataset`](CrawleeOneDataset.md)<`object`\>\>
+> **openDataset**: (`id`?) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneDataset`](CrawleeOneDataset.md)\<`object`\>\>
 
 Opens a dataset and returns a promise resolving to an instance of the [CrawleeOneDataset](CrawleeOneDataset.md).
 
@@ -193,29 +147,23 @@ Datasets are used to store structured data where each object stored has the same
 such as online store products or real estate offers. The actual data is stored either on
 the local filesystem or in the cloud.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `id?` | ``null`` \| `string` |
+• **id?**: `null` \| `string`
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<[`CrawleeOneDataset`](CrawleeOneDataset.md)<`object`\>\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneDataset`](CrawleeOneDataset.md)\<`object`\>\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:35](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L35)
+[src/lib/integrations/types.ts:35](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L35)
 
-___
+***
 
-### openKeyValueStore
+### openKeyValueStore()
 
-• **openKeyValueStore**: (`id?`: ``null`` \| `string`) => [`MaybePromise`](../modules.md#maybepromise)<[`CrawleeOneKeyValueStore`](CrawleeOneKeyValueStore.md)\>
-
-#### Type declaration
-
-▸ (`id?`): [`MaybePromise`](../modules.md#maybepromise)<[`CrawleeOneKeyValueStore`](CrawleeOneKeyValueStore.md)\>
+> **openKeyValueStore**: (`id`?) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneKeyValueStore`](CrawleeOneKeyValueStore.md)\>
 
 Opens a key-value store and returns a promise resolving to an instance of the [CrawleeOneKeyValueStore](CrawleeOneKeyValueStore.md).
 
@@ -223,29 +171,23 @@ Key-value stores are used to store records or files, along with their MIME conte
 The records are stored and retrieved using a unique key. The actual data is stored
 either on a local filesystem or in the cloud.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `id?` | ``null`` \| `string` |
+• **id?**: `null` \| `string`
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<[`CrawleeOneKeyValueStore`](CrawleeOneKeyValueStore.md)\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneKeyValueStore`](CrawleeOneKeyValueStore.md)\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:52](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L52)
+[src/lib/integrations/types.ts:52](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L52)
 
-___
+***
 
-### openRequestQueue
+### openRequestQueue()
 
-• **openRequestQueue**: (`id?`: ``null`` \| `string`) => [`MaybePromise`](../modules.md#maybepromise)<[`CrawleeOneRequestQueue`](CrawleeOneRequestQueue.md)\>
-
-#### Type declaration
-
-▸ (`id?`): [`MaybePromise`](../modules.md#maybepromise)<[`CrawleeOneRequestQueue`](CrawleeOneRequestQueue.md)\>
+> **openRequestQueue**: (`id`?) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneRequestQueue`](CrawleeOneRequestQueue.md)\>
 
 Opens a request queue and returns a promise resolving to an instance of the [CrawleeOneRequestQueue](CrawleeOneRequestQueue.md).
 
@@ -254,29 +196,23 @@ or in the cloud. The queue is used for deep crawling of websites, where you star
 URLs and then recursively follow links to other pages. The data structure supports both
 breadth-first and depth-first crawling orders.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `id?` | ``null`` \| `string` |
+• **id?**: `null` \| `string`
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<[`CrawleeOneRequestQueue`](CrawleeOneRequestQueue.md)\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneRequestQueue`](CrawleeOneRequestQueue.md)\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:44](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L44)
+[src/lib/integrations/types.ts:44](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L44)
 
-___
+***
 
-### runInContext
+### runInContext()
 
-• **runInContext**: (`userFunc`: () => `unknown`, `options?`: `ExitOptions`) => `Promise`<`void`\>
-
-#### Type declaration
-
-▸ (`userFunc`, `options?`): `Promise`<`void`\>
+> **runInContext**: (`userFunc`, `options`?) => `Promise`\<`void`\>
 
 Equivalent of Actor.main.
 
@@ -306,30 +242,25 @@ The `Actor.main()` function performs the following actions:
   prints error details to console so that they are stored to the log.
 - Exits the Node.js process, with zero exit code on success and non-zero on errors.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `userFunc` | () => `unknown` |
-| `options?` | `ExitOptions` |
+• **userFunc**
 
-##### Returns
+• **options?**: `ExitOptions`
 
-`Promise`<`void`\>
+#### Returns
 
-#### Defined in
+`Promise`\<`void`\>
 
-[src/lib/integrations/types.ts:116](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L116)
+#### Source
 
-___
+[src/lib/integrations/types.ts:116](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L116)
 
-### triggerDownstreamCrawler
+***
 
-• **triggerDownstreamCrawler**: <TInput\>(`targetActorId`: `string`, `input?`: `TInput`, `options?`: { `build?`: `string`  }) => `Promise`<`void`\>
+### triggerDownstreamCrawler()
 
-#### Type declaration
-
-▸ <`TInput`\>(`targetActorId`, `input?`, `options?`): `Promise`<`void`\>
+> **triggerDownstreamCrawler**: \<`TInput`\>(`targetActorId`, `input`?, `options`?) => `Promise`\<`void`\>
 
 Equivalent of Actor.metamorph.
 
@@ -346,25 +277,31 @@ stops the current container and starts the new container instead. All the defaul
 are preserved and the new input is stored under the INPUT-METAMORPH-1 key in the same
 default key-value store.
 
-##### Type parameters
+#### Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `TInput` | extends `object` |
+• **TInput** *extends* `object`
 
-##### Parameters
+#### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `targetActorId` | `string` | ID of the crawler/actor to which should be triggered. |
-| `input?` | `TInput` | Input for the crawler/actor. Must be JSON-serializable (it will be stringified to JSON). |
-| `options?` | `Object` | - |
-| `options.build?` | `string` | Tag or number of the target build to metamorph into (e.g. `beta` or `1.2.345`). If not provided, the run uses build tag or number from the default actor run configuration (typically `latest`). |
+• **targetActorId**: `string`
 
-##### Returns
+ID of the crawler/actor to which should be triggered.
 
-`Promise`<`void`\>
+• **input?**: `TInput`
 
-#### Defined in
+Input for the crawler/actor. Must be JSON-serializable (it will be stringified to JSON).
 
-[src/lib/integrations/types.ts:74](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L74)
+• **options?**
+
+• **options.build?**: `string`
+
+Tag or number of the target build to metamorph into (e.g. `beta` or `1.2.345`).
+If not provided, the run uses build tag or number from the default actor run configuration (typically `latest`).
+
+#### Returns
+
+`Promise`\<`void`\>
+
+#### Source
+
+[src/lib/integrations/types.ts:74](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L74)

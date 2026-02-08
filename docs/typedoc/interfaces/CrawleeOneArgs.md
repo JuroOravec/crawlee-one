@@ -1,106 +1,114 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / CrawleeOneArgs
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: CrawleeOneArgs<TType, T\>
+***
+
+[crawlee-one](../globals.md) / CrawleeOneArgs
+
+# Interface: CrawleeOneArgs\<TType, T\>
 
 Args object passed to `crawleeOne`
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `TType` | extends [`CrawlerType`](../modules.md#crawlertype) |
-| `T` | extends [`CrawleeOneCtx`](CrawleeOneCtx.md)<`CrawlerMeta`<`TType`\>[``"context"``]\> |
+• **TType** *extends* [`CrawlerType`](../type-aliases/CrawlerType.md)
 
-## Table of contents
-
-### Properties
-
-- [crawlerConfig](CrawleeOneArgs.md#crawlerconfig)
-- [crawlerConfigDefaults](CrawleeOneArgs.md#crawlerconfigdefaults)
-- [hooks](CrawleeOneArgs.md#hooks)
-- [input](CrawleeOneArgs.md#input)
-- [inputDefaults](CrawleeOneArgs.md#inputdefaults)
-- [io](CrawleeOneArgs.md#io)
-- [mergeInput](CrawleeOneArgs.md#mergeinput)
-- [name](CrawleeOneArgs.md#name)
-- [proxy](CrawleeOneArgs.md#proxy)
-- [router](CrawleeOneArgs.md#router)
-- [routes](CrawleeOneArgs.md#routes)
-- [telemetry](CrawleeOneArgs.md#telemetry)
-- [type](CrawleeOneArgs.md#type)
+• **T** *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)\<`CrawlerMeta`\<`TType`\>\[`"context"`\]\>
 
 ## Properties
 
-### crawlerConfig
+### crawlerConfig?
 
-• `Optional` **crawlerConfig**: `Omit`<`CrawlerMeta`<`TType`, `CrawlingContext`<`unknown`, `Dictionary`\>, `Record`<`string`, `any`\>\>[``"options"``], ``"requestHandler"``\>
+> `optional` **crawlerConfig**: `Omit`\<`CrawlerMeta`\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
 Crawlee crawler configuration that CANNOT be overriden via `input` and `crawlerConfigDefaults`
 
-#### Defined in
+#### Source
 
-[src/api.ts:25](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L25)
+[src/api.ts:25](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L25)
 
-___
+***
 
-### crawlerConfigDefaults
+### crawlerConfigDefaults?
 
-• `Optional` **crawlerConfigDefaults**: `Omit`<`CrawlerMeta`<`TType`, `CrawlingContext`<`unknown`, `Dictionary`\>, `Record`<`string`, `any`\>\>[``"options"``], ``"requestHandler"``\>
+> `optional` **crawlerConfigDefaults**: `Omit`\<`CrawlerMeta`\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
 Crawlee crawler configuration that CAN be overriden via `input` and `crawlerConfig`
 
-#### Defined in
+#### Source
 
-[src/api.ts:27](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L27)
+[src/api.ts:27](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L27)
 
-___
+***
 
-### hooks
+### hooks?
 
-• `Optional` **hooks**: `Object`
+> `optional` **hooks**: `object`
 
-#### Type declaration
+#### onAfterHandler?
 
-| Name | Type |
-| :------ | :------ |
-| `onAfterHandler?` | [`CrawleeOneRouteHandler`](../modules.md#crawleeoneroutehandler)<`T`, [`CrawleeOneActorRouterCtx`](../modules.md#crawleeoneactorrouterctx)<`T`\>\> |
-| `onBeforeHandler?` | [`CrawleeOneRouteHandler`](../modules.md#crawleeoneroutehandler)<`T`, [`CrawleeOneActorRouterCtx`](../modules.md#crawleeoneactorrouterctx)<`T`\>\> |
-| `onReady?` | (`actor`: [`CrawleeOneActorInst`](CrawleeOneActorInst.md)<`T`\>) => [`MaybePromise`](../modules.md#maybepromise)<`void`\> |
-| `validateInput?` | (`input`: ``null`` \| [`AllActorInputs`](../modules.md#allactorinputs)) => [`MaybePromise`](../modules.md#maybepromise)<`void`\> |
+> `optional` **onAfterHandler**: [`CrawleeOneRouteHandler`](../type-aliases/CrawleeOneRouteHandler.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>
 
-#### Defined in
+#### onBeforeHandler?
 
-[src/api.ts:115](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L115)
+> `optional` **onBeforeHandler**: [`CrawleeOneRouteHandler`](../type-aliases/CrawleeOneRouteHandler.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>
 
-___
+#### onReady()?
 
-### input
+> `optional` **onReady**: (`actor`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-• `Optional` **input**: `Partial`<[`AllActorInputs`](../modules.md#allactorinputs)\>
+##### Parameters
+
+• **actor**: [`CrawleeOneActorInst`](CrawleeOneActorInst.md)\<`T`\>
+
+##### Returns
+
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
+
+#### validateInput()?
+
+> `optional` **validateInput**: (`input`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
+
+##### Parameters
+
+• **input**: `null` \| [`AllActorInputs`](../type-aliases/AllActorInputs.md)
+
+##### Returns
+
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
+
+#### Source
+
+[src/api.ts:115](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L115)
+
+***
+
+### input?
+
+> `optional` **input**: `Partial`\<[`AllActorInputs`](../type-aliases/AllActorInputs.md)\>
 
 Input configuration that CANNOT be overriden via `inputDefaults` and `io.getInput()`
 
-#### Defined in
+#### Source
 
-[src/api.ts:67](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L67)
+[src/api.ts:67](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L67)
 
-___
+***
 
-### inputDefaults
+### inputDefaults?
 
-• `Optional` **inputDefaults**: `Partial`<[`AllActorInputs`](../modules.md#allactorinputs)\>
+> `optional` **inputDefaults**: `Partial`\<[`AllActorInputs`](../type-aliases/AllActorInputs.md)\>
 
 Input configuration that CAN be overriden via `input` and `io.getInput()`
 
-#### Defined in
+#### Source
 
-[src/api.ts:69](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L69)
+[src/api.ts:69](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L69)
 
-___
+***
 
-### io
+### io?
 
-• `Optional` **io**: `T`[``"io"``]
+> `optional` **io**: `T`\[`"io"`\]
 
 Provide an instance that is responsible for state management:
 - Adding scraped data to datasets
@@ -118,15 +126,15 @@ then it will use Apify's cloud for storage.
 
 See [CrawleeOneIO](CrawleeOneIO.md)
 
-#### Defined in
+#### Source
 
-[src/api.ts:101](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L101)
+[src/api.ts:101](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L101)
 
-___
+***
 
-### mergeInput
+### mergeInput?
 
-• `Optional` **mergeInput**: `boolean` \| (`sources`: { `defaults`: `Partial`<[`AllActorInputs`](../modules.md#allactorinputs)\> ; `env`: `Partial`<[`AllActorInputs`](../modules.md#allactorinputs)\> ; `overrides`: `Partial`<[`AllActorInputs`](../modules.md#allactorinputs)\>  }) => [`MaybePromise`](../modules.md#maybepromise)<`Partial`<[`AllActorInputs`](../modules.md#allactorinputs)\>\>
+> `optional` **mergeInput**: `boolean` \| (`sources`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`Partial`\<[`AllActorInputs`](../type-aliases/AllActorInputs.md)\>\>
 
 If `mergeInput` is truthy, will merge input settings from `inputDefaults`, `input`,
 and `io.getInput()`.
@@ -159,41 +167,41 @@ Alternatively, you can supply your own function that merges the sources:
 }
 ```
 
-#### Defined in
+#### Source
 
-[src/api.ts:61](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L61)
+[src/api.ts:61](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L61)
 
-___
+***
 
-### name
+### name?
 
-• `Optional` **name**: `string`
+> `optional` **name**: `string`
 
 Unique name of the crawler instance. The name may be used in codegen and logging.
 
-#### Defined in
+#### Source
 
-[src/api.ts:22](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L22)
+[src/api.ts:22](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L22)
 
-___
+***
 
-### proxy
+### proxy?
 
-• `Optional` **proxy**: [`MaybeAsyncFn`](../modules.md#maybeasyncfn)<`ProxyConfiguration`, [[`CrawleeOneActorDefWithInput`](../modules.md#crawleeoneactordefwithinput)<`T`\>]\>
+> `optional` **proxy**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`ProxyConfiguration`, [[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>]\>
 
 Configure the Crawlee proxy.
 
 See ProxyConfiguration
 
-#### Defined in
+#### Source
 
-[src/api.ts:77](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L77)
+[src/api.ts:77](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L77)
 
-___
+***
 
-### router
+### router?
 
-• `Optional` **router**: [`MaybeAsyncFn`](../modules.md#maybeasyncfn)<`RouterHandler`<`T`[``"context"``]\>, [[`CrawleeOneActorDefWithInput`](../modules.md#crawleeoneactordefwithinput)<`T`\>]\>
+> `optional` **router**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`RouterHandler`\<`T`\[`"context"`\]\>, [[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>]\>
 
 Provide a custom router instance.
 
@@ -205,42 +213,42 @@ Router.create(),
 
 See Router
 
-#### Defined in
+#### Source
 
-[src/api.ts:113](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L113)
+[src/api.ts:113](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L113)
 
-___
+***
 
 ### routes
 
-• **routes**: `Record`<`T`[``"labels"``], [`CrawleeOneRoute`](CrawleeOneRoute.md)<`T`, [`CrawleeOneActorRouterCtx`](../modules.md#crawleeoneactorrouterctx)<`T`\>\>\>
+> **routes**: `Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](CrawleeOneRoute.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>\>
 
-#### Defined in
+#### Source
 
-[src/api.ts:121](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L121)
+[src/api.ts:121](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L121)
 
-___
+***
 
-### telemetry
+### telemetry?
 
-• `Optional` **telemetry**: [`MaybeAsyncFn`](../modules.md#maybeasyncfn)<`T`[``"telemetry"``], [[`CrawleeOneActorDefWithInput`](../modules.md#crawleeoneactordefwithinput)<`T`\>]\>
+> `optional` **telemetry**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`T`\[`"telemetry"`\], [[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>]\>
 
 Provide a telemetry instance that is used for tracking errors.
 
 See [CrawleeOneTelemetry](CrawleeOneTelemetry.md)
 
-#### Defined in
+#### Source
 
-[src/api.ts:83](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L83)
+[src/api.ts:83](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L83)
 
-___
+***
 
 ### type
 
-• **type**: ``"basic"`` \| ``"http"`` \| ``"cheerio"`` \| ``"jsdom"`` \| ``"playwright"`` \| ``"puppeteer"``
+> **type**: `"basic"` \| `"http"` \| `"jsdom"` \| `"cheerio"` \| `"playwright"` \| `"adaptive-playwright"` \| `"puppeteer"`
 
 Type specifying the Crawlee crawler class, input options, and more.
 
-#### Defined in
+#### Source
 
-[src/api.ts:20](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/api.ts#L20)
+[src/api.ts:20](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/api.ts#L20)

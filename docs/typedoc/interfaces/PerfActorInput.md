@@ -1,21 +1,18 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / PerfActorInput
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / PerfActorInput
 
 # Interface: PerfActorInput
 
 Common input fields related to performance which are not part of the CrawlerConfig
 
-## Table of contents
-
-### Properties
-
-- [perfBatchSize](PerfActorInput.md#perfbatchsize)
-- [perfBatchWaitSecs](PerfActorInput.md#perfbatchwaitsecs)
-
 ## Properties
 
-### perfBatchSize
+### perfBatchSize?
 
-• `Optional` **perfBatchSize**: `number`
+> `optional` **perfBatchSize**: `number`
 
 If set, multiple Requests will be handled by a single Actor instance.
 
@@ -23,15 +20,15 @@ See official docs: https://docs.apify.com/platform/actors/development/performanc
 
 Example: If set to 20, then up to 20 requests will be handled in a single "go".
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:80](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L80)
+[src/lib/input.ts:81](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L81)
 
-___
+***
 
-### perfBatchWaitSecs
+### perfBatchWaitSecs?
 
-• `Optional` **perfBatchWaitSecs**: `number`
+> `optional` **perfBatchWaitSecs**: `number`
 
 How long to wait between entries within a single batch.
 
@@ -39,6 +36,6 @@ Increase this value if you're using batching and you're sending requests to the 
 
 Example: If set to 1, then after each entry in a batch, wait 1 second before continuing.
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:88](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L88)
+[src/lib/input.ts:89](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L89)

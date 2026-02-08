@@ -1,4 +1,8 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / CrawleeOneKeyValueStore
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / CrawleeOneKeyValueStore
 
 # Interface: CrawleeOneKeyValueStore
 
@@ -10,68 +14,44 @@ under keys.
 This interface is based on Crawlee/Apify, but defined separately to allow
 drop-in replacement with other integrations.
 
-## Table of contents
-
-### Properties
-
-- [clear](CrawleeOneKeyValueStore.md#clear)
-- [drop](CrawleeOneKeyValueStore.md#drop)
-- [setValue](CrawleeOneKeyValueStore.md#setvalue)
-
-### Methods
-
-- [getValue](CrawleeOneKeyValueStore.md#getvalue)
-
 ## Properties
 
-### clear
+### clear()
 
-• **clear**: () => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> **clear**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Removes all entries from the store.
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:223](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L223)
+[src/lib/integrations/types.ts:223](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L223)
 
-___
+***
 
-### drop
+### drop()
 
-• **drop**: () => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> **drop**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Removes the key-value store either from the cloud storage or from the local directory,
 depending on the mode of operation.
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:221](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L221)
+[src/lib/integrations/types.ts:221](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L221)
 
-___
+***
 
-### setValue
+### setValue()
 
-• **setValue**: (`key`: `string`, `value`: `any`, `options?`: { `contentType?`: `string`  }) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (`key`, `value`, `options?`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> **setValue**: (`key`, `value`, `options`?) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Saves or deletes a record in the key-value store. The function returns a promise that
 resolves once the record has been saved or deleted.
@@ -85,28 +65,31 @@ characters: a-zA-Z0-9!-_.'()
 To retrieve a value from the key-value store, use the [CrawleeOneKeyValueStore.getValue](CrawleeOneKeyValueStore.md#getvalue)
 function.
 
-##### Parameters
+#### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `key` | `string` | - |
-| `value` | `any` | - |
-| `options?` | `Object` | - |
-| `options.contentType?` | `string` | Specifies a custom MIME content type of the record. |
+• **key**: `string`
 
-##### Returns
+• **value**: `any`
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **options?**
 
-#### Defined in
+• **options.contentType?**: `string`
 
-[src/lib/integrations/types.ts:209](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L209)
+Specifies a custom MIME content type of the record.
+
+#### Returns
+
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
+
+#### Source
+
+[src/lib/integrations/types.ts:209](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L209)
 
 ## Methods
 
-### getValue
+### getValue()
 
-▸ **getValue**<`T`\>(`key`, `defaultValue`): `Promise`<`T`\>
+> **getValue**\<`T`\>(`key`, `defaultValue`): `Promise`\<`T`\>
 
 Gets a value from the key-value store.
 
@@ -119,23 +102,23 @@ To save or delete a value in the key-value store, use the
 
 #### Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | `unknown` |
+• **T** = `unknown`
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `key` | `string` | Unique key of the record. It can be at most 256 characters long and only consist of the following characters: `a`-`z`, `A`-`Z`, `0`-`9` and `!-_.'()` |
-| `defaultValue` | `T` | - |
+• **key**: `string`
+
+Unique key of the record. It can be at most 256 characters long and only consist
+  of the following characters: `a`-`z`, `A`-`Z`, `0`-`9` and `!-_.'()`
+
+• **defaultValue**: `T`
 
 #### Returns
 
-`Promise`<`T`\>
+`Promise`\<`T`\>
 
 Returns a promise that resolves to the value, or the default value if the key is missing from the store.
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:195](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L195)
+[src/lib/integrations/types.ts:195](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L195)

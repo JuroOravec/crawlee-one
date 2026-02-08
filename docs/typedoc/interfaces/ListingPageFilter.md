@@ -1,144 +1,111 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / ListingPageFilter
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / ListingPageFilter
 
 # Interface: ListingPageFilter
 
-## Table of contents
-
-### Properties
-
-- [disabled](ListingPageFilter.md#disabled)
-- [hasNextState](ListingPageFilter.md#hasnextstate)
-- [hasState](ListingPageFilter.md#hasstate)
-- [initState](ListingPageFilter.md#initstate)
-- [loadState](ListingPageFilter.md#loadstate)
-- [name](ListingPageFilter.md#name)
-- [nextState](ListingPageFilter.md#nextstate)
-- [resetState](ListingPageFilter.md#resetstate)
-
 ## Properties
 
-### disabled
+### disabled?
 
-• `Optional` **disabled**: `boolean`
+> `optional` **disabled**: `boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:18](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L18)
+[src/lib/actions/scrapeListing.ts:18](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L18)
 
-___
+***
 
-### hasNextState
+### hasNextState()
 
-• **hasNextState**: () => [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+> **hasNextState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-#### Type declaration
+#### Returns
 
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-##### Returns
+#### Source
 
-[`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[src/lib/actions/scrapeListing.ts:22](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L22)
 
-#### Defined in
+***
 
-[src/lib/actions/scrapeListing.ts:22](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L22)
+### hasState()
 
-___
+> **hasState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-### hasState
+#### Returns
 
-• **hasState**: () => [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-#### Type declaration
+#### Source
 
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[src/lib/actions/scrapeListing.ts:23](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L23)
 
-##### Returns
+***
 
-[`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+### initState()
 
-#### Defined in
+> **initState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-[src/lib/actions/scrapeListing.ts:23](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L23)
+#### Returns
 
-___
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-### initState
+#### Source
 
-• **initState**: () => [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[src/lib/actions/scrapeListing.ts:19](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L19)
 
-#### Type declaration
+***
 
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+### loadState()
 
-##### Returns
+> **loadState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-[`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+#### Returns
 
-#### Defined in
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-[src/lib/actions/scrapeListing.ts:19](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L19)
+#### Source
 
-___
+[src/lib/actions/scrapeListing.ts:24](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L24)
 
-### loadState
-
-• **loadState**: () => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-##### Returns
-
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Defined in
-
-[src/lib/actions/scrapeListing.ts:24](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L24)
-
-___
+***
 
 ### name
 
-• **name**: `string`
+> **name**: `string`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:17](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L17)
+[src/lib/actions/scrapeListing.ts:17](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L17)
 
-___
+***
 
-### nextState
+### nextState()
 
-• **nextState**: () => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> **nextState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Type declaration
+#### Returns
 
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-##### Returns
+#### Source
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[src/lib/actions/scrapeListing.ts:21](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L21)
 
-#### Defined in
+***
 
-[src/lib/actions/scrapeListing.ts:21](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L21)
+### resetState()
 
-___
+> **resetState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-### resetState
+#### Returns
 
-• **resetState**: () => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Type declaration
+#### Source
 
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-##### Returns
-
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Defined in
-
-[src/lib/actions/scrapeListing.ts:20](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L20)
+[src/lib/actions/scrapeListing.ts:20](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L20)

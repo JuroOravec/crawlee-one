@@ -1,57 +1,51 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / RequestQueueSizeMonitorOptions
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / RequestQueueSizeMonitorOptions
 
 # Interface: RequestQueueSizeMonitorOptions
 
-## Hierarchy
+## Extends
 
 - `ValueMonitorOptions`
 
-  ↳ **`RequestQueueSizeMonitorOptions`**
-
-## Table of contents
-
-### Properties
-
-- [io](RequestQueueSizeMonitorOptions.md#io)
-- [requestQueueId](RequestQueueSizeMonitorOptions.md#requestqueueid)
-- [ttlInMs](RequestQueueSizeMonitorOptions.md#ttlinms)
-
 ## Properties
 
-### io
+### io?
 
-• `Optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)<`any`, `any`, `object`\>
+> `optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)\<`any`, `any`, `object`\>
 
-#### Defined in
+#### Source
 
-[src/lib/io/requestQueue.ts:6](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/requestQueue.ts#L6)
+[src/lib/io/requestQueue.ts:6](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/requestQueue.ts#L6)
 
-___
+***
 
-### requestQueueId
+### requestQueueId?
 
-• `Optional` **requestQueueId**: `string`
+> `optional` **requestQueueId**: `string`
 
 ID of the RequestQueue that's monitored for size.
 
 If omitted, the default RequestQueue is used.
 
-#### Defined in
+#### Source
 
-[src/lib/io/requestQueue.ts:12](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/requestQueue.ts#L12)
+[src/lib/io/requestQueue.ts:12](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/requestQueue.ts#L12)
 
-___
+***
 
-### ttlInMs
+### ttlInMs?
 
-• `Optional` **ttlInMs**: `number`
+> `optional` **ttlInMs**: `number`
 
 How long (in milliseconds) after fetching the value can we use it before we have to re-fetch it.
 
 #### Inherited from
 
-ValueMonitorOptions.ttlInMs
+`ValueMonitorOptions.ttlInMs`
 
-#### Defined in
+#### Source
 
-[src/utils/valueMonitor.ts:6](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/utils/valueMonitor.ts#L6)
+[src/utils/valueMonitor.ts:6](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/utils/valueMonitor.ts#L6)

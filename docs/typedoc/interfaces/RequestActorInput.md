@@ -1,27 +1,18 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / RequestActorInput
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / RequestActorInput
 
 # Interface: RequestActorInput
 
 Common input fields related to actor requests
 
-## Table of contents
-
-### Properties
-
-- [requestFilter](RequestActorInput.md#requestfilter)
-- [requestFilterAfter](RequestActorInput.md#requestfilterafter)
-- [requestFilterBefore](RequestActorInput.md#requestfilterbefore)
-- [requestMaxEntries](RequestActorInput.md#requestmaxentries)
-- [requestQueueId](RequestActorInput.md#requestqueueid)
-- [requestTransform](RequestActorInput.md#requesttransform)
-- [requestTransformAfter](RequestActorInput.md#requesttransformafter)
-- [requestTransformBefore](RequestActorInput.md#requesttransformbefore)
-
 ## Properties
 
-### requestFilter
+### requestFilter?
 
-• `Optional` **requestFilter**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)<[`RequestOptions`<`Dictionary`\> \| `Request`<`Dictionary`\>], `unknown`\>
+> `optional` **requestFilter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<[`Source`], `unknown`\>
 
 Option to filter a request using a custom function before pushing it to the RequestQueue.
 
@@ -34,15 +25,15 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:200](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L200)
+[src/lib/input.ts:201](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L201)
 
-___
+***
 
-### requestFilterAfter
+### requestFilterAfter?
 
-• `Optional` **requestFilterAfter**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)
+> `optional` **requestFilterAfter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
 
 Use this if you need to run one-time initialization code after `requestFilter`.
 
@@ -51,15 +42,15 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:218](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L218)
+[src/lib/input.ts:219](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L219)
 
-___
+***
 
-### requestFilterBefore
+### requestFilterBefore?
 
-• `Optional` **requestFilterBefore**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)
+> `optional` **requestFilterBefore**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
 
 Use this if you need to run one-time initialization code before `requestFilter`.
 
@@ -68,15 +59,15 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:209](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L209)
+[src/lib/input.ts:210](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L210)
 
-___
+***
 
-### requestMaxEntries
+### requestMaxEntries?
 
-• `Optional` **requestMaxEntries**: `number`
+> `optional` **requestMaxEntries**: `number`
 
 If set, only at most this many requests will be scraped.
 
@@ -86,27 +77,27 @@ This means that if `requestMaxEntries` is set to 50, but the
 associated RequestQueue already handled 40 requests, then only 10 new requests
 will be handled.
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:154](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L154)
+[src/lib/input.ts:155](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L155)
 
-___
+***
 
-### requestQueueId
+### requestQueueId?
 
-• `Optional` **requestQueueId**: `string`
+> `optional` **requestQueueId**: `string`
 
 ID of the RequestQueue to which the requests should be pushed
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:221](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L221)
+[src/lib/input.ts:222](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L222)
 
-___
+***
 
-### requestTransform
+### requestTransform?
 
-• `Optional` **requestTransform**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)<[`RequestOptions`<`Dictionary`\> \| `Request`<`Dictionary`\>], `RequestOptions`<`Dictionary`\> \| `Request`<`Dictionary`\>\>
+> `optional` **requestTransform**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<[`Source`], `Source`\>
 
 Option to freely transform a request using a custom function before pushing it to the RequestQueue.
 
@@ -117,15 +108,15 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => { ... }`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:166](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L166)
+[src/lib/input.ts:167](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L167)
 
-___
+***
 
-### requestTransformAfter
+### requestTransformAfter?
 
-• `Optional` **requestTransformAfter**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)
+> `optional` **requestTransformAfter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
 
 Use this if you need to run one-time teardown code after `requestTransform`.
 
@@ -134,15 +125,15 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => { ... }`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:186](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L186)
+[src/lib/input.ts:187](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L187)
 
-___
+***
 
-### requestTransformBefore
+### requestTransformBefore?
 
-• `Optional` **requestTransformBefore**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)
+> `optional` **requestTransformBefore**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
 
 Use this if you need to run one-time initialization code before `requestTransform`.
 
@@ -151,6 +142,6 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => { ... }`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:177](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L177)
+[src/lib/input.ts:178](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L178)

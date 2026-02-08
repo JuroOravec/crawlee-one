@@ -1,125 +1,101 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / ListingFiltersSetupOptions
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: ListingFiltersSetupOptions<Ctx, UrlType\>
+***
+
+[crawlee-one](../globals.md) / ListingFiltersSetupOptions
+
+# Interface: ListingFiltersSetupOptions\<Ctx, UrlType\>
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `Ctx` | extends `object` |
-| `UrlType` | `UrlType` |
+• **Ctx** *extends* `object`
 
-## Table of contents
-
-### Properties
-
-- [context](ListingFiltersSetupOptions.md#context)
-- [filters](ListingFiltersSetupOptions.md#filters)
-- [log](ListingFiltersSetupOptions.md#log)
-- [onFiltersLoaded](ListingFiltersSetupOptions.md#onfiltersloaded)
-- [onResetFilters](ListingFiltersSetupOptions.md#onresetfilters)
-- [shouldApplyFilter](ListingFiltersSetupOptions.md#shouldapplyfilter)
+• **UrlType**
 
 ## Properties
 
 ### context
 
-• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>
+> **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:28](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L28)
+[src/lib/actions/scrapeListing.ts:28](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L28)
 
-___
+***
 
-### filters
+### filters?
 
-• `Optional` **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
+> `optional` **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:29](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L29)
+[src/lib/actions/scrapeListing.ts:29](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L29)
 
-___
+***
 
 ### log
 
-• **log**: [`ListingLogger`](ListingLogger.md)
+> **log**: [`ListingLogger`](ListingLogger.md)
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:37](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L37)
+[src/lib/actions/scrapeListing.ts:37](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L37)
 
-___
+***
 
-### onFiltersLoaded
+### onFiltersLoaded()?
 
-• `Optional` **onFiltersLoaded**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> `optional` **onFiltersLoaded**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Type declaration
+#### Parameters
 
-▸ (`context`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-##### Parameters
+#### Returns
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-##### Returns
+#### Source
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[src/lib/actions/scrapeListing.ts:36](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L36)
 
-#### Defined in
+***
 
-[src/lib/actions/scrapeListing.ts:36](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L36)
+### onResetFilters()?
 
-___
+> `optional` **onResetFilters**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-### onResetFilters
+#### Parameters
 
-• `Optional` **onResetFilters**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-#### Type declaration
+#### Returns
 
-▸ (`context`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-##### Parameters
+#### Source
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
+[src/lib/actions/scrapeListing.ts:35](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L35)
 
-##### Returns
+***
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+### shouldApplyFilter()?
 
-#### Defined in
+> `optional` **shouldApplyFilter**: (`context`, `filter`, `filters`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-[src/lib/actions/scrapeListing.ts:35](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L35)
+#### Parameters
 
-___
+• **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-### shouldApplyFilter
+• **filter**: [`ListingPageFilter`](ListingPageFilter.md)
 
-• `Optional` **shouldApplyFilter**: (`context`: [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\>, `filter`: [`ListingPageFilter`](ListingPageFilter.md), `filters`: [`ListingPageFilter`](ListingPageFilter.md)[]) => [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+• **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
 
-#### Type declaration
+#### Returns
 
-▸ (`context`, `filter`, `filters`): [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-##### Parameters
+#### Source
 
-| Name | Type |
-| :------ | :------ |
-| `context` | [`ListingPageScraperContext`](ListingPageScraperContext.md)<`Ctx`, `UrlType`\> |
-| `filter` | [`ListingPageFilter`](ListingPageFilter.md) |
-| `filters` | [`ListingPageFilter`](ListingPageFilter.md)[] |
-
-##### Returns
-
-[`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
-
-#### Defined in
-
-[src/lib/actions/scrapeListing.ts:30](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L30)
+[src/lib/actions/scrapeListing.ts:30](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L30)

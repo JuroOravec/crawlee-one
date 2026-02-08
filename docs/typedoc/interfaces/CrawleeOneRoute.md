@@ -1,6 +1,10 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / CrawleeOneRoute
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: CrawleeOneRoute<T, RouterCtx\>
+***
+
+[crawlee-one](../globals.md) / CrawleeOneRoute
+
+# Interface: CrawleeOneRoute\<T, RouterCtx\>
 
 Route that a request will be sent to if the request doesn't have a label yet,
 and if the `match` function returns truthy value.
@@ -13,48 +17,34 @@ a request will process that request.
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`CrawleeOneCtx`](CrawleeOneCtx.md) |
-| `RouterCtx` | extends `Record`<`string`, `any`\> = [`CrawleeOneRouteCtx`](../modules.md#crawleeoneroutectx)<`T`\> |
+• **T** *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
 
-## Table of contents
-
-### Properties
-
-- [handler](CrawleeOneRoute.md#handler)
-- [match](CrawleeOneRoute.md#match)
+• **RouterCtx** *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](../type-aliases/CrawleeOneRouteCtx.md)\<`T`\>
 
 ## Properties
 
-### handler
+### handler()
 
-• **handler**: (`ctx`: `Omit`<`T`[``"context"``] & `RouterCtx`, ``"request"``\> & { `request`: `Request`<`Dictionary`\>  }) => `Awaitable`<`void`\>
+> **handler**: (`ctx`) => `Awaitable`\<`void`\>
 
-#### Type declaration
+#### Parameters
 
-▸ (`ctx`): `Awaitable`<`void`\>
+• **ctx**: `Omit`\<`T`\[`"context"`\] & `RouterCtx`, `"request"`\> & `object`
 
-##### Parameters
+#### Returns
 
-| Name | Type |
-| :------ | :------ |
-| `ctx` | `Omit`<`T`[``"context"``] & `RouterCtx`, ``"request"``\> & { `request`: `Request`<`Dictionary`\>  } |
+`Awaitable`\<`void`\>
 
-##### Returns
+#### Source
 
-`Awaitable`<`void`\>
+[src/lib/router/types.ts:41](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/router/types.ts#L41)
 
-#### Defined in
-
-[src/lib/router/types.ts:41](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/router/types.ts#L41)
-
-___
+***
 
 ### match
 
-• **match**: [`CrawleeOneRouteMatcher`](../modules.md#crawleeoneroutematcher)<`T`, `RouterCtx`\>
+> **match**: [`CrawleeOneRouteMatcher`](../type-aliases/CrawleeOneRouteMatcher.md)\<`T`, `RouterCtx`\>
 
-#### Defined in
+#### Source
 
-[src/lib/router/types.ts:40](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/router/types.ts#L40)
+[src/lib/router/types.ts:40](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/router/types.ts#L40)

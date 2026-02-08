@@ -1,21 +1,19 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / PrivacyActorInput
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / PrivacyActorInput
 
 # Interface: PrivacyActorInput
 
 Common input fields related to privacy setup
 
-## Table of contents
-
-### Properties
-
-- [includePersonalData](PrivacyActorInput.md#includepersonaldata)
-
 ## Properties
 
-### includePersonalData
+### includePersonalData?
 
-• `Optional` **includePersonalData**: `boolean`
+> `optional` **includePersonalData**: `boolean`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:359](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L359)
+[src/lib/input.ts:360](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L360)

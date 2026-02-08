@@ -1,78 +1,62 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / PushRequestsOptions
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: PushRequestsOptions<T\>
+***
+
+[crawlee-one](../globals.md) / PushRequestsOptions
+
+# Interface: PushRequestsOptions\<T\>
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Exclude`<[`CrawlerUrl`](../modules.md#crawlerurl), `string`\> = `Exclude`<[`CrawlerUrl`](../modules.md#crawlerurl), `string`\> |
-
-## Table of contents
-
-### Properties
-
-- [filter](PushRequestsOptions.md#filter)
-- [io](PushRequestsOptions.md#io)
-- [log](PushRequestsOptions.md#log)
-- [maxCount](PushRequestsOptions.md#maxcount)
-- [queueOptions](PushRequestsOptions.md#queueoptions)
-- [requestQueueId](PushRequestsOptions.md#requestqueueid)
-- [transform](PushRequestsOptions.md#transform)
+• **T** *extends* `Exclude`\<[`CrawlerUrl`](../type-aliases/CrawlerUrl.md), `string`\> = `Exclude`\<[`CrawlerUrl`](../type-aliases/CrawlerUrl.md), `string`\>
 
 ## Properties
 
-### filter
+### filter()?
 
-• `Optional` **filter**: (`req`: `T`) => `unknown`
-
-#### Type declaration
-
-▸ (`req`): `unknown`
+> `optional` **filter**: (`req`) => `unknown`
 
 Option to filter a request before pushing it to the RequestQueue.
 
 This serves mainly to allow users to filter the requests from actor input UI.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `req` | `T` |
+• **req**: `T`
 
-##### Returns
+#### Returns
 
 `unknown`
 
-#### Defined in
+#### Source
 
-[src/lib/io/pushRequests.ts:35](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/pushRequests.ts#L35)
+[src/lib/io/pushRequests.ts:35](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushRequests.ts#L35)
 
-___
+***
 
-### io
+### io?
 
-• `Optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)<`any`, `any`, `object`\>
+> `optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)\<`any`, `any`, `object`\>
 
-#### Defined in
+#### Source
 
-[src/lib/io/pushRequests.ts:12](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/pushRequests.ts#L12)
+[src/lib/io/pushRequests.ts:12](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushRequests.ts#L12)
 
-___
+***
 
-### log
+### log?
 
-• `Optional` **log**: `Log`
+> `optional` **log**: `Log`
 
-#### Defined in
+#### Source
 
-[src/lib/io/pushRequests.ts:13](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/pushRequests.ts#L13)
+[src/lib/io/pushRequests.ts:13](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushRequests.ts#L13)
 
-___
+***
 
-### maxCount
+### maxCount?
 
-• `Optional` **maxCount**: `number`
+> `optional` **maxCount**: `number`
 
 If set, only at most this many requests will be added to the RequestQueue.
 
@@ -82,56 +66,50 @@ This means that if `maxCount` is set to 50, but the
 associated RequestQueue already handled 40 requests, then only 10 new requests
 will be processed.
 
-#### Defined in
+#### Source
 
-[src/lib/io/pushRequests.ts:23](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/pushRequests.ts#L23)
+[src/lib/io/pushRequests.ts:23](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushRequests.ts#L23)
 
-___
+***
 
-### queueOptions
+### queueOptions?
 
-• `Optional` **queueOptions**: `RequestQueueOperationOptions`
+> `optional` **queueOptions**: `RequestQueueOperationOptions`
 
-#### Defined in
+#### Source
 
-[src/lib/io/pushRequests.ts:40](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/pushRequests.ts#L40)
+[src/lib/io/pushRequests.ts:40](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushRequests.ts#L40)
 
-___
+***
 
-### requestQueueId
+### requestQueueId?
 
-• `Optional` **requestQueueId**: `string`
+> `optional` **requestQueueId**: `string`
 
 ID of the RequestQueue to which the data should be pushed
 
-#### Defined in
+#### Source
 
-[src/lib/io/pushRequests.ts:37](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/pushRequests.ts#L37)
+[src/lib/io/pushRequests.ts:37](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushRequests.ts#L37)
 
-___
+***
 
-### transform
+### transform()?
 
-• `Optional` **transform**: (`req`: `T`) => [`MaybePromise`](../modules.md#maybepromise)<`T`\>
-
-#### Type declaration
-
-▸ (`req`): [`MaybePromise`](../modules.md#maybepromise)<`T`\>
+> `optional` **transform**: (`req`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`\>
 
 Option to freely transform a request before pushing it to the RequestQueue.
 
 This serves mainly to allow users to transform the requests from actor input UI.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `req` | `T` |
+• **req**: `T`
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`T`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`\>
 
-#### Defined in
+#### Source
 
-[src/lib/io/pushRequests.ts:29](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/pushRequests.ts#L29)
+[src/lib/io/pushRequests.ts:29](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushRequests.ts#L29)

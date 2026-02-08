@@ -1,48 +1,44 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / StartUrlsActorInput
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / StartUrlsActorInput
 
 # Interface: StartUrlsActorInput
 
 Common input fields for defining URLs to scrape
 
-## Table of contents
-
-### Properties
-
-- [startUrls](StartUrlsActorInput.md#starturls)
-- [startUrlsFromDataset](StartUrlsActorInput.md#starturlsfromdataset)
-- [startUrlsFromFunction](StartUrlsActorInput.md#starturlsfromfunction)
-
 ## Properties
 
-### startUrls
+### startUrls?
 
-• `Optional` **startUrls**: (`string` \| `RequestOptions`<`Dictionary`\> \| `Request`<`Dictionary`\>)[]
+> `optional` **startUrls**: [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]
 
 URLs to start with, defined manually as a list of strings or crawler requests
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:94](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L94)
+[src/lib/input.ts:95](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L95)
 
-___
+***
 
-### startUrlsFromDataset
+### startUrlsFromDataset?
 
-• `Optional` **startUrlsFromDataset**: `string`
+> `optional` **startUrlsFromDataset**: `string`
 
 Import starting URLs from an existing Dataset.
 
 String is in the format `datasetID#field` (e.g. `datasetid123#url`).
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:100](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L100)
+[src/lib/input.ts:101](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L101)
 
-___
+***
 
-### startUrlsFromFunction
+### startUrlsFromFunction?
 
-• `Optional` **startUrlsFromFunction**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)<[], (`string` \| `RequestOptions`<`Dictionary`\> \| `Request`<`Dictionary`\>)[]\>
+> `optional` **startUrlsFromFunction**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<[], [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]\>
 
 Import or generate starting URLs using a custom function.
 
@@ -59,6 +55,6 @@ async ({ io, input, state, itemCacheKey }) => {
 }
 ```
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:117](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L117)
+[src/lib/input.ts:118](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L118)

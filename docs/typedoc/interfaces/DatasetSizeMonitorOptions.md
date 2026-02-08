@@ -1,73 +1,66 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / DatasetSizeMonitorOptions
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / DatasetSizeMonitorOptions
 
 # Interface: DatasetSizeMonitorOptions
 
-## Hierarchy
+## Extends
 
 - `ValueMonitorOptions`
 
-  ↳ **`DatasetSizeMonitorOptions`**
-
-## Table of contents
-
-### Properties
-
-- [datasetId](DatasetSizeMonitorOptions.md#datasetid)
-- [io](DatasetSizeMonitorOptions.md#io)
-- [requestQueueId](DatasetSizeMonitorOptions.md#requestqueueid)
-- [ttlInMs](DatasetSizeMonitorOptions.md#ttlinms)
-
 ## Properties
 
-### datasetId
+### datasetId?
 
-• `Optional` **datasetId**: `string`
+> `optional` **datasetId**: `string`
 
 ID or name of the Dataset that's monitored for size.
 
 If omitted, the default Dataset is used.
 
-#### Defined in
+#### Source
 
-[src/lib/io/dataset.ts:73](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/dataset.ts#L73)
+[src/lib/io/dataset.ts:73](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/dataset.ts#L73)
 
-___
+***
 
-### io
+### io?
 
-• `Optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)<`object`, `object`, `object`\>
+> `optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)\<`object`, `object`, `object`\>
 
-#### Defined in
+#### Source
 
-[src/lib/io/dataset.ts:81](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/dataset.ts#L81)
+[src/lib/io/dataset.ts:81](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/dataset.ts#L81)
 
-___
+***
 
-### requestQueueId
+### requestQueueId?
 
-• `Optional` **requestQueueId**: `string`
+> `optional` **requestQueueId**: `string`
 
 ID of the RequestQueue that holds remaining requests. This queue will be
 emptied when Dataset reaches `maxSize`.
 
 If omitted, the default RequestQueue is used.
 
-#### Defined in
+#### Source
 
-[src/lib/io/dataset.ts:80](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/io/dataset.ts#L80)
+[src/lib/io/dataset.ts:80](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/dataset.ts#L80)
 
-___
+***
 
-### ttlInMs
+### ttlInMs?
 
-• `Optional` **ttlInMs**: `number`
+> `optional` **ttlInMs**: `number`
 
 How long (in milliseconds) after fetching the value can we use it before we have to re-fetch it.
 
 #### Inherited from
 
-ValueMonitorOptions.ttlInMs
+`ValueMonitorOptions.ttlInMs`
 
-#### Defined in
+#### Source
 
-[src/utils/valueMonitor.ts:6](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/utils/valueMonitor.ts#L6)
+[src/utils/valueMonitor.ts:6](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/utils/valueMonitor.ts#L6)

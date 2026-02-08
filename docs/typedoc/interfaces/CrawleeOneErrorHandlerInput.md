@@ -1,58 +1,53 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / CrawleeOneErrorHandlerInput
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / CrawleeOneErrorHandlerInput
 
 # Interface: CrawleeOneErrorHandlerInput
 
 Input passed to the error handler
 
-## Table of contents
-
-### Properties
-
-- [error](CrawleeOneErrorHandlerInput.md#error)
-- [log](CrawleeOneErrorHandlerInput.md#log)
-- [page](CrawleeOneErrorHandlerInput.md#page)
-- [url](CrawleeOneErrorHandlerInput.md#url)
-
 ## Properties
 
 ### error
 
-• **error**: `Error`
+> **error**: `Error`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:306](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L306)
+[src/lib/integrations/types.ts:306](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L306)
 
-___
+***
 
 ### log
 
-• **log**: ``null`` \| `Log`
+> **log**: `null` \| `Log`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:311](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L311)
+[src/lib/integrations/types.ts:311](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L311)
 
-___
+***
 
 ### page
 
-• **page**: ``null`` \| `Page`
+> **page**: `null` \| `Page`
 
 Page instance if we used PlaywrightCrawler
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:308](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L308)
+[src/lib/integrations/types.ts:308](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L308)
 
-___
+***
 
 ### url
 
-• **url**: ``null`` \| `string`
+> **url**: `null` \| `string`
 
 URL where the error happened. If not given URL is taken from the Page object
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:310](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L310)
+[src/lib/integrations/types.ts:310](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L310)

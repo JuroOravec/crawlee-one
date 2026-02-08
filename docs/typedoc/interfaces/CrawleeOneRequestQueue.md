@@ -1,4 +1,8 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / CrawleeOneRequestQueue
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / CrawleeOneRequestQueue
 
 # Interface: CrawleeOneRequestQueue
 
@@ -7,99 +11,77 @@ Interface for storing and retrieving Requests (URLs) to scrape
 This interface is based on Crawlee/Apify, but defined separately to allow
 drop-in replacement with other integrations.
 
-## Table of contents
-
-### Properties
-
-- [addRequests](CrawleeOneRequestQueue.md#addrequests)
-- [clear](CrawleeOneRequestQueue.md#clear)
-- [drop](CrawleeOneRequestQueue.md#drop)
-- [fetchNextRequest](CrawleeOneRequestQueue.md#fetchnextrequest)
-- [handledCount](CrawleeOneRequestQueue.md#handledcount)
-- [isFinished](CrawleeOneRequestQueue.md#isfinished)
-- [markRequestHandled](CrawleeOneRequestQueue.md#markrequesthandled)
-- [reclaimRequest](CrawleeOneRequestQueue.md#reclaimrequest)
-
 ## Properties
 
-### addRequests
+### addRequests()
 
-• **addRequests**: (`requestsLike`: (`RequestOptions`<`Dictionary`\> \| `Request`<`Dictionary`\>)[], `options?`: { `forefront?`: `boolean`  }) => `unknown`
-
-#### Type declaration
-
-▸ (`requestsLike`, `options?`): `unknown`
+> **addRequests**: (`requestsLike`, `options`?) => `unknown`
 
 Adds requests to the queue.
 
 If a request that is passed in is already present due to its uniqueKey property
 being the same, it will not be updated.
 
-##### Parameters
+#### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestsLike` | (`RequestOptions`<`Dictionary`\> \| `Request`<`Dictionary`\>)[] | Objects with request data. |
-| `options?` | `Object` | - |
-| `options.forefront?` | `boolean` | If set to true, the request will be added to the foremost position in the queue, so that it's returned in the next call to [CrawleeOneRequestQueue.fetchNextRequest](CrawleeOneRequestQueue.md#fetchnextrequest). By default, it's put to the end of the queue. |
+• **requestsLike**: (`Request`\<`Dictionary`\> \| `RequestOptions`\<`Dictionary`\>)[]
 
-##### Returns
+Objects with request data.
+
+• **options?**
+
+• **options.forefront?**: `boolean`
+
+If set to true, the request will be added to the foremost position in the queue,
+so that it's returned in the next call to [CrawleeOneRequestQueue.fetchNextRequest](CrawleeOneRequestQueue.md#fetchnextrequest).
+
+By default, it's put to the end of the queue.
+
+#### Returns
 
 `unknown`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:239](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L239)
+[src/lib/integrations/types.ts:239](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L239)
 
-___
+***
 
-### clear
+### clear()
 
-• **clear**: () => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> **clear**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Removes all entries from the queue.
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:299](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L299)
+[src/lib/integrations/types.ts:299](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L299)
 
-___
+***
 
-### drop
+### drop()
 
-• **drop**: () => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
-
-#### Type declaration
-
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> **drop**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Removes the queue from the storage.
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:297](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L297)
+[src/lib/integrations/types.ts:297](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L297)
 
-___
+***
 
-### fetchNextRequest
+### fetchNextRequest()
 
-• **fetchNextRequest**: () => [`MaybePromise`](../modules.md#maybepromise)<``null`` \| `Request`<`Dictionary`\>\>
-
-#### Type declaration
-
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<``null`` \| `Request`<`Dictionary`\>\>
+> **fetchNextRequest**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`null` \| `Request`\<`Dictionary`\>\>
 
 Returns a next request in the queue to be processed, or null if there are no more
 pending requests.
@@ -114,110 +96,95 @@ Note that the null return value doesn't mean the queue processing finished,
 it means there are currently no pending requests. To check whether all requests in queue
 were finished, use [CrawleeOneRequestQueue.isFinished](CrawleeOneRequestQueue.md#isfinished) instead.
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<``null`` \| `Request`<`Dictionary`\>\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`null` \| `Request`\<`Dictionary`\>\>
 
-— Returns the request object or null if there are no more pending requests.
+#### Source
 
-#### Defined in
+[src/lib/integrations/types.ts:274](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L274)
 
-[src/lib/integrations/types.ts:274](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L274)
+***
 
-___
+### handledCount()
 
-### handledCount
-
-• **handledCount**: () => [`MaybePromise`](../modules.md#maybepromise)<``null`` \| `number`\>
-
-#### Type declaration
-
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<``null`` \| `number`\>
+> **handledCount**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`null` \| `number`\>
 
 Returns the number of handled requests.
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<``null`` \| `number`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`null` \| `number`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:301](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L301)
+[src/lib/integrations/types.ts:301](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L301)
 
-___
+***
 
-### isFinished
+### isFinished()
 
-• **isFinished**: () => [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
-
-#### Type declaration
-
-▸ (): [`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+> **isFinished**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
 Resolves to true if all requests were already handled and there are no more left. Due to the nature
 of distributed storage used by the queue, the function might occasionally return a false negative.
 
-##### Returns
+#### Returns
 
-[`MaybePromise`](../modules.md#maybepromise)<`boolean`\>
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:295](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L295)
+[src/lib/integrations/types.ts:295](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L295)
 
-___
+***
 
-### markRequestHandled
+### markRequestHandled()
 
-• **markRequestHandled**: (`req`: `Request`<`Dictionary`\>) => `unknown`
-
-#### Type declaration
-
-▸ (`req`): `unknown`
+> **markRequestHandled**: (`req`) => `unknown`
 
 Marks a request that was previously returned by the
 [CrawleeOneRequestQueue.fetchNextRequest](CrawleeOneRequestQueue.md#fetchnextrequest) function as handled after successful
 processing. Handled requests will never again be returned by the fetchNextRequest function.
 
-##### Parameters
+#### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `req` | `Request`<`Dictionary`\> |
+• **req**: `Request`\<`Dictionary`\>
 
-##### Returns
+#### Returns
 
 `unknown`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:257](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L257)
+[src/lib/integrations/types.ts:257](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L257)
 
-___
+***
 
-### reclaimRequest
+### reclaimRequest()
 
-• **reclaimRequest**: (`req`: `Request`<`Dictionary`\>, `options?`: { `forefront?`: `boolean`  }) => `unknown`
-
-#### Type declaration
-
-▸ (`req`, `options?`): `unknown`
+> **reclaimRequest**: (`req`, `options`?) => `unknown`
 
 Reclaims a failed request back to the queue, so that it can be returned
 for processing later again by another call to [CrawleeOneRequestQueue.fetchNextRequest](CrawleeOneRequestQueue.md#fetchnextrequest).
 
-##### Parameters
+#### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `req` | `Request`<`Dictionary`\> | - |
-| `options?` | `Object` | - |
-| `options.forefront?` | `boolean` | If set to true, the request will be placed to the beginning of the queue, so that it's returned in the next call to [CrawleeOneRequestQueue.fetchNextRequest](CrawleeOneRequestQueue.md#fetchnextrequest). By default, it's put to the end of the queue. |
+• **req**: `Request`\<`Dictionary`\>
 
-##### Returns
+• **options?**
+
+• **options.forefront?**: `boolean`
+
+If set to true, the request will be placed to the beginning of the queue,
+so that it's returned in the next call to [CrawleeOneRequestQueue.fetchNextRequest](CrawleeOneRequestQueue.md#fetchnextrequest).
+
+By default, it's put to the end of the queue.
+
+#### Returns
 
 `unknown`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/types.ts:279](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/types.ts#L279)
+[src/lib/integrations/types.ts:279](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L279)

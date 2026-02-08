@@ -1,6 +1,10 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / CrawleeOneTelemetry
+[**crawlee-one**](../README.md) • **Docs**
 
-# Interface: CrawleeOneTelemetry<T, THandlerOptions\>
+***
+
+[crawlee-one](../globals.md) / CrawleeOneTelemetry
+
+# Interface: CrawleeOneTelemetry\<T, THandlerOptions\>
 
 Interface for storing and retrieving:
 - Scraped data
@@ -12,65 +16,48 @@ drop-in replacement with other integrations.
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`CrawleeOneCtx`](CrawleeOneCtx.md) |
-| `THandlerOptions` | extends [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)<`any`\> = [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md) |
+• **T** *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
 
-## Table of contents
-
-### Properties
-
-- [onSendErrorToTelemetry](CrawleeOneTelemetry.md#onsenderrortotelemetry)
-- [setup](CrawleeOneTelemetry.md#setup)
+• **THandlerOptions** *extends* [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)\<`any`\> = [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)
 
 ## Properties
 
-### onSendErrorToTelemetry
+### onSendErrorToTelemetry()
 
-• **onSendErrorToTelemetry**: (`error`: `Error`, `report`: [`ExtractErrorHandlerOptionsReport`](../modules.md#extracterrorhandleroptionsreport)<`THandlerOptions`\>, `options`: `Omit`<`THandlerOptions`, ``"onErrorCapture"``\>, `ctx`: `T`[``"context"``]) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+> **onSendErrorToTelemetry**: (`error`, `report`, `options`, `ctx`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-#### Type declaration
+#### Parameters
 
-▸ (`error`, `report`, `options`, `ctx`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+• **error**: `Error`
 
-##### Parameters
+• **report**: [`ExtractErrorHandlerOptionsReport`](../type-aliases/ExtractErrorHandlerOptionsReport.md)\<`THandlerOptions`\>
 
-| Name | Type |
-| :------ | :------ |
-| `error` | `Error` |
-| `report` | [`ExtractErrorHandlerOptionsReport`](../modules.md#extracterrorhandleroptionsreport)<`THandlerOptions`\> |
-| `options` | `Omit`<`THandlerOptions`, ``"onErrorCapture"``\> |
-| `ctx` | `T`[``"context"``] |
+• **options**: `Omit`\<`THandlerOptions`, `"onErrorCapture"`\>
 
-##### Returns
+• **ctx**: `T`\[`"context"`\]
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+#### Returns
 
-#### Defined in
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-[src/lib/telemetry/types.ts:22](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/telemetry/types.ts#L22)
+#### Source
 
-___
+[src/lib/telemetry/types.ts:22](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/telemetry/types.ts#L22)
 
-### setup
+***
 
-• **setup**: (`actor`: [`CrawleeOneActorInst`](CrawleeOneActorInst.md)<`T`\>) => [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+### setup()
 
-#### Type declaration
+> **setup**: (`actor`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-▸ (`actor`): [`MaybePromise`](../modules.md#maybepromise)<`void`\>
+#### Parameters
 
-##### Parameters
+• **actor**: [`CrawleeOneActorInst`](CrawleeOneActorInst.md)\<`T`\>
 
-| Name | Type |
-| :------ | :------ |
-| `actor` | [`CrawleeOneActorInst`](CrawleeOneActorInst.md)<`T`\> |
+#### Returns
 
-##### Returns
+[`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-[`MaybePromise`](../modules.md#maybepromise)<`void`\>
+#### Source
 
-#### Defined in
-
-[src/lib/telemetry/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/telemetry/types.ts#L21)
+[src/lib/telemetry/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/telemetry/types.ts#L21)

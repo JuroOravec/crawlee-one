@@ -1,4 +1,6 @@
-crawlee-one / [Exports](modules.md)
+**crawlee-one** • [**Docs**](globals.md)
+
+***
 
 # CrawleeOne
 
@@ -672,11 +674,11 @@ version: 1
 schema:
   crawlers:
     main:
-      type: 'playwright',
-      routes: ['listingPage', 'detailPage'],
+      type: 'playwright'
+      routes: ['listingPage', 'detailPage']
     other:
-      type: 'cheerio',
-      routes: ['someNoJSPage'],
+      type: 'cheerio'
+      routes: ['someNoJSPage']
 ```
 
 CrawleeOne uses

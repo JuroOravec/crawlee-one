@@ -1,21 +1,25 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / ProxyActorInput
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / ProxyActorInput
 
 # Interface: ProxyActorInput
 
 Common input fields related to proxy setup
 
-## Table of contents
-
-### Properties
-
-- [proxy](ProxyActorInput.md#proxy)
-
 ## Properties
 
-### proxy
+### proxy?
 
-• `Optional` **proxy**: `ProxyConfigurationOptions` & { `useApifyProxy?`: `boolean`  }
+> `optional` **proxy**: `ProxyConfigurationOptions` & `object`
 
-#### Defined in
+#### Type declaration
 
-[src/lib/input.ts:140](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L140)
+##### useApifyProxy?
+
+> `optional` **useApifyProxy**: `boolean`
+
+#### Source
+
+[src/lib/input.ts:141](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L141)

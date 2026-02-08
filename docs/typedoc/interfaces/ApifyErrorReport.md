@@ -1,96 +1,87 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / ApifyErrorReport
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / ApifyErrorReport
 
 # Interface: ApifyErrorReport
-
-## Table of contents
-
-### Properties
-
-- [actorId](ApifyErrorReport.md#actorid)
-- [actorRunId](ApifyErrorReport.md#actorrunid)
-- [actorRunUrl](ApifyErrorReport.md#actorrunurl)
-- [errorMessage](ApifyErrorReport.md#errormessage)
-- [errorName](ApifyErrorReport.md#errorname)
-- [pageHtmlSnapshot](ApifyErrorReport.md#pagehtmlsnapshot)
-- [pageScreenshot](ApifyErrorReport.md#pagescreenshot)
-- [pageUrl](ApifyErrorReport.md#pageurl)
 
 ## Properties
 
 ### actorId
 
-• **actorId**: ``null`` \| `string`
+> **actorId**: `null` \| `string`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/apify.ts:7](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L7)
+[src/lib/integrations/apify.ts:7](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L7)
 
-___
+***
 
 ### actorRunId
 
-• **actorRunId**: ``null`` \| `string`
+> **actorRunId**: `null` \| `string`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/apify.ts:8](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L8)
+[src/lib/integrations/apify.ts:8](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L8)
 
-___
+***
 
 ### actorRunUrl
 
-• **actorRunUrl**: `string`
+> **actorRunUrl**: `string`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/apify.ts:9](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L9)
+[src/lib/integrations/apify.ts:9](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L9)
 
-___
+***
 
 ### errorMessage
 
-• **errorMessage**: `string`
+> **errorMessage**: `string`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/apify.ts:11](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L11)
+[src/lib/integrations/apify.ts:11](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L11)
 
-___
+***
 
 ### errorName
 
-• **errorName**: `string`
+> **errorName**: `string`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/apify.ts:10](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L10)
+[src/lib/integrations/apify.ts:10](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L10)
 
-___
+***
 
 ### pageHtmlSnapshot
 
-• **pageHtmlSnapshot**: ``null`` \| `string`
+> **pageHtmlSnapshot**: `null` \| `string`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/apify.ts:13](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L13)
+[src/lib/integrations/apify.ts:13](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L13)
 
-___
+***
 
 ### pageScreenshot
 
-• **pageScreenshot**: ``null`` \| `string`
+> **pageScreenshot**: `null` \| `string`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/apify.ts:14](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L14)
+[src/lib/integrations/apify.ts:14](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L14)
 
-___
+***
 
 ### pageUrl
 
-• **pageUrl**: ``null`` \| `string`
+> **pageUrl**: `null` \| `string`
 
-#### Defined in
+#### Source
 
-[src/lib/integrations/apify.ts:12](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/integrations/apify.ts#L12)
+[src/lib/integrations/apify.ts:12](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L12)

@@ -1,21 +1,18 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / InputActorInput
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / InputActorInput
 
 # Interface: InputActorInput
 
 Common input fields related to extending Actor input with remote or generated data
 
-## Table of contents
-
-### Properties
-
-- [inputExtendFromFunction](InputActorInput.md#inputextendfromfunction)
-- [inputExtendUrl](InputActorInput.md#inputextendurl)
-
 ## Properties
 
-### inputExtendFromFunction
+### inputExtendFromFunction?
 
-• `Optional` **inputExtendFromFunction**: `string` \| [`CrawleeOneHookFn`](../modules.md#crawleeonehookfn)<[], [`AllActorInputs`](../modules.md#allactorinputs)\>
+> `optional` **inputExtendFromFunction**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<[], [`AllActorInputs`](../type-aliases/AllActorInputs.md)\>
 
 If set, the Actor input is extended with a config from this custom function.
 
@@ -26,15 +23,15 @@ the Actor input overwrites the imported fields.
 
 The URL must point to a JSON file containing a single object (the config).
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:68](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L68)
+[src/lib/input.ts:69](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L69)
 
-___
+***
 
-### inputExtendUrl
+### inputExtendUrl?
 
-• `Optional` **inputExtendUrl**: `string`
+> `optional` **inputExtendUrl**: `string`
 
 If set, the Actor input is extended with a config from this URL.
 
@@ -45,6 +42,6 @@ the Actor input overwrites the imported fields.
 
 The URL must point to a JSON file containing a single object (the config).
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:57](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L57)
+[src/lib/input.ts:58](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L58)

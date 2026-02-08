@@ -1,112 +1,87 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / ListingLogger
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / ListingLogger
 
 # Interface: ListingLogger
 
-## Table of contents
-
-### Properties
-
-- [debug](ListingLogger.md#debug)
-- [error](ListingLogger.md#error)
-- [info](ListingLogger.md#info)
-- [warning](ListingLogger.md#warning)
-
 ## Properties
 
-### debug
+### debug()
 
-• **debug**: (`msg`: `string`, `data?`: `any`) => `void`
+> **debug**: (`msg`, `data`?) => `void`
 
-#### Type declaration
+#### Parameters
 
-▸ (`msg`, `data?`): `void`
+• **msg**: `string`
 
-##### Parameters
+• **data?**: `any`
 
-| Name | Type |
-| :------ | :------ |
-| `msg` | `string` |
-| `data?` | `any` |
-
-##### Returns
+#### Returns
 
 `void`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:10](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L10)
+[src/lib/actions/scrapeListing.ts:10](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L10)
 
-___
+***
 
-### error
+### error()
 
-• **error**: (`msg`: `string`, `data?`: `any`) => `void`
+> **error**: (`msg`, `data`?) => `void`
 
-#### Type declaration
+#### Parameters
 
-▸ (`msg`, `data?`): `void`
+• **msg**: `string`
 
-##### Parameters
+• **data?**: `any`
 
-| Name | Type |
-| :------ | :------ |
-| `msg` | `string` |
-| `data?` | `any` |
-
-##### Returns
+#### Returns
 
 `void`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:13](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L13)
+[src/lib/actions/scrapeListing.ts:13](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L13)
 
-___
+***
 
-### info
+### info()
 
-• **info**: (`msg`: `string`, `data?`: `any`) => `void`
+> **info**: (`msg`, `data`?) => `void`
 
-#### Type declaration
+#### Parameters
 
-▸ (`msg`, `data?`): `void`
+• **msg**: `string`
 
-##### Parameters
+• **data?**: `any`
 
-| Name | Type |
-| :------ | :------ |
-| `msg` | `string` |
-| `data?` | `any` |
-
-##### Returns
+#### Returns
 
 `void`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:11](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L11)
+[src/lib/actions/scrapeListing.ts:11](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L11)
 
-___
+***
 
-### warning
+### warning()
 
-• **warning**: (`msg`: `string`, `data?`: `any`) => `void`
+> **warning**: (`msg`, `data`?) => `void`
 
-#### Type declaration
+#### Parameters
 
-▸ (`msg`, `data?`): `void`
+• **msg**: `string`
 
-##### Parameters
+• **data?**: `any`
 
-| Name | Type |
-| :------ | :------ |
-| `msg` | `string` |
-| `data?` | `any` |
-
-##### Returns
+#### Returns
 
 `void`
 
-#### Defined in
+#### Source
 
-[src/lib/actions/scrapeListing.ts:12](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/actions/scrapeListing.ts#L12)
+[src/lib/actions/scrapeListing.ts:12](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L12)

@@ -1,52 +1,48 @@
-[crawlee-one](../README.md) / [Exports](../modules.md) / LoggingActorInput
+[**crawlee-one**](../README.md) • **Docs**
+
+***
+
+[crawlee-one](../globals.md) / LoggingActorInput
 
 # Interface: LoggingActorInput
 
 Common input fields related to logging setup
 
-## Table of contents
-
-### Properties
-
-- [errorReportingDatasetId](LoggingActorInput.md#errorreportingdatasetid)
-- [errorTelemetry](LoggingActorInput.md#errortelemetry)
-- [logLevel](LoggingActorInput.md#loglevel)
-
 ## Properties
 
-### errorReportingDatasetId
+### errorReportingDatasetId?
 
-• `Optional` **errorReportingDatasetId**: `string`
+> `optional` **errorReportingDatasetId**: `string`
 
 Dataset ID to which errors should be captured.
 
 Default: `'REPORTING'`.
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:135](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L135)
+[src/lib/input.ts:136](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L136)
 
-___
+***
 
-### errorTelemetry
+### errorTelemetry?
 
-• `Optional` **errorTelemetry**: `boolean`
+> `optional` **errorTelemetry**: `boolean`
 
 Whether to report actor errors to telemetry such as <a href="https://sentry.io/">Sentry</a>.
 
 This info is used by the author of this actor to identify broken integrations,
 and track down and fix issues.
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:129](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L129)
+[src/lib/input.ts:130](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L130)
 
-___
+***
 
-### logLevel
+### logLevel?
 
-• `Optional` **logLevel**: ``"error"`` \| ``"off"`` \| ``"info"`` \| ``"debug"`` \| ``"warn"``
+> `optional` **logLevel**: `"error"` \| `"debug"` \| `"info"` \| `"warn"` \| `"off"`
 
-#### Defined in
+#### Source
 
-[src/lib/input.ts:122](https://github.com/JuroOravec/crawlee-one/blob/490b500/src/lib/input.ts#L122)
+[src/lib/input.ts:123](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L123)
