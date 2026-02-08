@@ -26,7 +26,7 @@ import type { MaybePromise } from '../../utils/types';
 
 export type OnBatchAddRequestsArgs = [
   requests: Omit<RequestQueueClientRequestSchema, 'id'>[],
-  options?: RequestQueueClientBatchAddRequestWithRetriesOptions
+  options?: RequestQueueClientBatchAddRequestWithRetriesOptions,
 ];
 export type OnBatchAddRequests = (...args: OnBatchAddRequestsArgs) => MaybePromise<void>;
 
@@ -44,6 +44,7 @@ export const createMockClientDataset = (overrides?: ClientDataset): ClientDatase
   actRunId: 'MockClientDataset.actRunId',
   stats: {},
   fields: [],
+  itemsPublicUrl: '',
   ...overrides,
 });
 
@@ -150,7 +151,7 @@ export const createMockRequestQueueClient = ({
     updateRequest: (
       ...args: [
         request: RequestQueueClientRequestSchema,
-        options?: RequestQueueClientAddRequestOptions
+        options?: RequestQueueClientAddRequestOptions,
       ]
     ): Promise<RequestQueueClientAddRequestResult> => {
       const [request, options] = args;
@@ -211,6 +212,7 @@ export const createMockDatasetCollectionClient = ({
         offset: options?.offset ?? 0,
         limit: options?.limit ?? items.length,
         desc: options?.desc ?? false,
+        unnamed: false,
         items,
       });
     },
@@ -257,7 +259,7 @@ export const createMockStorageDataset = (
       log?: (...args: any[]) => void;
       onPushData?: (...args: any[]) => MaybePromise<void>;
       onGetInfo?: (...args: any[]) => MaybePromise<void>;
-    }
+    },
   ]
 ): Promise<Dataset<any>> => {
   const origArgs = args.slice().slice(0, 2);

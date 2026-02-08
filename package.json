@@ -55,6 +55,7 @@
     "@types/pkginfo": "^0.4.3",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
+    "crawlee": "^3.16.0",
     "eslint": "^9.3.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
@@ -69,13 +70,14 @@
   "peerDependencies": {
     "@sentry/node": "^7.50.0",
     "actor-spec": "^0.4.1",
-    "apify": "^3.1.x",
+    "apify": "^3.1.0",
     "apify-actor-config": "^1.0.3",
-    "apify-client": "^2.7.x",
+    "apify-client": "^2.7.0",
     "cheerio": "^1.0.0-rc.12",
     "crawlee": "^3.3.1",
+    "got-scraping": "^4.0.0",
     "joi": "^17.9.2",
-    "playwright": "^1.44.x",
+    "playwright": "^1.44.0",
     "vitest": "^1.6.0"
   },
   "dependencies": {

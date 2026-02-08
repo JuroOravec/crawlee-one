@@ -160,7 +160,7 @@ export const createErrorHandler = <T extends CrawleeOneCtx>(
   return async (ctx, error) => {
     const { request, log, page } = ctx;
     const url = request.loadedUrl || request.url;
-    captureError(
+    await captureError(
       { error, url, log, page: page as Page },
       {
         ...optionsWithDefaults,

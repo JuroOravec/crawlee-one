@@ -11,7 +11,7 @@ import {
 
 export const setupMockApifyActor = async <
   TInput,
-  TData extends MaybeArray<Dictionary> = MaybeArray<Dictionary>
+  TData extends MaybeArray<Dictionary> = MaybeArray<Dictionary>,
 >({
   vi: viInstance,
   actorInput,
@@ -36,7 +36,7 @@ export const setupMockApifyActor = async <
     console.log('Mock Actor.openDataset: ', datasetId);
     return createMockStorageDataset(datasetId, options, { log, onPushData, onGetInfo });
   });
-  viInstance.spyOn(Actor, 'pushData').mockImplementation(async (data) => {
+  viInstance.spyOn(Actor, 'pushData').mockImplementation(async (data): Promise<any> => {
     console.log('Mock Actor.pushData');
     if (onPushData) await onPushData(data as any);
   });
