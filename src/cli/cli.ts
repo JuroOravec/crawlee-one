@@ -1,12 +1,12 @@
 import { program } from 'commander';
-import path from 'path';
+import path from 'node:path';
 
-import { getPackageJsonInfo } from '../utils/package';
-import { createLocalMigrator } from '../lib/migrate/localMigrator';
-import { loadConfig, validateConfig } from './commands/config';
-import { generateTypes } from './commands/codegen';
+import { getPackageJsonInfo } from '../utils/package.js';
+import { createLocalMigrator } from '../lib/migrate/localMigrator.js';
+import { loadConfig, validateConfig } from './commands/config.js';
+import { generateTypes } from './commands/codegen.js';
 
-const pkgJson = getPackageJsonInfo(module, ['name', 'version']);
+const pkgJson = getPackageJsonInfo(import.meta.url, ['name', 'version']);
 
 program //
   .name(pkgJson.name)

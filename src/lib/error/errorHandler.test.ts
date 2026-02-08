@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import { captureError, createErrorHandler } from './errorHandler';
-import type { CrawleeOneIO, CrawleeOneDataset } from '../integrations/types';
+import { captureError, createErrorHandler } from './errorHandler.js';
+import type { CrawleeOneIO, CrawleeOneDataset } from '../integrations/types.js';
 
 const createMockDataset = (overrides?: Partial<CrawleeOneDataset>): CrawleeOneDataset => ({
   pushData: vi.fn(),

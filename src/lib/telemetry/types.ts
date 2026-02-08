@@ -1,9 +1,9 @@
-import type { MaybePromise } from '../../utils/types';
+import type { MaybePromise } from '../../utils/types.js';
 import type {
   CrawleeOneErrorHandlerOptions,
   ExtractErrorHandlerOptionsReport,
-} from '../integrations/types';
-import type { CrawleeOneActorInst, CrawleeOneCtx } from '../actor/types';
+} from '../integrations/types.js';
+import type { CrawleeOneActorInst, CrawleeOneCtx } from '../actor/types.js';
 
 /**
  * Interface for storing and retrieving:

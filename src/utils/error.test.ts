@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import { logAndRethrow } from './error';
+import { logAndRethrow } from './error.js';
 
 describe('logAndRethrow', () => {
   it('rethrows the error', () => {

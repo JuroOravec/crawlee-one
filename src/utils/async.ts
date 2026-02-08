@@ -1,4 +1,4 @@
-import type { MaybePromise } from '../utils/types';
+import type { MaybePromise } from '../utils/types.js';
 
 export const serialAsyncMap = async <T, R>(
   inputArr: T[],

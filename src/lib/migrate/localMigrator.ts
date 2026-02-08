@@ -1,9 +1,9 @@
-import path from 'path';
+import path from 'node:path';
 import dotenv from 'dotenv';
 import { glob } from 'glob';
 import { ApifyClient } from 'apify-client';
 
-import type { Migration } from './types';
+import type { Migration } from './types.js';
 
 export const createLocalMigrator = ({
   migrationsDir,
@@ -41,14 +41,14 @@ export const createLocalMigrator = ({
   const migrate = async (version: string) => {
     const migFile = await findLocalMigrationFileByVersion(version);
     const { client } = setup();
-    const { migrate } = require(migFile).default as Migration;
+    const { migrate } = ((await import(migFile)) as { default: Migration }).default;
     await migrate(client);
   };
 
   const unmigrate = async (version: string) => {
     const migFile = await findLocalMigrationFileByVersion(version);
     const { client } = setup();
-    const { unmigrate } = require(migFile).default as Migration;
+    const { unmigrate } = ((await import(migFile)) as { default: Migration }).default;
     await unmigrate(client);
   };
 

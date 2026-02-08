@@ -1,7 +1,7 @@
 import { Actor, ApifyEnv } from 'apify';
 import { CrawlingContext, Request as CrawleeRequest, playwrightUtils } from 'crawlee';
 
-import type { CrawleeOneDataset, CrawleeOneIO } from './types';
+import type { CrawleeOneDataset, CrawleeOneIO } from './types.js';
 
 export interface ApifyErrorReport {
   actorId: string | null;

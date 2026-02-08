@@ -1,15 +1,15 @@
-import { runCrawleeOne } from './lib/actor/actor';
+import { runCrawleeOne } from './lib/actor/actor.js';
 import type {
   CrawleeOneActorInst,
   CrawleeOneActorDef,
   CrawleeOneActorRouterCtx,
   CrawleeOneCtx,
-} from './lib/actor/types';
-import type { AllActorInputs } from './lib/input';
-import { logLevelHandlerWrapper } from './lib/log';
-import type { CrawleeOneRouteHandler, CrawleeOneRoute } from './lib/router/types';
-import type { CrawlerMeta, CrawlerType } from './types';
-import type { MaybePromise } from './utils/types';
+} from './lib/actor/types.js';
+import type { AllActorInputs } from './lib/input.js';
+import { logLevelHandlerWrapper } from './lib/log.js';
+import type { CrawleeOneRouteHandler, CrawleeOneRoute } from './lib/router/types.js';
+import type { CrawlerMeta, CrawlerType } from './types/index.js';
+import type { MaybePromise } from './utils/types.js';
 
 /** Args object passed to `crawleeOne` */
 export interface CrawleeOneArgs<

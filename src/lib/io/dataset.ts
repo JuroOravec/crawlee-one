@@ -1,8 +1,8 @@
 import type { DatasetDataOptions, Log } from 'apify';
 
-import { ValueMonitorOptions, createSizeMonitor } from '../../utils/valueMonitor';
-import type { CrawleeOneIO } from '../integrations/types';
-import { apifyIO } from '../integrations/apify';
+import { ValueMonitorOptions, createSizeMonitor } from '../../utils/valueMonitor.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
+import { apifyIO } from '../integrations/apify.js';
 
 /**
  * Given a Dataset ID, get the number of entries already in the Dataset.

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import { requestQueueSizeMonitor } from './requestQueue';
-import type { CrawleeOneIO, CrawleeOneRequestQueue } from '../integrations/types';
+import { requestQueueSizeMonitor } from './requestQueue.js';
+import type { CrawleeOneIO, CrawleeOneRequestQueue } from '../integrations/types.js';
 
 const createMockRequestQueue = (
   overrides?: Partial<CrawleeOneRequestQueue>

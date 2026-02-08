@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import fsp from 'fs/promises';
-import path from 'path';
+import path from 'node:path';
 
-import type { CrawleeOneConfig, CrawleeOneConfigSchema } from '../../types/config';
-import { crawlingContextNameByType } from '../../constants';
-import { loadConfig, validateConfig } from './config';
+import type { CrawleeOneConfig, CrawleeOneConfigSchema } from '../../types/config.js';
+import { crawlingContextNameByType } from '../../constants.js';
+import { loadConfig, validateConfig } from './config.js';
 // NOTE: We intentionally import these to know when their names change
-import type { AllActorInputs } from '../../lib/input';
-import type { CrawleeOneActorInst, CrawleeOneActorRouterCtx } from '../../lib/actor/types';
+import type { AllActorInputs } from '../../lib/input.js';
+import type { CrawleeOneActorInst, CrawleeOneActorRouterCtx } from '../../lib/actor/types.js';
 import type {
   CrawleeOneRoute,
   CrawleeOneRouteHandler,
   CrawleeOneRouteMatcher,
   CrawleeOneRouteMatcherFn,
   CrawleeOneRouteWrapper,
-} from '../../lib/router/types';
-import type { MaybePromise } from '../../utils/types';
-import type { CrawleeOneArgs, crawleeOne } from '../../api';
+} from '../../lib/router/types.js';
+import type { MaybePromise } from '../../utils/types.js';
+import type { CrawleeOneArgs, crawleeOne } from '../../api.js';
 
 const makeUnion = (items: string[]) => items.map((s) => `"${s}"`).join(` | `);
 const makeEnum = (items: string[]) =>

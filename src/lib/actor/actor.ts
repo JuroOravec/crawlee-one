@@ -6,19 +6,19 @@ import {
   LogLevel,
   Request as CrawleeRequest,
 } from 'crawlee';
-import { omitBy, pick, defaults } from 'lodash';
+import { omitBy, pick, defaults } from 'lodash-es';
 import { gotScraping } from 'got-scraping';
 
-import type { CrawlerMeta, CrawlerType } from '../../types';
-import { actorClassByType } from '../../constants';
-import type { MaybePromise, PickPartial } from '../../utils/types';
-import { createErrorHandler } from '../error/errorHandler';
-import { type PushDataOptions, itemCacheKey, pushData } from '../io/pushData';
-import { getColumnFromDataset } from '../io/dataset';
-import { PushRequestsOptions, pushRequests } from '../io/pushRequests';
-import type { CrawleeOneIO } from '../integrations/types';
-import { apifyIO } from '../integrations/apify';
-import { registerHandlers, setupDefaultHandlers } from '../router/router';
+import type { CrawlerMeta, CrawlerType } from '../../types/index.js';
+import { actorClassByType } from '../../constants.js';
+import type { MaybePromise, PickPartial } from '../../utils/types.js';
+import { createErrorHandler } from '../error/errorHandler.js';
+import { type PushDataOptions, itemCacheKey, pushData } from '../io/pushData.js';
+import { getColumnFromDataset } from '../io/dataset.js';
+import { PushRequestsOptions, pushRequests } from '../io/pushRequests.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
+import { apifyIO } from '../integrations/apify.js';
+import { registerHandlers, setupDefaultHandlers } from '../router/router.js';
 import {
   CrawlerConfigActorInput,
   OutputActorInput,
@@ -29,8 +29,8 @@ import {
   InputActorInput,
   RequestActorInput,
   LoggingActorInput,
-} from '../input';
-import { logLevelHandlerWrapper, logLevelToCrawlee } from '../log';
+} from '../input.js';
+import { logLevelHandlerWrapper, logLevelToCrawlee } from '../log.js';
 import type {
   CrawleeOneActorInst,
   CrawleeOneActorDef,
@@ -41,7 +41,7 @@ import type {
   CrawleeOneCtx,
   CrawleeOneHookFn,
   CrawleeOneActorDefWithInput,
-} from './types';
+} from './types.js';
 
 const isRouter = (r: any): r is RouterHandler<any> => {
   return !!((r as RouterHandler)?.addHandler && (r as RouterHandler)?.addDefaultHandler);

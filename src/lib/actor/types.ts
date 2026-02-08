@@ -13,18 +13,18 @@ import type {
 } from 'crawlee';
 import type { gotScraping } from 'got-scraping';
 
-import type { MaybeAsyncFn, MaybePromise, PickPartial } from '../../utils/types';
-import type { CrawlerUrl } from '../../types';
-import type { PushDataOptions, itemCacheKey } from '../io/pushData';
-import type { PushRequestsOptions } from '../io/pushRequests';
+import type { MaybeAsyncFn, MaybePromise, PickPartial } from '../../utils/types.js';
+import type { CrawlerUrl } from '../../types/index.js';
+import type { PushDataOptions, itemCacheKey } from '../io/pushData.js';
+import type { PushRequestsOptions } from '../io/pushRequests.js';
 import type {
   CrawleeOneRoute,
   CrawleeOneRouteHandler,
   CrawleeOneRouteWrapper,
-} from '../router/types';
-import type { MetamorphActorInput } from '../input';
-import type { CrawleeOneIO } from '../integrations/types';
-import type { CrawleeOneTelemetry } from '../telemetry/types';
+} from '../router/types.js';
+import type { MetamorphActorInput } from '../input.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
+import type { CrawleeOneTelemetry } from '../telemetry/types.js';
 
 type OrigRunCrawler<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
 

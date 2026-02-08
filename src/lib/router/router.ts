@@ -6,17 +6,17 @@ import {
 import type { CommonPage } from '@crawlee/browser-pool';
 import type { Page } from 'playwright';
 
-import { serialAsyncFind, wait } from '../../utils/async';
-import type { MaybePromise } from '../../utils/types';
-import type { PerfActorInput, RequestActorInput } from '../input';
+import { serialAsyncFind, wait } from '../../utils/async.js';
+import type { MaybePromise } from '../../utils/types.js';
+import type { PerfActorInput, RequestActorInput } from '../input.js';
 import type {
   CrawleeOneRouteWrapper,
   CrawleeOneRouteHandler,
   CrawleeOneRouteCtx,
   CrawleeOneRouteMatcherFn,
   CrawleeOneRoute,
-} from './types';
-import type { CrawleeOneCtx } from '../actor/types';
+} from './types.js';
+import type { CrawleeOneCtx } from '../actor/types.js';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
 

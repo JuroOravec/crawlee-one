@@ -9,7 +9,7 @@ import type {
 } from 'crawlee';
 import type { Page } from 'playwright';
 
-import type { MaybeArray, MaybePromise, PickRequired } from '../../utils/types';
+import type { MaybeArray, MaybePromise, PickRequired } from '../../utils/types.js';
 
 /**
  * Interface for storing and retrieving:

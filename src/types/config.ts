@@ -1,4 +1,4 @@
-import type { CrawlerType } from '.';
+import type { CrawlerType } from './index.js';
 
 export interface CrawleeOneConfig {
   /** Version of the CrawleeOne config. */

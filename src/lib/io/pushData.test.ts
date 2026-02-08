@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import { itemCacheKey, pushData } from './pushData';
+import { itemCacheKey, pushData } from './pushData.js';
 import type {
   CrawleeOneIO,
   CrawleeOneDataset,
   CrawleeOneKeyValueStore,
-} from '../integrations/types';
+} from '../integrations/types.js';
 
 // Minimal mock crawling context
 const createMockCtx = () =>

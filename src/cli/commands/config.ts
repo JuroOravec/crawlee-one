@@ -1,13 +1,13 @@
 import { cosmiconfig } from 'cosmiconfig';
 import Joi from 'joi';
 
-import { getPackageJsonInfo } from '../../utils/package';
+import { getPackageJsonInfo } from '../../utils/package.js';
 import type {
   CrawleeOneConfig,
   CrawleeOneConfigSchema,
   CrawleeOneConfigSchemaCrawler,
-} from '../../types/config';
-import { CRAWLER_TYPE } from '../../types';
+} from '../../types/config.js';
+import { CRAWLER_TYPE } from '../../types/index.js';
 
 /** Pattern for a valid JS variable */
 const varNamePattern = /^[a-z_][a-z0-9_]*$/i;
@@ -49,7 +49,7 @@ export const validateConfig = (config: unknown | string) => {
  * Learn more: https://github.com/cosmiconfig/cosmiconfig
  */
 export const loadConfig = async (configFilePath?: string) => {
-  const pkgJson = getPackageJsonInfo(module, ['name']);
+  const pkgJson = getPackageJsonInfo(import.meta.url, ['name']);
 
   // See https://github.com/cosmiconfig/cosmiconfig#usage-for-tooling-developers
   const explorer = cosmiconfig(pkgJson.name);

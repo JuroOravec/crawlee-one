@@ -23,7 +23,7 @@ import type {
   PuppeteerCrawlingContext,
 } from 'crawlee';
 
-import type { ArrVal } from '../utils/types';
+import type { ArrVal } from '../utils/types.js';
 
 /** Available Crawlee crawler types. */
 export const CRAWLER_TYPE = [

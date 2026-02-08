@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { Router } from 'crawlee';
 
-import { registerHandlers, setupDefaultHandlers } from './router';
-import type { CrawleeOneIO, CrawleeOneRequestQueue } from '../integrations/types';
+import { registerHandlers, setupDefaultHandlers } from './router.js';
+import type { CrawleeOneIO, CrawleeOneRequestQueue } from '../integrations/types.js';
 
 // Minimal mock IO
 const createMockRequestQueue = (): CrawleeOneRequestQueue => ({

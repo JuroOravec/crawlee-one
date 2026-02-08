@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { strOrNull, strAsNumber } from './format';
+import { strOrNull, strAsNumber } from './format.js';
 
 describe('strOrNull', () => {
   it('returns string for truthy strings', () => {

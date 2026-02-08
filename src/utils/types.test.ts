@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { enumFromArray } from './types';
+import { enumFromArray } from './types.js';
 
 describe('enumFromArray', () => {
   it('creates a self-referencing enum object', () => {

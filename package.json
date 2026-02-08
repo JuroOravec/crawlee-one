@@ -1,6 +1,7 @@
 {
   "name": "crawlee-one",
   "version": "2.0.4",
+  "type": "module",
   "private": false,
   "description": "CrawleeOne is a framework built on top of Crawlee and Apify for writing robust and highly configurable web scrapers",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
@@ -26,24 +27,29 @@
     "dist"
   ],
   "exports": {
-    ".": "./dist/cjs/index.js",
-    "./apify": "./dist/cjs/lib/integrations/apify.js",
-    "./sentry": "./dist/cjs/lib/telemetry/sentry.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./apify": {
+      "types": "./dist/lib/integrations/apify.d.ts",
+      "import": "./dist/lib/integrations/apify.js"
+    },
+    "./sentry": {
+      "types": "./dist/lib/telemetry/sentry.d.ts",
+      "import": "./dist/lib/telemetry/sentry.js"
+    }
   },
-  "module": "dist/esm/index.js",
-  "types": "dist/cjs/index.d.ts",
-  "bin": "dist/cjs/cli/index.js",
+  "types": "dist/index.d.ts",
+  "bin": "dist/cli/index.js",
   "engines": {
     "node": ">=20.0.0"
   },
   "scripts": {
     "start": "npm run start:dev",
-    "start:prod": "node dist/cjs/index.js",
-    "start:dev": "ts-node ./src/index.ts",
-    "build": "npm run build:cjs",
-    "build:all": "npm run build:cjs && npm run build:esm",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build:esm": "tsc -p tsconfig.esm.json",
+    "start:prod": "node dist/index.js",
+    "start:dev": "tsx ./src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "test": "vitest run",
@@ -52,8 +58,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@types/lodash": "^4.17.23",
-    "@types/pkginfo": "^0.4.4",
+    "@types/lodash-es": "^4.17.12",
     "@vitest/coverage-v8": "^4.0.18",
     "crawlee": "^3.16.0",
     "eslint": "^9.39.2",
@@ -61,7 +66,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "playwright": "^1.58.2",
     "prettier": "^3.8.1",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typedoc": "^0.28.16",
     "typedoc-plugin-markdown": "^4.10.0",
     "typescript": "^5.9.3",
@@ -86,7 +91,6 @@
     "cosmiconfig": "^9.0.0",
     "dotenv": "^17.2.4",
     "glob": "^13.0.1",
-    "lodash": "^4.17.21",
-    "pkginfo": "^0.4.1"
+    "lodash-es": "^4.17.23"
   }
 }

@@ -1,4 +1,4 @@
-import type { MaybePromise } from './types';
+import type { MaybePromise } from './types.js';
 
 export type ValueCallback<T> = (value: T, oldValue: T | null) => MaybePromise<any>;
 export interface ValueMonitorOptions {

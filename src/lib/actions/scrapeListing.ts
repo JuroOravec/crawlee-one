@@ -1,8 +1,8 @@
-import { findLastIndex } from 'lodash';
+import { findLastIndex } from 'lodash-es';
 
-import { serialAsyncMap, retryAsync } from '../../utils/async';
-import { validateUrl } from '../../utils/url';
-import type { MaybePromise } from '../../utils/types';
+import { serialAsyncMap, retryAsync } from '../../utils/async.js';
+import { validateUrl } from '../../utils/url.js';
+import type { MaybePromise } from '../../utils/types.js';
 
 // TODO - Clean this up and merge it into PageLib
 

@@ -1,6 +1,6 @@
 import type { ApifyClient } from 'apify-client';
 
-import type { MaybePromise } from '../../utils/types';
+import type { MaybePromise } from '../../utils/types.js';
 
 export interface Migration {
   migrate: (client: ApifyClient) => MaybePromise<void>;

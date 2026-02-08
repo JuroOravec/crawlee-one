@@ -10,9 +10,9 @@ import {
 } from 'apify-actor-config';
 import Joi from 'joi';
 
-import type { CrawlerUrl } from '../types';
-import { LOG_LEVEL, LogLevel } from './log';
-import type { CrawleeOneHookFn } from './actor/types';
+import type { CrawlerUrl } from '../types/index.js';
+import { LOG_LEVEL, LogLevel } from './log.js';
+import type { CrawleeOneHookFn } from './actor/types.js';
 
 export type AllActorInputs = InputActorInput &
   CrawlerConfigActorInput &

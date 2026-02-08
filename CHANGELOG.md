@@ -1,8 +1,14 @@
 # Release notes
 
-## v2.1.0
+## v3.0.0
 
 _2026-02-08_
+
+#### 🚨 Breaking Changes
+
+- **This package is now pure ESM.** It can no longer be `require()`'d from CommonJS. See [Sindre's guide](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) for migration help.
+- Minimum Node.js version is now 20.
+- The package `exports` have changed from CJS to ESM entry points. If you were importing from `crawlee-one`, `crawlee-one/apify`, or `crawlee-one/sentry`, the import paths remain the same but now resolve to ESM.
 
 #### Features
 

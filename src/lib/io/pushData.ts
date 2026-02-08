@@ -1,11 +1,11 @@
 import { CrawlingContext, Log } from 'crawlee';
-import { get, pick, set, unset, uniq, sortBy, isPlainObject, fromPairs } from 'lodash';
+import { get, pick, set, unset, uniq, sortBy, isPlainObject, fromPairs } from 'lodash-es';
 
-import { serialAsyncMap } from '../../utils/async';
-import type { CrawleeOneIO } from '../integrations/types';
-import { ApifyCrawleeOneIO, apifyIO } from '../integrations/apify';
-import { datasetSizeMonitor } from './dataset';
-import type { MaybePromise } from '../../utils/types';
+import { serialAsyncMap } from '../../utils/async.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
+import { ApifyCrawleeOneIO, apifyIO } from '../integrations/apify.js';
+import { datasetSizeMonitor } from './dataset.js';
+import type { MaybePromise } from '../../utils/types.js';
 
 /**
  * Functions that generates a "redacted" version of a value.

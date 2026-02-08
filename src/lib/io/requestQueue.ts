@@ -1,6 +1,6 @@
-import { createSizeMonitor, type ValueMonitorOptions } from '../../utils/valueMonitor';
-import type { CrawleeOneIO } from '../integrations/types';
-import { apifyIO } from '../integrations/apify';
+import { createSizeMonitor, type ValueMonitorOptions } from '../../utils/valueMonitor.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
+import { apifyIO } from '../integrations/apify.js';
 
 export interface RequestQueueSizeMonitorOptions extends ValueMonitorOptions {
   io?: CrawleeOneIO<any, any>;

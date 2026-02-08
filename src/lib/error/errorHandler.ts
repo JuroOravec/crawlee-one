@@ -9,16 +9,16 @@ import type {
 } from 'crawlee';
 import type { Page } from 'playwright';
 
-import type { MaybePromise, PickRequired } from '../../utils/types';
-import type { CrawleeOneRouteHandler, CrawleeOneRouteCtx } from '../router/types';
+import type { MaybePromise, PickRequired } from '../../utils/types.js';
+import type { CrawleeOneRouteHandler, CrawleeOneRouteCtx } from '../router/types.js';
 import type {
   CrawleeOneErrorHandlerInput,
   CrawleeOneErrorHandlerOptions,
   CrawleeOneIO,
   ExtractIOReport,
-} from '../integrations/types';
-import type { CrawleeOneCtx } from '../actor/types';
-import { apifyIO } from '../integrations/apify';
+} from '../integrations/types.js';
+import type { CrawleeOneCtx } from '../actor/types.js';
+import { apifyIO } from '../integrations/apify.js';
 
 export type CaptureErrorInput = PickRequired<Partial<CrawleeOneErrorHandlerInput>, 'error'>;
 export type CaptureError = (input: CaptureErrorInput) => MaybePromise<void>;

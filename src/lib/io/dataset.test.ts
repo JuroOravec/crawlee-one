@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import { getDatasetCount, getColumnFromDataset, datasetSizeMonitor } from './dataset';
+import { getDatasetCount, getColumnFromDataset, datasetSizeMonitor } from './dataset.js';
 import type {
   CrawleeOneIO,
   CrawleeOneDataset,
   CrawleeOneRequestQueue,
-} from '../integrations/types';
+} from '../integrations/types.js';
 
 const createMockDataset = (overrides?: Partial<CrawleeOneDataset>): CrawleeOneDataset => ({
   pushData: vi.fn(),

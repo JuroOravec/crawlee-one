@@ -1,29 +1,29 @@
 // Main API
-export * from './api';
+export * from './api.js';
 
 // Low-level API + types + helpers
-export * from './lib/actor/actor';
-export * from './lib/actor/types';
-export * from './lib/input';
-export * from './lib/io/dataset';
-export * from './lib/io/requestQueue';
-export * from './lib/io/pushData';
-export * from './lib/io/pushRequests';
-export * from './lib/actions/scrapeListing';
-export * from './lib/error/errorHandler';
-export * from './lib/migrate/localMigrator';
-export * from './lib/migrate/localState';
-export * from './lib/migrate/types';
-export * from './lib/router/router';
-export * from './lib/router/types';
-export * from './lib/log';
-export * from './lib/test/actor';
-export * from './lib/test/mockApifyClient';
-export * from './lib/integrations/apify';
-export * from './lib/integrations/types';
-export * from './lib/telemetry/types';
-export * from './lib/telemetry/sentry';
-export type { CrawlerUrl, CrawlerType } from './types/index';
+export * from './lib/actor/actor.js';
+export * from './lib/actor/types.js';
+export * from './lib/input.js';
+export * from './lib/io/dataset.js';
+export * from './lib/io/requestQueue.js';
+export * from './lib/io/pushData.js';
+export * from './lib/io/pushRequests.js';
+export * from './lib/actions/scrapeListing.js';
+export * from './lib/error/errorHandler.js';
+export * from './lib/migrate/localMigrator.js';
+export * from './lib/migrate/localState.js';
+export * from './lib/migrate/types.js';
+export * from './lib/router/router.js';
+export * from './lib/router/types.js';
+export * from './lib/log.js';
+export * from './lib/test/actor.js';
+export * from './lib/test/mockApifyClient.js';
+export * from './lib/integrations/apify.js';
+export * from './lib/integrations/types.js';
+export * from './lib/telemetry/types.js';
+export * from './lib/telemetry/sentry.js';
+export type { CrawlerUrl, CrawlerType } from './types/index.js';
 export type {
   PickPartial,
   PickRequired,
@@ -31,9 +31,9 @@ export type {
   ArrVal,
   MaybePromise,
   MaybeAsyncFn,
-} from './utils/types';
+} from './utils/types.js';
 
 // Codegen
-export * from './types/config';
-export * from './cli/commands/config';
-export * from './cli/commands/codegen';
+export * from './types/config.js';
+export * from './cli/commands/config.js';
+export * from './cli/commands/codegen.js';

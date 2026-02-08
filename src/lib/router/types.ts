@@ -1,7 +1,7 @@
 import type { RouterHandler as CrawlerRouter, Awaitable } from 'crawlee';
 
-import type { MaybeArray, MaybePromise } from '../../utils/types';
-import type { CrawleeOneCtx } from '../actor/types';
+import type { MaybeArray, MaybePromise } from '../../utils/types.js';
+import type { CrawleeOneCtx } from '../actor/types.js';
 
 /** Context object provided in CrawlerRouter */
 export type CrawleeOneRouteCtx<

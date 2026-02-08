@@ -22,7 +22,7 @@ import type {
 } from 'apify-client';
 import type { StorageClient } from 'crawlee';
 
-import type { MaybePromise } from '../../utils/types';
+import type { MaybePromise } from '../../utils/types.js';
 
 export type OnBatchAddRequestsArgs = [
   requests: Omit<RequestQueueClientRequestSchema, 'id'>[],

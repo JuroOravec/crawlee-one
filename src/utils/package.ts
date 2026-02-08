@@ -1,24 +1,26 @@
-import pkginfo from 'pkginfo';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
 /**
- * `pkginfo` is an npm package that finds closest package.json
- * and returns only the fields that we request. While it works
- * well, the usage is strange. Hence we wrap it to contain the magic.
- *
- * See https://www.npmjs.com/package/pkginfo
- * */
+ * Finds the closest package.json by walking up from the given
+ * `import.meta.url` and returns only the requested fields.
+ */
 export const getPackageJsonInfo = <TFields extends string = string>(
-  filenameOrModule:
-    | { filename: string; id?: string }
-    | { id: string; filename?: string }
-    | NodeModule,
+  importMetaUrl: string,
   fields: TFields[]
-) => {
-  const obj = {
-    filename: filenameOrModule?.filename,
-    id: filenameOrModule?.id,
-    exports: {}, // This is where the fields will be written
-  };
-  pkginfo(obj as any, { include: fields });
-  return obj.exports as Record<TFields, any>;
+): Record<TFields, any> => {
+  let dir = path.dirname(fileURLToPath(importMetaUrl));
+  while (true) {
+    try {
+      const pkg = JSON.parse(readFileSync(path.join(dir, 'package.json'), 'utf-8'));
+      const result = {} as Record<TFields, any>;
+      for (const field of fields) result[field] = pkg[field];
+      return result;
+    } catch {
+      const parent = path.dirname(dir);
+      if (parent === dir) throw new Error('package.json not found');
+      dir = parent;
+    }
+  }
 };

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { createHttpCrawlerOptions } from './actor';
+import { createHttpCrawlerOptions } from './actor.js';
 
 describe('createHttpCrawlerOptions', () => {
   it('returns defaults when no input or overrides', () => {

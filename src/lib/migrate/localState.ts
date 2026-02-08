@@ -1,5 +1,5 @@
 import fsp from 'fs/promises';
-import path from 'path';
+import path from 'node:path';
 import type { Actor, ActorClient } from 'apify-client';
 
 export const createLocalMigrationState = ({ stateDir }: { stateDir: string }) => {
