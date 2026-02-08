@@ -1,4 +1,6 @@
 import type {
+  AdaptivePlaywrightCrawler,
+  AdaptivePlaywrightCrawlerOptions,
   BasicCrawler,
   CrawlingContext,
   BasicCrawlerOptions,
@@ -30,6 +32,7 @@ export const CRAWLER_TYPE = [
   'jsdom',
   'cheerio',
   'playwright',
+  'adaptive-playwright',
   'puppeteer',
 ] as const;
 export type CrawlerType = ArrVal<typeof CRAWLER_TYPE>;
@@ -66,13 +69,15 @@ export type CrawlerMeta<
       ? { crawler: CheerioCrawler, context: CheerioCrawlingContext<TData>, options: CheerioCrawlerOptions<TData> } // prettier-ignore
       : T extends 'playwright'
         ? { crawler: PlaywrightCrawler, context: PlaywrightCrawlingContext<TData>, options: PlaywrightCrawlerOptions } // prettier-ignore
-        : T extends 'puppeteer'
-          ? { crawler: PuppeteerCrawler, context: PuppeteerCrawlingContext<TData>, options: PuppeteerCrawlerOptions } // prettier-ignore
-          : T extends 'basic'
-            ? Ctx extends CrawlingContext
-              ? { crawler: BasicCrawler<Ctx>, context: BasicCrawlingContext<TData>, options: BasicCrawlerOptions<Ctx> } // prettier-ignore
-              : never
-            : never;
+        : T extends 'adaptive-playwright'
+          ? { crawler: AdaptivePlaywrightCrawler, context: PlaywrightCrawlingContext<TData>, options: AdaptivePlaywrightCrawlerOptions } // prettier-ignore
+          : T extends 'puppeteer'
+            ? { crawler: PuppeteerCrawler, context: PuppeteerCrawlingContext<TData>, options: PuppeteerCrawlerOptions } // prettier-ignore
+            : T extends 'basic'
+              ? Ctx extends CrawlingContext
+                ? { crawler: BasicCrawler<Ctx>, context: BasicCrawlingContext<TData>, options: BasicCrawlerOptions<Ctx> } // prettier-ignore
+                : never
+              : never;
 
 /** URL string or object passed to Crawler.run */
 export type CrawlerUrl = import('@crawlee/core').Source | string;

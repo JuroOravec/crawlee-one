@@ -37,6 +37,7 @@ export type CrawlerConfigActorInput = Pick<
   | 'maxRequestRetries'
   | 'maxRequestsPerCrawl'
   | 'maxRequestsPerMinute'
+  | 'maxCrawlDepth'
   | 'minConcurrency'
   | 'maxConcurrency'
   | 'keepAlive'
@@ -552,6 +553,15 @@ export const crawlerInput = {
     minimum: 1,
     nullable: true,
   }), // prettier-ignore
+  maxCrawlDepth: createIntegerField({
+    title: 'maxCrawlDepth',
+    type: 'integer',
+    description: `Maximum depth of the crawl. The initial requests have depth 0, requests enqueued from the initial requests have depth 1, and so on.
+    ${newLine(1)} Setting this to <code>0</code> will only process the initial requests. Setting it to <code>1</code> will process initial requests and their direct links, etc.
+    ${newLine(1)} If not set, the crawl continues until all requests are processed.`,
+    minimum: 0,
+    nullable: true,
+  }),
   minConcurrency: createIntegerField({
     title: 'minConcurrency',
     type: 'integer',
@@ -1051,6 +1061,7 @@ export const crawlerInputValidationFields = {
   maxRequestRetries: Joi.number().integer().min(0).optional(),
   maxRequestsPerCrawl: Joi.number().integer().min(0).optional(),
   maxRequestsPerMinute: Joi.number().integer().min(0).optional(),
+  maxCrawlDepth: Joi.number().integer().min(0).optional(),
   minConcurrency: Joi.number().integer().min(0).optional(),
   maxConcurrency: Joi.number().integer().min(0).optional(),
   keepAlive: Joi.boolean().optional(),

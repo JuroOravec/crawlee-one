@@ -1,5 +1,14 @@
 # Release notes
 
+## v2.1.0
+
+_2026-02-08_
+
+#### Features
+
+- Add `adaptive-playwright` crawler type, backed by Crawlee's `AdaptivePlaywrightCrawler` (v3.8.0). This crawler automatically switches between HTTP-only and browser rendering for better performance.
+- Add `maxCrawlDepth` input option (Crawlee v3.14.0). Limits how deep the crawler follows links from initial requests.
+
 ## v2.0.4
 
 _2024-05-29_

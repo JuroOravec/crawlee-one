@@ -1,4 +1,5 @@
 import {
+  AdaptivePlaywrightCrawler,
   BasicCrawler,
   type BasicCrawlingContext,
   CheerioCrawler,
@@ -21,6 +22,7 @@ export const actorClassByType = {
   cheerio: CheerioCrawler,
   jsdom: JSDOMCrawler,
   playwright: PlaywrightCrawler,
+  'adaptive-playwright': AdaptivePlaywrightCrawler,
   puppeteer: PuppeteerCrawler,
 } as const satisfies Record<CrawlerType, { new (options: Record<string, any>): any }>;
 
@@ -40,5 +42,6 @@ export const crawlingContextNameByType = {
   cheerio: 'CheerioCrawlingContext',
   jsdom: 'JSDOMCrawlingContext',
   playwright: 'PlaywrightCrawlingContext',
+  'adaptive-playwright': 'PlaywrightCrawlingContext',
   puppeteer: 'PuppeteerCrawlingContext',
 } satisfies Record<CrawlerType, CrawlingContextName>;

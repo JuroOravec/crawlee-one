@@ -86,4 +86,21 @@ describe('createHttpCrawlerOptions', () => {
     expect(result).not.toHaveProperty('outputDatasetId');
     expect(result).not.toHaveProperty('startUrls');
   });
+
+  it('picks maxCrawlDepth from input', () => {
+    const result = createHttpCrawlerOptions({
+      input: { maxCrawlDepth: 3 },
+    });
+
+    expect(result).toHaveProperty('maxCrawlDepth', 3);
+  });
+
+  it('maxCrawlDepth can be overridden', () => {
+    const result = createHttpCrawlerOptions({
+      input: { maxCrawlDepth: 3 },
+      overrides: { maxCrawlDepth: 1 } as any,
+    });
+
+    expect(result).toHaveProperty('maxCrawlDepth', 1);
+  });
 });
