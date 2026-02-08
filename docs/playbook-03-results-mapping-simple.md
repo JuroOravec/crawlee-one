@@ -1,50 +1,28 @@
-# 3. Simple transformations: Select and rename columns, set how many entries to scrape
+# 3. Simple transformations: Select, rename, and limit fields
 
-> NOTE:
+> **TL;DR:** Rename fields, select specific columns, and cap the number of entries -- all from input config, no coding required.
+
+> **Note on input format:** Examples show input as JSON. When using `crawlee-one` directly, pass the same fields via the `input` option:
 >
-> In these examples, the input is mostly shown as a JSON, e.g.:
-> ```json
-> {
->   "startUrls": ["https://www.example.com/path/1"],
-> }
-> ```
-> If you are using the `crawlee-one` package directly, then that is the same as:
 > ```ts
-> import { crawleeOne } from 'crawlee-one';
-> await crawleeOne({
->   type: '...',
->   input: {
->     startUrls: ['https://www.example.com/path/1'],
->   },
-> });
+> await crawleeOne({ type: '...', input: { startUrls: ['https://...'] } });
 > ```
 
-To start off this section, let's consider this scenario:
+## The problem
 
-> _Imagine you are software developer who's making a payment gateway solution tailored to SaaS businesses. Your colleague Curt is in charge of sales and marketing. To get a sense of the market, Curt found a web scraper that downloads companies and user profiles from [ProductHunt](https://producthunt.com). ProductHunt is full of SaaS products, so this is a great start!_
->
-> _Curt intends to import the data as JSON and into a CRM. But, uh-oh, the data from the web scraper is in a wrong format. The data is too large to be modified in a text editor or online tools, and Curt is not very tech-savvy, so he asks you to modify the data so it can be imported into the CRM._
->
-> _In terms of the data, maybe we need to:_
->
-> - _Rename the fields, so they match what the CRM expects_
-> - _Remove extra fields, because CRM complains about them too_
->
-> _This was fine at first, but Curt gets a new dataset every few weeks or so. And every time, he asks you to modify the data. Sometimes even the same dataset that you've massaged previously..._
->
-> _You feel like this is taking too much of your time. But building a data processing pipeline for these kind of scenarios feels like massive overengineering, and you wonder, "Why can't he just change the headers of the scraped data...?" But Curt refuses to learn [jq](https://jqlang.github.io/jq/)..._ 😢
+Scraped data rarely matches the exact format your downstream system expects. Field names don't align with the CRM schema, there are extra columns you don't need, and the dataset is larger than necessary.
 
-Sometimes, you need to make small tweaks to the scraped dataset, so it can work with the downstream integration - rename headers, or select only some fields.
+Typically, this means writing a separate script to post-process the data -- or asking a developer to do it every time. CrawleeOne lets you handle these adjustments directly from the scraper input, with no code.
 
-Usually scrapers give you the data as is, and you are unable to make small adjustments to the scraped dataset if you don't know how. **That's why CrawleeOne allow you to rename, select, and limit the number of entries right from the Apify UI, with no coding required.**
+## Input fields
 
-Let's have a look at 3 Actor input fields that do just that:
+- `outputMaxEntries` -- Cap the number of entries scraped.
+- `outputPickFields` -- Keep only the specified fields (the rest is discarded).
+- `outputRenameFields` -- Rename fields so the output matches what the downstream system expects. Supports nested paths.
 
-- `outputMaxEntries` - If set, only at most this many entries will be scraped.
-- `outputPickFields` - Specify which fields to keep from the scraped data (the rest is discarded). This is useful if you need to save storage space.
-- `outputRenameFields` - Rename fields, so the data can be fed directly to the downstream systems.
+## Example
 
-So if the scraper produces a dataset like so:
+Given this scraped entry:
 
 ```json
 {
@@ -54,19 +32,12 @@ So if the scraper produces a dataset like so:
   "email": "xxxx@xxxx.xx",
   "description": "<SOME VERY LONG TEXT>",
   "media": {
-    "photos": [
-      {
-        "data": {
-          "photoUrl": "https://.../img.png"
-        }
-      }
-    ]
+    "photos": [{ "data": { "photoUrl": "https://.../img.png" } }]
   }
-  // Other fields...
 }
 ```
 
-Then, if we need to rename and select only some fields, we can use following Actor input for our scraper:
+Apply this input:
 
 ```json
 {
@@ -75,7 +46,7 @@ Then, if we need to rename and select only some fields, we can use following Act
 }
 ```
 
-To generate this output:
+The output becomes:
 
 ```json
 {
@@ -86,4 +57,4 @@ To generate this output:
 }
 ```
 
-> _Congrats! With CrawleeOne, you are able to rename and trim down the dataset right from the Apify UI. 🚀_
+**Result:** Fields renamed, extras removed, output ready for the CRM -- all configured from the Apify UI.

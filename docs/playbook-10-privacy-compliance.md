@@ -1,61 +1,48 @@
 # 10. Privacy compliance: Include or omit personal data
 
-> NOTE:
->
-> In these examples, the input is mostly shown as a JSON, e.g.:
->
-> ```json
-> {
->   "startUrls": ["https://www.example.com/path/1"]
-> }
-> ```
->
-> If you are using the `crawlee-one` package directly, then that is the same as:
+> **TL;DR:** Toggle personal data inclusion with a single flag -- PII fields are automatically redacted when disabled.
+
+> **Note on input format:** Examples show input as JSON. When using `crawlee-one` directly, pass the same fields via the `input` option:
 >
 > ```ts
-> import { crawleeOne } from 'crawlee-one';
-> await crawleeOne({
->   type: '...',
->   input: {
->     startUrls: ['https://www.example.com/path/1'],
->   },
-> });
+> await crawleeOne({ type: '...', input: { startUrls: ['https://...'] } });
 > ```
 
-What's the difference between scraping e-commerce products vs scraping people's profiles from social media?
+## The problem
 
-The second dataset includes personal information, which needs to be handled carefully.
+Scraping e-commerce products is straightforward. Scraping social media profiles, employee directories, or any dataset containing personal information introduces privacy obligations under regulations like GDPR.
 
-When scraping data, you should always be wary of privacy regulations like GDPR. Even when you use platforms like Apify, the onus is on you. Not the platform, and not the developer of the scraper.
+The responsibility lies with whoever processes the data -- not the platform, not the scraper author. You need a way to control whether personal data is included in the output.
 
-CrawleeOne simplifies the compliance with privacy regulations - you can decide whether to include or exclude personal data with a simple toggle (`true` / `false`).
+## The solution
 
-This is set via the `includePersonalData` input option.
+CrawleeOne provides a single input toggle: `includePersonalData`.
 
-A well-configured CrawleeOne scraper has identified which fields include personal data. If `includePersonalData` is not enabled, then the fields with PII will be redacted. Redacted fields may look like this:
+A well-configured CrawleeOne scraper identifies which fields contain personal data via `privacyMask`. When `includePersonalData` is `false` (the default), those fields are automatically redacted.
 
-With `includePersonalData: false`
-
-```json
-{
-  "name": "<Redacted property \"name\">"
-  "type": "employee",
-  "likes": ["hotdog", "skiing"],
-}
-```
-
-With `includePersonalData: true`
+**With `includePersonalData: false`:**
 
 ```json
 {
-  "name": "John Smith"
+  "name": "<Redacted property \"name\">",
   "type": "employee",
-  "likes": ["hotdog", "skiing"],
+  "likes": ["hotdog", "skiing"]
 }
 ```
 
-NOTE: You should turn this on ONLY if you have a consent, legal basis for using the data, or at your own risk.
+**With `includePersonalData: true`:**
 
-NOTE 2: While the aim of this feature is to simplify things for you, this is not a bullet-proof solution. The scraper author is not to be held liable for errors, and it is your responsibility to decide if the dataset that you're using is breaching privacy laws, whether some fields are redacted or not.
+```json
+{
+  "name": "John Smith",
+  "type": "employee",
+  "likes": ["hotdog", "skiing"]
+}
+```
+
+## Important notes
+
+- Enable `includePersonalData` only when you have consent, a legal basis, or accept the risk.
+- This feature simplifies compliance but is not a complete solution. The scraper author is not liable for errors. It is your responsibility to verify that your use of the data complies with applicable privacy laws.
 
 [Learn more about GDPR](https://gdpr.eu/eu-gdpr-personal-data/).

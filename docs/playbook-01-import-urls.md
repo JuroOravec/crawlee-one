@@ -1,80 +1,56 @@
-# 1. Import URLs to scrape from your database (or elsewhere)
+# 1. Import URLs from your database (or elsewhere)
 
-> NOTE:
+> **TL;DR:** Load starting URLs from a static list, an Apify Dataset, or a custom function -- no separate loader script needed.
+
+> **Note on input format:** Examples show input as JSON. When using `crawlee-one` directly, pass the same fields via the `input` option:
 >
-> In these examples, the input is mostly shown as a JSON, e.g.:
-> ```json
-> {
->   "startUrls": ["https://www.example.com/path/1"],
-> }
-> ```
-> If you are using the `crawlee-one` package directly, then that is the same as:
 > ```ts
-> import { crawleeOne } from 'crawlee-one';
-> await crawleeOne({
->   type: '...',
->   input: {
->     startUrls: ['https://www.example.com/path/1'],
->   },
-> });
+> await crawleeOne({ type: '...', input: { startUrls: ['https://...'] } });
 > ```
 
-Let's start our examples at the beginning of the scraping lifecycle:
+## The problem
 
-There are website(s) from which you want to extract data, and you have URLs to those websites.
+You have a list of URLs to scrape. If there are only a handful, you can manage them manually. But if the URLs live in a database or external service, you need a loader script to fetch them -- and that script needs to run somewhere.
 
-If you have only a few of the URLs (say, up to hundreds), you can copy-paste them and manage them manually, and that's fine.
+Before you've even started scraping, you're managing two programs: a loader and a scraper.
 
-**But if you store the URLs in a database or another service, you will need a script to extract the URLs. And that script will need to live somewhere, and it will need to run somewhere.**
+CrawleeOne eliminates the loader. URL loading is built into the scraper itself.
 
-So you haven't even started, and you already need to run 2 programs:
+## Three ways to define URLs
 
-1. A loader script
-2. The scraper itself
+- `startUrls` -- A static list of URLs.
+- `startUrlsFromDataset` -- Pull URLs from an existing Apify Dataset.
+- `startUrlsFromFunction` -- A custom function that fetches or generates URLs.
 
-**To avoid this, CrawleeOne has the loader script integrated.** Let's see how it works:
+## Example scenario
 
-You have 3 ways of defining the URLs to scrape:
+You have a dataset of 1M Amazon book product listings and need to scrape reviews for each. Each entry looks like:
 
-- `startUrls` - Provide a static list of URLs.
-- `startUrlsFromDataset` - Take URLs from _another_ Apify Dataset.
-- `startUrlsFromFunction` - Define custom loader script that obtains or generates the URLs.
+```json
+{
+  "asin": "xxxxxxxxx",
+  "title": "A book title",
+  "url": "https://www.amazon.com/..."
+}
+```
 
-Let's show the 3 ways on the following scenario:
+### Step 1: Validate with a static list
 
-> _Imagine you want to train an AI model that detects fake reviews specifically for books. You decide to use Amazon's product reviews for training. You have already extracted their book product listings. It looks like this:_
->
-> ```json
-> {
->   "asin": "xxxxxxxxx",
->   "title": "A book title",
->   "description": "...",
->   "url": "https://www.amazon.com/..."
-> }
-> ```
->
-> _You have a dataset of 100K-1M products. Now you need to extract the reviews for each of the products._
-
-...1 milion is a lot, but let's not get ahead of ourselves. At first, you may want to use just 2-3 URLs to verify validity of your approach.
-
-In that, you can use a CrawleeOne Apify actor and pass it a static list of URLs:
+Start small. Pass a few URLs to verify your scraper works:
 
 ```json
 {
   "startUrls": [
     "https://www.example.com/path/1",
     "https://www.example.com/path/2",
-    "https://www.example.com/path/3",
-    ...
-  ],
+    "https://www.example.com/path/3"
+  ]
 }
 ```
 
-> _You ran a scraper with the settings above, and the scraper got us the results we needed. Sweet! Now onto the remaining 999,997 entries..._
+### Step 2: Scale with a dataset reference
 
-Assuming that you named the Amazon products dataset as `"AmazonBooks2023-08"`, we can pass all 1 million URLs to the scraper by referring to your Apify Dataset and the field that holds the URL.
-
-For this, we use the `startUrlsFromDataset` field, and we separate the Dataset ID and the field name with `#`, like so: `{datasetId}#{fieldName}`.
+Once validated, point the scraper at your full dataset. Use `startUrlsFromDataset` with the format `{datasetId}#{fieldName}`:
 
 ```json
 {
@@ -82,38 +58,22 @@ For this, we use the `startUrlsFromDataset` field, and we separate the Dataset I
 }
 ```
 
-Alternatively, you may want to derive the URLs from the product's `asin` field. This is more complicated, because we already require some data pre-processing - we need to map the `asin` field to an URL.
+All 1M URLs are loaded directly from the dataset. No intermediate script.
 
-Nevertheless, this is still very much feasible if we define an Actor input with a custom loader function:
+### Step 3: Custom logic with a loader function
 
-```json
-{
-  "startUrlsFromFunction": "
-    // Example: Create and load URLs from an Apify Dataset
-    async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
-      const dataset = await Actor.openDataset('AmazonBooks2023-08');
-      const data = await dataset.getData();
-      const urls = data.items.map((item) => `https://amazon.com/dp/${item.asin}`);
-      return urls;
-    };",
-}
-```
-
-And here's the same, but with JS syntax highlight:
+If you need to derive URLs from other fields (e.g. constructing URLs from ASINs), use `startUrlsFromFunction`:
 
 ```js
 async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
   const dataset = await Actor.openDataset('AmazonBooks2023-08');
   const data = await dataset.getData();
-  const urls = data.items.map((item) => `https://amazon.com/dp/${item.asin}`);
-  return urls;
+  return data.items.map((item) => `https://amazon.com/dp/${item.asin}`);
 };
 ```
 
-(NOTE: Of course, in reality you should download the dataset in smaller batches.)
+> In production, download the dataset in smaller batches rather than all at once.
 
-And just like that, you've loaded the 1M URLs from one Apify Dataset, and passed it to a scraper that uses CrawleeOne.
+The function receives the current `state`, `input`, and helper methods (`Actor`, `sendRequest`, `itemCacheKey`), giving you full control over URL generation.
 
-Also, notice how the function returned the list of URLs. The function also received current context in `state` and `input`, and helper methods in `Actor`, `sendRequest`, `itemCacheKey`.
-
-> _Congrats! With CrawleeOne, you were able to scrape reviews for all your 1M products using an Apify Actor. And you didn't even need to spin up a separate server just for loading the URLs to the scraper. 🚀_
+**Result:** 1M URLs loaded from an Apify Dataset, fed directly to the scraper, with no separate infrastructure.

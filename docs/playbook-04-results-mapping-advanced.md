@@ -1,189 +1,98 @@
-# 4. Advanced transformations & aggregations
+# 4. Advanced transformations and aggregations
 
-> NOTE:
->
-> In these examples, the input is mostly shown as a JSON, e.g.:
->
-> ```json
-> {
->   "startUrls": ["https://www.example.com/path/1"]
-> }
-> ```
->
-> If you are using the `crawlee-one` package directly, then that is the same as:
+> **TL;DR:** Use custom functions to add, remove, or modify fields, enrich entries with remote data, or aggregate across entries using KeyValueStore.
+
+> **Note on input format:** Examples show input as JSON. When using `crawlee-one` directly, pass the same fields via the `input` option:
 >
 > ```ts
-> import { crawleeOne } from 'crawlee-one';
-> await crawleeOne({
->   type: '...',
->   input: {
->     startUrls: ['https://www.example.com/path/1'],
->   },
-> });
+> await crawleeOne({ type: '...', input: { startUrls: ['https://...'] } });
 > ```
 
-We've already described simple transformations like selecting or renaming fields.
+## When simple transforms aren't enough
 
-But what if you need something more advanced? Consider these scenarios:
+The [simple transformations](./playbook-03-results-mapping-simple.md) cover field selection and renaming. For more complex cases -- computed fields, API enrichment, cross-entry aggregation -- use custom transformation functions.
 
-- _You want to export data to a spreadsheet, so you don't need metadata for each image. Instead, you want just a column with `imageCount`._
+**Input fields:**
 
-- _You are scraping book data. You want to capture the relationships between authors and books. So, as each entry is being processed, you want to note down the name of the author and the related book._
+- `outputTransform` -- Called for each entry. Receives the entry, returns the transformed entry.
+- `outputTransformBefore` -- Called once before scraping starts. Use for initialization.
+- `outputTransformAfter` -- Called once after scraping completes. Use for cleanup.
 
-- _You are scraping job offers, and you want to add `keywords` field. You will send each job offer to ChatGPT to get keyword suggestions._
-  > NOTE: While it's entirely possible, this scenario is not recommended to be done at this stage (scraping entries). There is too many things that can go wrong when using a 3rd party server to enrich your data. And if it fails, the entry may be lost too, so it should be done as a standalone task.
+> **Note on code format:** For clarity, examples below use JavaScript syntax. In practice, these are passed as string values in JSON input.
 
-All of these are feasible with CrawleeOne, we just need to write a custom transformation function.
+## Examples
 
-For that we can use input fields `outputTransform`, `outputTransformBefore`, and `outputTransformAfter`.
+### 1. Add, remove, and modify fields
 
-Let's have a look at some examples!
-
-NOTE: For clarity, following code examples for Actor inputs are formatted as JavaScript. But when I write:
+Replace an `images` array with a computed `imagesWithTextCount` field:
 
 ```js
 {
-  outputFilter: (entry) => {
-    return entry.someValue > 10;
+  outputTransform: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
+    const { images, ...keptData } = entry || {};
+    const imagesWithTextCount = images.filter((img) => img.alt != null).length;
+    return { ...keptData, imagesWithTextCount };
   };
 }
 ```
 
-what I really mean is:
+### 2. Enrich entries with remote data
 
-```json
+Call an external API to add data to each entry. The `sendRequest` argument is an instance of [`got-scraping`](https://github.com/apify/got-scraping):
+
+```js
 {
-  "outputFilter": "(entry) => {
-    return entry.someValue > 10;
-  }"
+  outputTransform: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
+    const response = await sendRequest
+      .get('https://cat-fact.herokuapp.com/facts/5887e1d85c873e0011036889')
+      .json();
+    return { ...entry, catFact: response.text };
+  };
 }
 ```
 
-1. Add, remove, and modify fields
+> While possible, enrichment via third-party APIs during scraping carries risk. If the API call fails, the entry may be lost. Consider doing enrichment as a separate pipeline step for critical data.
 
-   In this example, we removed the `images` field, and instead
-   added field `imagesWithTextCount`.
+### 3. Aggregate across entries with KeyValueStore
 
-   ```js
-   {
-     outputTransform: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
-       const { images, ...keptData } = entry || {};
-       const imagesWithTextCount = images.filter((img) => img.alt != null).length;
-       return {
-         ...keptData,
-         imagesWithTextCount,
-       };
-     };
-   }
-   ```
+Track categories across all scraped entries using `outputTransformBefore` for setup and the `state` object for cross-call communication:
 
-2. Enrich entries with remote data
+```js
+{
+  outputTransformBefore: async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
+    const store = await Actor.openKeyValueStore();
+    state.store = store;
+    if (!(await store.getValue('idsByCategories'))) {
+      await store.setValue('idsByCategories', {});
+    }
+  },
 
-   In this example, we call the CatFacts API to generate a random cat fact to send along with this entry.
+  outputTransform: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
+    if (!entry.category) return entry;
 
-   For this, we use the `sendRequest` argument available to the function. `sendRequest` is actually an instance of [`got-scraping`](https://github.com/apify/got-scraping).
+    const data = (await state.store.getValue('idsByCategories')) || {};
+    const idList = data[entry.category] || [];
+    idList.push(entry.id);
+    await state.store.setValue('idsByCategories', { ...data, [entry.category]: idList });
 
-   ```js
-   {
-     // Define what happens for each entry
-     outputTransform: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
-       // Use `sendRequest` to get data from the internet:
-       // Docs: https://github.com/apify/got-scraping
-       // We make a GET request to the given URL, and parse the response as JSON
-       const catFactResponse = await sendRequest.get('https://cat-fact.herokuapp.com/facts/5887e1d85c873e0011036889').json();
+    // Return the original entry unchanged
+    return entry;
+  },
 
-       const catFact = catFact.text;
-       // => "Cats make about 100 different sounds. Dogs make only about 10."
+  outputTransformAfter: async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
+    // KeyValueStore does not need explicit cleanup
+  },
+}
+```
 
-       return { ...entry, catFact };
-     },
-   }
-   ```
+## How the hooks work
 
-3. Aggregate with KeyValueStore
+- `outputTransformBefore` and `outputTransformAfter` do not receive an entry argument -- they run once at the start and end of the scraping run respectively.
+- `outputTransform` must return the transformed entry. Returning nothing effectively removes the entry from the dataset.
+- Data is shared between hooks via the `state` object.
 
-   In this example, we capture the category of each entry.
-   Note how in the end, we still return the original `entry`.
+## Concurrency considerations
 
-   - For one, we must return it. If we don't, we practically
-     remove the entry from the dataset.
-
-   - And for two, we don't make any changes to the entry itself,
-     so we can return it as is.
-
-   Futher, we also make use of the `outputTransformBefore` and `outputTransformAfter` to prepare and cleanup the environment.
-
-   ```js
-   {
-     // Initialize the cache during scraper startup
-     outputTransformBefore: async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
-       // Use the cache/store associated with this scraper run
-       const store = await Actor.openKeyValueStore();
-
-       // Persist the store instance, so we can use it in `outputTransform`
-       state.store = store;
-
-       // Create the cache entry that will hold aggregate data
-       const data = (await store.getValue('idsByCategories'));
-       if (!data) {
-         await store.setValue('idsByCategories', {});
-       }
-     },
-
-     // Define what happens for each entry
-     outputTransform: async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
-       // Leave early if invalid entry
-       if (!entry.category) return entry;
-
-       const data = (await state.store.getValue('idsByCategories')) || {};
-
-       // Update stats
-       const idList = data[entry.category] || [];
-       idList.push(entry.id);
-       data[entry.category] = idList;
-       const newData = { ...data, [entry.category]: idList };
-
-       // Save to cache again
-       await store.setValue('idsByCategories', newData);
-
-       return entry;
-     },
-
-     // Do... nothing during scraper shutdown
-     outputTransformAfter: async ({ Actor, input, state, sendRequest, itemCacheKey }) => {
-       // NOTE: KeyValueStore doesn't need to be closed/disposed
-       // there's not much for us to do here
-     },
-   }
-   ```
-
-   Did you notice the following about the example above?
-
-   1. While the `outputTransform` function has an "entry" argument, `outputTransformBefore` and `outputTransformAfter` don't, because:
-
-      - `outputTransformBefore` is run before any scraping begins.
-      - `outputTransformAfter` is run after all scraping is done.
-
-   2. `outputTransform` has to return the transformed data. But `outputTransformBefore` and `outputTransformAfter` don't return anything.
-
-   3. We passed the KeyValueStore from `outputTransformBefore` to `outputTransform` via the `state` object.
-
-   > IMPORTANT 1: Note that `outputTransformBefore` and `outputTransformAfter` are ran for EACH scraper instance.
-   >
-   > What this means is that if you set the Actor input `maxConcurrency` to anything beyond 1, then you may have multiple instances running at the same time.
-   >
-   > Then, `outputTransformBefore` and `outputTransformAfter` will run for both of them!
-
-   > IMPORTANT 2: Likewise, the `state` object is INSTANCE-SPECIFIC!
-   >
-   > What this means is that if you set the Actor input `maxConcurrency` to anything beyond 1, then you may have multiple instances running at the same time.
-   >
-   > Then, they will each have their own `state` object. Instead, if you want to share data between all instances, use the KeyValueStore.
-
-   > NOTE: Although possible, the example above is open to concurrency issues. In other words, if the KeyValueStore is opened by two different entries at the same time, and they both update it at the same time, then the change coming from one of them might be lost!
-   >
-   > To avoid concurrency issues, either set `maxConcurrency: 1`, so all entries are processed one by one. Or store the data for each entry under a different key in the KeyValueStore.
-
-That's all for advanced transformations!
-
-> _Congrats! Now you know how to transform, enrich, and aggregate scraper data using CrawleeOne. 🚀_
+> **The `state` object is instance-specific.** If `maxConcurrency` is greater than 1, multiple instances run in parallel, each with their own `state`. To share data across instances, use the KeyValueStore.
+>
+> **KeyValueStore writes are not atomic.** Concurrent reads and writes to the same key can cause data loss. To avoid this, either set `maxConcurrency: 1`, or store each entry under a unique key.

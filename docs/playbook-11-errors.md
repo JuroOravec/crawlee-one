@@ -1,49 +1,30 @@
-# 11. Capture errors
+# 11. Error capture
 
-> NOTE:
->
-> In these examples, the input is mostly shown as a JSON, e.g.:
->
-> ```json
-> {
->   "startUrls": ["https://www.example.com/path/1"]
-> }
-> ```
->
-> If you are using the `crawlee-one` package directly, then that is the same as:
+> **TL;DR:** Errors are automatically saved to a dedicated dataset for persistent, centralized monitoring across scrapers.
+
+> **Note on input format:** Examples show input as JSON. When using `crawlee-one` directly, pass the same fields via the `input` option:
 >
 > ```ts
-> import { crawleeOne } from 'crawlee-one';
-> await crawleeOne({
->   type: '...',
->   input: {
->     startUrls: ['https://www.example.com/path/1'],
->   },
-> });
+> await crawleeOne({ type: '...', input: { startUrls: ['https://...'] } });
 > ```
 
-### Scenario
+## The problem
 
-> Imagine you're scraping Amazon products in large quantities and daily. One day, something changed, and you start getting a lot of errors. Something in the integration broke.
->
-> If you're scraping north of tens of thousands of entries, keeping track of all the errors can be quite challenging. So, what do you do?
->
-> - Do you check logs for errors? These can be easily lost or overlooked.
-> - Or do you stop the whole scraping run if there's an error?
-> - Or let it slide and work with the rest? But then what's your tolerance for errors?
-> - Maybe you decide to change som configuration, but then you start receiving a different kind of error...
+At scale, errors are inevitable. A site changes its layout, a server returns unexpected responses, or a configuration change introduces regressions. When you're scraping tens of thousands of entries daily, tracking errors through logs alone is unreliable -- they're easily lost or overlooked.
 
-### Error Dataset
+## The solution
 
-CrawleeOne helps to manage this issue out of the box. Errors are tracked in a separate Dataset. When an error occurs, it's automatically recorded. This can help you in several ways:
+CrawleeOne automatically records errors in a dedicated Apify Dataset. This provides:
 
-- The errors are persisted, so they can be re-visited later.
-- The errors can be pooled from multiple scrapers into a single Dataset.
+- **Persistence** -- Errors are saved as structured data, not ephemeral log lines. They can be reviewed at any time.
+- **Centralization** -- Multiple scrapers can write to the same error dataset, giving you a single view across all your crawlers.
 
-This can be configured with the `errorReportingDatasetId` input option:
+Configure it with the `errorReportingDatasetId` input:
 
 ```json
 {
   "errorReportingDatasetId": "REPORTING"
 }
 ```
+
+For more advanced error tracking, CrawleeOne also supports pluggable telemetry integrations (e.g. Sentry). See the [integrations guide](./integrations.md).

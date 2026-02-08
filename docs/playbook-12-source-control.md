@@ -1,109 +1,74 @@
 # 12. Source control: Keep scraper configuration in sync
 
-> NOTE:
->
-> In these examples, the input is mostly shown as a JSON, e.g.:
->
-> ```json
-> {
->   "startUrls": ["https://www.example.com/path/1"]
-> }
-> ```
->
-> If you are using the `crawlee-one` package directly, then that is the same as:
+> **TL;DR:** Import scraper configuration from a remote URL or source control to keep multiple scraper instances in sync.
+
+> **Note on input format:** Examples show input as JSON. When using `crawlee-one` directly, pass the same fields via the `input` option:
 >
 > ```ts
-> import { crawleeOne } from 'crawlee-one';
-> await crawleeOne({
->   type: '...',
->   input: {
->     startUrls: ['https://www.example.com/path/1'],
->   },
-> });
+> await crawleeOne({ type: '...', input: { startUrls: ['https://...'] } });
 > ```
 
-As you've seen, we can solve most of our data processing needs without having to spin up another server. What's more, we can even do it all through a single UI.
+## The problem
 
-While that's great, you may wonder - if we keep all our transformation and filtering logic inside the scrapers, then how do we maintain the logic? What if we need to change or copy something? Won't it be a pain to manually update all logic for each single scraper instance we have?
+CrawleeOne's transformation and filtering logic lives in scraper input. This is convenient for single instances, but becomes a maintenance burden when you have multiple scrapers sharing the same configuration. Updating each one manually is error-prone and doesn't scale.
 
-The short answer is: No. We can store and import the scraper config from a source control like git (GitHub, GitLab, BitBucket).
+## The solution
 
-With this approach, we can reuse a single config file for multiple scrapers. Or we can write the logic in TypeScript, compile it to JS, and import that as the config.
+Store your scraper configuration in source control (GitHub, GitLab, Bitbucket) and import it at runtime. CrawleeOne provides two input fields for this:
 
-So, how do we do that?
+- `inputExtendUrl` -- Fetch configuration from a URL via GET request.
+- `inputExtendFromFunction` -- Use a custom function for full control (POST requests, auth headers, dynamic values).
 
-CrawleeOne defines 2 input fields: `inputExtendUrl` and `inputExtendFromFunction`:
+## Example
 
-- `inputExtendUrl` takes a plain URL, and sends a GET request to download remote config.
-- `inputExtendFromFunction` gives you freedom to download or generate the config however you wish.
-
-Let's go through an example:
-
-1. Define the scraper config:
-
-```json
-// Formatted for clarity
-{
-  "maxConcurrency": 5,
-  "minConcurrency": 3,
-  "outputRenameFields": {
-    "data[0].media.value": "images"
-  },
-  "outputFilter": "async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
-    // Example: Filter entries based on number of images they have (at least 5)
-    return entry.images.length > 5;
-  };"
-}
-```
-
-2. Make the config available. Let's assume that you've defined it in a public GitHub repo,
-   so the config above is available at <https://raw.githubusercontent.com/username/project/main/config.json>.
-
-3. Now configure an Apify Actor to use the config.
-
-   For the simpler scenario, we can just set `inputExtendUrl` to the config URL:
-
-   ```json
-   {
-    "inputExtendUrl": "https://raw.githubusercontent.com/username/project/main/config.json",
-    "startUrls": [ ... ],
-   }
-   ```
-
-   Or if we need more control, or we need to make a POST request or include auth credentials, we can use `inputExtendFromFunction`:
-
-   ```json
-   {
-    "inputExtendFromFunction": "
-      const config = await sendRequest.post('https://raw.githubusercontent.com/username/project/main/config.json').json();
-
-      // Increase concurrency during off-peak hours
-      // NOTE: Imagine we're targetting a small server, that can be slower during the day
-      const hours = new Date().getUTCHours();
-      const isOffPeak = hours < 6 || hours > 20;
-      config.maxConcurrency = isOffPeak ? 8 : 3;
-
-      return config;",
-    "startUrls": [ ... ],
-   }
-   ```
-
-4. You have effectively imported and merged a config from a source control. The resulting config is following:
+### 1. Define the shared config
 
 ```json
 {
-  // Fields from GitHub config
   "maxConcurrency": 5,
   "minConcurrency": 3,
-  "outputRenameFields": {
-    "data[0].media.value": "images"
-  },
-  "outputFilter": "async (entry, { Actor, input, state, sendRequest, itemCacheKey }) => {
-    // Example: Filter entries based on number of images they have (at least 5)
-    return entry.images.length > 5;
-  };",
-
-  // Fields defined on the Actor input
-  "startUrls": [ ... ],
+  "outputRenameFields": { "data[0].media.value": "images" },
+  "outputFilter": "async (entry) => entry.images.length > 5"
 }
 ```
+
+### 2. Host it in source control
+
+Make the file available at a URL, e.g.:
+`https://raw.githubusercontent.com/org/project/main/config.json`
+
+### 3. Reference it from the scraper input
+
+**Simple -- static URL:**
+
+```json
+{
+  "inputExtendUrl": "https://raw.githubusercontent.com/org/project/main/config.json",
+  "startUrls": ["https://..."]
+}
+```
+
+**Advanced -- custom function with dynamic logic:**
+
+```json
+{
+  "inputExtendFromFunction": "const config = await sendRequest.post('https://raw.githubusercontent.com/org/project/main/config.json').json(); const hours = new Date().getUTCHours(); config.maxConcurrency = (hours < 6 || hours > 20) ? 8 : 3; return config;",
+  "startUrls": ["https://..."]
+}
+```
+
+### 4. Merged result
+
+The remote config is merged with the local input. Fields from both sources are combined:
+
+```json
+{
+  "maxConcurrency": 5,
+  "minConcurrency": 3,
+  "outputRenameFields": { "data[0].media.value": "images" },
+  "outputFilter": "async (entry) => entry.images.length > 5",
+  "startUrls": ["https://..."]
+}
+```
+
+**Result:** One config file in source control, shared across any number of scraper instances. Update once, apply everywhere.
