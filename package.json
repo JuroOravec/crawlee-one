@@ -31,10 +31,10 @@
     "./sentry": "./dist/cjs/lib/telemetry/sentry.js"
   },
   "module": "dist/esm/index.js",
-  "types": "dist/cjs/index.d.js",
+  "types": "dist/cjs/index.d.ts",
   "bin": "dist/cjs/cli/index.js",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "start": "npm run start:dev",
@@ -51,21 +51,21 @@
     "gen:docs": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.base.json --out ./docs/typedoc"
   },
   "devDependencies": {
-    "@eslint/js": "^9.0.0",
-    "@types/lodash": "^4.17.4",
-    "@types/pkginfo": "^0.4.3",
+    "@eslint/js": "^9.39.2",
+    "@types/lodash": "^4.17.23",
+    "@types/pkginfo": "^0.4.4",
     "@vitest/coverage-v8": "^4.0.18",
     "crawlee": "^3.16.0",
-    "eslint": "^9.0.0",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "playwright": "^1.44.1",
-    "prettier": "^3.2.5",
+    "eslint-plugin-prettier": "^5.5.5",
+    "playwright": "^1.58.2",
+    "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
-    "typedoc": "^0.25.13",
-    "typedoc-plugin-markdown": "^4.0.3",
-    "typescript": "^5.4.5",
-    "typescript-eslint": "^8.0.0",
+    "typedoc": "^0.28.16",
+    "typedoc-plugin-markdown": "^4.10.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0",
     "vitest": "^4.0.18"
   },
   "peerDependencies": {
@@ -82,10 +82,10 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "commander": "^12.1.0",
+    "commander": "^14.0.3",
     "cosmiconfig": "^9.0.0",
-    "dotenv": "^16.4.5",
-    "glob": "^10.4.1",
+    "dotenv": "^17.2.4",
+    "glob": "^13.0.1",
     "lodash": "^4.17.21",
     "pkginfo": "^0.4.1"
   }
