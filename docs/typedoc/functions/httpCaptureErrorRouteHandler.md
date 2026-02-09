@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,18 +8,20 @@
 
 > **httpCaptureErrorRouteHandler**\<`T`\>(...`args`): [`CrawleeOneRouteHandler`](../type-aliases/CrawleeOneRouteHandler.md)\<`T`, [`CrawleeOneRouteCtx`](../type-aliases/CrawleeOneRouteCtx.md)\<`T`\>\>
 
-## Type parameters
+Defined in: [src/lib/error/errorHandler.ts:134](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/error/errorHandler.ts#L134)
 
-• **T** *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`HttpCrawlingContext`\<`any`, `any`\>, `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
+## Type Parameters
+
+### T
+
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`HttpCrawlingContext`\<`any`, `any`\>, `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
 
 ## Parameters
 
-• ...**args**: [(`ctx`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>, [`CrawleeOneErrorHandlerOptions`](../interfaces/CrawleeOneErrorHandlerOptions.md)\<`T`\[`"io"`\]\>]
+### args
+
+...\[(`ctx`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>, [`CrawleeOneErrorHandlerOptions`](../interfaces/CrawleeOneErrorHandlerOptions.md)\<`T`\[`"io"`\]\>\]
 
 ## Returns
 
 [`CrawleeOneRouteHandler`](../type-aliases/CrawleeOneRouteHandler.md)\<`T`, [`CrawleeOneRouteCtx`](../type-aliases/CrawleeOneRouteCtx.md)\<`T`\>\>
-
-## Source
-
-[src/lib/error/errorHandler.ts:134](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/error/errorHandler.ts#L134)

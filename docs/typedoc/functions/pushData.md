@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Function: pushData()
 
 > **pushData**\<`Ctx`, `T`\>(`ctx`, `oneOrManyItems`, `options`): `Promise`\<`unknown`[]\>
+
+Defined in: [src/lib/io/pushData.ts:319](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/io/pushData.ts#L319)
 
 Apify's `Actor.pushData` with extra features:
 
@@ -18,24 +20,30 @@ Apify's `Actor.pushData` with extra features:
 - Transform and filter entries. Entries that did not pass the filter are not added to the dataset.
 - Add/remove entries to/from KeyValueStore. Entries are saved to the store by hash generated from entry fields set by `cachePrimaryKeys`.
 
-## Type parameters
+## Type Parameters
 
-• **Ctx** *extends* `CrawlingContext`\<`unknown`, `Dictionary`\>
+### Ctx
 
-• **T** *extends* `Record`\<`any`, `any`\> = `Record`\<`any`, `any`\>
+`Ctx` *extends* `CrawlingContext`\<`unknown`, `Dictionary`\>
+
+### T
+
+`T` *extends* `Record`\<`any`, `any`\> = `Record`\<`any`, `any`\>
 
 ## Parameters
 
-• **ctx**: `Ctx`
+### ctx
 
-• **oneOrManyItems**: `T` \| `T`[]
+`Ctx`
 
-• **options**: [`PushDataOptions`](../interfaces/PushDataOptions.md)\<`T`\>
+### oneOrManyItems
+
+`T` | `T`[]
+
+### options
+
+[`PushDataOptions`](../interfaces/PushDataOptions.md)\<`T`\>
 
 ## Returns
 
 `Promise`\<`unknown`[]\>
-
-## Source
-
-[src/lib/io/pushData.ts:319](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushData.ts#L319)

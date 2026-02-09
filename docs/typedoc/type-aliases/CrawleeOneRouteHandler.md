@@ -1,21 +1,23 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / CrawleeOneRouteHandler
 
-# Type alias: CrawleeOneRouteHandler\<T, RouterCtx\>
+# Type Alias: CrawleeOneRouteHandler\<T, RouterCtx\>
 
-> **CrawleeOneRouteHandler**\<`T`, `RouterCtx`\>: `Parameters`\<`CrawlerRouter`\<`T`\[`"context"`\] & `RouterCtx`\>\[`"addHandler"`\]\>\[`1`\]
+> **CrawleeOneRouteHandler**\<`T`, `RouterCtx`\> = `Parameters`\<`CrawlerRouter`\<`T`\[`"context"`\] & `RouterCtx`\>\[`"addHandler"`\]\>\[`1`\]
+
+Defined in: [src/lib/router/types.ts:13](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/router/types.ts#L13)
 
 Function that's passed to `router.addHandler(label, handler)`
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+### T
 
-• **RouterCtx** *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](CrawleeOneRouteCtx.md)\<`T`\>
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
 
-## Source
+### RouterCtx
 
-[src/lib/router/types.ts:13](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/router/types.ts#L13)
+`RouterCtx` *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](CrawleeOneRouteCtx.md)\<`T`\>

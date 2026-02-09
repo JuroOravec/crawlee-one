@@ -1,34 +1,48 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / CrawleeOneActorRouterCtx
 
-# Type alias: CrawleeOneActorRouterCtx\<T\>
+# Type Alias: CrawleeOneActorRouterCtx\<T\>
 
-> **CrawleeOneActorRouterCtx**\<`T`\>: `object`
+> **CrawleeOneActorRouterCtx**\<`T`\> = `object`
+
+Defined in: [src/lib/actor/types.ts:75](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L75)
 
 Context passed from actor to route handlers
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+### T
 
-## Type declaration
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+
+## Properties
 
 ### actor
 
 > **actor**: [`CrawleeOneActorInst`](../interfaces/CrawleeOneActorInst.md)\<`T`\>
 
+Defined in: [src/lib/actor/types.ts:76](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L76)
+
+***
+
 ### metamorph
 
 > **metamorph**: [`Metamorph`](Metamorph.md)
 
+Defined in: [src/lib/actor/types.ts:78](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L78)
+
 Trigger actor metamorph, using actor's inputs as defaults.
+
+***
 
 ### pushData()
 
 > **pushData**: \<`T`\>(`oneOrManyItems`, `options`) => `Promise`\<`any`[]\>
+
+Defined in: [src/lib/actor/types.ts:87](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L87)
 
 `Actor.pushData` with extra optional features:
 
@@ -37,43 +51,55 @@ Trigger actor metamorph, using actor's inputs as defaults.
 - Add metadata to entries before they are pushed to Dataset.
 - Set which (nested) properties are personal data optionally redact them for privacy compliance.
 
-#### Type parameters
+#### Type Parameters
 
-• **T** *extends* `Record`\<`any`, `any`\> = `Record`\<`any`, `any`\>
+##### T
+
+`T` *extends* `Record`\<`any`, `any`\> = `Record`\<`any`, `any`\>
 
 #### Parameters
 
-• **oneOrManyItems**: `T` \| `T`[]
+##### oneOrManyItems
 
-• **options**: [`PushDataOptions`](../interfaces/PushDataOptions.md)\<`T`\>
+`T` | `T`[]
+
+##### options
+
+[`PushDataOptions`](../interfaces/PushDataOptions.md)\<`T`\>
 
 #### Returns
 
 `Promise`\<`any`[]\>
 
+***
+
 ### pushRequests()
 
-> **pushRequests**: \<`T`\>(`oneOrManyItems`, `options`?) => `Promise`\<`any`[]\>
+> **pushRequests**: \<`T`\>(`oneOrManyItems`, `options?`) => `Promise`\<`any`[]\>
+
+Defined in: [src/lib/actor/types.ts:97](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L97)
 
 Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
 - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
 - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
 
-#### Type parameters
+#### Type Parameters
 
-• **T** *extends* `Exclude`\<[`CrawlerUrl`](CrawlerUrl.md), `string`\>
+##### T
+
+`T` *extends* `Exclude`\<[`CrawlerUrl`](CrawlerUrl.md), `string`\>
 
 #### Parameters
 
-• **oneOrManyItems**: `T` \| `T`[]
+##### oneOrManyItems
 
-• **options?**: [`PushRequestsOptions`](../interfaces/PushRequestsOptions.md)\<`T`\>
+`T` | `T`[]
+
+##### options?
+
+[`PushRequestsOptions`](../interfaces/PushRequestsOptions.md)\<`T`\>
 
 #### Returns
 
 `Promise`\<`any`[]\>
-
-## Source
-
-[src/lib/actor/types.ts:75](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L75)

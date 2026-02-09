@@ -1,19 +1,19 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / ArrVal
 
-# Type alias: ArrVal\<T\>
+# Type Alias: ArrVal\<T\>
 
-> **ArrVal**\<`T`\>: `T`\[`number`\]
+> **ArrVal**\<`T`\> = `T`\[`number`\]
+
+Defined in: [src/utils/types.ts:9](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/utils/types.ts#L9)
 
 Unwrap Array to its item(s)
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* `any`[] \| readonly `any`[]
+### T
 
-## Source
-
-[src/utils/types.ts:9](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/utils/types.ts#L9)
+`T` *extends* `any`[] \| readonly `any`[]

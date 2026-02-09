@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,20 +6,22 @@
 
 # Function: createMockRequestQueueClient()
 
-> **createMockRequestQueueClient**(`__namedParameters`): `RequestQueueClient`
+> **createMockRequestQueueClient**(`__namedParameters?`): `RequestQueueClient`
+
+Defined in: [src/lib/test/mockApifyClient.ts:99](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/test/mockApifyClient.ts#L99)
 
 ## Parameters
 
-• **\_\_namedParameters**= `{}`
+### \_\_namedParameters?
 
-• **\_\_namedParameters.log?**
+#### log?
 
-• **\_\_namedParameters.onBatchAddRequests?**: [`OnBatchAddRequests`](../type-aliases/OnBatchAddRequests.md)
+(`args`) => `void`
+
+#### onBatchAddRequests?
+
+[`OnBatchAddRequests`](../type-aliases/OnBatchAddRequests.md)
 
 ## Returns
 
 `RequestQueueClient`
-
-## Source
-
-[src/lib/test/mockApifyClient.ts:99](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/test/mockApifyClient.ts#L99)

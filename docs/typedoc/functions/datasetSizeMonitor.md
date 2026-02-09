@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Function: datasetSizeMonitor()
 
-> **datasetSizeMonitor**(`maxSize`, `options`?): `object`
+> **datasetSizeMonitor**(`maxSize`, `options?`): `object`
+
+Defined in: [src/lib/io/dataset.ts:94](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/io/dataset.ts#L94)
 
 Semi-automatic monitoring of Dataset size. This is used in limiting the total of entries
 scraped per run / Dataset:
@@ -19,9 +21,13 @@ By default uses Apify Dataset.
 
 ## Parameters
 
-• **maxSize**: `number`
+### maxSize
 
-• **options?**: [`DatasetSizeMonitorOptions`](../interfaces/DatasetSizeMonitorOptions.md)
+`number`
+
+### options?
+
+[`DatasetSizeMonitorOptions`](../interfaces/DatasetSizeMonitorOptions.md)
 
 ## Returns
 
@@ -49,11 +55,13 @@ By default uses Apify Dataset.
 
 #### Parameters
 
-• **callback**: `ValueCallback`\<`number`\>
+##### callback
+
+`ValueCallback`\<`number`\>
 
 #### Returns
 
-`Function`
+> (): `void`
 
 ##### Returns
 
@@ -71,13 +79,17 @@ By default uses Apify Dataset.
 
 > **shortenToSize**: \<`T`\>(`arr`) => `Promise`\<`T`[]\>
 
-#### Type parameters
+#### Type Parameters
 
-• **T**
+##### T
+
+`T`
 
 #### Parameters
 
-• **arr**: `T`[]
+##### arr
+
+`T`[]
 
 #### Returns
 
@@ -85,12 +97,8 @@ By default uses Apify Dataset.
 
 ### value()
 
-> **value**: () => `null` \| `number` \| `Promise`\<`number`\> = `getValue`
+> **value**: () => `number` \| `Promise`\<`number`\> \| `null` = `getValue`
 
 #### Returns
 
-`null` \| `number` \| `Promise`\<`number`\>
-
-## Source
-
-[src/lib/io/dataset.ts:94](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/dataset.ts#L94)
+`number` \| `Promise`\<`number`\> \| `null`

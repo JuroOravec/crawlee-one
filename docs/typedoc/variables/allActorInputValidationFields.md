@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,11 +8,13 @@
 
 > `const` **allActorInputValidationFields**: `object`
 
-## Type declaration
+Defined in: [src/lib/input.ts:1140](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L1140)
+
+## Type Declaration
 
 ### additionalMimeTypes
 
-> **additionalMimeTypes**: `ArraySchema`\<`string`[]\>
+> **additionalMimeTypes**: `ArraySchema`\<`any`[]\>
 
 ### errorReportingDatasetId
 
@@ -96,7 +98,7 @@
 
 ### outputCachePrimaryKeys
 
-> **outputCachePrimaryKeys**: `ArraySchema`\<`string`[]\>
+> **outputCachePrimaryKeys**: `ArraySchema`\<`any`[]\>
 
 ### outputCacheStoreId
 
@@ -124,7 +126,7 @@
 
 ### outputPickFields
 
-> **outputPickFields**: `ArraySchema`\<`string`[]\>
+> **outputPickFields**: `ArraySchema`\<`any`[]\>
 
 ### outputRenameFields
 
@@ -205,7 +207,3 @@
 ### suggestResponseEncoding
 
 > **suggestResponseEncoding**: `StringSchema`\<`string`\>
-
-## Source
-
-[src/lib/input.ts:1140](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L1140)

@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Function: getDatasetCount()
 
-> **getDatasetCount**(`datasetNameOrId`?, `options`?): `Promise`\<`null` \| `number`\>
+> **getDatasetCount**(`datasetNameOrId?`, `options?`): `Promise`\<`number` \| `null`\>
+
+Defined in: [src/lib/io/dataset.ts:12](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/io/dataset.ts#L12)
 
 Given a Dataset ID, get the number of entries already in the Dataset.
 
@@ -14,18 +16,20 @@ By default uses Apify Dataset.
 
 ## Parameters
 
-• **datasetNameOrId?**: `string`
+### datasetNameOrId?
 
-• **options?**
+`string`
 
-• **options.io?**: [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>
+### options?
 
-• **options.log?**: `Log`
+#### io?
+
+[`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>
+
+#### log?
+
+`Log`
 
 ## Returns
 
-`Promise`\<`null` \| `number`\>
-
-## Source
-
-[src/lib/io/dataset.ts:12](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/dataset.ts#L12)
+`Promise`\<`number` \| `null`\>

@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,14 +8,14 @@
 
 > **createMockStorageDataset**(...`args`): `Promise`\<`Dataset`\<`any`\>\>
 
+Defined in: [src/lib/test/mockApifyClient.ts:254](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/test/mockApifyClient.ts#L254)
+
 ## Parameters
 
-• ...**args**: [`null` \| `string`, `OpenStorageOptions`, `object`]
+### args
+
+...\[`string` \| `null`, `OpenStorageOptions`, `object`\]
 
 ## Returns
 
 `Promise`\<`Dataset`\<`any`\>\>
-
-## Source
-
-[src/lib/test/mockApifyClient.ts:254](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/test/mockApifyClient.ts#L254)

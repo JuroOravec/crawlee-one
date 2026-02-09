@@ -1,19 +1,19 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / MaybeArray
 
-# Type alias: MaybeArray\<T\>
+# Type Alias: MaybeArray\<T\>
 
-> **MaybeArray**\<`T`\>: `T` \| `T`[]
+> **MaybeArray**\<`T`\> = `T` \| `T`[]
+
+Defined in: [src/utils/types.ts:4](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/utils/types.ts#L4)
 
 Value or an array thereof
 
-## Type parameters
+## Type Parameters
 
-• **T**
+### T
 
-## Source
-
-[src/utils/types.ts:4](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/utils/types.ts#L4)
+`T`

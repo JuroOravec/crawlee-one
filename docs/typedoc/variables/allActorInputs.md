@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,7 +8,9 @@
 
 > `const` **allActorInputs**: `object`
 
-## Type declaration
+Defined in: [src/lib/input.ts:1041](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L1041)
+
+## Type Declaration
 
 ### additionalMimeTypes
 
@@ -80,13 +82,7 @@
 
 ### metamorphActorInput
 
-> **metamorphActorInput**: `ObjectField`\<`object`\>
-
-#### Type declaration
-
-##### uploadDatasetToGDrive
-
-> **uploadDatasetToGDrive**: `boolean` = `true`
+> **metamorphActorInput**: `ObjectField`\<\{ `uploadDatasetToGDrive`: `boolean`; \}\>
 
 ### minConcurrency
 
@@ -98,7 +94,7 @@
 
 ### outputCacheActionOnResult
 
-> **outputCacheActionOnResult**: `StringField`\<`NonNullable`\<`undefined` \| `null` \| `"add"` \| `"remove"` \| `"overwrite"`\>, `string`\>
+> **outputCacheActionOnResult**: `StringField`\<`NonNullable`\<`"add"` \| `"remove"` \| `"overwrite"` \| `null` \| `undefined`\>, `string`\>
 
 ### outputCachePrimaryKeys
 
@@ -134,13 +130,7 @@
 
 ### outputRenameFields
 
-> **outputRenameFields**: `ObjectField`\<`object`\>
-
-#### Type declaration
-
-##### oldFieldName
-
-> **oldFieldName**: `string` = `'newFieldName'`
+> **outputRenameFields**: `ObjectField`\<\{ `oldFieldName`: `string`; \}\>
 
 ### outputTransform
 
@@ -217,7 +207,3 @@
 ### suggestResponseEncoding
 
 > **suggestResponseEncoding**: `StringField`\<`string`, `string`\>
-
-## Source
-
-[src/lib/input.ts:1041](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L1041)

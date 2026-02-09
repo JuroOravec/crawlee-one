@@ -1,12 +1,14 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / PrivacyFilter
 
-# Type alias: PrivacyFilter\<V, K, O\>
+# Type Alias: PrivacyFilter\<V, K, O\>
 
-> **PrivacyFilter**\<`V`, `K`, `O`\>: `boolean` \| (`val`, `key`, `obj`, `options`?) => `any`
+> **PrivacyFilter**\<`V`, `K`, `O`\> = `boolean` \| (`val`, `key`, `obj`, `options?`) => `any`
+
+Defined in: [src/lib/io/pushData.ts:32](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/io/pushData.ts#L32)
 
 Determine if the property is considered private (and hence may be hidden for privacy reasons).
 
@@ -22,14 +24,16 @@ supply it to `setCustomRedactedValue`.
 
 If the function returns a Promise, it will be awaited.
 
-## Type parameters
+## Type Parameters
 
-• **V**
+### V
 
-• **K**
+`V`
 
-• **O**
+### K
 
-## Source
+`K`
 
-[src/lib/io/pushData.ts:32](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushData.ts#L32)
+### O
+
+`O`

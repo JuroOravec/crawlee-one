@@ -1,21 +1,23 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / PickRequired
 
-# Type alias: PickRequired\<T, Keys\>
+# Type Alias: PickRequired\<T, Keys\>
 
-> **PickRequired**\<`T`, `Keys`\>: `Omit`\<`T`, `Keys`\> & `Required`\<`Pick`\<`T`, `Keys`\>\>
+> **PickRequired**\<`T`, `Keys`\> = `Omit`\<`T`, `Keys`\> & `Required`\<`Pick`\<`T`, `Keys`\>\>
+
+Defined in: [src/utils/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/utils/types.ts#L21)
 
 Pick properties that should be required
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* `object`
+### T
 
-• **Keys** *extends* keyof `T`
+`T` *extends* `object`
 
-## Source
+### Keys
 
-[src/utils/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/utils/types.ts#L21)
+`Keys` *extends* keyof `T`

@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,10 +8,8 @@
 
 > `const` **apifyIO**: [`ApifyCrawleeOneIO`](../type-aliases/ApifyCrawleeOneIO.md)
 
+Defined in: [src/lib/integrations/apify.ts:117](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L117)
+
 Integration between CrawleeOne and Apify.
 
 This is the default integration.
-
-## Source
-
-[src/lib/integrations/apify.ts:117](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L117)

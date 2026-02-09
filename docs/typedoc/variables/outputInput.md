@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,13 +8,15 @@
 
 > `const` **outputInput**: `object`
 
+Defined in: [src/lib/input.ts:861](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L861)
+
 Common input fields related to actor output
 
-## Type declaration
+## Type Declaration
 
 ### outputCacheActionOnResult
 
-> **outputCacheActionOnResult**: `StringField`\<`NonNullable`\<`undefined` \| `null` \| `"add"` \| `"remove"` \| `"overwrite"`\>, `string`\>
+> **outputCacheActionOnResult**: `StringField`\<`NonNullable`\<`"add"` \| `"remove"` \| `"overwrite"` \| `null` \| `undefined`\>, `string`\>
 
 ### outputCachePrimaryKeys
 
@@ -50,13 +52,7 @@ Common input fields related to actor output
 
 ### outputRenameFields
 
-> **outputRenameFields**: `ObjectField`\<`object`\>
-
-#### Type declaration
-
-##### oldFieldName
-
-> **oldFieldName**: `string` = `'newFieldName'`
+> **outputRenameFields**: `ObjectField`\<\{ `oldFieldName`: `string`; \}\>
 
 ### outputTransform
 
@@ -69,7 +65,3 @@ Common input fields related to actor output
 ### outputTransformBefore
 
 > **outputTransformBefore**: `StringField`\<`string`, `string`\>
-
-## Source
-
-[src/lib/input.ts:861](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L861)

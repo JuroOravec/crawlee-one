@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Function: runCrawleeOne()
 
 > **runCrawleeOne**\<`TType`, `T`\>(`args`): `Promise`\<`void`\>
+
+Defined in: [src/lib/actor/actor.ts:156](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/actor.ts#L156)
 
 Create opinionated Crawlee crawler that uses, and run it within Apify's `Actor.main()` context.
 
@@ -38,20 +40,22 @@ configured via Actor input.
 9) Apify context (e.g. calling `Actor.getInput`) can be replaced with custom
  implementation using the `io` option.
 
-## Type parameters
+## Type Parameters
 
-• **TType** *extends* `"basic"` \| `"http"` \| `"jsdom"` \| `"cheerio"` \| `"playwright"` \| `"adaptive-playwright"` \| `"puppeteer"`
+### TType
 
-• **T** *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`CrawlerMeta`\<`TType`\>\[`"context"`\], `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
+`TType` *extends* `"basic"` \| `"http"` \| `"jsdom"` \| `"cheerio"` \| `"playwright"` \| `"adaptive-playwright"` \| `"puppeteer"`
+
+### T
+
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`CrawlerMeta`\<`TType`\>\[`"context"`\], `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
 
 ## Parameters
 
-• **args**: [`RunCrawleeOneOptions`](../interfaces/RunCrawleeOneOptions.md)\<`TType`, `T`\>
+### args
+
+[`RunCrawleeOneOptions`](../interfaces/RunCrawleeOneOptions.md)\<`TType`, `T`\>
 
 ## Returns
 
 `Promise`\<`void`\>
-
-## Source
-
-[src/lib/actor/actor.ts:156](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/actor.ts#L156)

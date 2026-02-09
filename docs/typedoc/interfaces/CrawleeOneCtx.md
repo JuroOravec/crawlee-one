@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,22 +6,34 @@
 
 # Interface: CrawleeOneCtx\<Ctx, Labels, Input, TIO, Telem\>
 
+Defined in: [src/lib/actor/types.ts:46](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L46)
+
 Abstract type that holds all variable (generic) types used in CrawleeOne.
 
 This type is not constructed anywhere. It is simply a shorthand, so we don't
 have to pass through many times, but only one that describes them all.
 
-## Type parameters
+## Type Parameters
 
-• **Ctx** *extends* `CrawlingContext`\<`BasicCrawler` \| `HttpCrawler`\<`InternalHttpCrawlingContext`\> \| `JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler`\> = `CrawlingContext`\<`BasicCrawler` \| `HttpCrawler`\<`InternalHttpCrawlingContext`\> \| `JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler`\>
+### Ctx
 
-• **Labels** *extends* `string` = `string`
+`Ctx` *extends* `CrawlingContext`\<`BasicCrawler` \| `HttpCrawler`\<`InternalHttpCrawlingContext`\> \| `JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler`\> = `CrawlingContext`\<`BasicCrawler` \| `HttpCrawler`\<`InternalHttpCrawlingContext`\> \| `JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler`\>
 
-• **Input** *extends* `Record`\<`string`, `any`\> = `Record`\<`string`, `any`\>
+### Labels
 
-• **TIO** *extends* [`CrawleeOneIO`](CrawleeOneIO.md) = [`CrawleeOneIO`](CrawleeOneIO.md)
+`Labels` *extends* `string` = `string`
 
-• **Telem** *extends* [`CrawleeOneTelemetry`](CrawleeOneTelemetry.md)\<`any`, `any`\> = [`CrawleeOneTelemetry`](CrawleeOneTelemetry.md)\<`any`, `any`\>
+### Input
+
+`Input` *extends* `Record`\<`string`, `any`\> = `Record`\<`string`, `any`\>
+
+### TIO
+
+`TIO` *extends* [`CrawleeOneIO`](CrawleeOneIO.md) = [`CrawleeOneIO`](CrawleeOneIO.md)
+
+### Telem
+
+`Telem` *extends* [`CrawleeOneTelemetry`](CrawleeOneTelemetry.md)\<`any`, `any`\> = [`CrawleeOneTelemetry`](CrawleeOneTelemetry.md)\<`any`, `any`\>
 
 ## Properties
 
@@ -29,9 +41,7 @@ have to pass through many times, but only one that describes them all.
 
 > **context**: `Ctx`
 
-#### Source
-
-[src/lib/actor/types.ts:67](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L67)
+Defined in: [src/lib/actor/types.ts:67](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L67)
 
 ***
 
@@ -39,9 +49,7 @@ have to pass through many times, but only one that describes them all.
 
 > **input**: `Input`
 
-#### Source
-
-[src/lib/actor/types.ts:69](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L69)
+Defined in: [src/lib/actor/types.ts:69](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L69)
 
 ***
 
@@ -49,9 +57,7 @@ have to pass through many times, but only one that describes them all.
 
 > **io**: `TIO`
 
-#### Source
-
-[src/lib/actor/types.ts:70](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L70)
+Defined in: [src/lib/actor/types.ts:70](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L70)
 
 ***
 
@@ -59,9 +65,7 @@ have to pass through many times, but only one that describes them all.
 
 > **labels**: `Labels`
 
-#### Source
-
-[src/lib/actor/types.ts:68](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L68)
+Defined in: [src/lib/actor/types.ts:68](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L68)
 
 ***
 
@@ -69,6 +73,4 @@ have to pass through many times, but only one that describes them all.
 
 > **telemetry**: `Telem`
 
-#### Source
-
-[src/lib/actor/types.ts:71](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L71)
+Defined in: [src/lib/actor/types.ts:71](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L71)

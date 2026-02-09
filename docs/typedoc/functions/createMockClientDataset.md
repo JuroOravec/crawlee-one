@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,16 +6,16 @@
 
 # Function: createMockClientDataset()
 
-> **createMockClientDataset**(`overrides`?): `Dataset`
+> **createMockClientDataset**(`overrides?`): `Dataset`
+
+Defined in: [src/lib/test/mockApifyClient.ts:33](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/test/mockApifyClient.ts#L33)
 
 ## Parameters
 
-• **overrides?**: `Dataset`
+### overrides?
+
+`Dataset`
 
 ## Returns
 
 `Dataset`
-
-## Source
-
-[src/lib/test/mockApifyClient.ts:33](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/test/mockApifyClient.ts#L33)

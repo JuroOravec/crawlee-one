@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,15 +6,15 @@
 
 # Interface: ListingPageFilter
 
+Defined in: [src/lib/actions/scrapeListing.ts:16](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L16)
+
 ## Properties
 
 ### disabled?
 
 > `optional` **disabled**: `boolean`
 
-#### Source
-
-[src/lib/actions/scrapeListing.ts:18](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L18)
+Defined in: [src/lib/actions/scrapeListing.ts:18](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L18)
 
 ***
 
@@ -22,13 +22,11 @@
 
 > **hasNextState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
+Defined in: [src/lib/actions/scrapeListing.ts:22](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L22)
+
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:22](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L22)
 
 ***
 
@@ -36,13 +34,11 @@
 
 > **hasState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
+Defined in: [src/lib/actions/scrapeListing.ts:23](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L23)
+
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:23](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L23)
 
 ***
 
@@ -50,13 +46,11 @@
 
 > **initState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
+Defined in: [src/lib/actions/scrapeListing.ts:19](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L19)
+
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:19](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L19)
 
 ***
 
@@ -64,13 +58,11 @@
 
 > **loadState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
+Defined in: [src/lib/actions/scrapeListing.ts:24](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L24)
+
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:24](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L24)
 
 ***
 
@@ -78,9 +70,7 @@
 
 > **name**: `string`
 
-#### Source
-
-[src/lib/actions/scrapeListing.ts:17](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L17)
+Defined in: [src/lib/actions/scrapeListing.ts:17](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L17)
 
 ***
 
@@ -88,13 +78,11 @@
 
 > **nextState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
+Defined in: [src/lib/actions/scrapeListing.ts:21](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L21)
+
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:21](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L21)
 
 ***
 
@@ -102,10 +90,8 @@
 
 > **resetState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
+Defined in: [src/lib/actions/scrapeListing.ts:20](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L20)
+
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:20](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L20)

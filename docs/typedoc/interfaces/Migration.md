@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,23 +6,25 @@
 
 # Interface: Migration
 
+Defined in: [src/lib/migrate/types.ts:5](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/migrate/types.ts#L5)
+
 ## Properties
 
 ### migrate()
 
 > **migrate**: (`client`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
+Defined in: [src/lib/migrate/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/migrate/types.ts#L6)
+
 #### Parameters
 
-• **client**: `ApifyClient`
+##### client
+
+`ApifyClient`
 
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
-
-#### Source
-
-[src/lib/migrate/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/migrate/types.ts#L6)
 
 ***
 
@@ -30,14 +32,14 @@
 
 > **unmigrate**: (`client`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
+Defined in: [src/lib/migrate/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/migrate/types.ts#L7)
+
 #### Parameters
 
-• **client**: `ApifyClient`
+##### client
+
+`ApifyClient`
 
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
-
-#### Source
-
-[src/lib/migrate/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/migrate/types.ts#L7)

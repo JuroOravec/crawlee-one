@@ -1,21 +1,23 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / PickPartial
 
-# Type alias: PickPartial\<T, Keys\>
+# Type Alias: PickPartial\<T, Keys\>
 
-> **PickPartial**\<`T`, `Keys`\>: `Omit`\<`T`, `Keys`\> & `Partial`\<`Pick`\<`T`, `Keys`\>\>
+> **PickPartial**\<`T`, `Keys`\> = `Omit`\<`T`, `Keys`\> & `Partial`\<`Pick`\<`T`, `Keys`\>\>
+
+Defined in: [src/utils/types.ts:18](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/utils/types.ts#L18)
 
 Pick properties that should be optional
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* `object`
+### T
 
-• **Keys** *extends* keyof `T`
+`T` *extends* `object`
 
-## Source
+### Keys
 
-[src/utils/types.ts:18](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/utils/types.ts#L18)
+`Keys` *extends* keyof `T`

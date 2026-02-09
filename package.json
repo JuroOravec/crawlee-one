@@ -57,7 +57,7 @@
     "bench": "vitest bench",
     "bench:gen": "tsx benchmarks/run-bench.ts generate",
     "validate": "tsx scripts/validate/index.ts",
-    "gen:docs": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.base.json --out ./docs/typedoc"
+    "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.base.json --out ./docs/typedoc"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -69,6 +69,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "playwright": "^1.58.2",
     "prettier": "^3.8.1",
+    "puppeteer": "^24.37.2",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typedoc": "^0.28.16",

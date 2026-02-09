@@ -150,3 +150,84 @@ describe('pushRequests', () => {
     expect(result).toEqual([{ url: 'https://example.com/1', uniqueKey: '1' }]);
   });
 });
+
+describe('pushRequests with maxCount', () => {
+  it('limits requests when maxCount is set and queue has capacity', async () => {
+    const reqQueue = createMockRequestQueue({
+      handledCount: vi.fn().mockResolvedValue(5),
+    });
+    const io = createMockIO({ reqQueue });
+
+    const requests = Array.from({ length: 20 }, (_, i) => ({
+      url: `https://example.com/${i}`,
+      uniqueKey: `${i}`,
+    }));
+
+    await pushRequests(requests as any, { io, maxCount: 10 });
+
+    // Queue has 5 handled, max is 10 → only 5 more should be accepted
+    expect(reqQueue.addRequests).toHaveBeenCalledTimes(1);
+    const addedRequests = vi.mocked(reqQueue.addRequests).mock.calls[0][0];
+    expect(addedRequests.length).toBeLessThanOrEqual(5);
+  });
+
+  it('discards all requests when queue is already full', async () => {
+    const reqQueue = createMockRequestQueue({
+      handledCount: vi.fn().mockResolvedValue(10),
+    });
+    const io = createMockIO({ reqQueue });
+
+    const requests = [
+      { url: 'https://example.com/1', uniqueKey: '1' },
+      { url: 'https://example.com/2', uniqueKey: '2' },
+    ];
+
+    await pushRequests(requests as any, { io, maxCount: 10 });
+
+    // Queue is full (10/10), all should be discarded → empty array pushed
+    expect(reqQueue.addRequests).toHaveBeenCalledWith([], undefined);
+  });
+
+  it('allows all requests when queue is empty and maxCount is large enough', async () => {
+    const reqQueue = createMockRequestQueue({
+      handledCount: vi.fn().mockResolvedValue(0),
+    });
+    const io = createMockIO({ reqQueue });
+
+    const requests = [
+      { url: 'https://example.com/1', uniqueKey: '1' },
+      { url: 'https://example.com/2', uniqueKey: '2' },
+      { url: 'https://example.com/3', uniqueKey: '3' },
+    ];
+
+    await pushRequests(requests as any, { io, maxCount: 100 });
+
+    // Queue is empty, max is 100 → all 3 should be accepted
+    expect(reqQueue.addRequests).toHaveBeenCalledTimes(1);
+    const addedRequests = vi.mocked(reqQueue.addRequests).mock.calls[0][0];
+    expect(addedRequests.length).toBe(3);
+  });
+
+  it('combines maxCount with transform and filter', async () => {
+    const reqQueue = createMockRequestQueue({
+      handledCount: vi.fn().mockResolvedValue(0),
+    });
+    const io = createMockIO({ reqQueue });
+
+    const requests = Array.from({ length: 10 }, (_, i) => ({
+      url: `https://example.com/${i}`,
+      uniqueKey: `${i}`,
+    }));
+
+    await pushRequests(requests as any, {
+      io,
+      maxCount: 5,
+      filter: (req: any) => parseInt(req.uniqueKey) % 2 === 0, // Keep even indices
+    });
+
+    expect(reqQueue.addRequests).toHaveBeenCalledTimes(1);
+    const addedRequests = vi.mocked(reqQueue.addRequests).mock.calls[0][0];
+    // maxCount=5 limits to 5 from queue, then filter keeps only even indices
+    expect(addedRequests.length).toBeLessThanOrEqual(5);
+  });
+});

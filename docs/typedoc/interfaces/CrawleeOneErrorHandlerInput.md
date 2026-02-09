@@ -1,10 +1,12 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / CrawleeOneErrorHandlerInput
 
 # Interface: CrawleeOneErrorHandlerInput
+
+Defined in: [src/lib/integrations/types.ts:305](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/types.ts#L305)
 
 Input passed to the error handler
 
@@ -14,40 +16,32 @@ Input passed to the error handler
 
 > **error**: `Error`
 
-#### Source
-
-[src/lib/integrations/types.ts:306](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L306)
+Defined in: [src/lib/integrations/types.ts:306](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/types.ts#L306)
 
 ***
 
 ### log
 
-> **log**: `null` \| `Log`
+> **log**: `Log` \| `null`
 
-#### Source
-
-[src/lib/integrations/types.ts:311](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L311)
+Defined in: [src/lib/integrations/types.ts:311](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/types.ts#L311)
 
 ***
 
 ### page
 
-> **page**: `null` \| `Page`
+> **page**: `Page` \| `null`
+
+Defined in: [src/lib/integrations/types.ts:308](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/types.ts#L308)
 
 Page instance if we used PlaywrightCrawler
-
-#### Source
-
-[src/lib/integrations/types.ts:308](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L308)
 
 ***
 
 ### url
 
-> **url**: `null` \| `string`
+> **url**: `string` \| `null`
+
+Defined in: [src/lib/integrations/types.ts:310](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/types.ts#L310)
 
 URL where the error happened. If not given URL is taken from the Page object
-
-#### Source
-
-[src/lib/integrations/types.ts:310](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L310)

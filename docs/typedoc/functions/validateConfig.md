@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,6 +8,8 @@
 
 > **validateConfig**(`config`): `void`
 
+Defined in: [src/cli/commands/config.ts:40](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/cli/commands/config.ts#L40)
+
 Validate given CrawleeOne config.
 
 Config can be passed directly, or you can specify the path to the config file.
@@ -15,12 +17,10 @@ For the latter, the config will be loaded using [loadConfig](loadConfig.md).
 
 ## Parameters
 
-• **config**: `unknown`
+### config
+
+`unknown`
 
 ## Returns
 
 `void`
-
-## Source
-
-[src/cli/commands/config.ts:40](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/cli/commands/config.ts#L40)

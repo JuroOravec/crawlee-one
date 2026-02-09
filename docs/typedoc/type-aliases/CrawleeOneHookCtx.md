@@ -1,16 +1,18 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / CrawleeOneHookCtx
 
-# Type alias: CrawleeOneHookCtx\<T\>
+# Type Alias: CrawleeOneHookCtx\<T\>
 
-> **CrawleeOneHookCtx**\<`T`\>: `Pick`\<[`CrawleeOneActorInst`](../interfaces/CrawleeOneActorInst.md)\<`T`\>, `"input"` \| `"state"`\> & `object`
+> **CrawleeOneHookCtx**\<`T`\> = `Pick`\<[`CrawleeOneActorInst`](../interfaces/CrawleeOneActorInst.md)\<`T`\>, `"input"` \| `"state"`\> & `object`
+
+Defined in: [src/lib/actor/types.ts:104](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L104)
 
 Context passed to user-defined functions passed from input
 
-## Type declaration
+## Type Declaration
 
 ### io
 
@@ -37,10 +39,8 @@ Fetch remote data. Uses 'got-scraping', same as Apify's `sendRequest`.
 
 See https://crawlee.dev/docs/guides/got-scraping
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+### T
 
-## Source
-
-[src/lib/actor/types.ts:104](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L104)
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)

@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,19 +6,19 @@
 
 # Interface: OutputActorInput
 
+Defined in: [src/lib/input.ts:226](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L226)
+
 Common input fields related to actor output
 
 ## Properties
 
 ### outputCacheActionOnResult?
 
-> `optional` **outputCacheActionOnResult**: `null` \| `"add"` \| `"remove"` \| `"overwrite"`
+> `optional` **outputCacheActionOnResult**: `"add"` \| `"remove"` \| `"overwrite"` \| `null`
+
+Defined in: [src/lib/input.ts:331](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L331)
 
 Define whether we want to add, remove, or overwrite cached entries with results from the actor run
-
-#### Source
-
-[src/lib/input.ts:331](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L331)
 
 ***
 
@@ -26,11 +26,9 @@ Define whether we want to add, remove, or overwrite cached entries with results 
 
 > `optional` **outputCachePrimaryKeys**: `string`[]
 
+Defined in: [src/lib/input.ts:329](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L329)
+
 Define fields that will be used for cache key
-
-#### Source
-
-[src/lib/input.ts:329](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L329)
 
 ***
 
@@ -38,11 +36,9 @@ Define fields that will be used for cache key
 
 > `optional` **outputCacheStoreId**: `string`
 
+Defined in: [src/lib/input.ts:327](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L327)
+
 ID or name of the key-value store used as cache
-
-#### Source
-
-[src/lib/input.ts:327](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L327)
 
 ***
 
@@ -50,17 +46,17 @@ ID or name of the key-value store used as cache
 
 > `optional` **outputDatasetId**: `string`
 
+Defined in: [src/lib/input.ts:324](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L324)
+
 ID or name of the dataset to which the data should be pushed
-
-#### Source
-
-[src/lib/input.ts:324](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L324)
 
 ***
 
 ### outputFilter?
 
-> `optional` **outputFilter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<[`any`], `any`\>
+> `optional` **outputFilter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<\[`any`\], `any`\>
+
+Defined in: [src/lib/input.ts:303](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L303)
 
 Option to filter out the data using a custom function before pushing it to the dataset.
 
@@ -73,15 +69,13 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => boolean`
 
-#### Source
-
-[src/lib/input.ts:303](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L303)
-
 ***
 
 ### outputFilterAfter?
 
 > `optional` **outputFilterAfter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
+
+Defined in: [src/lib/input.ts:321](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L321)
 
 Use this if you need to run one-time initialization code after `outputFilter`.
 
@@ -90,15 +84,13 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-#### Source
-
-[src/lib/input.ts:321](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L321)
-
 ***
 
 ### outputFilterBefore?
 
 > `optional` **outputFilterBefore**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
+
+Defined in: [src/lib/input.ts:312](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L312)
 
 Use this if you need to run one-time initialization code before `outputFilter`.
 
@@ -107,15 +99,13 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-#### Source
-
-[src/lib/input.ts:312](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L312)
-
 ***
 
 ### outputMaxEntries?
 
 > `optional` **outputMaxEntries**: `number`
+
+Defined in: [src/lib/input.ts:236](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L236)
 
 If set, only at most this many entries will be scraped.
 
@@ -125,15 +115,13 @@ This means that if `outputMaxEntries` is set to 50, but the
 associated Dataset already has 40 items in it, then only 10 new entries
 will be saved.
 
-#### Source
-
-[src/lib/input.ts:236](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L236)
-
 ***
 
 ### outputPickFields?
 
 > `optional` **outputPickFields**: `string`[]
+
+Defined in: [src/lib/input.ts:248](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L248)
 
 Option to select a subset of keys/fields of an entry that
 will be pushed to the dataset.
@@ -145,15 +133,13 @@ This is done after `outputRenameFields`.
 Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
 resolved using Lodash.get().
 
-#### Source
-
-[src/lib/input.ts:248](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L248)
-
 ***
 
 ### outputRenameFields?
 
 > `optional` **outputRenameFields**: `Record`\<`string`, `string`\>
+
+Defined in: [src/lib/input.ts:257](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L257)
 
 Option to remap the keys before pushing the entries to the dataset.
 
@@ -162,15 +148,13 @@ This is done before `outputRenameFields`.
 Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
 resolved using Lodash.get().
 
-#### Source
-
-[src/lib/input.ts:257](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L257)
-
 ***
 
 ### outputTransform?
 
-> `optional` **outputTransform**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<[`any`], `any`\>
+> `optional` **outputTransform**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<\[`any`\], `any`\>
+
+Defined in: [src/lib/input.ts:271](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L271)
 
 Option to freely transform the output data object using a custom function before pushing it to the dataset.
 
@@ -183,15 +167,13 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => { ... }`
 
-#### Source
-
-[src/lib/input.ts:271](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L271)
-
 ***
 
 ### outputTransformAfter?
 
 > `optional` **outputTransformAfter**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
+
+Defined in: [src/lib/input.ts:289](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L289)
 
 Use this if you need to run one-time teardown code after `outputTransform`.
 
@@ -200,15 +182,13 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => { ... }`
 
-#### Source
-
-[src/lib/input.ts:289](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L289)
-
 ***
 
 ### outputTransformBefore?
 
 > `optional` **outputTransformBefore**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)
+
+Defined in: [src/lib/input.ts:280](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L280)
 
 Use this if you need to run one-time initialization code before `outputTransform`.
 
@@ -216,7 +196,3 @@ The function has access to Apify's Actor class (under variable `io`), and actor'
 and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => { ... }`
-
-#### Source
-
-[src/lib/input.ts:280](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L280)

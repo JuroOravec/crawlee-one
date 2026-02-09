@@ -1,10 +1,12 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / StartUrlsActorInput
 
 # Interface: StartUrlsActorInput
+
+Defined in: [src/lib/input.ts:93](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L93)
 
 Common input fields for defining URLs to scrape
 
@@ -14,11 +16,9 @@ Common input fields for defining URLs to scrape
 
 > `optional` **startUrls**: [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]
 
+Defined in: [src/lib/input.ts:95](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L95)
+
 URLs to start with, defined manually as a list of strings or crawler requests
-
-#### Source
-
-[src/lib/input.ts:95](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L95)
 
 ***
 
@@ -26,19 +26,19 @@ URLs to start with, defined manually as a list of strings or crawler requests
 
 > `optional` **startUrlsFromDataset**: `string`
 
+Defined in: [src/lib/input.ts:101](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L101)
+
 Import starting URLs from an existing Dataset.
 
 String is in the format `datasetID#field` (e.g. `datasetid123#url`).
-
-#### Source
-
-[src/lib/input.ts:101](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L101)
 
 ***
 
 ### startUrlsFromFunction?
 
-> `optional` **startUrlsFromFunction**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<[], [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]\>
+> `optional` **startUrlsFromFunction**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<\[\], [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]\>
+
+Defined in: [src/lib/input.ts:118](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/input.ts#L118)
 
 Import or generate starting URLs using a custom function.
 
@@ -54,7 +54,3 @@ async ({ io, input, state, itemCacheKey }) => {
   return urls;
 }
 ```
-
-#### Source
-
-[src/lib/input.ts:118](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/input.ts#L118)

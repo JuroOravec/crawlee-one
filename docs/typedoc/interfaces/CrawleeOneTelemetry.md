@@ -1,10 +1,12 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / CrawleeOneTelemetry
 
 # Interface: CrawleeOneTelemetry\<T, THandlerOptions\>
+
+Defined in: [src/lib/telemetry/types.ts:17](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/telemetry/types.ts#L17)
 
 Interface for storing and retrieving:
 - Scraped data
@@ -14,11 +16,15 @@ Interface for storing and retrieving:
 This interface is based on Crawlee/Apify, but defined separately to allow
 drop-in replacement with other integrations.
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
+### T
 
-• **THandlerOptions** *extends* [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)\<`any`\> = [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)
+`T` *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
+
+### THandlerOptions
+
+`THandlerOptions` *extends* [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)\<`any`\> = [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)
 
 ## Properties
 
@@ -26,23 +32,29 @@ drop-in replacement with other integrations.
 
 > **onSendErrorToTelemetry**: (`error`, `report`, `options`, `ctx`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
+Defined in: [src/lib/telemetry/types.ts:22](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/telemetry/types.ts#L22)
+
 #### Parameters
 
-• **error**: `Error`
+##### error
 
-• **report**: [`ExtractErrorHandlerOptionsReport`](../type-aliases/ExtractErrorHandlerOptionsReport.md)\<`THandlerOptions`\>
+`Error`
 
-• **options**: `Omit`\<`THandlerOptions`, `"onErrorCapture"`\>
+##### report
 
-• **ctx**: `T`\[`"context"`\]
+[`ExtractErrorHandlerOptionsReport`](../type-aliases/ExtractErrorHandlerOptionsReport.md)\<`THandlerOptions`\>
+
+##### options
+
+`Omit`\<`THandlerOptions`, `"onErrorCapture"`\>
+
+##### ctx
+
+`T`\[`"context"`\]
 
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
-
-#### Source
-
-[src/lib/telemetry/types.ts:22](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/telemetry/types.ts#L22)
 
 ***
 
@@ -50,14 +62,14 @@ drop-in replacement with other integrations.
 
 > **setup**: (`actor`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
+Defined in: [src/lib/telemetry/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/telemetry/types.ts#L21)
+
 #### Parameters
 
-• **actor**: [`CrawleeOneActorInst`](CrawleeOneActorInst.md)\<`T`\>
+##### actor
+
+[`CrawleeOneActorInst`](CrawleeOneActorInst.md)\<`T`\>
 
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
-
-#### Source
-
-[src/lib/telemetry/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/telemetry/types.ts#L21)

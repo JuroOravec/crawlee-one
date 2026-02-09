@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,19 +8,27 @@
 
 > **createLocalMigrator**(`__namedParameters`): `object`
 
+Defined in: [src/lib/migrate/localMigrator.ts:8](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/migrate/localMigrator.ts#L8)
+
 ## Parameters
 
-• **\_\_namedParameters**
+### \_\_namedParameters
 
-• **\_\_namedParameters.delimeter**: `string`= `'_'`
+#### delimeter
+
+`string` = `'_'`
 
 Delimeter between version and rest of file name
 
-• **\_\_namedParameters.extension**: `string`= `'.js'`
+#### extension
+
+`string` = `'.js'`
 
 Extension glob
 
-• **\_\_namedParameters.migrationsDir**: `string`
+#### migrationsDir
+
+`string`
 
 ## Returns
 
@@ -32,7 +40,9 @@ Extension glob
 
 #### Parameters
 
-• **version**: `string`
+##### version
+
+`string`
 
 #### Returns
 
@@ -44,12 +54,10 @@ Extension glob
 
 #### Parameters
 
-• **version**: `string`
+##### version
+
+`string`
 
 #### Returns
 
 `Promise`\<`void`\>
-
-## Source
-
-[src/lib/migrate/localMigrator.ts:8](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/migrate/localMigrator.ts#L8)

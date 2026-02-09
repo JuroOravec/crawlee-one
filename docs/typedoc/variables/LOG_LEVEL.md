@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,8 +6,6 @@
 
 # Variable: LOG\_LEVEL
 
-> `const` **LOG\_LEVEL**: readonly [`"debug"`, `"info"`, `"warn"`, `"error"`, `"off"`]
+> `const` **LOG\_LEVEL**: readonly \[`"debug"`, `"info"`, `"warn"`, `"error"`, `"off"`\]
 
-## Source
-
-[src/lib/log.ts:7](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/log.ts#L7)
+Defined in: [src/lib/log.ts:7](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/log.ts#L7)

@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,82 +6,92 @@
 
 # Interface: ListingLogger
 
+Defined in: [src/lib/actions/scrapeListing.ts:9](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L9)
+
 ## Properties
 
 ### debug()
 
-> **debug**: (`msg`, `data`?) => `void`
+> **debug**: (`msg`, `data?`) => `void`
+
+Defined in: [src/lib/actions/scrapeListing.ts:10](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L10)
 
 #### Parameters
 
-• **msg**: `string`
+##### msg
 
-• **data?**: `any`
+`string`
+
+##### data?
+
+`any`
 
 #### Returns
 
 `void`
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:10](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L10)
 
 ***
 
 ### error()
 
-> **error**: (`msg`, `data`?) => `void`
+> **error**: (`msg`, `data?`) => `void`
+
+Defined in: [src/lib/actions/scrapeListing.ts:13](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L13)
 
 #### Parameters
 
-• **msg**: `string`
+##### msg
 
-• **data?**: `any`
+`string`
+
+##### data?
+
+`any`
 
 #### Returns
 
 `void`
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:13](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L13)
 
 ***
 
 ### info()
 
-> **info**: (`msg`, `data`?) => `void`
+> **info**: (`msg`, `data?`) => `void`
+
+Defined in: [src/lib/actions/scrapeListing.ts:11](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L11)
 
 #### Parameters
 
-• **msg**: `string`
+##### msg
 
-• **data?**: `any`
+`string`
+
+##### data?
+
+`any`
 
 #### Returns
 
 `void`
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:11](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L11)
 
 ***
 
 ### warning()
 
-> **warning**: (`msg`, `data`?) => `void`
+> **warning**: (`msg`, `data?`) => `void`
+
+Defined in: [src/lib/actions/scrapeListing.ts:12](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L12)
 
 #### Parameters
 
-• **msg**: `string`
+##### msg
 
-• **data?**: `any`
+`string`
+
+##### data?
+
+`any`
 
 #### Returns
 
 `void`
-
-#### Source
-
-[src/lib/actions/scrapeListing.ts:12](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L12)

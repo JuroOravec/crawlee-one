@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Function: pushRequests()
 
-> **pushRequests**\<`T`\>(`oneOrManyItems`, `options`?): `Promise`\<`unknown`[]\>
+> **pushRequests**\<`T`\>(`oneOrManyItems`, `options?`): `Promise`\<`unknown`[]\>
+
+Defined in: [src/lib/io/pushRequests.ts:78](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/io/pushRequests.ts#L78)
 
 Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
@@ -14,20 +16,22 @@ Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
 - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* `Source`
+### T
+
+`T` *extends* `Source`
 
 ## Parameters
 
-• **oneOrManyItems**: `T` \| `T`[]
+### oneOrManyItems
 
-• **options?**: [`PushRequestsOptions`](../interfaces/PushRequestsOptions.md)\<`T`\>
+`T` | `T`[]
+
+### options?
+
+[`PushRequestsOptions`](../interfaces/PushRequestsOptions.md)\<`T`\>
 
 ## Returns
 
 `Promise`\<`unknown`[]\>
-
-## Source
-
-[src/lib/io/pushRequests.ts:78](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/pushRequests.ts#L78)

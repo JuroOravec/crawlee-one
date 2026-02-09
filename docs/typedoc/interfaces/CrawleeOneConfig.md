@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,17 +6,17 @@
 
 # Interface: CrawleeOneConfig
 
+Defined in: [src/types/config.ts:3](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/types/config.ts#L3)
+
 ## Properties
 
 ### schema
 
 > **schema**: [`CrawleeOneConfigSchema`](CrawleeOneConfigSchema.md)
 
+Defined in: [src/types/config.ts:7](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/types/config.ts#L7)
+
 Schema defining the crawlers in this project. This schema is used for code generation.
-
-#### Source
-
-[src/types/config.ts:7](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/types/config.ts#L7)
 
 ***
 
@@ -24,8 +24,6 @@ Schema defining the crawlers in this project. This schema is used for code gener
 
 > **version**: `1`
 
+Defined in: [src/types/config.ts:5](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/types/config.ts#L5)
+
 Version of the CrawleeOne config.
-
-#### Source
-
-[src/types/config.ts:5](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/types/config.ts#L5)

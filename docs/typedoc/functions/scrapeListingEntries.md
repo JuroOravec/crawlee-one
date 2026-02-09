@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,22 +8,26 @@
 
 > **scrapeListingEntries**\<`Ctx`, `UrlType`\>(`options`): `Promise`\<`UrlType`[]\>
 
+Defined in: [src/lib/actions/scrapeListing.ts:229](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actions/scrapeListing.ts#L229)
+
 Get entries from a listing page (eg URLs to profiles that should be scraped later)
 
-## Type parameters
+## Type Parameters
 
-• **Ctx** *extends* `object`
+### Ctx
 
-• **UrlType**
+`Ctx` *extends* `object`
+
+### UrlType
+
+`UrlType`
 
 ## Parameters
 
-• **options**: [`ListingPageScraperOptions`](../interfaces/ListingPageScraperOptions.md)\<`Ctx`, `UrlType`\>
+### options
+
+[`ListingPageScraperOptions`](../interfaces/ListingPageScraperOptions.md)\<`Ctx`, `UrlType`\>
 
 ## Returns
 
 `Promise`\<`UrlType`[]\>
-
-## Source
-
-[src/lib/actions/scrapeListing.ts:229](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actions/scrapeListing.ts#L229)

@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,11 +6,15 @@
 
 # Interface: CrawleeOneActorDef\<T\>
 
+Defined in: [src/lib/actor/types.ts:136](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L136)
+
 All that's necessary to define a single CrawleeOne actor/crawler.
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
+### T
+
+`T` *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
 
 ## Properties
 
@@ -18,23 +22,25 @@ All that's necessary to define a single CrawleeOne actor/crawler.
 
 > **createCrawler**: (`actorCtx`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`\[`"context"`\]\[`"crawler"`\]\>
 
+Defined in: [src/lib/actor/types.ts:271](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L271)
+
 #### Parameters
 
-• **actorCtx**: `Omit`\<[`CrawleeOneActorInst`](CrawleeOneActorInst.md)\<`T`\>, `"pushData"` \| `"crawler"` \| `"startUrls"` \| `"runCrawler"` \| `"metamorph"` \| `"pushRequests"`\>
+##### actorCtx
+
+`Omit`\<[`CrawleeOneActorInst`](CrawleeOneActorInst.md)\<`T`\>, `"crawler"` \| `"runCrawler"` \| `"metamorph"` \| `"pushData"` \| `"pushRequests"` \| `"startUrls"`\>
 
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`\[`"context"`\]\[`"crawler"`\]\>
 
-#### Source
-
-[src/lib/actor/types.ts:271](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L271)
-
 ***
 
 ### input?
 
-> `optional` **input**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`T`\[`"input"`\], [[`CrawleeOneActorDef`](CrawleeOneActorDef.md)\<`T`\>]\>
+> `optional` **input**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`T`\[`"input"`\], \[`CrawleeOneActorDef`\<`T`\>\]\>
+
+Defined in: [src/lib/actor/types.ts:149](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L149)
 
 Supply actor input via this field instead of from `io.getInput()`.
 
@@ -43,21 +49,15 @@ which by default corresponds to Apify's `Actor.getInput()`.
 
 If `input` is defined, then `io.getInput()` is ignored.
 
-#### Source
-
-[src/lib/actor/types.ts:149](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L149)
-
 ***
 
 ### inputDefaults?
 
-> `optional` **inputDefaults**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`T`\[`"input"`\], [[`CrawleeOneActorDef`](CrawleeOneActorDef.md)\<`T`\>]\>
+> `optional` **inputDefaults**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`T`\[`"input"`\], \[`CrawleeOneActorDef`\<`T`\>\]\>
+
+Defined in: [src/lib/actor/types.ts:151](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L151)
 
 Default input that may be overriden by `input` and `io.getInput()`.
-
-#### Source
-
-[src/lib/actor/types.ts:151](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L151)
 
 ***
 
@@ -65,17 +65,17 @@ Default input that may be overriden by `input` and `io.getInput()`.
 
 > **io**: `T`\[`"io"`\]
 
+Defined in: [src/lib/actor/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L138)
+
 Client for communicating with cloud/local storage.
-
-#### Source
-
-[src/lib/actor/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L138)
 
 ***
 
 ### mergeInput?
 
 > `optional` **mergeInput**: `boolean` \| (`sources`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`\[`"input"`\]\>
+
+Defined in: [src/lib/actor/types.ts:184](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L184)
 
 If `mergeInput` is truthy, will merge input settings from `inputDefaults`, `input`,
 and `io.getInput()`.
@@ -108,25 +108,21 @@ Alternatively, you can supply your own function that merges the sources:
 }
 ```
 
-#### Source
-
-[src/lib/actor/types.ts:184](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L184)
-
 ***
 
 ### proxy?
 
-> `optional` **proxy**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`ProxyConfiguration`, [[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>]\>
+> `optional` **proxy**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`ProxyConfiguration`, \[[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>\]\>
 
-#### Source
-
-[src/lib/actor/types.ts:262](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L262)
+Defined in: [src/lib/actor/types.ts:262](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L262)
 
 ***
 
 ### routeHandlerWrappers?
 
-> `optional` **routeHandlerWrappers**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<[`CrawleeOneRouteWrapper`](../type-aliases/CrawleeOneRouteWrapper.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>[], [[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>]\>
+> `optional` **routeHandlerWrappers**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<[`CrawleeOneRouteWrapper`](../type-aliases/CrawleeOneRouteWrapper.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>[], \[[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>\]\>
+
+Defined in: [src/lib/actor/types.ts:256](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L256)
 
 Provides the option to modify or extend all router handlers by wrapping
 them in these functions.
@@ -144,15 +140,13 @@ Default `routeHandlerWrappers`:
 }
 ```
 
-#### Source
-
-[src/lib/actor/types.ts:256](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L256)
-
 ***
 
 ### router
 
-> **router**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`RouterHandler`\<`T`\[`"context"`\]\>, [[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>]\>
+> **router**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`RouterHandler`\<`T`\[`"context"`\]\>, \[[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>\]\>
+
+Defined in: [src/lib/actor/types.ts:205](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L205)
 
 Router instance that redirects the request to handlers.
 
@@ -167,15 +161,13 @@ import { createCheerioRouter } from 'crawlee';
 })
 ```
 
-#### Source
-
-[src/lib/actor/types.ts:205](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L205)
-
 ***
 
 ### routes
 
-> **routes**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](CrawleeOneRoute.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>\>, [[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>]\>
+> **routes**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](CrawleeOneRoute.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>\>, \[[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>\]\>
+
+Defined in: [src/lib/actor/types.ts:235](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L235)
 
 Criteria that un-labelled requests are matched against.
 
@@ -208,21 +200,15 @@ the request is passed to the `action` function for processing.
 })
 ```
 
-#### Source
-
-[src/lib/actor/types.ts:235](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L235)
-
 ***
 
 ### telemetry?
 
-> `optional` **telemetry**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`T`\[`"telemetry"`\], [[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>]\>
+> `optional` **telemetry**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`T`\[`"telemetry"`\], \[[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>\]\>
+
+Defined in: [src/lib/actor/types.ts:268](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L268)
 
 Client for telemetry like tracking errors.
-
-#### Source
-
-[src/lib/actor/types.ts:268](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L268)
 
 ***
 
@@ -230,16 +216,16 @@ Client for telemetry like tracking errors.
 
 > `optional` **validateInput**: (`input`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
+Defined in: [src/lib/actor/types.ts:192](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L192)
+
 Validation for the actor input. Should throw error if validation fails.
 
 #### Parameters
 
-• **input**: `null` \| `T`\[`"input"`\]
+##### input
+
+`T`\[`"input"`\] | `null`
 
 #### Returns
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
-
-#### Source
-
-[src/lib/actor/types.ts:192](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L192)

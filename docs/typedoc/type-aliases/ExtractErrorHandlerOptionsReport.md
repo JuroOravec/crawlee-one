@@ -1,17 +1,17 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / ExtractErrorHandlerOptionsReport
 
-# Type alias: ExtractErrorHandlerOptionsReport\<T\>
+# Type Alias: ExtractErrorHandlerOptionsReport\<T\>
 
-> **ExtractErrorHandlerOptionsReport**\<`T`\>: `T` *extends* [`CrawleeOneErrorHandlerOptions`](../interfaces/CrawleeOneErrorHandlerOptions.md)\<infer U\> ? [`ExtractIOReport`](ExtractIOReport.md)\<`U`\> : `never`
+> **ExtractErrorHandlerOptionsReport**\<`T`\> = `T` *extends* [`CrawleeOneErrorHandlerOptions`](../interfaces/CrawleeOneErrorHandlerOptions.md)\<infer U\> ? [`ExtractIOReport`](ExtractIOReport.md)\<`U`\> : `never`
 
-## Type parameters
+Defined in: [src/lib/integrations/types.ts:322](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/types.ts#L322)
 
-• **T** *extends* [`CrawleeOneErrorHandlerOptions`](../interfaces/CrawleeOneErrorHandlerOptions.md)\<`any`\>
+## Type Parameters
 
-## Source
+### T
 
-[src/lib/integrations/types.ts:322](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/types.ts#L322)
+`T` *extends* [`CrawleeOneErrorHandlerOptions`](../interfaces/CrawleeOneErrorHandlerOptions.md)\<`any`\>

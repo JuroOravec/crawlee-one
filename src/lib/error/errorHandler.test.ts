@@ -1,6 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import { captureError, createErrorHandler } from './errorHandler.js';
+import {
+  captureError,
+  captureErrorWrapper,
+  captureErrorRouteHandler,
+  createErrorHandler,
+} from './errorHandler.js';
 import type { CrawleeOneIO, CrawleeOneDataset } from '../integrations/types.js';
 
 const createMockDataset = (overrides?: Partial<CrawleeOneDataset>): CrawleeOneDataset => ({
@@ -122,6 +127,199 @@ describe('captureError', () => {
 
     expect(dataset.pushData).not.toHaveBeenCalled();
   });
+
+  it('passes page and url to generateErrorReport', async () => {
+    const io = createMockIO();
+    const error = new Error('Test');
+    const mockPage = { url: () => 'https://page-url.com' } as any;
+
+    try {
+      await captureError(
+        { error, url: 'https://example.com', page: mockPage, log: null },
+        { io, reportingDatasetId: 'ERRORS' }
+      );
+    } catch {
+      // Expected
+    }
+
+    expect(io.generateErrorReport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error,
+        page: mockPage,
+        url: 'https://example.com',
+      }),
+      expect.any(Object)
+    );
+  });
+});
+
+describe('captureErrorWrapper', () => {
+  it('passes captureError function to the wrapped function', async () => {
+    const io = createMockIO();
+    let receivedCapture: any = null;
+
+    await captureErrorWrapper(
+      ({ captureError: capture }) => {
+        receivedCapture = capture;
+      },
+      { io }
+    );
+
+    expect(typeof receivedCapture).toBe('function');
+  });
+
+  it('catches and reports errors thrown by the wrapped function', async () => {
+    const io = createMockIO();
+    const error = new Error('Wrapped function failed');
+
+    // captureErrorWrapper catches the error, calls captureError which reports
+    // and then rethrows. The rethrow propagates out of captureErrorWrapper.
+    try {
+      await captureErrorWrapper(
+        () => {
+          throw error;
+        },
+        { io, reportingDatasetId: 'ERRORS' }
+      );
+    } catch {
+      // Expected - captureError always rethrows
+    }
+
+    // Error was captured (generateErrorReport was called)
+    expect(io.generateErrorReport).toHaveBeenCalled();
+  });
+
+  it('does not double-capture already captured errors', async () => {
+    const io = createMockIO();
+    const error = new Error('Already captured');
+    (error as any)._crawleeOneErrorCaptured = true;
+
+    // Should not call generateErrorReport again since error is already captured
+    await captureErrorWrapper(
+      () => {
+        throw error;
+      },
+      { io }
+    );
+
+    // The error was already captured, so generateErrorReport should not be called
+    expect(io.generateErrorReport).not.toHaveBeenCalled();
+  });
+
+  it('allows the wrapped function to capture errors manually', async () => {
+    const io = createMockIO();
+    const error = new Error('Manual capture');
+
+    // The wrapped function uses the provided captureError to report the error
+    try {
+      await captureErrorWrapper(
+        async ({ captureError: capture }) => {
+          try {
+            throw error;
+          } catch (e: any) {
+            await capture({ error: e, url: 'https://example.com', page: null, log: null });
+          }
+        },
+        { io, reportingDatasetId: 'ERRORS' }
+      );
+    } catch {
+      // captureError always rethrows
+    }
+
+    expect(io.generateErrorReport).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('captureErrorRouteHandler', () => {
+  it('wraps a route handler with error capture', () => {
+    const io = createMockIO();
+    const handler = vi.fn();
+
+    const wrapped = captureErrorRouteHandler(handler as any, { io });
+
+    expect(typeof wrapped).toBe('function');
+  });
+
+  it('provides captureError to the handler context', async () => {
+    const io = createMockIO();
+    let receivedCapture: any = null;
+
+    const handler = async (ctx: any) => {
+      receivedCapture = ctx.captureError;
+    };
+
+    const wrapped = captureErrorRouteHandler(handler as any, { io });
+
+    const mockCtx = {
+      request: { url: 'https://example.com' },
+      log: { child: () => ({ error: vi.fn(), info: vi.fn(), debug: vi.fn() }) },
+      page: null,
+    };
+
+    await wrapped(mockCtx as any);
+
+    expect(typeof receivedCapture).toBe('function');
+  });
+
+  it('auto-captures errors thrown by the handler', async () => {
+    const io = createMockIO();
+    const error = new Error('Handler error');
+
+    const handler = async () => {
+      throw error;
+    };
+
+    const wrapped = captureErrorRouteHandler(handler as any, {
+      io,
+      reportingDatasetId: 'ERRORS',
+    });
+
+    const mockCtx = {
+      request: { url: 'https://example.com' },
+      log: { child: () => ({ error: vi.fn(), info: vi.fn(), debug: vi.fn() }) },
+      page: null,
+    };
+
+    // The error is captured and reported, then rethrown
+    try {
+      await wrapped(mockCtx as any);
+    } catch {
+      // Expected - captureError always rethrows
+    }
+
+    expect(io.generateErrorReport).toHaveBeenCalled();
+  });
+
+  it('uses context url and page for error capture when not provided', async () => {
+    const io = createMockIO();
+    const mockPage = { url: () => 'https://page.com' } as any;
+
+    let capturedArgs: any = null;
+    const handler = async (ctx: any) => {
+      // Call captureError without explicit url/page
+      await ctx.captureError({ error: new Error('test') });
+    };
+
+    const wrapped = captureErrorRouteHandler(handler as any, { io });
+
+    const mockLog = { error: vi.fn(), info: vi.fn(), debug: vi.fn() };
+    const mockCtx = {
+      request: { url: 'https://example.com' },
+      log: { child: () => mockLog },
+      page: mockPage,
+    };
+
+    try {
+      await wrapped(mockCtx as any);
+    } catch {
+      // captureError rethrows
+    }
+
+    // generateErrorReport should have been called with the context page and url
+    const reportInput = vi.mocked(io.generateErrorReport).mock.calls[0][0];
+    expect(reportInput.page).toBe(mockPage);
+    expect(reportInput.url).toBe('https://example.com');
+  });
 });
 
 describe('createErrorHandler', () => {
@@ -211,5 +409,29 @@ describe('createErrorHandler', () => {
     }
 
     expect(onSendErrorToTelemetry).not.toHaveBeenCalled();
+  });
+
+  it('falls back to request.url when loadedUrl is not available', async () => {
+    const io = createMockIO();
+    const handler = createErrorHandler({
+      io,
+      reportingDatasetId: 'ERRORS',
+    } as any);
+
+    const mockLog = { error: vi.fn(), info: vi.fn(), debug: vi.fn(), warning: vi.fn() };
+    const ctx = {
+      request: { url: 'https://example.com', loadedUrl: '' },
+      log: { child: () => mockLog },
+      page: null,
+    } as any;
+
+    try {
+      await handler(ctx, new Error('fail'));
+    } catch {
+      // Expected
+    }
+
+    const reportInput = vi.mocked(io.generateErrorReport).mock.calls[0][0];
+    expect(reportInput.url).toBe('https://example.com');
   });
 });

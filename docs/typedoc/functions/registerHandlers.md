@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Function: registerHandlers()
 
-> **registerHandlers**\<`T`, `RouterCtx`\>(`router`, `routes`, `options`?): `Promise`\<`void`\>
+> **registerHandlers**\<`T`, `RouterCtx`\>(`router`, `routes`, `options?`): `Promise`\<`void`\>
+
+Defined in: [src/lib/router/router.ts:93](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/router/router.ts#L93)
 
 Register many handlers at once onto the Crawlee's RouterHandler.
 
@@ -32,30 +34,40 @@ A list of wrappers `[a, b, c]` will be applied to the handlers right-to-left as 
 
 The entries on the `routerContext` object will be made available to all handlers.
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`CrawlingContext`\<`JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler` \| `BasicCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\> \| `HttpCrawler`\<`InternalHttpCrawlingContext`\<`any`, `any`, `HttpCrawler`\<`any`\>\>\>, `Dictionary`\>, `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
+### T
 
-• **RouterCtx** *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](../type-aliases/CrawleeOneRouteCtx.md)\<`T`\>
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`CrawlingContext`\<`JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler` \| `BasicCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\> \| `HttpCrawler`\<`InternalHttpCrawlingContext`\<`any`, `any`, `HttpCrawler`\<`any`\>\>\>, `Dictionary`\>, `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
+
+### RouterCtx
+
+`RouterCtx` *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](../type-aliases/CrawleeOneRouteCtx.md)\<`T`\>
 
 ## Parameters
 
-• **router**: `RouterHandler`\<`T`\[`"context"`\]\>
+### router
 
-• **routes**: `Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](../interfaces/CrawleeOneRoute.md)\<`T`, `RouterCtx`\>\>
+`RouterHandler`\<`T`\[`"context"`\]\>
 
-• **options?**
+### routes
 
-• **options.handlerWrappers?**: [`CrawleeOneRouteWrapper`](../type-aliases/CrawleeOneRouteWrapper.md)\<`T`, `RouterCtx`\>[]
+`Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](../interfaces/CrawleeOneRoute.md)\<`T`, `RouterCtx`\>\>
 
-• **options.onSetCtx?**
+### options?
 
-• **options.routerContext?**: `RouterCtx`
+#### handlerWrappers?
+
+[`CrawleeOneRouteWrapper`](../type-aliases/CrawleeOneRouteWrapper.md)\<`T`, `RouterCtx`\>[]
+
+#### onSetCtx?
+
+(`ctx`) => `void`
+
+#### routerContext?
+
+`RouterCtx`
 
 ## Returns
 
 `Promise`\<`void`\>
-
-## Source
-
-[src/lib/router/router.ts:93](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/router/router.ts#L93)

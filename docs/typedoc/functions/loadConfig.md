@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Function: loadConfig()
 
-> **loadConfig**(`configFilePath`?): `Promise`\<`null` \| [`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md)\>
+> **loadConfig**(`configFilePath?`): `Promise`\<[`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md) \| `null`\>
+
+Defined in: [src/cli/commands/config.ts:51](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/cli/commands/config.ts#L51)
 
 Load CrawleeOne config file. Config will be searched for using CosmicConfig.
 
@@ -16,12 +18,10 @@ Learn more: https://github.com/cosmiconfig/cosmiconfig
 
 ## Parameters
 
-• **configFilePath?**: `string`
+### configFilePath?
+
+`string`
 
 ## Returns
 
-`Promise`\<`null` \| [`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md)\>
-
-## Source
-
-[src/cli/commands/config.ts:51](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/cli/commands/config.ts#L51)
+`Promise`\<[`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md) \| `null`\>

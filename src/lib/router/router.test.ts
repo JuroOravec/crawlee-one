@@ -125,6 +125,37 @@ describe('registerHandlers', () => {
     // we'd need to simulate a crawl. Instead, verify registration succeeded.
     expect(handler).not.toHaveBeenCalled(); // Handler isn't called during registration
   });
+
+  it('calls onSetCtx during handler execution', async () => {
+    const router = Router.create();
+    const onSetCtx = vi.fn();
+    const handler = vi.fn();
+
+    const routes = {
+      TEST_LABEL: { match: /test/, handler },
+    } as any;
+
+    await registerHandlers(router as any, routes, { onSetCtx: onSetCtx as any });
+
+    // Crawlee's Router internally calls ctx.log.debug, so log needs those methods directly
+    const mockLog: any = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warning: vi.fn() };
+    mockLog.child = vi.fn().mockReturnValue(mockLog);
+
+    const mockCtx = {
+      request: { url: 'https://test.com', label: 'TEST_LABEL' },
+      log: mockLog,
+    } as any;
+
+    await router(mockCtx);
+
+    // onSetCtx should be called with ctx and then null
+    expect(onSetCtx).toHaveBeenCalledTimes(2);
+    expect(onSetCtx).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ request: mockCtx.request })
+    );
+    expect(onSetCtx).toHaveBeenNthCalledWith(2, null);
+  });
 });
 
 describe('setupDefaultHandlers', () => {
@@ -175,5 +206,267 @@ describe('setupDefaultHandlers', () => {
     });
 
     expect(wrapperCalled).toHaveBeenCalled();
+  });
+});
+
+// ---- Default handler execution tests ----
+
+// Helper to create a mock log that works with Crawlee's Router (which calls ctx.log.debug directly)
+const createRouterMockLog = () => {
+  const mockLog: any = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warning: vi.fn() };
+  mockLog.child = vi.fn().mockReturnValue(mockLog);
+  return mockLog;
+};
+
+describe('default handler URL matching', () => {
+  it('matches URL to the correct route handler via RegExp', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    const handlerA = vi.fn();
+    const handlerB = vi.fn();
+
+    const routes = {
+      ROUTE_A: { match: /example\.com/, handler: handlerA },
+      ROUTE_B: { match: /other\.com/, handler: handlerB },
+    } as any;
+
+    await setupDefaultHandlers({ io, router: router as any, routes });
+
+    const mockCtx = {
+      request: { url: 'https://example.com/page', loadedUrl: 'https://example.com/page' },
+      log: createRouterMockLog(),
+    } as any;
+
+    await router(mockCtx);
+
+    expect(handlerA).toHaveBeenCalled();
+    expect(handlerB).not.toHaveBeenCalled();
+  });
+
+  it('matches URL to the correct route handler via string matcher', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    const handlerA = vi.fn();
+
+    const routes = {
+      ROUTE_A: { match: 'example\\.com', handler: handlerA },
+    } as any;
+
+    await setupDefaultHandlers({ io, router: router as any, routes });
+
+    const mockCtx = {
+      request: { url: 'https://example.com/page', loadedUrl: 'https://example.com/page' },
+      log: createRouterMockLog(),
+    } as any;
+
+    await router(mockCtx);
+
+    expect(handlerA).toHaveBeenCalled();
+  });
+
+  it('matches URL using function matcher', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    const handler = vi.fn();
+    const matchFn = vi.fn((url: string) => url.includes('special'));
+
+    const routes = {
+      SPECIAL: { match: matchFn, handler },
+    } as any;
+
+    await setupDefaultHandlers({ io, router: router as any, routes });
+
+    const mockCtx = {
+      request: { url: 'https://special.com/page', loadedUrl: 'https://special.com/page' },
+      log: createRouterMockLog(),
+    } as any;
+
+    await router(mockCtx);
+
+    expect(matchFn).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalled();
+  });
+
+  it('matches URL using array of matchers', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    const handler = vi.fn();
+
+    const routes = {
+      MULTI: { match: [/foo\.com/, /bar\.com/], handler },
+    } as any;
+
+    await setupDefaultHandlers({ io, router: router as any, routes });
+
+    const mockCtx = {
+      request: { url: 'https://bar.com/page', loadedUrl: 'https://bar.com/page' },
+      log: createRouterMockLog(),
+    } as any;
+
+    await router(mockCtx);
+
+    expect(handler).toHaveBeenCalled();
+  });
+
+  it('logs error when no route matches URL', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    const routes = {
+      ROUTE_A: { match: /example\.com/, handler: vi.fn() },
+    } as any;
+
+    await setupDefaultHandlers({ io, router: router as any, routes });
+
+    const mockLog = createRouterMockLog();
+    const mockCtx = {
+      request: { url: 'https://unknown.com', loadedUrl: 'https://unknown.com' },
+      log: mockLog,
+    } as any;
+
+    await router(mockCtx);
+
+    expect(mockLog.error).toHaveBeenCalledWith(expect.stringContaining('No route matched URL'));
+  });
+
+  it('logs error when route has no handler', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    const routes = {
+      NO_HANDLER: { match: /example\.com/, handler: null as any },
+    } as any;
+
+    await setupDefaultHandlers({ io, router: router as any, routes });
+
+    const mockLog = createRouterMockLog();
+    const mockCtx = {
+      request: { url: 'https://example.com/page', loadedUrl: 'https://example.com/page' },
+      log: mockLog,
+    } as any;
+
+    await router(mockCtx);
+
+    expect(mockLog.error).toHaveBeenCalledWith(
+      expect.stringContaining('No handler found for route')
+    );
+  });
+
+  it('throws error for batch processing without page (non-browser crawler)', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    const routes = {
+      MAIN: { match: /.*/, handler: vi.fn() },
+    } as any;
+
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      input: { perfBatchSize: 5 } as any,
+    });
+
+    const mockCtx = {
+      request: { url: 'https://example.com', loadedUrl: 'https://example.com' },
+      log: createRouterMockLog(),
+      page: undefined,
+    } as any;
+
+    // The batching check throws BEFORE the try-catch block, so it propagates
+    await expect(router(mockCtx)).rejects.toThrow('Request batching');
+  });
+
+  it('calls onSetCtx with context during default handler execution', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+    const onSetCtx = vi.fn();
+
+    const routes = {
+      MAIN: { match: /example\.com/, handler: vi.fn() },
+    } as any;
+
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      onSetCtx: onSetCtx as any,
+    });
+
+    const mockCtx = {
+      request: { url: 'https://example.com', loadedUrl: 'https://example.com' },
+      log: createRouterMockLog(),
+    } as any;
+
+    await router(mockCtx);
+
+    // onSetCtx called with ctx then null
+    expect(onSetCtx).toHaveBeenCalledTimes(2);
+    expect(onSetCtx).toHaveBeenNthCalledWith(2, null);
+  });
+
+  it('merges routerContext into handler context', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    let capturedCtx: any = null;
+    const handler = vi.fn(async (ctx: any) => {
+      capturedCtx = ctx;
+    });
+
+    const routerContext = { customField: 'test-value', pushData: vi.fn() };
+
+    const routes = {
+      MAIN: { match: /example\.com/, handler },
+    } as any;
+
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      routerContext: routerContext as any,
+    });
+
+    const mockCtx = {
+      request: { url: 'https://example.com', loadedUrl: 'https://example.com' },
+      log: createRouterMockLog(),
+    } as any;
+
+    await router(mockCtx);
+
+    // The handler should receive merged context
+    expect(capturedCtx).toHaveProperty('customField', 'test-value');
+    expect(capturedCtx).toHaveProperty('request');
+  });
+
+  it('handles single perfBatchSize of 1 without error for non-page crawlers', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    const handler = vi.fn();
+
+    const routes = {
+      MAIN: { match: /example\.com/, handler },
+    } as any;
+
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      input: { perfBatchSize: 1 } as any,
+    });
+
+    const mockCtx = {
+      request: { url: 'https://example.com', loadedUrl: 'https://example.com' },
+      log: createRouterMockLog(),
+    } as any;
+
+    // Should not throw - perfBatchSize of 1 is allowed for non-page crawlers
+    await router(mockCtx);
+    expect(handler).toHaveBeenCalled();
   });
 });

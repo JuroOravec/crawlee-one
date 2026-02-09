@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Function: requestQueueSizeMonitor()
 
-> **requestQueueSizeMonitor**(`maxSize`, `options`?): `object`
+> **requestQueueSizeMonitor**(`maxSize`, `options?`): `object`
+
+Defined in: [src/lib/io/requestQueue.ts:24](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/io/requestQueue.ts#L24)
 
 Semi-automatic monitoring of RequestQueue size. This is used for limiting the total of
 entries scraped per run / RequestQueue:
@@ -18,9 +20,13 @@ By default uses Apify RequestQueue.
 
 ## Parameters
 
-• **maxSize**: `number`
+### maxSize
 
-• **options?**: [`RequestQueueSizeMonitorOptions`](../interfaces/RequestQueueSizeMonitorOptions.md)
+`number`
+
+### options?
+
+[`RequestQueueSizeMonitorOptions`](../interfaces/RequestQueueSizeMonitorOptions.md)
 
 ## Returns
 
@@ -48,11 +54,13 @@ By default uses Apify RequestQueue.
 
 #### Parameters
 
-• **callback**: `ValueCallback`\<`number`\>
+##### callback
+
+`ValueCallback`\<`number`\>
 
 #### Returns
 
-`Function`
+> (): `void`
 
 ##### Returns
 
@@ -70,13 +78,17 @@ By default uses Apify RequestQueue.
 
 > **shortenToSize**: \<`T`\>(`arr`) => `Promise`\<`T`[]\>
 
-#### Type parameters
+#### Type Parameters
 
-• **T**
+##### T
+
+`T`
 
 #### Parameters
 
-• **arr**: `T`[]
+##### arr
+
+`T`[]
 
 #### Returns
 
@@ -84,12 +96,8 @@ By default uses Apify RequestQueue.
 
 ### value()
 
-> **value**: () => `null` \| `number` \| `Promise`\<`number`\> = `getValue`
+> **value**: () => `number` \| `Promise`\<`number`\> \| `null` = `getValue`
 
 #### Returns
 
-`null` \| `number` \| `Promise`\<`number`\>
-
-## Source
-
-[src/lib/io/requestQueue.ts:24](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/io/requestQueue.ts#L24)
+`number` \| `Promise`\<`number`\> \| `null`

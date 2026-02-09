@@ -1,21 +1,23 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / CrawleeOneRouteCtx
 
-# Type alias: CrawleeOneRouteCtx\<T, RouterCtx\>
+# Type Alias: CrawleeOneRouteCtx\<T, RouterCtx\>
 
-> **CrawleeOneRouteCtx**\<`T`, `RouterCtx`\>: `Parameters`\<`Parameters`\<`CrawlerRouter`\<`T`\[`"context"`\] & `RouterCtx`\>\[`"addHandler"`\]\>\[`1`\]\>\[`0`\]
+> **CrawleeOneRouteCtx**\<`T`, `RouterCtx`\> = `Parameters`\<`Parameters`\<`CrawlerRouter`\<`T`\[`"context"`\] & `RouterCtx`\>\[`"addHandler"`\]\>\[`1`\]\>\[`0`\]
+
+Defined in: [src/lib/router/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/router/types.ts#L7)
 
 Context object provided in CrawlerRouter
 
-## Type parameters
+## Type Parameters
 
-• **T** *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+### T
 
-• **RouterCtx** *extends* `Record`\<`string`, `any`\> = `object`
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
 
-## Source
+### RouterCtx
 
-[src/lib/router/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/router/types.ts#L7)
+`RouterCtx` *extends* `Record`\<`string`, `any`\> = \{ \}

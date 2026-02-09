@@ -66,9 +66,9 @@ jobs:
 
       - name: Check generated docs are up to date
         run: |
-          npm run gen:docs
+          npm run docs:gen
           if [ -n "$(git status --porcelain)" ]; then
-            echo "::error::Generated docs are out of date. Run 'npm run gen:docs' and commit the changes."
+            echo "::error::Generated docs are out of date. Run 'npm run docs:gen' and commit the changes."
             git diff --stat
             exit 1
           fi

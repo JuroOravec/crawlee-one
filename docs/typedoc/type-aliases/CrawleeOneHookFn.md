@@ -1,29 +1,35 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
 [crawlee-one](../globals.md) / CrawleeOneHookFn
 
-# Type alias: CrawleeOneHookFn()\<TArgs, TReturn, T\>
+# Type Alias: CrawleeOneHookFn()\<TArgs, TReturn, T\>
 
-> **CrawleeOneHookFn**\<`TArgs`, `TReturn`, `T`\>: (...`args`) => [`MaybePromise`](MaybePromise.md)\<`TReturn`\>
+> **CrawleeOneHookFn**\<`TArgs`, `TReturn`, `T`\> = (...`args`) => [`MaybePromise`](MaybePromise.md)\<`TReturn`\>
 
-## Type parameters
+Defined in: [src/lib/actor/types.ts:129](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/actor/types.ts#L129)
 
-• **TArgs** *extends* `any`[] = []
+## Type Parameters
 
-• **TReturn** = `void`
+### TArgs
 
-• **T** *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md) = [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+`TArgs` *extends* `any`[] = \[\]
+
+### TReturn
+
+`TReturn` = `void`
+
+### T
+
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md) = [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
 
 ## Parameters
 
-• ...**args**: [`...TArgs`, [`CrawleeOneHookCtx`](CrawleeOneHookCtx.md)\<`T`\>]
+### args
+
+...\[`...TArgs`, [`CrawleeOneHookCtx`](CrawleeOneHookCtx.md)\<`T`\>\]
 
 ## Returns
 
 [`MaybePromise`](MaybePromise.md)\<`TReturn`\>
-
-## Source
-
-[src/lib/actor/types.ts:129](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/actor/types.ts#L129)

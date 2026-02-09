@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,35 +6,31 @@
 
 # Interface: ApifyEntryMetadata
 
+Defined in: [src/lib/integrations/apify.ts:17](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L17)
+
 ## Properties
 
 ### actorId
 
-> **actorId**: `null` \| `string`
+> **actorId**: `string` \| `null`
 
-#### Source
-
-[src/lib/integrations/apify.ts:18](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L18)
+Defined in: [src/lib/integrations/apify.ts:18](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L18)
 
 ***
 
 ### actorRunId
 
-> **actorRunId**: `null` \| `string`
+> **actorRunId**: `string` \| `null`
 
-#### Source
-
-[src/lib/integrations/apify.ts:19](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L19)
+Defined in: [src/lib/integrations/apify.ts:19](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L19)
 
 ***
 
 ### actorRunUrl
 
-> **actorRunUrl**: `null` \| `string`
+> **actorRunUrl**: `string` \| `null`
 
-#### Source
-
-[src/lib/integrations/apify.ts:20](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L20)
+Defined in: [src/lib/integrations/apify.ts:20](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L20)
 
 ***
 
@@ -42,9 +38,7 @@
 
 > **contextId**: `string`
 
-#### Source
-
-[src/lib/integrations/apify.ts:21](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L21)
+Defined in: [src/lib/integrations/apify.ts:21](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L21)
 
 ***
 
@@ -52,23 +46,19 @@
 
 > **dateHandled**: `string`
 
+Defined in: [src/lib/integrations/apify.ts:30](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L30)
+
 ISO datetime string that indicates the time when the request has been processed.
-
-#### Source
-
-[src/lib/integrations/apify.ts:30](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L30)
 
 ***
 
 ### loadedUrl
 
-> **loadedUrl**: `null` \| `string`
+> **loadedUrl**: `string` \| `null`
+
+Defined in: [src/lib/integrations/apify.ts:27](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L27)
 
 The URL given to the crawler after possible redirects
-
-#### Source
-
-[src/lib/integrations/apify.ts:27](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L27)
 
 ***
 
@@ -76,28 +66,22 @@ The URL given to the crawler after possible redirects
 
 > **numberOfRetries**: `number`
 
-#### Source
-
-[src/lib/integrations/apify.ts:31](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L31)
+Defined in: [src/lib/integrations/apify.ts:31](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L31)
 
 ***
 
 ### originalUrl
 
-> **originalUrl**: `null` \| `string`
+> **originalUrl**: `string` \| `null`
+
+Defined in: [src/lib/integrations/apify.ts:25](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L25)
 
 The URL given to the crawler
-
-#### Source
-
-[src/lib/integrations/apify.ts:25](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L25)
 
 ***
 
 ### requestId
 
-> **requestId**: `null` \| `string`
+> **requestId**: `string` \| `null`
 
-#### Source
-
-[src/lib/integrations/apify.ts:22](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/integrations/apify.ts#L22)
+Defined in: [src/lib/integrations/apify.ts:22](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/integrations/apify.ts#L22)

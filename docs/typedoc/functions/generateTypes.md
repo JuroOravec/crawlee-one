@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Function: generateTypes()
 
-> **generateTypes**(`outfile`, `configOrPath`?): `Promise`\<`void`\>
+> **generateTypes**(`outfile`, `configOrPath?`): `Promise`\<`void`\>
+
+Defined in: [src/cli/commands/codegen.ts:251](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/cli/commands/codegen.ts#L251)
 
 Generate types for CrawleeOne given a config.
 
@@ -15,14 +17,14 @@ If the config is omitted, it is automatically searched for using CosmicConfig.
 
 ## Parameters
 
-• **outfile**: `string`
+### outfile
 
-• **configOrPath?**: `string` \| [`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md)
+`string`
+
+### configOrPath?
+
+`string` | [`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md)
 
 ## Returns
 
 `Promise`\<`void`\>
-
-## Source
-
-[src/cli/commands/codegen.ts:251](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/cli/commands/codegen.ts#L251)

@@ -1,4 +1,4 @@
-[**crawlee-one**](../README.md) • **Docs**
+[**crawlee-one**](../README.md)
 
 ***
 
@@ -8,32 +8,46 @@
 
 > **setupMockApifyActor**\<`TInput`, `TData`\>(`__namedParameters`): `Promise`\<`void`\>
 
-## Type parameters
+Defined in: [src/lib/test/actor.ts:12](https://github.com/JuroOravec/crawlee-one/blob/b22a7b5549c967588792b1d290e0bcccdaddfc61/src/lib/test/actor.ts#L12)
 
-• **TInput**
+## Type Parameters
 
-• **TData** *extends* [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\> = [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\>
+### TInput
+
+`TInput`
+
+### TData
+
+`TData` *extends* [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\> = [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\>
 
 ## Parameters
 
-• **\_\_namedParameters**
+### \_\_namedParameters
 
-• **\_\_namedParameters.actorInput?**: `TInput`
+#### actorInput?
 
-• **\_\_namedParameters.log?**
+`TInput`
 
-• **\_\_namedParameters.onBatchAddRequests?**: [`OnBatchAddRequests`](../type-aliases/OnBatchAddRequests.md)
+#### log?
 
-• **\_\_namedParameters.onGetInfo?**
+(...`args`) => `void`
 
-• **\_\_namedParameters.onPushData?**
+#### onBatchAddRequests?
 
-• **\_\_namedParameters.vi**: `VitestUtils`
+[`OnBatchAddRequests`](../type-aliases/OnBatchAddRequests.md)
+
+#### onGetInfo?
+
+(...`args`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
+
+#### onPushData?
+
+(`data`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
+
+#### vi
+
+`VitestUtils`
 
 ## Returns
 
 `Promise`\<`void`\>
-
-## Source
-
-[src/lib/test/actor.ts:12](https://github.com/JuroOravec/crawlee-one/blob/0ca55da91a680bbb8a6fc10e3df394336ef5d766/src/lib/test/actor.ts#L12)
