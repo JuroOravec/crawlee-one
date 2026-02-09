@@ -1,0 +1,85 @@
+# Run benchmarks on push to main (persist results + update dashboard)
+# and on pull requests (compare + post PR comment).
+#
+# All configurable values come from benchmarks/config.ts, exported as
+# ${{ env.BENCH_* }} variables by the "Export benchmark config" step.
+
+name: Benchmark
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # Reads benchmarks/config.ts and writes BENCH_* env vars to $GITHUB_ENV
+      - name: Export benchmark config
+        run: npx tsx benchmarks/run-bench.ts export
+
+      # Run benchmarks, then transform into rich archive + dashboard JSON
+      - name: Run benchmarks
+        run: tsx benchmarks/run-bench.ts generate
+        env:
+          BENCHMARK_MACHINE: ci-linux
+
+      # On push to main: commit rich results back to the repo
+      - name: Commit benchmark results
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.BENCH_RESULTS_DIR }}/
+          git diff --cached --quiet || git commit -m "bench: persist results for $(git rev-parse --short HEAD)"
+          git push
+
+      # On push to main: update the gh-pages dashboard
+      - name: Update dashboard (push to main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          # Internal settings, do not change
+          tool: "customSmallerIsBetter"
+          auto-push: true
+          output-file-path: ${{ env.BENCH_DASHBOARD_OUTPUT }}
+          gh-pages-branch: ${{ env.BENCH_GH_PAGES_BRANCH }}
+          benchmark-data-dir-path: ${{ env.BENCH_DATA_DIR_PATH }}
+
+      # On PR: compare against baseline and post comment
+      - name: Compare benchmarks (PR)
+        if: github.event_name == 'pull_request'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          # Internal settings, do not change
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          tool: "customSmallerIsBetter"
+          auto-push: false
+          comment-on-alert: true
+          output-file-path: ${{ env.BENCH_DASHBOARD_OUTPUT }}
+          gh-pages-branch: ${{ env.BENCH_GH_PAGES_BRANCH }}
+          benchmark-data-dir-path: ${{ env.BENCH_DATA_DIR_PATH }}
+          comment-always: ${{ env.BENCH_COMMENT_ALWAYS }}
+          alert-threshold: ${{ env.BENCH_ALERT_THRESHOLD }}
+          fail-on-alert: ${{ env.BENCH_FAIL_ON_ALERT }}

@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "benchmarks": {
+    "cheerio crawl + parse": {
+      "type": "time",
+      "unit": "ms",
+      "pretty_name": "Cheerio crawl + parse"
+    },
+    "http crawl": {
+      "type": "time",
+      "unit": "ms",
+      "pretty_name": "HTTP crawl"
+    },
+    "jsdom crawl + parse": {
+      "type": "time",
+      "unit": "ms",
+      "pretty_name": "JSDOM crawl + parse"
+    },
+    "basic crawl": {
+      "type": "time",
+      "unit": "ms",
+      "pretty_name": "Basic crawl"
+    },
+    "cheerio peak memory": {
+      "type": "memory",
+      "unit": "bytes",
+      "pretty_name": "Cheerio peak memory"
+    },
+    "http peak memory": {
+      "type": "memory",
+      "unit": "bytes",
+      "pretty_name": "HTTP peak memory"
+    },
+    "jsdom peak memory": {
+      "type": "memory",
+      "unit": "bytes",
+      "pretty_name": "JSDOM peak memory"
+    },
+    "basic peak memory": {
+      "type": "memory",
+      "unit": "bytes",
+      "pretty_name": "Basic peak memory"
+    }
+  }
+}

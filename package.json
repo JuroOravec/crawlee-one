@@ -54,6 +54,8 @@
     "lint:fix": "eslint ./src --fix",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
+    "bench": "vitest bench",
+    "bench:gen": "tsx benchmarks/run-bench.ts generate",
     "gen:docs": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.base.json --out ./docs/typedoc"
   },
   "devDependencies": {

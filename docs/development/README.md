@@ -26,6 +26,8 @@ npx playwright install --with-deps chromium
 | `npm run build`      | Bundle with tsup + emit declarations with tsc                   |
 | `npm test`           | Run all tests once (Vitest)                                     |
 | `npm run coverage`   | Run tests with v8 coverage report                               |
+| `npm run bench`      | Run benchmarks with table output (interactive)                  |
+| `npm run bench:gen`  | Run benchmarks and transform into rich archive + dashboard JSON |
 | `npm run lint`       | Lint `src/` with ESLint                                         |
 | `npm run lint:fix`   | Lint and auto-fix                                               |
 | `npm run start:dev`  | Run `src/index.ts` directly via tsx (for local experimentation) |
@@ -125,6 +127,40 @@ Some tests spin up a local HTTP server to test real fetch-parse-handle pipelines
 
 See [testing-gotchas.md](./testing-gotchas.md) for project-specific pitfalls to be aware of when writing tests.
 
+## Benchmarking
+
+Performance benchmarks live in `benchmarks/` and use **Vitest bench** (tinybench under the hood). They spin up a local HTTP server and measure each crawler type end-to-end (init, fetch, parse, teardown), tracking both throughput and memory footprint.
+
+### Running benchmarks
+
+```sh
+npm run bench              # interactive run with table output
+npm run bench:gen          # run benchmarks and transform into rich archive + dashboard JSON
+```
+
+### What gets measured
+
+| Benchmark             | Type   | Unit  | Description                             |
+| --------------------- | ------ | ----- | --------------------------------------- |
+| cheerio crawl + parse | time   | ms    | Full crawl cycle with Cheerio parsing   |
+| http crawl            | time   | ms    | Raw HTTP fetch without parsing          |
+| jsdom crawl + parse   | time   | ms    | Full crawl cycle with JSDOM             |
+| basic crawl           | time   | ms    | Minimal crawl with request context only |
+| cheerio memory        | memory | bytes | Peak memory¹ during a Cheerio crawl     |
+| http memory           | memory | bytes | Peak memory¹ during an HTTP crawl       |
+| jsdom memory          | memory | bytes | Peak memory¹ during a JSDOM crawl       |
+| basic memory          | memory | bytes | Peak memory¹ during a basic crawl       |
+
+¹ The delta of the portion of the process's memory held in RAM (as reported by `process.memoryUsage().rss`).
+
+### Adding a new benchmark
+
+1. Add a `measurePerf()` or `measureMemory()` call in `benchmarks/crawl.bench.ts`, providing the bench name and a human-readable pretty name.
+2. `benchmarks.json` is auto-generated from test metadata -- no manual registry updates needed.
+3. Run `npm run bench:gen` to verify the new benchmark appears in the output.
+
+For configuration, file layout, the data pipeline, CI integration, and GitHub Pages setup, see the [benchmarks README](../../benchmarks/README.md).
+
 ## Linting
 
 ESLint (flat config) + Prettier. Run `npm run lint:fix` before committing.
@@ -150,5 +186,6 @@ CI checks that generated docs are up to date -- if `gen:docs` produces uncommitt
 
 - [CONTRIBUTING.md](../../CONTRIBUTING.md) -- how to submit PRs and report bugs
 - [testing-gotchas.md](./testing-gotchas.md) -- Crawlee-specific testing pitfalls
+- [benchmarks/README.md](../../benchmarks/README.md) -- benchmarking infrastructure deep dive
 - [Getting started](../getting-started.md) -- user-facing guide for the library API
 - [Features](../features.md) -- complete feature catalog
