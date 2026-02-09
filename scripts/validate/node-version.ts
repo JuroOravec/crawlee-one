@@ -40,7 +40,7 @@ export default async function validateNodeVersion(): Promise<void> {
   console.log(`package.json engines.node: "${enginesNode}" (minimum major: ${minMajor})`);
 
   // 2. Read CI workflow matrix
-  const ciYaml = await readFile('.github/workflows/ci.yml', 'utf-8');
+  const ciYaml = await readFile('.github/workflows/tests.yml', 'utf-8');
   const ci = parse(ciYaml);
 
   const testJob = ci.jobs?.test;
@@ -59,7 +59,7 @@ export default async function validateNodeVersion(): Promise<void> {
   if (!matrixVersions.includes(minMajor)) {
     errors.push(
       `engines.node minimum (${minMajor}) is not tested in CI matrix. ` +
-        `Add ${minMajor} to the node-version matrix in .github/workflows/ci.yml, ` +
+        `Add ${minMajor} to the node-version matrix in .github/workflows/tests.yml, ` +
         `or update engines.node to match the actual minimum tested version.`
     );
   }
