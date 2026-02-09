@@ -4,8 +4,8 @@
 #
 # Prerequisites:
 # - Add NPM_TOKEN as a repository secret (Settings > Secrets and variables > Actions).
-#   Generate the token at https://www.npmjs.com/ > Access Tokens > Generate New Token
-#   (use "Automation" type for CI publishing).
+#   Generate the token at https://www.npmjs.com/ > Access Tokens > Generate New Token.
+#   Use "Classic" token with type "Automation" -- this skips OTP and works in CI.
 
 name: "crawlee-one: Release"
 

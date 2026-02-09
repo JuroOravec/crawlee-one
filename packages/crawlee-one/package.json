@@ -5,14 +5,14 @@
   "private": false,
   "description": "Production-ready web scraping in a single function call. Built on Crawlee. Data transforms, caching, privacy compliance, and error tracking -- out of the box.",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
-  "homepage": "https://github.com/jurooravec/crawlee-one#readme",
+  "homepage": "https://github.com/JuroOravec/crawlee-one#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jurooravec/crawlee-one.git",
+    "url": "git+https://github.com/JuroOravec/crawlee-one.git",
     "directory": "packages/crawlee-one"
   },
   "bugs": {
-    "url": "https://github.com/jurooravec/crawlee-one/issues"
+    "url": "https://github.com/JuroOravec/crawlee-one/issues"
   },
   "license": "MIT",
   "keywords": [
