@@ -32,6 +32,7 @@ npx playwright install --with-deps chromium
 | `npm run lint:fix`   | Lint and auto-fix                                               |
 | `npm run start:dev`  | Run `src/index.ts` directly via tsx (for local experimentation) |
 | `npm run start:prod` | Run the built `dist/index.js`                                   |
+| `npm run validate`   | Run project constraint validation scripts                       |
 | `npm run gen:docs`   | Regenerate TypeDoc API docs into `docs/typedoc/`                |
 
 ## Project structure
@@ -174,6 +175,45 @@ npm run gen:docs
 ```
 
 CI checks that generated docs are up to date -- if `gen:docs` produces uncommitted changes, the checks job fails.
+
+## Validation scripts
+
+Lightweight, self-contained scripts in `scripts/validate/` that enforce project constraints in CI. Think of them as pre-commit hooks without the tooling overhead -- just TypeScript files in a directory.
+
+**Why:** Some constraints aren't caught by linters or tests. For example, GitHub branch protection must list the exact CI job names. If someone changes the CI matrix but doesn't update branch protection, PRs either merge without that check or get stuck waiting for a check that no longer exists.
+
+### How it works
+
+`scripts/validate/index.ts` scans the directory for `.ts` files (excluding itself), dynamically imports each one, and calls its default export. If any script throws, the runner exits with code 1.
+
+```sh
+npm run validate
+```
+
+CI runs this in the `checks` job after `npm ci` and before lint/build/test.
+
+### Adding a new validation script
+
+1. Create a `.ts` file in `scripts/validate/` (any name except `index.ts`).
+2. Export a default async function. Throw on failure.
+3. The runner picks it up automatically -- no imports or registration needed.
+
+```typescript
+export default async function validateSomething(): Promise<void> {
+  const ok = await checkSomeConstraint();
+  if (!ok) {
+    throw new Error('Describe what went wrong and how to fix it.');
+  }
+}
+```
+
+### Existing scripts
+
+**`branch-protection.ts`** -- Validates that GitHub branch protection required status checks match the CI workflow job names. Parses `.github/workflows/ci.yml` to derive expected job names (expanding matrix combinations), fetches branch protection via `gh api`, and compares. On mismatch, prints the exact `gh api` command to fix it. Requires `gh` CLI with admin access; skips gracefully if unavailable.
+
+**`node-version.ts`** -- Checks that `package.json` `engines.node` minimum version is consistent with the CI test matrix. Catches drift like bumping `engines.node` to `>=22` without removing Node 20 from CI (wasted runs), or adding a Node version to CI without reflecting it in `engines`.
+
+**`package-exports.ts`** -- Checks that every `exports` and `bin` entry in `package.json` has a corresponding tsup entry point, and vice versa. Catches cases where a new subpath export has no build entry (import resolves to a missing file) or a tsup entry has no corresponding export (file gets built but consumers can't import it).
 
 ## Release process
 
