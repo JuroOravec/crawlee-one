@@ -1,6 +1,8 @@
 /**
- * Validates that package.json `exports` and `bin` fields are consistent with
- * the tsup entry points in tsup.config.ts.
+ * Validates that every workspace package under `packages/` and `scrapers/`
+ * that defines package.json `exports` and `bin` fields are consistent with
+ * the tsup entry points in tsup.config.ts, for every workspace package that
+ * has a tsup config.
  *
  * Catches drift like:
  * - Adding a new subpath export to package.json without a matching tsup entry
@@ -14,7 +16,13 @@
  * exactly the signal we want.
  */
 
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
+
+/** Directories that contain workspace packages. */
+const WORKSPACE_DIRS = ['packages', 'scrapers'];
+
+/** Possible tsup config filenames. */
+const TSUP_CONFIG_NAMES = ['tsup.config.ts', 'tsup.config.js', 'tsup.config.mjs'];
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -32,7 +40,7 @@ function distPathToEntryKey(distPath: string): string {
 }
 
 /**
- * Extract tsup entry keys from tsup.config.ts by finding lines that assign
+ * Extract tsup entry keys from a tsup config file by finding lines that assign
  * entry values (e.g., `index: 'src/index.ts'`).
  *
  * Scans for the `entry:` property, then collects key-value pairs until
@@ -47,7 +55,7 @@ function parseTsupEntryKeys(configSource: string): Set<string> {
   const entryMatch = stripped.match(/entry\s*:\s*\{([^}]+)\}/s);
   if (!entryMatch) {
     throw new Error(
-      'Could not parse tsup.config.ts: no entry object found. ' +
+      'Could not parse tsup config: no entry object found. ' +
         'If the config format changed, update this validation script.'
     );
   }
@@ -64,7 +72,7 @@ function parseTsupEntryKeys(configSource: string): Set<string> {
 
   if (keys.size === 0) {
     throw new Error(
-      'Could not parse any entry keys from tsup.config.ts. ' +
+      'Could not parse any entry keys from tsup config. ' +
         'If the config format changed, update this validation script.'
     );
   }
@@ -72,18 +80,53 @@ function parseTsupEntryKeys(configSource: string): Set<string> {
   return keys;
 }
 
-// ---------------------------------------------------------------------------
-// Main
-// ---------------------------------------------------------------------------
+/**
+ * Find all workspace package directories that contain a tsup config file.
+ * Returns array of { dir, tsupConfigPath } objects.
+ */
+async function findPackagesWithTsup(): Promise<{ dir: string; tsupConfig: string }[]> {
+  const results: { dir: string; tsupConfig: string }[] = [];
 
-export default async function validatePackageExports(): Promise<void> {
-  // 1. Read package.json exports and bin
-  const pkg = JSON.parse(await readFile('package.json', 'utf-8'));
+  for (const parentDir of WORKSPACE_DIRS) {
+    let entries: string[];
+    try {
+      entries = await readdir(parentDir);
+    } catch {
+      continue;
+    }
+
+    for (const entry of entries) {
+      const fullPath = `${parentDir}/${entry}`;
+      const stats = await stat(fullPath);
+      if (!stats.isDirectory()) continue;
+
+      for (const configName of TSUP_CONFIG_NAMES) {
+        const configPath = `${fullPath}/${configName}`;
+        try {
+          await stat(configPath);
+          results.push({ dir: fullPath, tsupConfig: configPath });
+          break; // found a config, no need to check other names
+        } catch {
+          // not found, try next name
+        }
+      }
+    }
+  }
+
+  return results;
+}
+
+/**
+ * Validate a single package's exports/bin against its tsup entry points.
+ * Returns an array of error messages (empty if consistent).
+ */
+async function validatePackage(dir: string, tsupConfigPath: string): Promise<string[]> {
+  const pkg = JSON.parse(await readFile(`${dir}/package.json`, 'utf-8'));
   const exports: Record<string, { import?: string }> = pkg.exports ?? {};
   const bin: string | Record<string, string> | undefined = pkg.bin;
 
   // Collect all dist paths that package.json exposes
-  const exportedKeys = new Map<string, string>(); // entryKey -> source description
+  const exportedKeys = new Map<string, string>();
 
   for (const [subpath, conditions] of Object.entries(exports)) {
     const importPath = conditions.import;
@@ -103,31 +146,29 @@ export default async function validatePackageExports(): Promise<void> {
     }
   }
 
-  console.log('package.json exposed entry keys:');
+  console.log('  package.json exposed entry keys:');
   for (const [key, source] of [...exportedKeys.entries()].sort((a, b) =>
     a[0].localeCompare(b[0])
   )) {
-    console.log(`  - ${key}  (from ${source})`);
+    console.log(`    - ${key}  (from ${source})`);
   }
 
-  // 2. Read tsup.config.ts entry points
-  const tsupSource = await readFile('tsup.config.ts', 'utf-8');
+  // Read tsup config entry points
+  const tsupSource = await readFile(tsupConfigPath, 'utf-8');
   const tsupKeys = parseTsupEntryKeys(tsupSource);
 
-  console.log('\ntsup entry keys:');
+  console.log('  tsup entry keys:');
   for (const key of [...tsupKeys].sort()) {
-    console.log(`  - ${key}`);
+    console.log(`    - ${key}`);
   }
 
-  // 3. Compare
   const errors: string[] = [];
 
-  // Every exported path must have a tsup entry
   for (const [key, source] of exportedKeys) {
     if (!tsupKeys.has(key)) {
       errors.push(
-        `package.json declares ${source} but tsup has no "${key}" entry point. ` +
-          `The file won't be built. Add "${key}" to tsup.config.ts entry, ` +
+        `${dir}: package.json declares ${source} but tsup has no "${key}" entry point. ` +
+          `The file won't be built. Add "${key}" to tsup entry, ` +
           `or remove the export from package.json.`
       );
     }
@@ -137,20 +178,43 @@ export default async function validatePackageExports(): Promise<void> {
   for (const key of tsupKeys) {
     if (!exportedKeys.has(key)) {
       errors.push(
-        `tsup builds "${key}" but package.json has no corresponding export or bin. ` +
+        `${dir}: tsup builds "${key}" but package.json has no corresponding export or bin. ` +
           `The file gets built but consumers can't import it. Add an export ` +
-          `path to package.json, or remove "${key}" from tsup.config.ts entry.`
+          `path to package.json, or remove "${key}" from tsup entry.`
       );
     }
   }
 
-  if (errors.length > 0) {
+  return errors;
+}
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
+export default async function validatePackageExports(): Promise<void> {
+  const packages = await findPackagesWithTsup();
+
+  if (packages.length === 0) {
+    console.log('No packages with tsup config found.');
+    return;
+  }
+
+  const allErrors: string[] = [];
+
+  for (const { dir, tsupConfig } of packages) {
+    console.log(`\n${dir} (${tsupConfig.split('/').pop()}):`);
+    const errors = await validatePackage(dir, tsupConfig);
+    allErrors.push(...errors);
+  }
+
+  if (allErrors.length > 0) {
     console.error('');
-    for (const err of errors) {
+    for (const err of allErrors) {
       console.error(`  - ${err}`);
     }
     throw new Error('package.json exports/bin and tsup entry points are inconsistent.');
   }
 
-  console.log('\npackage.json exports/bin and tsup entry points are consistent.');
+  console.log('\nAll packages: exports/bin and tsup entry points are consistent.');
 }

@@ -1,0 +1,27 @@
+[**crawlee-one**](../README.md)
+
+***
+
+[crawlee-one](../README.md) / loadConfig
+
+# Function: loadConfig()
+
+> **loadConfig**(`configFilePath?`): `Promise`\<[`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md) \| `null`\>
+
+Defined in: packages/crawlee-one/src/cli/commands/config.ts:51
+
+Load CrawleeOne config file. Config will be searched for using CosmicConfig.
+
+Optionally, you can supply path to the config file.
+
+Learn more: https://github.com/cosmiconfig/cosmiconfig
+
+## Parameters
+
+### configFilePath?
+
+`string`
+
+## Returns
+
+`Promise`\<[`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md) \| `null`\>

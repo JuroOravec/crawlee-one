@@ -1,4 +1,4 @@
-dist/*
+**/dist/*
 lib/*
 esm/*
 umd/*
@@ -43,6 +43,7 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+.pnpm-store/
 
 # TypeScript v1 declaration files
 typings/
@@ -69,4 +70,4 @@ typings/
 .next
 
 # Transient benchmark outputs
-benchmarks/temp
+**/benchmarks/temp

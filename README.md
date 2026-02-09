@@ -1,5 +1,12 @@
 # CrawleeOne
 
+[![npm version](https://img.shields.io/npm/v/crawlee-one)](https://www.npmjs.com/package/crawlee-one)
+[![npm downloads](https://img.shields.io/npm/dm/crawlee-one)](https://www.npmjs.com/package/crawlee-one)
+[![license](https://img.shields.io/npm/l/crawlee-one)](https://github.com/jurooravec/crawlee-one/blob/main/LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
+[![node](https://img.shields.io/node/v/crawlee-one)](https://nodejs.org/)
+[![GitHub stars](https://img.shields.io/github/stars/jurooravec/crawlee-one)](https://github.com/jurooravec/crawlee-one)
+
 **Production-ready web scraping. Out of the box.**
 
 CrawleeOne wraps [Crawlee](https://crawlee.dev/) with everything production scrapers need -- data transforms, privacy compliance, error tracking, caching, and more -- in a single function call. Write the extraction logic. CrawleeOne handles the rest.
@@ -83,7 +90,7 @@ Failed requests are saved to a dataset automatically. Plug in Sentry with one li
 
 Regex, functions, or both. CrawleeOne auto-routes unlabeled requests to the right handler.
 
-[See all features](./docs/features.md)
+[See all features](./packages/crawlee-one/docs/features.md)
 
 ## Before and after
 
@@ -166,16 +173,16 @@ And that's far from everything -- the vanilla version still doesn't include data
 
 CrawleeOne scrapers support these out of the box, all configurable via input:
 
-| Use case                                                                  | What it does                                                    |
-| ------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **[Import URLs](./docs/playbook-01-import-urls.md)**                      | Load URLs from databases, datasets, or custom functions.        |
-| **[Data transforms](./docs/playbook-03-results-mapping-simple.md)**       | Rename, select, limit, and reshape output without code changes. |
-| **[Request filtering](./docs/playbook-06-requests-mapping-filtering.md)** | Control what gets scraped to save time and money.               |
-| **[Caching](./docs/playbook-07-caching.md)**                              | Incremental scraping -- only process new entries.               |
-| **[Privacy compliance](./docs/playbook-10-privacy-compliance.md)**        | Redact personal data with a single toggle.                      |
-| **[Error capture](./docs/playbook-11-errors.md)**                         | Centralized error tracking across scrapers.                     |
+| Use case                                                                                       | What it does                                                    |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **[Import URLs](./packages/crawlee-one/docs/playbook-01-import-urls.md)**                      | Load URLs from databases, datasets, or custom functions.        |
+| **[Data transforms](./packages/crawlee-one/docs/playbook-03-results-mapping-simple.md)**       | Rename, select, limit, and reshape output without code changes. |
+| **[Request filtering](./packages/crawlee-one/docs/playbook-06-requests-mapping-filtering.md)** | Control what gets scraped to save time and money.               |
+| **[Caching](./packages/crawlee-one/docs/playbook-07-caching.md)**                              | Incremental scraping -- only process new entries.               |
+| **[Privacy compliance](./packages/crawlee-one/docs/playbook-10-privacy-compliance.md)**        | Redact personal data with a single toggle.                      |
+| **[Error capture](./packages/crawlee-one/docs/playbook-11-errors.md)**                         | Centralized error tracking across scrapers.                     |
 
-[See all 12 use cases](./docs/use-cases.md)
+[See all 12 use cases](./packages/crawlee-one/docs/use-cases.md)
 
 ## Getting started
 
@@ -187,32 +194,32 @@ npm install crawlee-one
 
 ### For scraper developers
 
-1. Read the [getting started guide](./docs/getting-started.md) for a full walkthrough of `crawleeOne()` and its options.
+1. Read the [getting started guide](./packages/crawlee-one/docs/getting-started.md) for a full walkthrough of `crawleeOne()` and its options.
 2. See [example projects](#example-projects) for real-world usage.
-3. Managing multiple crawlers in one project? Use [codegen](./docs/codegen.md) to generate typed helper functions from a config file.
+3. Managing multiple crawlers in one project? Use [codegen](./packages/crawlee-one/docs/codegen.md) to generate typed helper functions from a config file.
 
 ### For end users
 
 Scrapers built with CrawleeOne are configurable by the end users (via Apify platform). Transform, filter, limit, and reshape scraped data and requests -- all through input fields, no code changes needed.
 
-[User guide](./docs/user-guide.md)
+[User guide](./packages/crawlee-one/docs/user-guide.md)
 
-![Apify actor input page](./docs/user-guide-input-ui-open.png)
+![Apify actor input page](./packages/crawlee-one/docs/user-guide-input-ui-open.png)
 
 ## Documentation
 
-| Document                                                        | Description                                                 |
-| --------------------------------------------------------------- | ----------------------------------------------------------- |
-| [Getting started](./docs/getting-started.md)                    | Developer guide with full `crawleeOne()` options reference. |
-| [Features](./docs/features.md)                                  | Complete feature catalog with code examples.                |
-| [Use cases](./docs/use-cases.md)                                | All 12 use cases with links to detailed guides.             |
-| [Input reference](./docs/reference-input.md)                    | All available input fields.                                 |
-| [Deploying to Apify](./docs/deploying-to-apify.md)              | Step-by-step Apify deployment guide.                        |
-| [Codegen](./docs/codegen.md)                                    | Generate typed crawler definitions from config.             |
-| [Integrations](./docs/integrations.md)                          | Custom telemetry and storage backends.                      |
-| [User guide](./docs/user-guide.md)                              | Guide for end users of CrawleeOne scrapers.                 |
-| [API reference](./docs/typedoc/globals.md)                      | Auto-generated TypeScript API docs.                         |
-| [Crawlee & Apify overview](./docs/scraping-workflow-summary.md) | Background on how Crawlee and Apify work.                   |
+| Document                                                                             | Description                                                 |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| [Getting started](./packages/crawlee-one/docs/getting-started.md)                    | Developer guide with full `crawleeOne()` options reference. |
+| [Features](./packages/crawlee-one/docs/features.md)                                  | Complete feature catalog with code examples.                |
+| [Use cases](./packages/crawlee-one/docs/use-cases.md)                                | All 12 use cases with links to detailed guides.             |
+| [Input reference](./packages/crawlee-one/docs/reference-input.md)                    | All available input fields.                                 |
+| [Deploying to Apify](./packages/crawlee-one/docs/deploying-to-apify.md)              | Step-by-step Apify deployment guide.                        |
+| [Codegen](./packages/crawlee-one/docs/codegen.md)                                    | Generate typed crawler definitions from config.             |
+| [Integrations](./packages/crawlee-one/docs/integrations.md)                          | Custom telemetry and storage backends.                      |
+| [User guide](./packages/crawlee-one/docs/user-guide.md)                              | Guide for end users of CrawleeOne scrapers.                 |
+| [API reference](./packages/crawlee-one/docs/typedoc/globals.md)                      | Auto-generated TypeScript API docs.                         |
+| [Crawlee & Apify overview](./packages/crawlee-one/docs/scraping-workflow-summary.md) | Background on how Crawlee and Apify work.                   |
 
 ## Example projects
 
@@ -227,7 +234,7 @@ When contributing code, please fork the repo and submit a pull request. See [CON
 
 ## Development
 
-Want to build, test, or hack on CrawleeOne? The [development guide](./docs/development/README.md) covers prerequisites, all npm scripts, project structure, architecture, and testing strategy.
+Want to build, test, or hack on CrawleeOne? The [development guide](./packages/crawlee-one/docs/development/README.md) covers prerequisites, all npm scripts, project structure, architecture, and testing strategy.
 
 ## Supporting CrawleeOne
 

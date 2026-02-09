@@ -1,10 +1,24 @@
 version: 2
 updates:
+  # Root dev dependencies
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    groups:
+      # Group all root dev dependencies into a single PR
+      # These are low risk updates that don't require manual review
+      root-devdeps:
+        patterns:
+          - "*"
+  # Crawlee-one package dependencies
+  - package-ecosystem: "npm"
+    directory: "/packages/crawlee-one"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+  # GitHub Actions dependencies
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

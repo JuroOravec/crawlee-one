@@ -1,0 +1,63 @@
+# Publish crawlee-one to npm when a GitHub Release with a matching tag is published.
+#
+# Tag format: crawlee-one@{version} (e.g. crawlee-one@3.1.0)
+#
+# Prerequisites:
+# - Add NPM_TOKEN as a repository secret (Settings > Secrets and variables > Actions).
+#   Generate the token at https://www.npmjs.com/ > Access Tokens > Generate New Token
+#   (use "Automation" type for CI publishing).
+
+name: "crawlee-one: Release"
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    if: startsWith(github.event.release.tag_name, 'crawlee-one@')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      # Extract and format the npm dist-tag based on the version
+      # e.g. 1.0.0-alpha.1 -> alpha
+      - name: Determine npm dist-tag
+        id: dist-tag
+        working-directory: packages/crawlee-one
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" == *-* ]]; then
+            # Pre-release: extract identifier (alpha, beta, rc) as the dist-tag
+            PREID=$(echo "$VERSION" | sed -E 's/.*-([a-zA-Z]+).*/\1/')
+            echo "tag=$PREID" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to npm
+        working-directory: packages/crawlee-one
+        run: pnpm publish --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }} --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
