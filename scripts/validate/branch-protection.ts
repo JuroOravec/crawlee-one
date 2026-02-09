@@ -32,7 +32,7 @@ function cartesian<T>(...arrays: T[][]): T[][] {
  * For non-matrix jobs: just the job key name.
  */
 async function getExpectedChecks(): Promise<Set<string>> {
-  const ciYaml = await readFile('.github/workflows/ci.yml', 'utf-8');
+  const ciYaml = await readFile('.github/workflows/tests.yml', 'utf-8');
   const ci = parse(ciYaml);
 
   const checks = new Set<string>();
