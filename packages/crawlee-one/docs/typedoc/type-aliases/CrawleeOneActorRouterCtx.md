@@ -8,7 +8,7 @@
 
 > **CrawleeOneActorRouterCtx**\<`T`\> = `object`
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:75
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:75](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L75)
 
 Context passed from actor to route handlers
 
@@ -24,7 +24,7 @@ Context passed from actor to route handlers
 
 > **actor**: [`CrawleeOneActorInst`](../interfaces/CrawleeOneActorInst.md)\<`T`\>
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:76
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:76](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L76)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/crawlee-one/src/lib/actor/types.ts:76
 
 > **metamorph**: [`Metamorph`](Metamorph.md)
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:78
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:78](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L78)
 
 Trigger actor metamorph, using actor's inputs as defaults.
 
@@ -42,7 +42,7 @@ Trigger actor metamorph, using actor's inputs as defaults.
 
 > **pushData**: \<`T`\>(`oneOrManyItems`, `options`) => `Promise`\<`any`[]\>
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:87
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:87](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L87)
 
 `Actor.pushData` with extra optional features:
 
@@ -77,7 +77,7 @@ Defined in: packages/crawlee-one/src/lib/actor/types.ts:87
 
 > **pushRequests**: \<`T`\>(`oneOrManyItems`, `options?`) => `Promise`\<`any`[]\>
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:97
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:97](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L97)
 
 Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 

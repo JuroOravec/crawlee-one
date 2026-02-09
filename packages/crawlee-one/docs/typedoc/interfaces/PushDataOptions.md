@@ -6,7 +6,7 @@
 
 # Interface: PushDataOptions\<T\>
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:63
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:63](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L63)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: packages/crawlee-one/src/lib/io/pushData.ts:63
 
 > `optional` **cacheActionOnResult**: `"add"` \| `"remove"` \| `"overwrite"` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:138
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:138](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L138)
 
 Define whether we want to add, remove, or overwrite cached entries with results from the actor run
 
@@ -30,7 +30,7 @@ Define whether we want to add, remove, or overwrite cached entries with results 
 
 > `optional` **cachePrimaryKeys**: `string`[]
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:136
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:136](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L136)
 
 Define fields that uniquely identify entries for caching
 
@@ -40,7 +40,7 @@ Define fields that uniquely identify entries for caching
 
 > `optional` **cacheStoreId**: `string`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:134
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:134](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L134)
 
 ID or name of the key-value store used as cache
 
@@ -50,7 +50,7 @@ ID or name of the key-value store used as cache
 
 > `optional` **datasetId**: `string`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:130
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:130](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L130)
 
 ID or name of the dataset to which the data should be pushed
 
@@ -60,7 +60,7 @@ ID or name of the dataset to which the data should be pushed
 
 > `optional` **filter**: (`item`) => `unknown`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:128
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:128](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L128)
 
 Option to filter an entry before pushing it to the dataset.
 
@@ -82,7 +82,7 @@ This serves mainly to allow users to filter the entries from actor input UI.
 
 > `optional` **includeMetadata**: `boolean`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:81
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:81](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L81)
 
 Whether items should be enriched with request and run metadata.
 
@@ -94,7 +94,7 @@ If truthy, the metadata is set under the `metadata` property.
 
 > `optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)\<`any`, `any`, `object`\>
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:64
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:64](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L64)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: packages/crawlee-one/src/lib/io/pushData.ts:64
 
 > `optional` **log**: `Log`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:65
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:65](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L65)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: packages/crawlee-one/src/lib/io/pushData.ts:65
 
 > `optional` **maxCount**: `number`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:75
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:75](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L75)
 
 If set, only at most this many entries will be scraped.
 
@@ -126,7 +126,7 @@ will be saved.
 
 > `optional` **pickKeys**: `string`[]
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:107
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:107](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L107)
 
 Option to select which keys (fields) of an entry to keep (discarding the rest)
 before pushing the entries to the dataset.
@@ -144,7 +144,7 @@ resolved using Lodash.get().
 
 > **privacyMask**: [`PrivacyMask`](../type-aliases/PrivacyMask.md)\<`T`\>
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:95
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:95](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L95)
 
 Determine which properties are considered personal data.
 
@@ -156,7 +156,7 @@ See [PrivacyMask](../type-aliases/PrivacyMask.md).
 
 > `optional` **remapKeys**: `Record`\<`string`, `string`\>
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:116
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:116](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L116)
 
 Option to remap the keys before pushing the entries to the dataset.
 
@@ -171,7 +171,7 @@ resolved using Lodash.get().
 
 > `optional` **requestQueueId**: `string`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:132
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:132](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L132)
 
 ID of the RequestQueue that stores remaining requests
 
@@ -181,7 +181,7 @@ ID of the RequestQueue that stores remaining requests
 
 > `optional` **showPrivate**: `boolean`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:89
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:89](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L89)
 
 Whether properties that are considered personal data should be shown as is.
 
@@ -195,7 +195,7 @@ Which properties are personal data is determined by `privacyMask`.
 
 > `optional` **transform**: (`item`) => `any`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:122
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:122](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L122)
 
 Option to freely transform an entry before pushing it to the dataset.
 

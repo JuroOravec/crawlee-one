@@ -8,7 +8,7 @@
 
 > **PrivacyFilter**\<`V`, `K`, `O`\> = `boolean` \| (`val`, `key`, `obj`, `options?`) => `any`
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:32
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:32](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L32)
 
 Determine if the property is considered private (and hence may be hidden for privacy reasons).
 

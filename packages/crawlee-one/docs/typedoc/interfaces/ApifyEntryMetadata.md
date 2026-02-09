@@ -6,7 +6,7 @@
 
 # Interface: ApifyEntryMetadata
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:17
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:17](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L17)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:17
 
 > **actorId**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:18
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:18](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L18)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:18
 
 > **actorRunId**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:19
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:19](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L19)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:19
 
 > **actorRunUrl**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:20
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:20](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L20)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:20
 
 > **contextId**: `string`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:21
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:21](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L21)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:21
 
 > **dateHandled**: `string`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:30
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:30](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L30)
 
 ISO datetime string that indicates the time when the request has been processed.
 
@@ -56,7 +56,7 @@ ISO datetime string that indicates the time when the request has been processed.
 
 > **loadedUrl**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:27
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:27](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L27)
 
 The URL given to the crawler after possible redirects
 
@@ -66,7 +66,7 @@ The URL given to the crawler after possible redirects
 
 > **numberOfRetries**: `number`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:31
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:31](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L31)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:31
 
 > **originalUrl**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:25
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:25](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L25)
 
 The URL given to the crawler
 
@@ -84,4 +84,4 @@ The URL given to the crawler
 
 > **requestId**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:22
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:22](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L22)

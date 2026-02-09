@@ -8,7 +8,7 @@
 
 > **PrivacyMask**\<`T`\> = \{ \[Key in keyof T\]?: T\[Key\] extends Date \| any\[\] ? PrivacyFilter\<T\[Key\], Key, T\> : T\[Key\] extends object ? PrivacyMask\<T\[Key\]\> : PrivacyFilter\<T\[Key\], Key, T\> \}
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:55
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:55](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L55)
 
 PrivacyMask determines which (potentally nested) properties
 of an object are considered private.

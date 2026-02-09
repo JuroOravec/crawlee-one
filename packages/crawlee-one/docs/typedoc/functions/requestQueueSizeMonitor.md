@@ -8,7 +8,7 @@
 
 > **requestQueueSizeMonitor**(`maxSize`, `options?`): `object`
 
-Defined in: packages/crawlee-one/src/lib/io/requestQueue.ts:24
+Defined in: [packages/crawlee-one/src/lib/io/requestQueue.ts:24](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/requestQueue.ts#L24)
 
 Semi-automatic monitoring of RequestQueue size. This is used for limiting the total of
 entries scraped per run / RequestQueue:

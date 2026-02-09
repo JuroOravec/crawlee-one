@@ -8,7 +8,7 @@
 
 > **pushRequests**\<`T`\>(`oneOrManyItems`, `options?`): `Promise`\<`unknown`[]\>
 
-Defined in: packages/crawlee-one/src/lib/io/pushRequests.ts:78
+Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:78](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushRequests.ts#L78)
 
 Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 

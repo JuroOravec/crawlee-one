@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneRoute\<T, RouterCtx\>
 
-Defined in: packages/crawlee-one/src/lib/router/types.ts:36
+Defined in: [packages/crawlee-one/src/lib/router/types.ts:36](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/router/types.ts#L36)
 
 Route that a request will be sent to if the request doesn't have a label yet,
 and if the `match` function returns truthy value.
@@ -33,7 +33,7 @@ a request will process that request.
 
 > **handler**: (`ctx`) => `Awaitable`\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/router/types.ts:41
+Defined in: [packages/crawlee-one/src/lib/router/types.ts:41](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/router/types.ts#L41)
 
 #### Parameters
 
@@ -51,4 +51,4 @@ Defined in: packages/crawlee-one/src/lib/router/types.ts:41
 
 > **match**: [`CrawleeOneRouteMatcher`](../type-aliases/CrawleeOneRouteMatcher.md)\<`T`, `RouterCtx`\>
 
-Defined in: packages/crawlee-one/src/lib/router/types.ts:40
+Defined in: [packages/crawlee-one/src/lib/router/types.ts:40](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/router/types.ts#L40)

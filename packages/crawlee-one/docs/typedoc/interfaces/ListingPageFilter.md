@@ -6,7 +6,7 @@
 
 # Interface: ListingPageFilter
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:16
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:16](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L16)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:16
 
 > `optional` **disabled**: `boolean`
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:18
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:18](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L18)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:18
 
 > **hasNextState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:22
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:22](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L22)
 
 #### Returns
 
@@ -34,7 +34,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:22
 
 > **hasState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:23
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:23](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L23)
 
 #### Returns
 
@@ -46,7 +46,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:23
 
 > **initState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:19
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:19](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L19)
 
 #### Returns
 
@@ -58,7 +58,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:19
 
 > **loadState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:24
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:24](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L24)
 
 #### Returns
 
@@ -70,7 +70,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:24
 
 > **name**: `string`
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:17
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:17](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L17)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:17
 
 > **nextState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:21
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:21](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L21)
 
 #### Returns
 
@@ -90,7 +90,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:21
 
 > **resetState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:20
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:20](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L20)
 
 #### Returns
 

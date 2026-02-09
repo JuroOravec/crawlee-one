@@ -6,7 +6,7 @@
 
 # Interface: InputActorInput
 
-Defined in: packages/crawlee-one/src/lib/input.ts:47
+Defined in: [packages/crawlee-one/src/lib/input.ts:47](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/input.ts#L47)
 
 Common input fields related to extending Actor input with remote or generated data
 
@@ -16,7 +16,7 @@ Common input fields related to extending Actor input with remote or generated da
 
 > `optional` **inputExtendFromFunction**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<\[\], [`AllActorInputs`](../type-aliases/AllActorInputs.md)\>
 
-Defined in: packages/crawlee-one/src/lib/input.ts:69
+Defined in: [packages/crawlee-one/src/lib/input.ts:69](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/input.ts#L69)
 
 If set, the Actor input is extended with a config from this custom function.
 
@@ -33,7 +33,7 @@ The URL must point to a JSON file containing a single object (the config).
 
 > `optional` **inputExtendUrl**: `string`
 
-Defined in: packages/crawlee-one/src/lib/input.ts:58
+Defined in: [packages/crawlee-one/src/lib/input.ts:58](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/input.ts#L58)
 
 If set, the Actor input is extended with a config from this URL.
 

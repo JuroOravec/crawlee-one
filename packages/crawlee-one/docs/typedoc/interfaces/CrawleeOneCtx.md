@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneCtx\<Ctx, Labels, Input, TIO, Telem\>
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:46
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:46](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L46)
 
 Abstract type that holds all variable (generic) types used in CrawleeOne.
 
@@ -41,7 +41,7 @@ have to pass through many times, but only one that describes them all.
 
 > **context**: `Ctx`
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:67
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:67](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L67)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: packages/crawlee-one/src/lib/actor/types.ts:67
 
 > **input**: `Input`
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:69
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:69](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L69)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: packages/crawlee-one/src/lib/actor/types.ts:69
 
 > **io**: `TIO`
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:70
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:70](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L70)
 
 ***
 
@@ -65,7 +65,7 @@ Defined in: packages/crawlee-one/src/lib/actor/types.ts:70
 
 > **labels**: `Labels`
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:68
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:68](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L68)
 
 ***
 
@@ -73,4 +73,4 @@ Defined in: packages/crawlee-one/src/lib/actor/types.ts:68
 
 > **telemetry**: `Telem`
 
-Defined in: packages/crawlee-one/src/lib/actor/types.ts:71
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:71](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actor/types.ts#L71)

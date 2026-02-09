@@ -8,7 +8,7 @@
 
 > **scrapeListingEntries**\<`Ctx`, `UrlType`\>(`options`): `Promise`\<`UrlType`[]\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:229
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:229](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L229)
 
 Get entries from a listing page (eg URLs to profiles that should be scraped later)
 
