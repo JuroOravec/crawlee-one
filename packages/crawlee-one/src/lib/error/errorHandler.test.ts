@@ -294,7 +294,6 @@ describe('captureErrorRouteHandler', () => {
     const io = createMockIO();
     const mockPage = { url: () => 'https://page.com' } as any;
 
-    let capturedArgs: any = null;
     const handler = async (ctx: any) => {
       // Call captureError without explicit url/page
       await ctx.captureError({ error: new Error('test') });

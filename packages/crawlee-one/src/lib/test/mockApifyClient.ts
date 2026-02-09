@@ -154,7 +154,7 @@ export const createMockRequestQueueClient = ({
         options?: RequestQueueClientAddRequestOptions,
       ]
     ): Promise<RequestQueueClientAddRequestResult> => {
-      const [request, _options] = args;
+      const [request] = args;
       log?.(`Called MockRequestQueueClient.updateRequest with ${JSON.stringify(args)}`);
       log?.(`requestQueue: ${JSON.stringify(requestQueue)}`);
 
@@ -194,7 +194,7 @@ export const createMockRequestQueueClient = ({
 };
 
 export const createMockDatasetCollectionClient = ({
-  log,
+  log: _log,
 }: { log?: (args: any) => void } = {}): DatasetCollectionClient => {
   const dataset: any[] = [];
 
@@ -218,8 +218,8 @@ export const createMockDatasetCollectionClient = ({
     },
 
     getOrCreate: (
-      name?: string,
-      options?: DatasetCollectionClientGetOrCreateOptions
+      _name?: string,
+      _options?: DatasetCollectionClientGetOrCreateOptions
     ): Promise<ClientDataset> => Promise.resolve(createMockClientDataset()),
 
     // _list, _create, _getOrCreate, baseUrl
@@ -263,7 +263,7 @@ export const createMockStorageDataset = (
   ]
 ): Promise<Dataset<any>> => {
   const origArgs = args.slice().slice(0, 2);
-  const [datasetId, __, custom] = args;
+  const [datasetId, _openOptions, custom] = args;
   const { log, onPushData, onGetInfo } = custom || {};
   log?.(`Called MockStorageDataset with ${JSON.stringify(origArgs)}`);
 
