@@ -223,7 +223,11 @@ Scrapers built with CrawleeOne are configurable by the end users (via Apify plat
 
 Found a bug or have a feature request? Please [open an issue](https://github.com/jurooravec/crawlee-one/issues).
 
-When contributing code, please fork the repo and submit a pull request.
+When contributing code, please fork the repo and submit a pull request. See [CONTRIBUTING.md](./CONTRIBUTING.md) for dev setup and guidelines.
+
+## Development
+
+Want to build, test, or hack on CrawleeOne? The [development guide](./docs/development/README.md) covers prerequisites, all npm scripts, project structure, architecture, and testing strategy.
 
 ## Supporting CrawleeOne
 

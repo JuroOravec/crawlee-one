@@ -1,0 +1,12 @@
+# Normalize line endings
+* text=auto
+
+# Generated API docs -- exclude from GitHub language stats and diffs
+docs/typedoc/** linguist-generated
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
