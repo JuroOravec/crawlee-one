@@ -1,6 +1,6 @@
 {
   "name": "crawlee-one",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "type": "module",
   "private": false,
   "description": "Production-ready web scraping in a single function call. Built on Crawlee. Data transforms, caching, privacy compliance, and error tracking -- out of the box.",
@@ -59,7 +59,6 @@
     "start:prod": "node dist/index.js",
     "start:dev": "tsx ./src/index.ts",
     "build": "tsup && tsc -p tsconfig.build.json",
-    "prepublishOnly": "cp ../../README.md ./dist/README.md",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "test": "vitest run",

@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Copy README into package
+        run: cp README.md packages/crawlee-one/README.md
+
       - name: Build
         run: pnpm build
 
