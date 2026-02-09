@@ -23,4 +23,4 @@ export type PickRequired<T extends object, Keys extends keyof T> = Omit<T, Keys>
 
 /** Remove the first element of the array */
 // See https://stackoverflow.com/a/55344772/9788634
-export type Tail<T extends any[]> = T extends [infer A, ...infer R] ? R : never;
+export type Tail<T extends any[]> = T extends [infer _A, ...infer R] ? R : never;

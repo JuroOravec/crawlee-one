@@ -1,4 +1,4 @@
-import type { Actor, ExitOptions } from 'apify';
+import type { ExitOptions } from 'apify';
 import type {
   Request as CrawleeRequest,
   CrawlingContext,

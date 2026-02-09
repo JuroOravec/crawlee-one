@@ -107,11 +107,7 @@ describe('registerHandlers', () => {
 
   it('makes routerContext available to handlers', async () => {
     const router = Router.create();
-    let receivedCtx: any = null;
-
-    const handler = vi.fn(async (ctx: any) => {
-      receivedCtx = ctx;
-    });
+    const handler = vi.fn(async (_ctx: any) => {});
 
     const routes = {
       TEST: { match: /test/, handler },

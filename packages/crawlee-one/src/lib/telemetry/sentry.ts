@@ -25,10 +25,10 @@ export const createSentryTelemetry = <T extends CrawleeOneTelemetry<CrawleeOneCt
   sentryOptions?: Sentry.NodeOptions
 ) => {
   return {
-    setup: async (actor) => {
+    setup: async (_actor) => {
       await setupSentry(sentryOptions);
     },
-    onSendErrorToTelemetry: (error, report, options, ctx) => {
+    onSendErrorToTelemetry: (error, report, _options, _ctx) => {
       Sentry.captureException(error, { extra: report as any });
     },
   } as T;
