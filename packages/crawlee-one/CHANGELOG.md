@@ -1,5 +1,13 @@
 # Release notes
 
+## v3.0.2
+
+_2026-02-09_
+
+#### Fix
+
+- Fix README copy in release workflow (move from prepublishOnly to CI step).
+
 ## v3.0.1
 
 _2026-02-09_
