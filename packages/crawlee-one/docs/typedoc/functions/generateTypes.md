@@ -8,7 +8,7 @@
 
 > **generateTypes**(`outfile`, `configOrPath?`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/cli/commands/codegen.ts:251](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/cli/commands/codegen.ts#L251)
+Defined in: [packages/crawlee-one/src/cli/commands/codegen.ts:251](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/cli/commands/codegen.ts#L251)
 
 Generate types for CrawleeOne given a config.
 

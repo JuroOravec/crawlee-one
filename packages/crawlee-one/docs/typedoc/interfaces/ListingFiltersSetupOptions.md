@@ -6,7 +6,7 @@
 
 # Interface: ListingFiltersSetupOptions\<Ctx, UrlType\>
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:27](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L27)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:27](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L27)
 
 ## Type Parameters
 
@@ -24,7 +24,7 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:27](https://g
 
 > **context**: [`ListingPageScraperContext`](ListingPageScraperContext.md)\<`Ctx`, `UrlType`\>
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:28](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L28)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:28](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L28)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:28](https://g
 
 > `optional` **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:29](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L29)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:29](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L29)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:29](https://g
 
 > **log**: [`ListingLogger`](ListingLogger.md)
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:37](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L37)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:37](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L37)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:37](https://g
 
 > `optional` **onFiltersLoaded**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:36](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L36)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:36](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L36)
 
 #### Parameters
 
@@ -66,7 +66,7 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:36](https://g
 
 > `optional` **onResetFilters**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:35](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L35)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:35](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L35)
 
 #### Parameters
 
@@ -84,7 +84,7 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:35](https://g
 
 > `optional` **shouldApplyFilter**: (`context`, `filter`, `filters`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:30](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L30)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:30](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L30)
 
 #### Parameters
 

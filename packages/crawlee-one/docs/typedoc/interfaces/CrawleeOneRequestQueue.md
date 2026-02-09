@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneRequestQueue
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:232](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L232)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:232](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L232)
 
 Interface for storing and retrieving Requests (URLs) to scrape
 
@@ -19,7 +19,7 @@ drop-in replacement with other integrations.
 
 > **addRequests**: (`requestsLike`, `options?`) => `unknown`
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:239](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L239)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:239](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L239)
 
 Adds requests to the queue.
 
@@ -55,7 +55,7 @@ By default, it's put to the end of the queue.
 
 > **clear**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:299](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L299)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:299](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L299)
 
 Removes all entries from the queue.
 
@@ -69,7 +69,7 @@ Removes all entries from the queue.
 
 > **drop**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:297](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L297)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:297](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L297)
 
 Removes the queue from the storage.
 
@@ -83,7 +83,7 @@ Removes the queue from the storage.
 
 > **fetchNextRequest**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`Request`\<`Dictionary`\> \| `null`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:274](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L274)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:274](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L274)
 
 Returns a next request in the queue to be processed, or null if there are no more
 pending requests.
@@ -110,7 +110,7 @@ were finished, use [CrawleeOneRequestQueue.isFinished](#isfinished) instead.
 
 > **handledCount**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`number` \| `null`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:301](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L301)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:301](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L301)
 
 Returns the number of handled requests.
 
@@ -124,7 +124,7 @@ Returns the number of handled requests.
 
 > **isFinished**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:295](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L295)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:295](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L295)
 
 Resolves to true if all requests were already handled and there are no more left. Due to the nature
 of distributed storage used by the queue, the function might occasionally return a false negative.
@@ -139,7 +139,7 @@ of distributed storage used by the queue, the function might occasionally return
 
 > **markRequestHandled**: (`req`) => `unknown`
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:257](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L257)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:257](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L257)
 
 Marks a request that was previously returned by the
 [CrawleeOneRequestQueue.fetchNextRequest](#fetchnextrequest) function as handled after successful
@@ -161,7 +161,7 @@ processing. Handled requests will never again be returned by the fetchNextReques
 
 > **reclaimRequest**: (`req`, `options?`) => `unknown`
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:279](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L279)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:279](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L279)
 
 Reclaims a failed request back to the queue, so that it can be returned
 for processing later again by another call to [CrawleeOneRequestQueue.fetchNextRequest](#fetchnextrequest).

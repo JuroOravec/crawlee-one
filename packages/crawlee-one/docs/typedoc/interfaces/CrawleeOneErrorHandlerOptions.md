@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneErrorHandlerOptions\<TIO\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:315](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L315)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:315](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L315)
 
 User-configurable options passed to the error handler
 
@@ -22,7 +22,7 @@ User-configurable options passed to the error handler
 
 > `optional` **allowScreenshot**: `boolean`
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:317](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L317)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:317](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L317)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:317](https://git
 
 > `optional` **io**: `TIO`
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:316](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L316)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:316](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L316)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:316](https://git
 
 > `optional` **onErrorCapture**: (`input`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:319](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L319)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:319](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L319)
 
 #### Parameters
 
@@ -62,4 +62,4 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:319](https://git
 
 > `optional` **reportingDatasetId**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L318)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L318)
