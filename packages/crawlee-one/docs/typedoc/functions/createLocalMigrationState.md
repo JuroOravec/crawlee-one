@@ -8,7 +8,7 @@
 
 > **createLocalMigrationState**(`__namedParameters`): `object`
 
-Defined in: packages/crawlee-one/src/lib/migrate/localState.ts:5
+Defined in: [packages/crawlee-one/src/lib/migrate/localState.ts:5](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/migrate/localState.ts#L5)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **registerHandlers**\<`T`, `RouterCtx`\>(`router`, `routes`, `options?`): `Promise`\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/router/router.ts:93
+Defined in: [packages/crawlee-one/src/lib/router/router.ts:93](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/router/router.ts#L93)
 
 Register many handlers at once onto the Crawlee's RouterHandler.
 

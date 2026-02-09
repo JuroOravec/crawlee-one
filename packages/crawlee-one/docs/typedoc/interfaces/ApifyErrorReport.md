@@ -6,7 +6,7 @@
 
 # Interface: ApifyErrorReport
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:6
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:6](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L6)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:6
 
 > **actorId**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:7
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:7](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L7)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:7
 
 > **actorRunId**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:8
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:8](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L8)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:8
 
 > **actorRunUrl**: `string`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:9
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:9](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L9)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:9
 
 > **errorMessage**: `string`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:11
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:11](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L11)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:11
 
 > **errorName**: `string`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:10
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:10](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L10)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:10
 
 > **pageHtmlSnapshot**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:13
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:13](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L13)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:13
 
 > **pageScreenshot**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:14
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:14](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L14)
 
 ***
 
@@ -70,4 +70,4 @@ Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:14
 
 > **pageUrl**: `string` \| `null`
 
-Defined in: packages/crawlee-one/src/lib/integrations/apify.ts:12
+Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:12](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/apify.ts#L12)

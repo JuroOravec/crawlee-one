@@ -8,7 +8,7 @@
 
 > **pushData**\<`Ctx`, `T`\>(`ctx`, `oneOrManyItems`, `options`): `Promise`\<`unknown`[]\>
 
-Defined in: packages/crawlee-one/src/lib/io/pushData.ts:319
+Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:319](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushData.ts#L319)
 
 Apify's `Actor.pushData` with extra features:
 

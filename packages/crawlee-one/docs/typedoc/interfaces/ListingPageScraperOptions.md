@@ -6,7 +6,7 @@
 
 # Interface: ListingPageScraperOptions\<Ctx, UrlType\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:54
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:54](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L54)
 
 ## Extends
 
@@ -28,7 +28,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:54
 
 > **context**: `Ctx`
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:55
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:55](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L55)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:55
 
 > **extractEntries**: (`context`, `retryIndex`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`UrlType`[]\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:84
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:84](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L84)
 
 Main logic to extract entries from a page
 
@@ -60,7 +60,7 @@ Main logic to extract entries from a page
 
 > `optional` **extractEntriesRetries**: `number`
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:86
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:86](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L86)
 
 How many attempts are retried after failed to scrape entries from a listing. Defaults to 3
 
@@ -70,7 +70,7 @@ How many attempts are retried after failed to scrape entries from a listing. Def
 
 > `optional` **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:29
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:29](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L29)
 
 #### Inherited from
 
@@ -82,7 +82,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:29
 
 > `optional` **listingCountOnly**: `boolean`
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:57
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:57](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L57)
 
 ***
 
@@ -90,7 +90,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:57
 
 > `optional` **loadFiltersRetries**: `number`
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:71
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:71](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L71)
 
 How many attempts are retried after filters failed to load. Defaults to 3
 
@@ -100,7 +100,7 @@ How many attempts are retried after filters failed to load. Defaults to 3
 
 > **log**: [`ListingLogger`](ListingLogger.md)
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:60
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:60](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L60)
 
 #### Overrides
 
@@ -112,7 +112,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:60
 
 > `optional` **nextPageWait**: `number`
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:111
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:111](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L111)
 
 How long to wait after we've navigated to the next page and before we start extracting?
 
@@ -122,7 +122,7 @@ How long to wait after we've navigated to the next page and before we start extr
 
 > `optional` **onAfterNavigation**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:68
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:68](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L68)
 
 Hook triggered after navigating to the url using Page.goto().
 
@@ -144,7 +144,7 @@ One use of this hook is to conditionally disable/enable filters based on the pag
 
 > `optional` **onExtractEntriesDone**: (`context`, `entries`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:97
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:97](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L97)
 
 #### Parameters
 
@@ -166,7 +166,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:97
 
 > `optional` **onExtractEntriesError**: (`context`, `error`, `retryIndex`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:92
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:92](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L92)
 
 Hook triggered after a failed attempt at scraping entries from a listing.
 
@@ -196,7 +196,7 @@ One use of this hook is to reload the page on failed attemp in case something di
 
 > `optional` **onFiltersLoaded**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:36
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:36](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L36)
 
 #### Parameters
 
@@ -218,7 +218,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:36
 
 > `optional` **onGoToNextPage**: (`context`, `entries`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:106
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:106](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L106)
 
 If goToNextPage hook is defined, it will be called after each page. To indicate that there's no more
 pages left, throw an error.
@@ -243,7 +243,7 @@ pages left, throw an error.
 
 > `optional` **onLoadFiltersError**: (`context`, `error`, `retryIndex`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:77
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:77](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L77)
 
 Hook triggered after a failed attempt at loading listings page filters.
 
@@ -273,7 +273,7 @@ One use of this hook is to reload the page on failed attemp in case something di
 
 > `optional` **onNavigate**: (`context`, `url`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:62
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:62](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L62)
 
 #### Parameters
 
@@ -295,7 +295,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:62
 
 > `optional` **onResetFilters**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:35
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:35](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L35)
 
 #### Parameters
 
@@ -317,7 +317,7 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:35
 
 > `optional` **pageId**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`string`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:59
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:59](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L59)
 
 Get ID of the current page in the pagination, so it can be logged
 
@@ -337,7 +337,7 @@ Get ID of the current page in the pagination, so it can be logged
 
 > `optional` **shouldApplyFilter**: (`context`, `filter`, `filters`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:30
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:30](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L30)
 
 #### Parameters
 
@@ -367,4 +367,4 @@ Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:30
 
 > **startUrls**: `UrlType`[]
 
-Defined in: packages/crawlee-one/src/lib/actions/scrapeListing.ts:56
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:56](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L56)

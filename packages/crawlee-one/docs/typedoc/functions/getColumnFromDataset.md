@@ -8,7 +8,7 @@
 
 > **getColumnFromDataset**\<`T`\>(`datasetId`, `field`, `options?`): `Promise`\<`T`[]\>
 
-Defined in: packages/crawlee-one/src/lib/io/dataset.ts:48
+Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:48](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/dataset.ts#L48)
 
 Given a Dataset ID and a name of a field, get the columnar data.
 

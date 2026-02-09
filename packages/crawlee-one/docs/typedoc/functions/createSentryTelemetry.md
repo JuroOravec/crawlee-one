@@ -8,7 +8,7 @@
 
 > **createSentryTelemetry**\<`T`\>(`sentryOptions?`): `T`
 
-Defined in: packages/crawlee-one/src/lib/telemetry/sentry.ts:24
+Defined in: [packages/crawlee-one/src/lib/telemetry/sentry.ts:24](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/telemetry/sentry.ts#L24)
 
 ## Type Parameters
 

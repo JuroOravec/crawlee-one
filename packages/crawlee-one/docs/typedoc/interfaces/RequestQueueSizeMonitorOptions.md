@@ -6,7 +6,7 @@
 
 # Interface: RequestQueueSizeMonitorOptions
 
-Defined in: packages/crawlee-one/src/lib/io/requestQueue.ts:5
+Defined in: [packages/crawlee-one/src/lib/io/requestQueue.ts:5](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/requestQueue.ts#L5)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: packages/crawlee-one/src/lib/io/requestQueue.ts:5
 
 > `optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)\<`any`, `any`, `object`\>
 
-Defined in: packages/crawlee-one/src/lib/io/requestQueue.ts:6
+Defined in: [packages/crawlee-one/src/lib/io/requestQueue.ts:6](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/requestQueue.ts#L6)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: packages/crawlee-one/src/lib/io/requestQueue.ts:6
 
 > `optional` **requestQueueId**: `string`
 
-Defined in: packages/crawlee-one/src/lib/io/requestQueue.ts:12
+Defined in: [packages/crawlee-one/src/lib/io/requestQueue.ts:12](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/requestQueue.ts#L12)
 
 ID of the RequestQueue that's monitored for size.
 
@@ -38,7 +38,7 @@ If omitted, the default RequestQueue is used.
 
 > `optional` **ttlInMs**: `number`
 
-Defined in: packages/crawlee-one/src/utils/valueMonitor.ts:6
+Defined in: [packages/crawlee-one/src/utils/valueMonitor.ts:6](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/utils/valueMonitor.ts#L6)
 
 How long (in milliseconds) after fetching the value can we use it before we have to re-fetch it.
 
