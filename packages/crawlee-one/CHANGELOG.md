@@ -1,5 +1,13 @@
 # Release notes
 
+## v3.0.1
+
+_2026-02-09_
+
+#### Fix
+
+- Include README in the published npm package.
+
 ## v3.0.0
 
 _2026-02-09_
