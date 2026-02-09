@@ -405,6 +405,154 @@ describe('runCrawleeOne', () => {
 
       expect(capturedStartUrls).toEqual([]);
     });
+
+    it('resolves startUrlsFromFunction when given a native function', async () => {
+      let capturedStartUrls: any;
+      const io = createMockIO({
+        input: {
+          startUrlsFromFunction: ({ io: _io }: any) => {
+            return ['https://from-fn.com/a', 'https://from-fn.com/b'];
+          },
+        },
+      });
+
+      await runCrawleeOne({
+        actorType: 'basic',
+        actorConfig: {
+          io,
+          routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+        },
+        onReady: async (actor) => {
+          capturedStartUrls = actor.startUrls;
+        },
+      });
+
+      expect(capturedStartUrls).toEqual(['https://from-fn.com/a', 'https://from-fn.com/b']);
+    });
+
+    it('resolves startUrlsFromFunction when given a string', async () => {
+      let capturedStartUrls: any;
+      const fnString = `async ({ io, input, state, sendRequest, itemCacheKey }) => {
+        return ['https://from-str.com/a', 'https://from-str.com/b'];
+      }`;
+      const io = createMockIO({
+        input: { startUrlsFromFunction: fnString },
+      });
+
+      await runCrawleeOne({
+        actorType: 'basic',
+        actorConfig: {
+          io,
+          routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+        },
+        onReady: async (actor) => {
+          capturedStartUrls = actor.startUrls;
+        },
+      });
+
+      expect(capturedStartUrls).toEqual(['https://from-str.com/a', 'https://from-str.com/b']);
+    });
+
+    it('startUrlsFromFunction receives hook context with io, input, state, sendRequest', async () => {
+      let receivedCtx: any;
+      const io = createMockIO({
+        input: {
+          startUrlsFromFunction: (ctx: any) => {
+            receivedCtx = ctx;
+            return [];
+          },
+        },
+      });
+
+      await runCrawleeOne({
+        actorType: 'basic',
+        actorConfig: {
+          io,
+          routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+        },
+        onReady: vi.fn(),
+      });
+
+      expect(receivedCtx).toBeDefined();
+      expect(receivedCtx.io).toBe(io);
+      expect(receivedCtx.input).toBeDefined();
+      expect(receivedCtx.state).toBeDefined();
+      expect(typeof receivedCtx.sendRequest).toBe('function');
+      expect(typeof receivedCtx.itemCacheKey).toBe('function');
+    });
+
+    it('combines startUrls with startUrlsFromFunction', async () => {
+      let capturedStartUrls: any;
+      const io = createMockIO({
+        input: {
+          startUrls: ['https://static.com'],
+          startUrlsFromFunction: () => ['https://dynamic.com'],
+        },
+      });
+
+      await runCrawleeOne({
+        actorType: 'basic',
+        actorConfig: {
+          io,
+          routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+        },
+        onReady: async (actor) => {
+          capturedStartUrls = actor.startUrls;
+        },
+      });
+
+      expect(capturedStartUrls).toEqual(['https://static.com', 'https://dynamic.com']);
+    });
+
+    it('startUrlsFromFunction string can use io from hook context', async () => {
+      let capturedStartUrls: any;
+      const mockDataset = createMockDataset({
+        getItems: vi.fn().mockResolvedValue([{ url: 'https://dataset-url.com' }]),
+      });
+      const io = createMockIO({
+        input: {
+          startUrlsFromFunction: `async ({ io }) => {
+            const ds = await io.openDataset('test-ds');
+            const items = await ds.getItems();
+            return items.map((item) => item.url);
+          }`,
+        },
+      });
+      vi.mocked(io.openDataset).mockResolvedValue(mockDataset);
+
+      await runCrawleeOne({
+        actorType: 'basic',
+        actorConfig: {
+          io,
+          routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+        },
+        onReady: async (actor) => {
+          capturedStartUrls = actor.startUrls;
+        },
+      });
+
+      expect(io.openDataset).toHaveBeenCalledWith('test-ds');
+      expect(capturedStartUrls).toEqual(['https://dataset-url.com']);
+    });
+
+    it('throws when startUrlsFromFunction returns non-array', async () => {
+      const io = createMockIO({
+        input: {
+          startUrlsFromFunction: () => 'not-an-array' as any,
+        },
+      });
+
+      await expect(
+        runCrawleeOne({
+          actorType: 'basic',
+          actorConfig: {
+            io,
+            routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+          },
+          onReady: vi.fn(),
+        })
+      ).rejects.toThrow('must return an array');
+    });
   });
 
   describe('scoped functions', () => {
