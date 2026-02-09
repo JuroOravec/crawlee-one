@@ -222,6 +222,8 @@ export default async function validateSomething(): Promise<void> {
 3. Commit, push, and create a GitHub Release.
 4. The release workflow automatically publishes to npm.
 
+Tags follow the format `v{version}` (e.g. `v1.2.3`). In a monorepo setup, use `{package-name}@{version}` instead.
+
 ## Further reading
 
 - [CONTRIBUTING.md](../../CONTRIBUTING.md) -- how to submit PRs and report bugs
