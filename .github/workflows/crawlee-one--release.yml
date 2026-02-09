@@ -2,10 +2,20 @@
 #
 # Tag format: crawlee-one@{version} (e.g. crawlee-one@3.1.0)
 #
-# Prerequisites:
-# - Add NPM_TOKEN as a repository secret (Settings > Secrets and variables > Actions).
-#   Generate the token at https://www.npmjs.com/ > Access Tokens > Generate New Token.
-#   Use "Classic" token with type "Automation" -- this skips OTP and works in CI.
+# Authentication (OIDC -- tokenless):
+#   Uses npm trusted publishing via OIDC. No NPM_TOKEN secret is needed.
+#   npm CLI v11+ handles authentication automatically using the GitHub Actions
+#   OIDC identity token (id-token: write permission).
+#
+#   Setup (one-time):
+#     Configure at npmjs.com > package Settings > Publishing access > Add trusted publisher.
+#     Set repository: JuroOravec/crawlee-one, workflow: crawlee-one--release.yml.
+#
+#   Fallback (if OIDC fails):
+#     Add NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} to the publish step env.
+#     Generate the token at npmjs.com > Access Tokens > Bypass 2FA/OTP.
+#     Store as NPM_TOKEN in GitHub repo secrets.
+#     Access tokens expire after max 90 days -- rotate before expiry.
 
 name: "crawlee-one: Release"
 
@@ -59,8 +69,13 @@ jobs:
             echo "tag=latest" >> "$GITHUB_OUTPUT"
           fi
 
+      # NOTE: pnpm does NOT support OIDC yet, so we need to use npm to publish.
+      # See https://github.com/pnpm/pnpm/pull/10092
+
+      # Node 22 ships npm v10; OIDC trusted publishing requires npm v11.5.1+
+      - name: Upgrade npm for OIDC support
+        run: npm install -g npm@11
+
       - name: Publish to npm
         working-directory: packages/crawlee-one
-        run: pnpm publish --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }} --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }}
