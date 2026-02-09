@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneKeyValueStore
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:178](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L178)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:178](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L178)
 
 Interface for storing and retrieving data in/from KeyValueStore.
 
@@ -22,7 +22,7 @@ drop-in replacement with other integrations.
 
 > **clear**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:223](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L223)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:223](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L223)
 
 Removes all entries from the store.
 
@@ -36,7 +36,7 @@ Removes all entries from the store.
 
 > **drop**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:221](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L221)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:221](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L221)
 
 Removes the key-value store either from the cloud storage or from the local directory,
 depending on the mode of operation.
@@ -51,7 +51,7 @@ depending on the mode of operation.
 
 > **setValue**: (`key`, `value`, `options?`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:209](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L209)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:209](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L209)
 
 Saves or deletes a record in the key-value store. The function returns a promise that
 resolves once the record has been saved or deleted.
@@ -93,7 +93,7 @@ Specifies a custom MIME content type of the record.
 
 > **getValue**\<`T`\>(`key`, `defaultValue`): `Promise`\<`T`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:195](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L195)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:195](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L195)
 
 Gets a value from the key-value store.
 

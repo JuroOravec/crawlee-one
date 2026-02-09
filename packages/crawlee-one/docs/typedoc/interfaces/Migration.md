@@ -6,7 +6,7 @@
 
 # Interface: Migration
 
-Defined in: [packages/crawlee-one/src/lib/migrate/types.ts:5](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/migrate/types.ts#L5)
+Defined in: [packages/crawlee-one/src/lib/migrate/types.ts:5](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/migrate/types.ts#L5)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/crawlee-one/src/lib/migrate/types.ts:5](https://github.com
 
 > **migrate**: (`client`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/migrate/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/migrate/types.ts#L6)
+Defined in: [packages/crawlee-one/src/lib/migrate/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/migrate/types.ts#L6)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [packages/crawlee-one/src/lib/migrate/types.ts:6](https://github.com
 
 > **unmigrate**: (`client`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/migrate/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/migrate/types.ts#L7)
+Defined in: [packages/crawlee-one/src/lib/migrate/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/migrate/types.ts#L7)
 
 #### Parameters
 

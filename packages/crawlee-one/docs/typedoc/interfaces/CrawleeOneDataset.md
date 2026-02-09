@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneDataset\<T\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:147](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L147)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:147](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L147)
 
 Interface for storing and retrieving data in/from Dataset
 
@@ -25,7 +25,7 @@ drop-in replacement with other integrations.
 
 > **getItemCount**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`number` \| `null`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:166](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L166)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:166](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L166)
 
 Returns the count of items in the dataset.
 
@@ -39,7 +39,7 @@ Returns the count of items in the dataset.
 
 > **getItems**: (`options?`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`[]\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:162](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L162)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:162](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L162)
 
 Returns the items in the dataset based on the provided parameters.
 
@@ -59,7 +59,7 @@ Returns the items in the dataset based on the provided parameters.
 
 > **pushData**: (`data`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:153](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L153)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:153](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L153)
 
 Stores an object or an array of objects to the dataset. The function returns a promise
 that resolves when the operation finishes. It has no result, but throws on invalid args

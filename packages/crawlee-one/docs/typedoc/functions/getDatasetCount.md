@@ -8,7 +8,7 @@
 
 > **getDatasetCount**(`datasetNameOrId?`, `options?`): `Promise`\<`number` \| `null`\>
 
-Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:12](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/dataset.ts#L12)
+Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:12](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L12)
 
 Given a Dataset ID, get the number of entries already in the Dataset.
 

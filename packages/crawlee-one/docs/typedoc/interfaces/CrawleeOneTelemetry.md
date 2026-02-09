@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneTelemetry\<T, THandlerOptions\>
 
-Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:17](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/telemetry/types.ts#L17)
+Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:17](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/telemetry/types.ts#L17)
 
 Interface for storing and retrieving:
 - Scraped data
@@ -32,7 +32,7 @@ drop-in replacement with other integrations.
 
 > **onSendErrorToTelemetry**: (`error`, `report`, `options`, `ctx`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:22](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/telemetry/types.ts#L22)
+Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:22](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/telemetry/types.ts#L22)
 
 #### Parameters
 
@@ -62,7 +62,7 @@ Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:22](https://github.
 
 > **setup**: (`actor`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/telemetry/types.ts#L21)
+Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/telemetry/types.ts#L21)
 
 #### Parameters
 

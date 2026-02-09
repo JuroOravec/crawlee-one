@@ -6,7 +6,7 @@
 
 # Interface: StartUrlsActorInput
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:93](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/input.ts#L93)
+Defined in: [packages/crawlee-one/src/lib/input.ts:93](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L93)
 
 Common input fields for defining URLs to scrape
 
@@ -16,7 +16,7 @@ Common input fields for defining URLs to scrape
 
 > `optional` **startUrls**: [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:95](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/input.ts#L95)
+Defined in: [packages/crawlee-one/src/lib/input.ts:95](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L95)
 
 URLs to start with, defined manually as a list of strings or crawler requests
 
@@ -26,7 +26,7 @@ URLs to start with, defined manually as a list of strings or crawler requests
 
 > `optional` **startUrlsFromDataset**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:101](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/input.ts#L101)
+Defined in: [packages/crawlee-one/src/lib/input.ts:101](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L101)
 
 Import starting URLs from an existing Dataset.
 
@@ -38,7 +38,7 @@ String is in the format `datasetID#field` (e.g. `datasetid123#url`).
 
 > `optional` **startUrlsFromFunction**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<\[\], [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]\>
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:118](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/input.ts#L118)
+Defined in: [packages/crawlee-one/src/lib/input.ts:118](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L118)
 
 Import or generate starting URLs using a custom function.
 

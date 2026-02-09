@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneIO\<TEnv, TReport, TMetadata\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:23](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L23)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L23)
 
 Interface for storing and retrieving:
 - Scraped data
@@ -36,7 +36,7 @@ drop-in replacement with other integrations.
 
 > **createDefaultProxyConfiguration**: \<`T`\>(`input`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`ProxyConfiguration` \| `undefined`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:128](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L128)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:128](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L128)
 
 Creates a proxy configuration and returns a promise resolving to an instance of
 ProxyConfiguration that is already initialized.
@@ -70,7 +70,7 @@ For more details and code examples, see ProxyConfiguration.
 
 > **generateEntryMetadata**: \<`Ctx`\>(`ctx`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`TMetadata`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L138)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:138](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L138)
 
 Generate object with info on current context, which will be appended to the scraped entry
 
@@ -96,7 +96,7 @@ Generate object with info on current context, which will be appended to the scra
 
 > **generateErrorReport**: (`input`, `options`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`TReport`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:133](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L133)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:133](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L133)
 
 Generate object with info on current context, which will be send to the error Dataset
 
@@ -120,7 +120,7 @@ Generate object with info on current context, which will be send to the error Da
 
 > **getInput**: \<`Input`\>() => `Promise`\<`Input` \| `null`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:57](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L57)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:57](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L57)
 
 Returns a promise of an object with the crawler input. E.g. In Apify, retrieves the actor input value from
 the default KeyValueStore associated with the current actor run.
@@ -141,7 +141,7 @@ the default KeyValueStore associated with the current actor run.
 
 > **isTelemetryEnabled**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:131](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L131)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:131](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L131)
 
 #### Returns
 
@@ -153,7 +153,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:131](https://git
 
 > **openDataset**: (`id?`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneDataset`](CrawleeOneDataset.md)\<`object`\>\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:35](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L35)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:35](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L35)
 
 Opens a dataset and returns a promise resolving to an instance of the [CrawleeOneDataset](CrawleeOneDataset.md).
 
@@ -177,7 +177,7 @@ the local filesystem or in the cloud.
 
 > **openKeyValueStore**: (`id?`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneKeyValueStore`](CrawleeOneKeyValueStore.md)\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:52](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L52)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:52](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L52)
 
 Opens a key-value store and returns a promise resolving to an instance of the [CrawleeOneKeyValueStore](CrawleeOneKeyValueStore.md).
 
@@ -201,7 +201,7 @@ either on a local filesystem or in the cloud.
 
 > **openRequestQueue**: (`id?`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneRequestQueue`](CrawleeOneRequestQueue.md)\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:44](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L44)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:44](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L44)
 
 Opens a request queue and returns a promise resolving to an instance of the [CrawleeOneRequestQueue](CrawleeOneRequestQueue.md).
 
@@ -226,7 +226,7 @@ breadth-first and depth-first crawling orders.
 
 > **runInContext**: (`userFunc`, `options?`) => `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:116](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L116)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:116](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L116)
 
 Equivalent of Actor.main.
 
@@ -276,7 +276,7 @@ The `Actor.main()` function performs the following actions:
 
 > **triggerDownstreamCrawler**: \<`TInput`\>(`targetActorId`, `input?`, `options?`) => `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:74](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/integrations/types.ts#L74)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:74](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L74)
 
 Equivalent of Actor.metamorph.
 

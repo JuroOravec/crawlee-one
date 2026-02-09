@@ -6,7 +6,7 @@
 
 # Interface: ListingPageScraperContext\<Ctx, UrlType\>
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:42](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L42)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:42](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L42)
 
 ## Type Parameters
 
@@ -24,7 +24,7 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:42](https://g
 
 > **abort**: () => `void`
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:50](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L50)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:50](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L50)
 
 Call this function from any callback to stop scraping
 
@@ -38,7 +38,7 @@ Call this function from any callback to stop scraping
 
 > **context**: `Ctx`
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:43](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L43)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:43](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L43)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:43](https://g
 
 > **filters**: [`ListingPageFilter`](ListingPageFilter.md)[]
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:46](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L46)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:46](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L46)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:46](https://g
 
 > **loadFilterState**: () => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:48](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L48)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:48](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L48)
 
 Use this if you need to load filters again (eg after reloading page manually)
 
@@ -68,7 +68,7 @@ Use this if you need to load filters again (eg after reloading page manually)
 
 > **log**: [`ListingLogger`](ListingLogger.md)
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:44](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L44)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:44](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L44)
 
 ***
 
@@ -76,4 +76,4 @@ Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:44](https://g
 
 > **startUrl**: `UrlType`
 
-Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:45](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L45)
+Defined in: [packages/crawlee-one/src/lib/actions/scrapeListing.ts:45](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actions/scrapeListing.ts#L45)

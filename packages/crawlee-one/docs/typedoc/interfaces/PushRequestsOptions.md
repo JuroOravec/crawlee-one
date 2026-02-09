@@ -6,7 +6,7 @@
 
 # Interface: PushRequestsOptions\<T\>
 
-Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:9](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushRequests.ts#L9)
+Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:9](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushRequests.ts#L9)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:9](https://github.c
 
 > `optional` **filter**: (`req`) => `unknown`
 
-Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:35](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushRequests.ts#L35)
+Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:35](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushRequests.ts#L35)
 
 Option to filter a request before pushing it to the RequestQueue.
 
@@ -42,7 +42,7 @@ This serves mainly to allow users to filter the requests from actor input UI.
 
 > `optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)\<`any`, `any`, `object`\>
 
-Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:12](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushRequests.ts#L12)
+Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:12](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushRequests.ts#L12)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:12](https://github.
 
 > `optional` **log**: `Log`
 
-Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:13](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushRequests.ts#L13)
+Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:13](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushRequests.ts#L13)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:13](https://github.
 
 > `optional` **maxCount**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:23](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushRequests.ts#L23)
+Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushRequests.ts#L23)
 
 If set, only at most this many requests will be added to the RequestQueue.
 
@@ -74,7 +74,7 @@ will be processed.
 
 > `optional` **queueOptions**: `RequestQueueOperationOptions`
 
-Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:40](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushRequests.ts#L40)
+Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:40](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushRequests.ts#L40)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:40](https://github.
 
 > `optional` **requestQueueId**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:37](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushRequests.ts#L37)
+Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:37](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushRequests.ts#L37)
 
 ID of the RequestQueue to which the data should be pushed
 
@@ -92,7 +92,7 @@ ID of the RequestQueue to which the data should be pushed
 
 > `optional` **transform**: (`req`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`\>
 
-Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:29](https://github.com/JuroOravec/crawlee-one/blob/21f97db438b62ef45add1d44924b7781b5721667/packages/crawlee-one/src/lib/io/pushRequests.ts#L29)
+Defined in: [packages/crawlee-one/src/lib/io/pushRequests.ts:29](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushRequests.ts#L29)
 
 Option to freely transform a request before pushing it to the RequestQueue.
 

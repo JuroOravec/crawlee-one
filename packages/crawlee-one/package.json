@@ -65,7 +65,7 @@
     "coverage": "vitest run --coverage",
     "bench": "vitest bench --run",
     "bench:gen": "tsx benchmarks/run-bench.ts generate",
-    "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --out ./docs/typedoc"
+    "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
   },
   "dependencies": {
     "commander": "^14.0.3",
