@@ -1,6 +1,6 @@
-# Publish crawlee-one to npm when a GitHub Release with a matching tag is published.
+# Publish portadom to npm when a GitHub Release with a matching tag is published.
 #
-# Tag format: crawlee-one@{version} (e.g. crawlee-one@3.1.0)
+# Tag format: portadom@{version} (e.g. portadom@2.0.0)
 #
 # Authentication (OIDC -- tokenless):
 #   Uses npm trusted publishing via OIDC. No NPM_TOKEN secret is needed.
@@ -9,7 +9,7 @@
 #
 #   Setup (one-time):
 #     Configure at npmjs.com > package Settings > Publishing access > Add trusted publisher.
-#     Set repository: JuroOravec/crawlee-one, workflow: crawlee-one--release.yml.
+#     Set repository: JuroOravec/crawlee-one, workflow: portadom--release.yml.
 #
 #   Fallback (if OIDC fails):
 #     Add NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} to the publish step env.
@@ -19,7 +19,7 @@
 #
 # Read more on https://docs.npmjs.com/trusted-publishers
 
-name: "crawlee-one: Release"
+name: "portadom: Release"
 
 on:
   release:
@@ -27,7 +27,7 @@ on:
 
 jobs:
   publish:
-    if: startsWith(github.event.release.tag_name, 'crawlee-one@')
+    if: startsWith(github.event.release.tag_name, 'portadom@')
     runs-on: ubuntu-latest
 
     permissions:
@@ -50,17 +50,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Copy README into package
-        run: cp README.md packages/crawlee-one/README.md
-
       - name: Build
-        run: pnpm build
+        run: pnpm --filter portadom build
 
       # Extract and format the npm dist-tag based on the version
-      # e.g. 1.0.0-alpha.1 -> alpha
+      # e.g. 2.0.0-alpha.1 -> alpha
       - name: Determine npm dist-tag
         id: dist-tag
-        working-directory: packages/crawlee-one
+        working-directory: packages/portadom
         run: |
           VERSION=$(node -p "require('./package.json').version")
           if [[ "$VERSION" == *-* ]]; then
@@ -79,5 +76,5 @@ jobs:
         run: npm install -g npm@11
 
       - name: Publish to npm
-        working-directory: packages/crawlee-one
+        working-directory: packages/portadom
         run: npm publish --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }}

@@ -18,6 +18,12 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+  # Portadom package dependencies
+  - package-ecosystem: "npm"
+    directory: "/packages/portadom"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
   # GitHub Actions dependencies
   - package-ecosystem: "github-actions"
     directory: "/"

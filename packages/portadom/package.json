@@ -1,0 +1,69 @@
+{
+  "name": "portadom",
+  "version": "2.0.0",
+  "type": "module",
+  "private": false,
+  "description": "Write scraping and extraction logic once. Run it on Cheerio, Playwright, or the Browser API. Swap engines when requirements change, no rewrite needed",
+  "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
+  "homepage": "https://github.com/JuroOravec/crawlee-one/tree/main/packages/portadom#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuroOravec/crawlee-one.git",
+    "directory": "packages/portadom"
+  },
+  "bugs": {
+    "url": "https://github.com/JuroOravec/crawlee-one/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "dom",
+    "manipulation",
+    "browser",
+    "cheerio",
+    "playwright",
+    "crawler",
+    "scraper",
+    "portadom"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "tsx ./src/index.ts",
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
+  },
+  "dependencies": {
+    "domhandler": "^5.0.3"
+  },
+  "peerDependencies": {
+    "cheerio": "^1.0.0",
+    "playwright": "^1.44.0"
+  },
+  "devDependencies": {
+    "cheerio": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "cheerio": {
+      "optional": true
+    },
+    "playwright": {
+      "optional": true
+    }
+  }
+}

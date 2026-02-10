@@ -6,15 +6,15 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "pnpm --filter crawlee-one build",
+    "build": "pnpm -r build",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
     "lint:fix": "pnpm -r lint:fix",
-    "coverage": "pnpm --filter crawlee-one coverage",
-    "bench": "pnpm --filter crawlee-one bench",
-    "bench:gen": "pnpm --filter crawlee-one bench:gen",
+    "coverage": "pnpm -r coverage",
+    "bench": "pnpm -r bench",
+    "bench:gen": "pnpm -r bench:gen",
     "validate": "tsx scripts/validate/index.ts",
-    "docs:gen": "pnpm --filter crawlee-one docs:gen"
+    "docs:gen": "pnpm -r docs:gen"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
