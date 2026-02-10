@@ -6,7 +6,7 @@
 
 # Interface: Portadom\<El, TNewEl\>
 
-Defined in: dom/types.ts:23
+Defined in: [dom/types.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L23)
 
 Common interface for working with DOM despite different environments.
 
@@ -32,7 +32,7 @@ This common interfaces makes the scraping code more portable between the two.
 
 > **attr**: (`attrName`, `options?`) => `MaybePromise`\<`string` \| `null`\>
 
-Defined in: dom/types.ts:39
+Defined in: [dom/types.ts:39](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L39)
 
 Get element's attribute
 
@@ -58,7 +58,7 @@ Get element's attribute
 
 > **attrs**: \<`T`\>(`attrNames`, `options?`) => `MaybePromise`\<`Record`\<`T`, `string` \| `null`\>\>
 
-Defined in: dom/types.ts:41
+Defined in: [dom/types.ts:41](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L41)
 
 Get element's attributes
 
@@ -90,7 +90,7 @@ Get element's attributes
 
 > **children**: \<`TFindEl`\>() => [`PortadomArrayPromise`](PortadomArrayPromise.md)\<`TFindEl`\>
 
-Defined in: dom/types.ts:81
+Defined in: [dom/types.ts:81](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L81)
 
 Get element's children
 
@@ -110,7 +110,7 @@ Get element's children
 
 > **closest**: \<`TFindEl`\>(`selector`) => [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-Defined in: dom/types.ts:77
+Defined in: [dom/types.ts:77](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L77)
 
 Get a single ancestor (or itself) matching the selector
 
@@ -136,7 +136,7 @@ Get a single ancestor (or itself) matching the selector
 
 > **findMany**: \<`TFindEl`\>(`selector`) => [`PortadomArrayPromise`](PortadomArrayPromise.md)\<`TFindEl`\>
 
-Defined in: dom/types.ts:75
+Defined in: [dom/types.ts:75](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L75)
 
 Get all descendants matching the selector
 
@@ -162,7 +162,7 @@ Get all descendants matching the selector
 
 > **findOne**: \<`TFindEl`\>(`selector`) => [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-Defined in: dom/types.ts:73
+Defined in: [dom/types.ts:73](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L73)
 
 Get a single descendant matching the selector
 
@@ -188,7 +188,7 @@ Get a single descendant matching the selector
 
 > **getCommonAncestor**: \<`TFindEl`\>(`otherEl`) => [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-Defined in: dom/types.ts:91
+Defined in: [dom/types.ts:91](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L91)
 
 Given two elements, return closest ancestor element that encompases them both,
 or `null` if none such found.
@@ -215,7 +215,7 @@ or `null` if none such found.
 
 > **getCommonAncestorFromSelector**: \<`TFindEl`\>(`selector`) => [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-Defined in: dom/types.ts:97
+Defined in: [dom/types.ts:97](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L97)
 
 Given a selector, find all DOM elements that match the selector,
 and return closest ancestor element that encompases them all,
@@ -243,7 +243,7 @@ or `null` if none such found.
 
 > **href**: (`options?`) => `MaybePromise`\<`string` \| `null`\>
 
-Defined in: dom/types.ts:58
+Defined in: [dom/types.ts:58](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L58)
 
 Get element's href
 
@@ -263,7 +263,7 @@ Get element's href
 
 > **map**: \<`TVal`\>(`map`) => `MaybePromise`\<`TVal`\>
 
-Defined in: dom/types.ts:66
+Defined in: [dom/types.ts:66](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L66)
 
 Freely modify the underlying DOM node
 
@@ -289,7 +289,7 @@ Freely modify the underlying DOM node
 
 > **node**: `El` \| `null`
 
-Defined in: dom/types.ts:24
+Defined in: [dom/types.ts:24](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L24)
 
 ***
 
@@ -297,7 +297,7 @@ Defined in: dom/types.ts:24
 
 > **nodeName**: () => `MaybePromise`\<`string` \| `null`\>
 
-Defined in: dom/types.ts:62
+Defined in: [dom/types.ts:62](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L62)
 
 Get element's nodeName
 
@@ -311,7 +311,7 @@ Get element's nodeName
 
 > **parent**: \<`TFindEl`\>() => [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-Defined in: dom/types.ts:79
+Defined in: [dom/types.ts:79](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L79)
 
 Get element's parent
 
@@ -331,7 +331,7 @@ Get element's parent
 
 > **prop**: \<`R`\>(`propName`, `options?`) => `MaybePromise`\<`R`\>
 
-Defined in: dom/types.ts:46
+Defined in: [dom/types.ts:46](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L46)
 
 Get element's property
 
@@ -365,7 +365,7 @@ Single or nested prop path
 
 > **props**: \<`R`\>(`propName`, `options?`) => `MaybePromise`\<`R`\>
 
-Defined in: dom/types.ts:52
+Defined in: [dom/types.ts:52](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L52)
 
 Get element's properties
 
@@ -399,7 +399,7 @@ List of single or nested prop paths
 
 > **remove**: () => `MaybePromise`\<`void`\>
 
-Defined in: dom/types.ts:83
+Defined in: [dom/types.ts:83](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L83)
 
 Remove the element
 
@@ -413,7 +413,7 @@ Remove the element
 
 > **root**: \<`TFindEl`\>() => [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-Defined in: dom/types.ts:85
+Defined in: [dom/types.ts:85](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L85)
 
 Get root element
 
@@ -433,7 +433,7 @@ Get root element
 
 > **src**: (`options?`) => `MaybePromise`\<`string` \| `null`\>
 
-Defined in: dom/types.ts:60
+Defined in: [dom/types.ts:60](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L60)
 
 Get element's src
 
@@ -453,7 +453,7 @@ Get element's src
 
 > **text**: (`options?`) => `MaybePromise`\<`string` \| `null`\>
 
-Defined in: dom/types.ts:31
+Defined in: [dom/types.ts:31](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L31)
 
 Get element's text (trimmed)
 
@@ -475,7 +475,7 @@ Get element's text (trimmed)
 
 > **textAsLower**: (`options?`) => `MaybePromise`\<`string` \| `null`\>
 
-Defined in: dom/types.ts:35
+Defined in: [dom/types.ts:35](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L35)
 
 Get element's text as lowercase (trimmed)
 
@@ -497,7 +497,7 @@ Get element's text as lowercase (trimmed)
 
 > **textAsNumber**: (`options?`) => `MaybePromise`\<`number` \| `null`\>
 
-Defined in: dom/types.ts:37
+Defined in: [dom/types.ts:37](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L37)
 
 Get element's text and convert it to number
 
@@ -517,7 +517,7 @@ Get element's text and convert it to number
 
 > **textAsUpper**: (`options?`) => `MaybePromise`\<`string` \| `null`\>
 
-Defined in: dom/types.ts:33
+Defined in: [dom/types.ts:33](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L33)
 
 Get element's text as uppercase (trimmed)
 
@@ -539,7 +539,7 @@ Get element's text as uppercase (trimmed)
 
 > **url**: () => `MaybePromise`\<`string` \| `null`\>
 
-Defined in: dom/types.ts:64
+Defined in: [dom/types.ts:64](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L64)
 
 Get URL of website associated with the DOM
 

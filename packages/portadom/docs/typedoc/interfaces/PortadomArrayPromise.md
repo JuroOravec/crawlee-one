@@ -6,7 +6,7 @@
 
 # Interface: PortadomArrayPromise\<El\>
 
-Defined in: dom/types.ts:358
+Defined in: [dom/types.ts:358](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L358)
 
 Wrapper for a Promise that resolves to an Array of [Portadom](Portadom.md) instances. This allows us to chain
 Portadom methods before the Promise is resolved.
@@ -23,7 +23,7 @@ Portadom methods before the Promise is resolved.
 
 > **at**: (...`args`) => [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-Defined in: dom/types.ts:367
+Defined in: [dom/types.ts:367](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L367)
 
 Wrapper for Array.at that returns the resulting item as [PortadomPromise](PortadomPromise.md).
 
@@ -43,7 +43,7 @@ Wrapper for Array.at that returns the resulting item as [PortadomPromise](Portad
 
 > **concat**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:373
+Defined in: [dom/types.ts:373](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L373)
 
 Wrapper for Array.concat that returns the resulting array wrapped in PortadomArrayPromise.
 
@@ -65,7 +65,7 @@ NOTE: The concat values are expected to be [Portadom](Portadom.md) instances
 
 > **copyWithin**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:377
+Defined in: [dom/types.ts:377](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L377)
 
 Wrapper for Array.copyWithin that returns the resulting array wrapped in PortadomArrayPromise.
 
@@ -85,7 +85,7 @@ Wrapper for Array.copyWithin that returns the resulting array wrapped in Portado
 
 > **entries**: (...`args`) => `Promise`\<`IterableIterator`\<\[`number`, [`Portadom`](Portadom.md)\<`El`, `El`\>\], `any`, `any`\>\>
 
-Defined in: dom/types.ts:383
+Defined in: [dom/types.ts:383](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L383)
 
 Wrapper for Array.entries.
 
@@ -107,7 +107,7 @@ NOTE: Does NOT return an instance of PortadomArrayPromise
 
 > **every**: (...`args`) => `Promise`\<`boolean`\>
 
-Defined in: dom/types.ts:387
+Defined in: [dom/types.ts:387](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L387)
 
 Wrapper for Array.every.
 
@@ -127,7 +127,7 @@ Wrapper for Array.every.
 
 > **fill**: \<`U`\>(...`args`) => `Promise`\<`U`[]\>
 
-Defined in: dom/types.ts:395
+Defined in: [dom/types.ts:395](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L395)
 
 Wrapper for Array.fill.
 
@@ -157,7 +157,7 @@ NOTE2: Unlike Array.fill, this option doesn't allow to specify `start` and `end`
 
 > **filter**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:399
+Defined in: [dom/types.ts:399](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L399)
 
 Wrapper for Array.filter that returns the resulting array wrapped in PortadomArrayPromise.
 
@@ -177,7 +177,7 @@ Wrapper for Array.filter that returns the resulting array wrapped in PortadomArr
 
 > **filterAsyncParallel**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:543
+Defined in: [dom/types.ts:543](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L543)
 
 Similar to Array.filter, but awaits for Promises. Items are handled all in parallel.
 
@@ -199,7 +199,7 @@ Returns the resulting array wrapped in PortadomArrayPromise.
 
 > **filterAsyncSerial**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:534
+Defined in: [dom/types.ts:534](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L534)
 
 Similar to Array.filter, but awaits for Promises. Items are handled one-by-one.
 
@@ -221,7 +221,7 @@ Returns the resulting array wrapped in PortadomArrayPromise.
 
 > **find**: (...`args`) => [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-Defined in: dom/types.ts:401
+Defined in: [dom/types.ts:401](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L401)
 
 Wrapper for Array.find that returns the resulting item as [PortadomPromise](PortadomPromise.md).
 
@@ -241,7 +241,7 @@ Wrapper for Array.find that returns the resulting item as [PortadomPromise](Port
 
 > **findAsyncSerial**: (...`args`) => [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-Defined in: dom/types.ts:552
+Defined in: [dom/types.ts:552](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L552)
 
 Similar to Array.find, but awaits for Promises. Items are handled one-by-one.
 
@@ -263,7 +263,7 @@ Returns the resulting item as [PortadomPromise](PortadomPromise.md).
 
 > **findIndex**: (...`args`) => `Promise`\<`number`\>
 
-Defined in: dom/types.ts:403
+Defined in: [dom/types.ts:403](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L403)
 
 Wrapper for Array.findIndex.
 
@@ -283,7 +283,7 @@ Wrapper for Array.findIndex.
 
 > **flat**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:405
+Defined in: [dom/types.ts:405](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L405)
 
 Wrapper for Array.flat that returns the resulting array wrapped in PortadomArrayPromise.
 
@@ -303,7 +303,7 @@ Wrapper for Array.flat that returns the resulting array wrapped in PortadomArray
 
 > **flatMap**: \<`U`, `This`\>(...`args`) => `Promise`\<`U`[]\>
 
-Defined in: dom/types.ts:411
+Defined in: [dom/types.ts:411](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L411)
 
 Wrapper for Array.flatMap.
 
@@ -335,7 +335,7 @@ NOTE: Mapped values can be anything, so result is NOT wrapped in an instance of 
 
 > **forEach**: (...`args`) => `Promise`\<`void`\>
 
-Defined in: dom/types.ts:416
+Defined in: [dom/types.ts:416](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L416)
 
 Wrapper for Array.forEach.
 
@@ -355,7 +355,7 @@ Wrapper for Array.forEach.
 
 > **forEachAsyncParallel**: (...`args`) => `Promise`\<`void`\>
 
-Defined in: dom/types.ts:507
+Defined in: [dom/types.ts:507](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L507)
 
 Similar to Array.forEach, but awaits for Promises. Items are handled all in parallel.
 
@@ -375,7 +375,7 @@ Similar to Array.forEach, but awaits for Promises. Items are handled all in para
 
 > **forEachAsyncSerial**: (...`args`) => `Promise`\<`void`\>
 
-Defined in: dom/types.ts:500
+Defined in: [dom/types.ts:500](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L500)
 
 Similar to Array.forEach, but awaits for Promises. Items are handled one-by-one.
 
@@ -395,7 +395,7 @@ Similar to Array.forEach, but awaits for Promises. Items are handled one-by-one.
 
 > **includes**: (...`args`) => `Promise`\<`boolean`\>
 
-Defined in: dom/types.ts:418
+Defined in: [dom/types.ts:418](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L418)
 
 Wrapper for Array.includes.
 
@@ -415,7 +415,7 @@ Wrapper for Array.includes.
 
 > **indexOf**: (...`args`) => `Promise`\<`number`\>
 
-Defined in: dom/types.ts:420
+Defined in: [dom/types.ts:420](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L420)
 
 Wrapper for Array.indexOf.
 
@@ -435,7 +435,7 @@ Wrapper for Array.indexOf.
 
 > **join**: (...`args`) => `Promise`\<`string`\>
 
-Defined in: dom/types.ts:422
+Defined in: [dom/types.ts:422](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L422)
 
 Wrapper for Array.join.
 
@@ -455,7 +455,7 @@ Wrapper for Array.join.
 
 > **keys**: (...`args`) => `Promise`\<`IterableIterator`\<`number`, `any`, `any`\>\>
 
-Defined in: dom/types.ts:424
+Defined in: [dom/types.ts:424](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L424)
 
 Wrapper for Array.keys.
 
@@ -475,7 +475,7 @@ Wrapper for Array.keys.
 
 > **lastIndexOf**: (...`args`) => `Promise`\<`number`\>
 
-Defined in: dom/types.ts:426
+Defined in: [dom/types.ts:426](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L426)
 
 Wrapper for Array.lastIndexOf.
 
@@ -495,7 +495,7 @@ Wrapper for Array.lastIndexOf.
 
 > **length**: `Promise`\<`number`\>
 
-Defined in: dom/types.ts:428
+Defined in: [dom/types.ts:428](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L428)
 
 Wrapper for Array.length.
 
@@ -505,7 +505,7 @@ Wrapper for Array.length.
 
 > **map**: \<`U`\>(...`args`) => `Promise`\<`U`[]\>
 
-Defined in: dom/types.ts:434
+Defined in: [dom/types.ts:434](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L434)
 
 Wrapper for Array.map.
 
@@ -533,7 +533,7 @@ NOTE: Mapped values can be anything, so result is NOT wrapped in an instance of 
 
 > **mapAsyncParallel**: \<`TVal`\>(...`args`) => `Promise`\<`Awaited`\<`TVal`\>[]\>
 
-Defined in: dom/types.ts:525
+Defined in: [dom/types.ts:525](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L525)
 
 Similar to Array.map, but awaits for Promises. Items are handled all in parallel.
 
@@ -561,7 +561,7 @@ NOTE: Mapped values can be anything, so result is NOT wrapped in an instance of 
 
 > **mapAsyncSerial**: \<`TVal`\>(...`args`) => `Promise`\<`Awaited`\<`TVal`\>[]\>
 
-Defined in: dom/types.ts:516
+Defined in: [dom/types.ts:516](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L516)
 
 Similar to Array.map, but awaits for Promises. Items are handled one-by-one.
 
@@ -589,7 +589,7 @@ NOTE: Mapped values can be anything, so result is NOT wrapped in an instance of 
 
 > **pop**: (...`args`) => [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-Defined in: dom/types.ts:439
+Defined in: [dom/types.ts:439](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L439)
 
 Wrapper for Array.pop that returns the resulting item as [PortadomPromise](PortadomPromise.md).
 
@@ -609,7 +609,7 @@ Wrapper for Array.pop that returns the resulting item as [PortadomPromise](Porta
 
 > **promise**: `Promise`\<[`Portadom`](Portadom.md)\<`El`, `El`\>[]\>
 
-Defined in: dom/types.ts:360
+Defined in: [dom/types.ts:360](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L360)
 
 Wrapped Promise of an array of [Portadom](Portadom.md) instances
 
@@ -619,7 +619,7 @@ Wrapped Promise of an array of [Portadom](Portadom.md) instances
 
 > **push**: (...`args`) => `Promise`\<`number`\>
 
-Defined in: dom/types.ts:445
+Defined in: [dom/types.ts:445](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L445)
 
 Wrapper for Array.push.
 
@@ -641,7 +641,7 @@ NOTE: The pushed values are expected to be [Portadom](Portadom.md) instances.
 
 > **reverse**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:465
+Defined in: [dom/types.ts:465](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L465)
 
 Wrapper for Array.reverse that returns the resulting array wrapped in PortadomArrayPromise.
 
@@ -661,7 +661,7 @@ Wrapper for Array.reverse that returns the resulting array wrapped in PortadomAr
 
 > **shift**: (...`args`) => [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-Defined in: dom/types.ts:467
+Defined in: [dom/types.ts:467](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L467)
 
 Wrapper for Array.shift that returns the resulting item as [PortadomPromise](PortadomPromise.md).
 
@@ -681,7 +681,7 @@ Wrapper for Array.shift that returns the resulting item as [PortadomPromise](Por
 
 > **slice**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:471
+Defined in: [dom/types.ts:471](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L471)
 
 Wrapper for Array.slice that returns the resulting array wrapped in PortadomArrayPromise.
 
@@ -701,7 +701,7 @@ Wrapper for Array.slice that returns the resulting array wrapped in PortadomArra
 
 > **some**: (...`args`) => `Promise`\<`boolean`\>
 
-Defined in: dom/types.ts:473
+Defined in: [dom/types.ts:473](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L473)
 
 Wrapper for Array.some.
 
@@ -721,7 +721,7 @@ Wrapper for Array.some.
 
 > **sort**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:477
+Defined in: [dom/types.ts:477](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L477)
 
 Wrapper for Array.sort that returns the resulting array wrapped in PortadomArrayPromise.
 
@@ -741,7 +741,7 @@ Wrapper for Array.sort that returns the resulting array wrapped in PortadomArray
 
 > **splice**: (...`args`) => `PortadomArrayPromise`\<`El`\>
 
-Defined in: dom/types.ts:481
+Defined in: [dom/types.ts:481](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L481)
 
 Wrapper for Array.splice that returns the resulting array wrapped in PortadomArrayPromise.
 
@@ -761,7 +761,7 @@ Wrapper for Array.splice that returns the resulting array wrapped in PortadomArr
 
 > **unshift**: (...`args`) => `Promise`\<`number`\>
 
-Defined in: dom/types.ts:487
+Defined in: [dom/types.ts:487](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L487)
 
 Wrapper for Array.unshift.
 
@@ -783,7 +783,7 @@ NOTE: The added values are expected to be [Portadom](Portadom.md) instances.
 
 > **values**: (...`args`) => `Promise`\<`IterableIterator`\<[`Portadom`](Portadom.md)\<`El`, `El`\>, `any`, `any`\>\>
 
-Defined in: dom/types.ts:489
+Defined in: [dom/types.ts:489](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L489)
 
 NOTE: Does NOT return an instance of PortadomArrayPromise
 
@@ -805,7 +805,7 @@ NOTE: Does NOT return an instance of PortadomArrayPromise
 
 > **reduce**(`callbackfn`): `Promise`\<[`Portadom`](Portadom.md)\<`El`, `El`\>\>
 
-Defined in: dom/types.ts:451
+Defined in: [dom/types.ts:451](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L451)
 
 Wrapper for Array.reduce.
 
@@ -825,7 +825,7 @@ NOTE: The reduce value can be anything, so result is NOT wrapped in an instance 
 
 > **reduce**(`callbackfn`, `initialValue`): `Promise`\<[`Portadom`](Portadom.md)\<`El`, `El`\>\>
 
-Defined in: dom/types.ts:452
+Defined in: [dom/types.ts:452](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L452)
 
 ##### Parameters
 
@@ -845,7 +845,7 @@ Defined in: dom/types.ts:452
 
 > **reduce**\<`U`\>(`callbackfn`, `initialValue`): `Promise`\<`U`\>
 
-Defined in: dom/types.ts:453
+Defined in: [dom/types.ts:453](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L453)
 
 ##### Type Parameters
 
@@ -875,7 +875,7 @@ Defined in: dom/types.ts:453
 
 > **reduceRight**(`callbackfn`): `Promise`\<[`Portadom`](Portadom.md)\<`El`, `El`\>\>
 
-Defined in: dom/types.ts:459
+Defined in: [dom/types.ts:459](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L459)
 
 Wrapper for Array.reduceRight.
 
@@ -895,7 +895,7 @@ NOTE: The reduce value can be anything, so result is NOT wrapped in an instance 
 
 > **reduceRight**(`callbackfn`, `initialValue`): `Promise`\<[`Portadom`](Portadom.md)\<`El`, `El`\>\>
 
-Defined in: dom/types.ts:460
+Defined in: [dom/types.ts:460](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L460)
 
 ##### Parameters
 
@@ -915,7 +915,7 @@ Defined in: dom/types.ts:460
 
 > **reduceRight**\<`U`\>(`callbackfn`, `initialValue`): `Promise`\<`U`\>
 
-Defined in: dom/types.ts:461
+Defined in: [dom/types.ts:461](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L461)
 
 ##### Type Parameters
 

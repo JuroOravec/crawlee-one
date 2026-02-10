@@ -8,7 +8,7 @@
 
 > **playwrightPortapage**\<`T`\>(`page`): `Promise`\<[`PlaywrightPortapage`](../type-aliases/PlaywrightPortapage.md)\<`T`\>\>
 
-Defined in: page/page.ts:30
+Defined in: [page/page.ts:30](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/page/page.ts#L30)
 
 Implementation of Portapage in Playwright
 

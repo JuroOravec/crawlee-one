@@ -8,7 +8,7 @@
 
 > **PlaywrightLocatorPortadom**\<`El`\> = [`Portadom`](../interfaces/Portadom.md)\<`El`\>
 
-Defined in: dom/dom.ts:765
+Defined in: [dom/dom.ts:765](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/dom.ts#L765)
 
 Implementation of Portadom in Playwright using Locators
 

@@ -8,7 +8,7 @@
 
 > **playwrightHandlePortadom**\<`El`\>(`node`, `page`): [`PlaywrightHandlePortadom`](../type-aliases/PlaywrightHandlePortadom.md)\<`El`\>
 
-Defined in: dom/dom.ts:454
+Defined in: [dom/dom.ts:454](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/dom.ts#L454)
 
 Implementation of Portadom in Playwright using Handles
 

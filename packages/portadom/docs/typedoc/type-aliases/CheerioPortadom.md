@@ -8,7 +8,7 @@
 
 > **CheerioPortadom**\<`El`\> = [`Portadom`](../interfaces/Portadom.md)\<`El`, `Cheerio`\<`AnyNode`\>\>
 
-Defined in: dom/dom.ts:232
+Defined in: [dom/dom.ts:232](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/dom.ts#L232)
 
 Implementation of Portadom in Cheerio
 

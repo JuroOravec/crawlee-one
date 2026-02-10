@@ -8,7 +8,7 @@
 
 > **PlaywrightPortapage**\<`T`\> = [`Portapage`](../interfaces/Portapage.md)\<`T`, `PWIST`, \{ `container`: `PWIST`\[`"container"`\]; `page`: `T`; \}\>
 
-Defined in: page/page.ts:23
+Defined in: [page/page.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/page/page.ts#L23)
 
 Implementation of Portapage in Playwright
 

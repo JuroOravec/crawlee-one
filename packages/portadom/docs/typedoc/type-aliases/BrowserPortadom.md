@@ -8,7 +8,7 @@
 
 > **BrowserPortadom**\<`El`\> = [`Portadom`](../interfaces/Portadom.md)\<`El`\>
 
-Defined in: dom/dom.ts:16
+Defined in: [dom/dom.ts:16](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/dom.ts#L16)
 
 Implementation of Portadom in browser (using Browser API)
 
