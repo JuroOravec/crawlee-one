@@ -16,7 +16,7 @@ Common input fields for defining URLs to scrape
 
 ### startUrls
 
-> **startUrls**: `ArrayField`\<`any`[]\>
+> **startUrls**: `ArrayField`\<`unknown`\>
 
 ### startUrlsFromDataset
 

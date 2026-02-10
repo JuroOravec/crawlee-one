@@ -75,15 +75,14 @@
     "lodash-es": "^4.17.23"
   },
   "peerDependencies": {
-    "@sentry/node": "^7.50.0",
-    "actor-spec": "^0.4.1",
+    "@sentry/node": ">=7.50.0",
     "apify": "^3.1.0",
-    "apify-actor-config": "^1.0.3",
+    "apify-actor-config": "workspace:*",
     "apify-client": "^2.7.0",
     "cheerio": "^1.0.0-rc.12",
     "crawlee": "^3.3.1",
     "got-scraping": "^4.0.0",
-    "joi": "^17.9.2",
+    "joi": ">=17.9.2",
     "playwright": "^1.44.0",
     "vitest": "^4.0.18"
   }

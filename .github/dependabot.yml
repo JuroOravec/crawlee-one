@@ -18,6 +18,12 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+  # Apify-actor-config package dependencies
+  - package-ecosystem: "npm"
+    directory: "/packages/apify-actor-config"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
   # Portadom package dependencies
   - package-ecosystem: "npm"
     directory: "/packages/portadom"
