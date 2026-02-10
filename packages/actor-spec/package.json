@@ -1,6 +1,6 @@
 {
   "name": "actor-spec",
-  "version": "0.5.0-rc.0",
+  "version": "0.5.0",
   "type": "module",
   "private": false,
   "description": "Publish your Apify Actors on other platforms. Define once, run anywhere.",
