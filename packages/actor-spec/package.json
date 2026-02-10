@@ -1,0 +1,55 @@
+{
+  "name": "actor-spec",
+  "version": "0.5.0-rc.0",
+  "type": "module",
+  "private": false,
+  "description": "Publish your Apify Actors on other platforms. Define once, run anywhere.",
+  "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
+  "homepage": "https://github.com/JuroOravec/crawlee-one/tree/main/packages/actor-spec#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuroOravec/crawlee-one.git",
+    "directory": "packages/actor-spec"
+  },
+  "bugs": {
+    "url": "https://github.com/JuroOravec/crawlee-one/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "actor",
+    "spec",
+    "bot",
+    "apify",
+    "scraper",
+    "actor-spec"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "actor-spec": "dist/cli.js"
+  },
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "tsx ./src/index.ts",
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
+  },
+  "dependencies": {
+    "commander": "^14.0.3"
+  }
+}
