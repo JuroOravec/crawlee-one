@@ -1,0 +1,80 @@
+# Publish actor-spec to npm when a GitHub Release with a matching tag is published.
+#
+# Tag format: actor-spec@{version} (e.g. actor-spec@1.0.0)
+#
+# Authentication (OIDC -- tokenless):
+#   Uses npm trusted publishing via OIDC. No NPM_TOKEN secret is needed.
+#   npm CLI v11+ handles authentication automatically using the GitHub Actions
+#   OIDC identity token (id-token: write permission).
+#
+#   Setup (one-time):
+#     Configure at npmjs.com > package Settings > Publishing access > Add trusted publisher.
+#     Set repository: JuroOravec/crawlee-one, workflow: actor-spec--release.yml.
+#
+#   Fallback (if OIDC fails):
+#     Add NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} to the publish step env.
+#     Generate the token at npmjs.com > Access Tokens > Bypass 2FA/OTP.
+#     Store as NPM_TOKEN in GitHub repo secrets.
+#     Access tokens expire after max 90 days -- rotate before expiry.
+#
+# Read more on https://docs.npmjs.com/trusted-publishers
+
+name: "actor-spec: Release"
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    if: startsWith(github.event.release.tag_name, 'actor-spec@')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm --filter actor-spec build
+
+      # Extract and format the npm dist-tag based on the version
+      # e.g. 1.0.0-rc.1 -> rc
+      - name: Determine npm dist-tag
+        id: dist-tag
+        working-directory: packages/actor-spec
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" == *-* ]]; then
+            # Pre-release: extract identifier (alpha, beta, rc) as the dist-tag
+            PREID=$(echo "$VERSION" | sed -E 's/.*-([a-zA-Z]+).*/\1/')
+            echo "tag=$PREID" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      # NOTE: pnpm does NOT support OIDC yet, so we need to use npm to publish.
+      # See https://github.com/pnpm/pnpm/pull/10092
+
+      # Node 22 ships npm v10; OIDC trusted publishing requires npm v11.5.1+
+      - name: Upgrade npm for OIDC support
+        run: npm install -g npm@11
+
+      - name: Publish to npm
+        working-directory: packages/actor-spec
+        run: npm publish --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }}
