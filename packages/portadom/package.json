@@ -1,6 +1,6 @@
 {
   "name": "portadom",
-  "version": "2.0.0",
+  "version": "2.0.0-rc.0",
   "type": "module",
   "private": false,
   "description": "Write scraping and extraction logic once. Run it on Cheerio, Playwright, or the Browser API. Swap engines when requirements change, no rewrite needed",
