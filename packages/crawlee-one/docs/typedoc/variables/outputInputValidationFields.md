@@ -18,7 +18,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1113](https://github.com/Juro
 
 ### outputCachePrimaryKeys
 
-> **outputCachePrimaryKeys**: `ArraySchema`\<`any`[]\>
+> **outputCachePrimaryKeys**: `ArraySchema`\<`string`[]\>
 
 ### outputCacheStoreId
 
@@ -46,7 +46,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1113](https://github.com/Juro
 
 ### outputPickFields
 
-> **outputPickFields**: `ArraySchema`\<`any`[]\>
+> **outputPickFields**: `ArraySchema`\<`string`[]\>
 
 ### outputRenameFields
 

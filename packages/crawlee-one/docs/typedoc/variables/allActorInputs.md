@@ -14,7 +14,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1041](https://github.com/Juro
 
 ### additionalMimeTypes
 
-> **additionalMimeTypes**: `ArrayField`\<`any`[]\>
+> **additionalMimeTypes**: `ArrayField`\<`unknown`\>
 
 ### errorReportingDatasetId
 
@@ -194,7 +194,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1041](https://github.com/Juro
 
 ### startUrls
 
-> **startUrls**: `ArrayField`\<`any`[]\>
+> **startUrls**: `ArrayField`\<`unknown`\>
 
 ### startUrlsFromDataset
 

@@ -1,32 +1,29 @@
-# Changelog
+# Release notes
 
-All notable changes to this project will be documented in this file.
+## v2.0.0
 
-## [2.0.0] - TBD
+_2026-02-10_
 
 Migrated from [JuroOravec/apify-actor-config](https://github.com/JuroOravec/apify-actor-config) into the [crawlee-one monorepo](https://github.com/JuroOravec/crawlee-one).
 
-### Breaking changes
+#### Breaking Changes
 
-- **ESM only** -- the package no longer ships a CommonJS build. Use `import` instead of `require`.
-- **Node >= 20** -- minimum Node.js version raised from 16 to 20.
+- **This package is now pure ESM.** It can no longer be `require()`'d from CommonJS.
+- Minimum Node.js version raised from 16 to 20.
 
-### Added
+#### Features
 
+- Updated the `ActorConfig` schema to match Apify config as of 2026-02-10
 - Test suite with >97% statement coverage (vitest).
 - TypeDoc-generated API documentation.
-- QA: test in GitHub Actions; Dependabot coverage.
-- Release workflow with npm OIDC trusted publishing.
+- Quality assurance: GitHub Actions CI, Dependabot, release workflow with npm OIDC trusted publishing.
+- Quarterly drift-check workflow to detect type drift against Apify docs.
 
-### Changed
+#### Refactor
 
 - Build system modernized: tsup (bundling) + tsc (declarations) replaces plain tsc.
 - CLI rewritten for ESM (`import()` replaces `require()`).
 
-### Removed
+## v1.0.3
 
-- CommonJS build output (`dist/cjs/`).
-
-## [1.0.3] - Previous release
-
-Last release from the standalone repository.
+_Previous release from the [standalone repository](https://github.com/JuroOravec/apify-actor-config)._

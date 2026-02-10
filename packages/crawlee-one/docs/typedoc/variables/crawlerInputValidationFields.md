@@ -14,7 +14,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1054](https://github.com/Juro
 
 ### additionalMimeTypes
 
-> **additionalMimeTypes**: `ArraySchema`\<`any`[]\>
+> **additionalMimeTypes**: `ArraySchema`\<`string`[]\>
 
 ### forceResponseEncoding
 

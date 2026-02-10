@@ -14,7 +14,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1140](https://github.com/Juro
 
 ### additionalMimeTypes
 
-> **additionalMimeTypes**: `ArraySchema`\<`any`[]\>
+> **additionalMimeTypes**: `ArraySchema`\<`string`[]\>
 
 ### errorReportingDatasetId
 
@@ -98,7 +98,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1140](https://github.com/Juro
 
 ### outputCachePrimaryKeys
 
-> **outputCachePrimaryKeys**: `ArraySchema`\<`any`[]\>
+> **outputCachePrimaryKeys**: `ArraySchema`\<`string`[]\>
 
 ### outputCacheStoreId
 
@@ -126,7 +126,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1140](https://github.com/Juro
 
 ### outputPickFields
 
-> **outputPickFields**: `ArraySchema`\<`any`[]\>
+> **outputPickFields**: `ArraySchema`\<`string`[]\>
 
 ### outputRenameFields
 

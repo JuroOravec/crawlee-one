@@ -16,7 +16,7 @@ Common input fields related to crawler setup
 
 ### additionalMimeTypes
 
-> **additionalMimeTypes**: `ArrayField`\<`any`[]\>
+> **additionalMimeTypes**: `ArrayField`\<`unknown`\>
 
 ### forceResponseEncoding
 
