@@ -1,0 +1,84 @@
+# Quarterly reminder to check apify-actor-config types against the latest Apify docs.
+#
+# There is no official Apify npm package with TypeScript types for actor.json,
+# so we maintain our own. This workflow creates a GitHub issue every quarter
+# to prompt a manual review of the Apify docs for new/changed/removed fields.
+#
+# Docs to check:
+#   - actor.json:      https://docs.apify.com/platform/actors/development/actor-definition/actor-json
+#   - Input schema:    https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1
+#   - Dataset schema:  https://docs.apify.com/platform/actors/development/actor-definition/dataset-schema
+
+name: "apify-actor-config: Drift check"
+
+on:
+  schedule:
+    # First day of every quarter: Jan 1, Apr 1, Jul 1, Oct 1 at 09:00 UTC
+    - cron: "0 9 1 1,4,7,10 *"
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+
+    steps:
+      - name: Create drift-check issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `apify-actor-config: quarterly type drift check`;
+            const today = new Date().toISOString().slice(0, 10);
+
+            // Check if an open issue with this title already exists
+            const { data: existing } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'maintenance',
+              per_page: 100,
+            });
+            const alreadyOpen = existing.some(i => i.title === title);
+            if (alreadyOpen) {
+              console.log('An open drift-check issue already exists, skipping.');
+              return;
+            }
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              labels: ['maintenance'],
+              body: [
+                `## Quarterly drift check (${today})`,
+                '',
+                'Compare the types in `packages/apify-actor-config/src/types/` against the current Apify docs and check for new, changed, or removed fields.',
+                '',
+                '### Docs to review',
+                '',
+                '| Area | Doc link | Source file |',
+                '|------|----------|-------------|',
+                '| `actor.json` config | [actor.json docs](https://docs.apify.com/platform/actors/development/actor-definition/actor-json) | `src/types/config.ts` |',
+                '| Input schema fields | [Input schema spec v1](https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1) | `src/types/inputSchema.ts` |',
+                '| Dataset / output schema | [Dataset schema](https://docs.apify.com/platform/actors/development/actor-definition/dataset-schema) | `src/types/outputSchema.ts` |',
+                '',
+                '### Checklist',
+                '',
+                '- [ ] `ActorConfig` -- any new top-level properties?',
+                '- [ ] `ActorInputSchema` -- any new root-level properties?',
+                '- [ ] Field types (string, boolean, integer, number, object, array) -- new editors, new properties, changed constraints?',
+                '- [ ] `ActorOutputSchema` / `DatasetView` / `ViewTransformation` / `ViewDisplay` -- any changes?',
+                '- [ ] Also check if Apify has published an official TypeScript types package (search npm for `@apify` actor config types)',
+                '',
+                '### If drift is found',
+                '',
+                '1. Update the types in `packages/apify-actor-config/src/types/`',
+                '2. Add/update tests',
+                '3. Update CHANGELOG.md',
+                '4. Bump the package version and release',
+              ].join('\n'),
+            });
+
+            console.log('Drift-check issue created.');
