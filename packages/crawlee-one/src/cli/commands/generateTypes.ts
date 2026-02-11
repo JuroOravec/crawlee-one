@@ -245,17 +245,24 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
 /**
  * Generate types for CrawleeOne given a config.
  *
+ * Reads the output file path from `config.types.outFile`.
+ * If the `types` section is not present in the config, generation is skipped.
+ *
  * Config can be passed directly, or as the path to the config file.
  * If the config is omitted, it is automatically searched for using CosmicConfig.
  */
-export const generateTypes = async (outfile: string, configOrPath?: CrawleeOneConfig | string) => {
+export const generateTypes = async (configOrPath?: CrawleeOneConfig | string) => {
   const config =
     !configOrPath || typeof configOrPath === 'string'
       ? await loadConfig(configOrPath)
       : configOrPath;
   validateConfig(config);
 
-  const { imports, definitions } = await parseTypesFromSchema(config!.schema);
+  if (!config?.types?.outFile) return;
+
+  const outfile = path.resolve(process.cwd(), config.types.outFile);
+
+  const { imports, definitions } = await parseTypesFromSchema(config.schema);
   const fileContent =
     Object.values(imports).join('\n') + '\n\n\n' + Object.values(definitions).join('\n\n');
 
@@ -263,5 +270,5 @@ export const generateTypes = async (outfile: string, configOrPath?: CrawleeOneCo
   await fsp.mkdir(outdir, { recursive: true });
   await fsp.writeFile(outfile, fileContent, 'utf-8');
 
-  console.log(`Done generating types to ${outfile}`);
+  console.log(`Generated types at ${outfile}`);
 };

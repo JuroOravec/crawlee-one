@@ -4,7 +4,10 @@ import path from 'node:path';
 import { getPackageJsonInfo } from '../utils/package.js';
 import { createLocalMigrator } from '../lib/migrate/localMigrator.js';
 import { loadConfig, validateConfig } from './commands/config.js';
-import { generateTypes } from './commands/codegen.js';
+import { generateTypes } from './commands/generateTypes.js';
+import { generateActor } from './commands/generateActor.js';
+import { generateActorSpec } from './commands/generateActorspec.js';
+import { generateReadme } from './commands/generateReadme.js';
 
 const pkgJson = getPackageJsonInfo(import.meta.url, ['name', 'version']);
 
@@ -15,18 +18,32 @@ program //
 
 program
   .command('generate')
-  .description('Generate CrawleeOne types based on config')
+  .alias('gen')
+  .description(
+    'Generate all configured artifacts (types, actor.json, actorspec.json, README) from config'
+  )
   .option('-c --config [config-file]', 'path to config file')
-  .requiredOption('-o --out <output-file>', 'path to output file')
   .addHelpText(
     'after',
     `
 
 Example call:
-  $ crawlee-one generate -c ./path/to/config-file -o ./path/to/output.ts`
+  $ crawlee-one generate
+  $ crawlee-one gen -c ./path/to/config-file.ts`
   )
-  .action(async ({ config: configFile, out: outFile }) => {
-    await generateTypes(outFile, configFile);
+  .action(async ({ config: configFile }) => {
+    const config = await loadConfig(configFile);
+    validateConfig(config);
+
+    if (!config) {
+      console.error('No crawlee-one config found. Create a crawlee-one.config.ts file.');
+      process.exit(1);
+    }
+
+    await generateTypes(config);
+    await generateActor(config);
+    await generateActorSpec(config);
+    await generateReadme(config);
   });
 
 program

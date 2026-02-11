@@ -36,4 +36,8 @@ export type {
 // Codegen
 export * from './types/config.js';
 export * from './cli/commands/config.js';
-export * from './cli/commands/codegen.js';
+export * from './cli/commands/generateTypes.js';
+
+// README renderers
+export { defaultReadmeRenderer } from './readme/defaultRenderer.js';
+export type { DefaultReadmeInput } from './readme/defaultRenderer.js';

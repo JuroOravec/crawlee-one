@@ -8,7 +8,7 @@
 
 > **loadConfig**(`configFilePath?`): `Promise`\<[`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md) \| `null`\>
 
-Defined in: [packages/crawlee-one/src/cli/commands/config.ts:52](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/cli/commands/config.ts#L52)
+Defined in: [packages/crawlee-one/src/cli/commands/config.ts:87](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/cli/commands/config.ts#L87)
 
 Load CrawleeOne config file. Config will be searched for using CosmicConfig.
 

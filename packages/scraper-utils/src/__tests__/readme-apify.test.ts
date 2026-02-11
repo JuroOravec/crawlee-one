@@ -1,7 +1,4 @@
-import { describe, expect, it, afterEach } from 'vitest';
-import fsp from 'fs/promises';
-import path from 'path';
-import os from 'os';
+import { describe, expect, it } from 'vitest';
 import type { ApifyScraperActorSpec, ApifyReadmeTemplatesOverrides } from '../index.js';
 import { renderApifyReadme } from '../index.js';
 
@@ -221,26 +218,13 @@ const templates: ApifyReadmeTemplatesOverrides = {
 };
 
 describe('renderApifyReadme', () => {
-  let tmpDir: string;
-  let outputPath: string;
-
-  afterEach(async () => {
-    if (tmpDir) {
-      await fsp.rm(tmpDir, { recursive: true, force: true });
-    }
-  });
-
-  it('renders a README file with expected sections', async () => {
-    tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'readme-test-'));
-    outputPath = path.join(tmpDir, 'README.md');
-
-    await renderApifyReadme({
-      filepath: outputPath,
+  it('renders a README string with expected sections', async () => {
+    const content = await renderApifyReadme({
       actorSpec,
-      templates,
+      input: { templates },
     });
 
-    const content = await fsp.readFile(outputPath, 'utf-8');
+    expect(typeof content).toBe('string');
 
     // Actor title and description
     expect(content).toContain('Test Scraper');
@@ -296,19 +280,5 @@ describe('renderApifyReadme', () => {
 
     // Legality section
     expect(content).toContain('legal to scrape');
-  });
-
-  it('writes the file to the specified path (including creating directories)', async () => {
-    tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'readme-test-'));
-    outputPath = path.join(tmpDir, 'nested', 'dir', 'README.md');
-
-    await renderApifyReadme({
-      filepath: outputPath,
-      actorSpec,
-      templates,
-    });
-
-    const stat = await fsp.stat(outputPath);
-    expect(stat.isFile()).toBe(true);
   });
 });

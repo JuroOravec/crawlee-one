@@ -196,7 +196,7 @@ npm install crawlee-one
 
 1. Read the [getting started guide](./packages/crawlee-one/docs/getting-started.md) for a full walkthrough of `crawleeOne()` and its options.
 2. See [example projects](#example-projects) for real-world usage.
-3. Managing multiple crawlers in one project? Use [codegen](./packages/crawlee-one/docs/codegen.md) to generate typed helper functions from a config file.
+3. Use [`crawlee-one gen`](./packages/crawlee-one/docs/codegen.md) to generate types, actor.json, actorspec.json, and README from a single config file.
 
 ### For end users
 
@@ -208,18 +208,18 @@ Scrapers built with CrawleeOne are configurable by the end users (via Apify plat
 
 ## Documentation
 
-| Document                                                                             | Description                                                 |
-| ------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| [Getting started](./packages/crawlee-one/docs/getting-started.md)                    | Developer guide with full `crawleeOne()` options reference. |
-| [Features](./packages/crawlee-one/docs/features.md)                                  | Complete feature catalog with code examples.                |
-| [Use cases](./packages/crawlee-one/docs/use-cases.md)                                | All 12 use cases with links to detailed guides.             |
-| [Input reference](./packages/crawlee-one/docs/reference-input.md)                    | All available input fields.                                 |
-| [Deploying to Apify](./packages/crawlee-one/docs/deploying-to-apify.md)              | Step-by-step Apify deployment guide.                        |
-| [Codegen](./packages/crawlee-one/docs/codegen.md)                                    | Generate typed crawler definitions from config.             |
-| [Integrations](./packages/crawlee-one/docs/integrations.md)                          | Custom telemetry and storage backends.                      |
-| [User guide](./packages/crawlee-one/docs/user-guide.md)                              | Guide for end users of CrawleeOne scrapers.                 |
-| [API reference](./packages/crawlee-one/docs/typedoc/globals.md)                      | Auto-generated TypeScript API docs.                         |
-| [Crawlee & Apify overview](./packages/crawlee-one/docs/scraping-workflow-summary.md) | Background on how Crawlee and Apify work.                   |
+| Document                                                                             | Description                                                    |
+| ------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| [Getting started](./packages/crawlee-one/docs/getting-started.md)                    | Developer guide with full `crawleeOne()` options reference.    |
+| [Features](./packages/crawlee-one/docs/features.md)                                  | Complete feature catalog with code examples.                   |
+| [Use cases](./packages/crawlee-one/docs/use-cases.md)                                | All 12 use cases with links to detailed guides.                |
+| [Input reference](./packages/crawlee-one/docs/reference-input.md)                    | All available input fields.                                    |
+| [Deploying to Apify](./packages/crawlee-one/docs/deploying-to-apify.md)              | Step-by-step Apify deployment guide.                           |
+| [Code generation](./packages/crawlee-one/docs/codegen.md)                            | Generate types, actor.json, actorspec, and README from config. |
+| [Integrations](./packages/crawlee-one/docs/integrations.md)                          | Custom telemetry and storage backends.                         |
+| [User guide](./packages/crawlee-one/docs/user-guide.md)                              | Guide for end users of CrawleeOne scrapers.                    |
+| [API reference](./packages/crawlee-one/docs/typedoc/globals.md)                      | Auto-generated TypeScript API docs.                            |
+| [Crawlee & Apify overview](./packages/crawlee-one/docs/scraping-workflow-summary.md) | Background on how Crawlee and Apify work.                      |
 
 ## Example projects
 

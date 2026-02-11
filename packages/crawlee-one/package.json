@@ -68,6 +68,7 @@
     "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
   },
   "dependencies": {
+    "actor-spec": "workspace:*",
     "commander": "catalog:",
     "cosmiconfig": "catalog:",
     "dotenv": "catalog:",

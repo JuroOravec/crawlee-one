@@ -4,8 +4,12 @@ import { z } from 'zod';
 import { getPackageJsonInfo } from '../../utils/package.js';
 import type {
   CrawleeOneConfig,
+  CrawleeOneConfigActor,
+  CrawleeOneConfigActorSpec,
+  CrawleeOneConfigReadme,
   CrawleeOneConfigSchema,
   CrawleeOneConfigSchemaCrawler,
+  CrawleeOneConfigTypes,
 } from '../../types/config.js';
 import { CRAWLER_TYPE } from '../../types/index.js';
 
@@ -25,12 +29,43 @@ const configSchemaSchema = z
   } satisfies Record<keyof CrawleeOneConfigSchema, z.ZodType>)
   .strict();
 
-const configSchema = z
+const configTypesSchema = z
   .object({
-    version: z.literal(1),
-    schema: configSchemaSchema,
-  } satisfies Record<keyof CrawleeOneConfig, z.ZodType>)
+    outFile: z.string().min(1),
+  } satisfies Record<keyof CrawleeOneConfigTypes, z.ZodType>)
   .strict();
+
+const configActorSchema = z
+  .object({
+    config: z.record(z.string(), z.any()),
+    outFile: z.string().min(1).optional(),
+  } satisfies Record<keyof CrawleeOneConfigActor, z.ZodType>)
+  .strict();
+
+const configActorSpecSchema = z
+  .object({
+    config: z.record(z.string(), z.any()),
+    outFile: z.string().min(1).optional(),
+  } satisfies Record<keyof CrawleeOneConfigActorSpec, z.ZodType>)
+  .strict();
+
+const configReadmeSchema = z
+  .object({
+    outFile: z.string().min(1).optional(),
+    actorSpec: z.any().optional(),
+    renderer: z.function().optional(),
+    input: z.any().optional(),
+  } satisfies Record<keyof CrawleeOneConfigReadme, z.ZodType>)
+  .strict();
+
+const configSchema = z.object({
+  version: z.literal(1),
+  schema: configSchemaSchema,
+  types: configTypesSchema.optional(),
+  actor: configActorSchema.optional(),
+  actorspec: configActorSpecSchema.optional(),
+  readme: configReadmeSchema.optional(),
+} satisfies Record<keyof CrawleeOneConfig, z.ZodType>);
 
 /**
  * Validate given CrawleeOne config.
