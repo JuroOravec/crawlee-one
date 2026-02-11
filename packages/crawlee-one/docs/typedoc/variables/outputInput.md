@@ -8,7 +8,7 @@
 
 > `const` **outputInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:861](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L861)
+Defined in: [packages/crawlee-one/src/lib/input.ts:898](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L898)
 
 Common input fields related to actor output
 
@@ -16,7 +16,7 @@ Common input fields related to actor output
 
 ### outputCacheActionOnResult
 
-> **outputCacheActionOnResult**: `StringField`\<`NonNullable`\<`"add"` \| `"remove"` \| `"overwrite"` \| `null` \| `undefined`\>, `string`\>
+> **outputCacheActionOnResult**: `StringField`\<`string`, `string`\>
 
 ### outputCachePrimaryKeys
 

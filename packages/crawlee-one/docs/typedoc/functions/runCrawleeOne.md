@@ -8,7 +8,7 @@
 
 > **runCrawleeOne**\<`TType`, `T`\>(`args`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:156](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L156)
+Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:157](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L157)
 
 Create opinionated Crawlee crawler that uses, and run it within Apify's `Actor.main()` context.
 

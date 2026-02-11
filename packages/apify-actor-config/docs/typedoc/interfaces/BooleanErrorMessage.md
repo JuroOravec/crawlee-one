@@ -6,7 +6,7 @@
 
 # Interface: BooleanErrorMessage
 
-Defined in: [inputSchema.ts:114](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L114)
+Defined in: [inputSchema.ts:121](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L121)
 
 See [StringErrorMessage](StringErrorMessage.md)
 
@@ -16,4 +16,4 @@ See [StringErrorMessage](StringErrorMessage.md)
 
 > `optional` **type**: `string`
 
-Defined in: [inputSchema.ts:115](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L115)
+Defined in: [inputSchema.ts:122](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L122)

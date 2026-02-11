@@ -8,7 +8,7 @@
 
 > **StringField**\<`TEnum`, `TEnumTitles`\> = `SelectStringField`\<`TEnum`, `TEnumTitles`\> \| `TextStringField`\<`TEnum`\> \| `DatePickerStringField`\<`TEnum`\> \| `BaseStringField`\<`TEnum`\>
 
-Defined in: [inputSchema.ts:205](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L205)
+Defined in: [inputSchema.ts:212](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L212)
 
 See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#string
 

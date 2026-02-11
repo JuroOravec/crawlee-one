@@ -6,7 +6,7 @@ import type { CrawleeOneConfig, CrawleeOneConfigSchema } from '../../types/confi
 import { crawlingContextNameByType } from '../../constants.js';
 import { loadConfig, validateConfig } from './config.js';
 // NOTE: We intentionally import these to know when their names change
-import type { AllActorInputs } from '../../lib/input.js';
+import type { ActorInput } from '../../lib/input.js';
 import type { CrawleeOneActorInst, CrawleeOneActorRouterCtx } from '../../lib/actor/types.js';
 import type {
   CrawleeOneRoute,
@@ -83,7 +83,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
 
   // 1. Define imports
   const {
-    AllActorInputs: actorInput,
+    ActorInput: actorInputType,
     CrawleeOneActorRouterCtx: actorRouterCtx,
     CrawleeOneActorInst: actorCtx,
     CrawleeOneRoute: routeType,
@@ -97,7 +97,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     CrawleeOneArgs: argsType,
     crawleeOne: crawleeOneFn,
   } = addImports('crawlee-one', [
-    'AllActorInputs',
+    'ActorInput',
     'CrawleeOneActorRouterCtx',
     'CrawleeOneActorInst',
     'CrawleeOneRoute',
@@ -132,13 +132,13 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     });
 
     const ctxTypeArgs = [
-      `TInput extends Record<string, any> = ${actorInput}`,
+      `TInput extends Record<string, any> = ${actorInputType}`,
       `TIO extends ${ioType} = ${ioType}`,
       `Telem extends ${telemType}<any, any> = ${telemType}<any, any>`,
     ];
 
     // 4. Create CrawleeOne context
-    // type `CrawlerName`Ctx = <TIO, Telem>CrawleeOneCtx<CheerioCrawlingContext, `CrawlerName`Label, AllActorInputs, TIO, Telem>
+    // type `CrawlerName`Ctx = <TIO, Telem>CrawleeOneCtx<CheerioCrawlingContext, `CrawlerName`Label, ActorInput, TIO, Telem>
     const ctxKey = define(
       `${crawlerName}Ctx`,
       `${ctxType}<${crawlingContextTypeName}, ${labelKey}, TInput, TIO, Telem>`,
@@ -154,7 +154,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     );
 
     // 6. Get actor router context (`CrawleeOneActorRouterCtx`)
-    // NOTE: We use `AllActorInput` for the Actor input, because this type definition
+    // NOTE: We use `ActorInput` for the Actor input, because this type definition
     //       will be used by developers.
     const routerCtxKey = define(
       `${crawlerName}RouterContext`,
@@ -163,7 +163,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     );
 
     // 7. Get actor context (`CrawleeOneActorInst`)
-    // NOTE: We use `AllActorInput` for the Actor input, because this type definition
+    // NOTE: We use `ActorInput` for the Actor input, because this type definition
     //       will be used by developers.
     const actorCtxKey = define(
       `${crawlerName}ActorCtx`,
@@ -220,7 +220,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
       typeArgs: ctxTypeArgs,
     });
 
-    // type `CrawlerName`OnReady = <TIO, Telem>(actor: CrawleeOneActorInst<`CrawlerName`Label, AllActorInputs, TIO, Telem, `type`CrawlingContext>) => MaybePromise<void>;
+    // type `CrawlerName`OnReady = <TIO, Telem>(actor: CrawleeOneActorInst<`CrawlerName`Label, ActorInput, TIO, Telem, `type`CrawlingContext>) => MaybePromise<void>;
     const onReadyKey = define(
       `${crawlerName}OnReady`,
       `(actor: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>;`,

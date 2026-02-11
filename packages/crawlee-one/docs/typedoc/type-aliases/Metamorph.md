@@ -8,7 +8,7 @@
 
 > **Metamorph** = (`overrides?`) => `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:38](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L38)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:40](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L40)
 
 Trigger actor metamorph, using actor's inputs as defaults.
 

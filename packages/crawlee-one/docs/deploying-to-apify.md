@@ -19,7 +19,7 @@ npm install crawlee-one
 
 Apify needs to know what input your crawler accepts. This is done via an [`actor.json`](https://docs.apify.com/platform/actors/development/actor-definition/actor-json) file that describes the input schema.
 
-CrawleeOne provides pre-defined input fields through `allActorInputs`. To use them:
+CrawleeOne provides pre-defined input fields through `actorInput`. To use them:
 
 1. Install [`apify-actor-config`](https://github.com/JuroOravec/apify-actor-config) as a dev dependency:
 
@@ -30,7 +30,7 @@ CrawleeOne provides pre-defined input fields through `allActorInputs`. To use th
 2. Create a config file that combines your custom inputs with CrawleeOne's inputs:
 
    ```ts
-   import { allActorInputs } from 'crawlee-one';
+   import { actorInput } from 'crawlee-one';
    import { createActorConfig, createActorInputSchema } from 'apify-actor-config';
 
    const inputSchema = createActorInputSchema({
@@ -38,7 +38,7 @@ CrawleeOne provides pre-defined input fields through `allActorInputs`. To use th
      // ...
      properties: {
        ...customActorInput,
-       ...allActorInputs,
+       ...actorInput,
      },
    });
 
@@ -51,10 +51,10 @@ CrawleeOne provides pre-defined input fields through `allActorInputs`. To use th
    export default config;
    ```
 
-   You can override defaults from `allActorInputs` directly:
+   You can override defaults from `actorInput` directly:
 
    ```ts
-   allActorInputs.requestHandlerTimeoutSecs.prefill = 60 * 3;
+   actorInput.requestHandlerTimeoutSecs.prefill = 60 * 3;
    ```
 
    [See here](https://github.com/JuroOravec/apify-actor-profesia-sk/blob/main/src/config.ts) for a full example config.

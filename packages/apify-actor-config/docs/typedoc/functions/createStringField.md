@@ -8,7 +8,7 @@
 
 > **createStringField**\<`T`, `U`\>(`field`): [`StringField`](../type-aliases/StringField.md)\<`T`, `U`\>
 
-Defined in: [inputSchema.ts:586](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L586)
+Defined in: [inputSchema.ts:593](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L593)
 
 ## Type Parameters
 

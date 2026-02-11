@@ -87,6 +87,13 @@ interface BaseField {
   sectionDescription?: string;
   /** Specifies whether null is an allowed value. */
   nullable?: boolean;
+  /**
+   * Optional validation schema for this field (e.g. a Zod schema).
+   *
+   * This property is NOT part of the Apify input schema spec and is
+   * automatically stripped when generating `actor.json`.
+   */
+  schema?: any;
 }
 
 /**

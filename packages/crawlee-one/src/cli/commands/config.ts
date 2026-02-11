@@ -1,5 +1,5 @@
 import { cosmiconfig } from 'cosmiconfig';
-import Joi from 'joi';
+import { z } from 'zod';
 
 import { getPackageJsonInfo } from '../../utils/package.js';
 import type {
@@ -12,24 +12,25 @@ import { CRAWLER_TYPE } from '../../types/index.js';
 /** Pattern for a valid JS variable */
 const varNamePattern = /^[a-z_][a-z0-9_]*$/i;
 
-const configSchemaCrawlerJoiSchema = Joi.object({
-  type: Joi.string().allow(...CRAWLER_TYPE).required(),
-  routes: Joi.array().items(Joi.string().required()).required(),
-} satisfies Record<keyof CrawleeOneConfigSchemaCrawler, Joi.Schema>)
-  .required().unknown(false); // prettier-ignore
+const configSchemaCrawlerSchema = z
+  .object({
+    type: z.enum(CRAWLER_TYPE),
+    routes: z.array(z.string()).min(1),
+  } satisfies Record<keyof CrawleeOneConfigSchemaCrawler, z.ZodType>)
+  .strict();
 
-const configSchemaJoiSchema = Joi.object({
-  crawlers: Joi.object()
-    .pattern(Joi.string().pattern(varNamePattern), configSchemaCrawlerJoiSchema)
-    .required().unknown(false),
-} satisfies Record<keyof CrawleeOneConfigSchema, Joi.Schema>)
-  .required().unknown(false); // prettier-ignore
+const configSchemaSchema = z
+  .object({
+    crawlers: z.record(z.string().regex(varNamePattern), configSchemaCrawlerSchema),
+  } satisfies Record<keyof CrawleeOneConfigSchema, z.ZodType>)
+  .strict();
 
-const configJoiSchema = Joi.object({
-  version: Joi.number().allow(1).required(),
-  schema: configSchemaJoiSchema,
-} satisfies Record<keyof CrawleeOneConfig, Joi.Schema>)
-  .required().unknown(false); // prettier-ignore
+const configSchema = z
+  .object({
+    version: z.literal(1),
+    schema: configSchemaSchema,
+  } satisfies Record<keyof CrawleeOneConfig, z.ZodType>)
+  .strict();
 
 /**
  * Validate given CrawleeOne config.
@@ -38,7 +39,7 @@ const configJoiSchema = Joi.object({
  * For the latter, the config will be loaded using {@link loadConfig}.
  */
 export const validateConfig = (config: unknown | string) => {
-  Joi.assert(config, configJoiSchema);
+  configSchema.parse(config);
 };
 
 /**

@@ -6,7 +6,7 @@
 
 # Interface: RunCrawleeOneOptions\<TType, T\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:97](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L97)
+Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:98](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L98)
 
 Options available when creating default configuration for an opinionated Crawlee actor,
 which is then run within Apify's `Actor.main()` context.
@@ -31,7 +31,7 @@ Read more about what this actor does at createCrawleeOne.
 
 > **actorConfig**: [`PickPartial`](../type-aliases/PickPartial.md)\<[`CrawleeOneActorDef`](CrawleeOneActorDef.md)\<`T`\>, `"io"` \| `"telemetry"` \| `"router"` \| `"createCrawler"`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:105](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L105)
+Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:106](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L106)
 
 Config passed to the createCrawleeOne
 
@@ -41,7 +41,7 @@ Config passed to the createCrawleeOne
 
 > `optional` **actorName**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:103](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L103)
+Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:104](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L104)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:103](https://github.com
 
 > **actorType**: `TType`
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:102](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L102)
+Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:103](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L103)
 
 String idetifying the actor class, e.g. `'cheerio'`
 
@@ -59,7 +59,7 @@ String idetifying the actor class, e.g. `'cheerio'`
 
 > `optional` **crawlerConfigDefaults**: `Omit`\<`CrawlerMeta`\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:110](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L110)
+Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:111](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L111)
 
 If using default `createCrawler` implementation, these are crawler options
 that may be overriden by user input.
@@ -70,7 +70,7 @@ that may be overriden by user input.
 
 > `optional` **crawlerConfigOverrides**: `Omit`\<`CrawlerMeta`\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:117](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L117)
+Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:118](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L118)
 
 If using default `createCrawler` implementation, these are crawler options
 that will override user input.
@@ -83,7 +83,7 @@ This is useful for testing env.
 
 > `optional` **onReady**: (`actor`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:122](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L122)
+Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:123](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L123)
 
 Callback with the created actor. The callback is called within
 the `Actor.main()` context.

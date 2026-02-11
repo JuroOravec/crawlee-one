@@ -8,7 +8,7 @@
 
 > **createNumberField**\<`T`, `U`\>(`field`): [`NumberField`](../interfaces/NumberField.md)\<`T`, `U`\>
 
-Defined in: [inputSchema.ts:589](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L589)
+Defined in: [inputSchema.ts:596](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L596)
 
 ## Type Parameters
 

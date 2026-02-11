@@ -8,7 +8,7 @@
 
 > `const` **metamorphInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:1012](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L1012)
+Defined in: [packages/crawlee-one/src/lib/input.ts:1060](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L1060)
 
 Common input fields related to actor metamorphing
 

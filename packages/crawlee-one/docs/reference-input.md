@@ -495,7 +495,7 @@ These options are applied directly to the Crawler. In majority of cases you don'
 
 Standalone performance options. These are not passed to the Crawler.
 
-#### perfBatchSize
+#### batchSize
 
 - **Type:** integer
 - **Description:** If set, multiple Requests will be handled by a single Actor instance.<br/>
@@ -506,7 +506,7 @@ Standalone performance options. These are not passed to the Crawler.
   20;
   ```
 
-#### perfBatchWaitSecs
+#### batchWaitSecs
 
 - **Type:** integer
 - **Description:** How long to wait between entries within a single batch.<br/>

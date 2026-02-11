@@ -8,13 +8,13 @@ import {
   createArrayField,
   Field,
 } from 'apify-actor-config';
-import Joi from 'joi';
+import { z } from 'zod';
 
 import type { CrawlerUrl } from '../types/index.js';
-import { LOG_LEVEL, LogLevel } from './log.js';
+import { LOG_LEVEL, type LogLevel } from './log.js';
 import type { CrawleeOneHookFn } from './actor/types.js';
 
-export type AllActorInputs = InputActorInput &
+export type ActorInput = InputActorInput &
   CrawlerConfigActorInput &
   PerfActorInput &
   StartUrlsActorInput &
@@ -66,7 +66,7 @@ export interface InputActorInput {
    *
    * The URL must point to a JSON file containing a single object (the config).
    */
-  inputExtendFromFunction?: string | CrawleeOneHookFn<[], AllActorInputs>;
+  inputExtendFromFunction?: string | CrawleeOneHookFn<[], ActorInput>;
 }
 
 /** Common input fields related to performance which are not part of the CrawlerConfig */
@@ -78,7 +78,7 @@ export interface PerfActorInput {
    *
    * Example: If set to 20, then up to 20 requests will be handled in a single "go".
    */
-  perfBatchSize?: number;
+  batchSize?: number;
   /**
    * How long to wait between entries within a single batch.
    *
@@ -86,7 +86,7 @@ export interface PerfActorInput {
    *
    * Example: If set to 1, then after each entry in a batch, wait 1 second before continuing.
    */
-  perfBatchWaitSecs?: number;
+  batchWaitSecs?: number;
 }
 
 /** Common input fields for defining URLs to scrape */
@@ -363,6 +363,10 @@ export interface PrivacyActorInput {
 const datasetIdPattern = '^[a-zA-Z0-9][a-zA-Z0-9-]*$';
 const datasetIdWithFieldPattern = `${datasetIdPattern.slice(0, -1)}#.+$`;
 
+// Regex equivalents for Zod schemas
+const datasetIdRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*$/;
+const datasetIdWithFieldRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*#.+$/;
+
 const newLine = (n: number) => '<br/>'.repeat(n);
 
 const createHookFnExample = (
@@ -504,6 +508,7 @@ export const inputInput = {
     sectionCaption: 'Programmatic Input (Advanced)',
     sectionDescription:
       "With these options you can configure other Actor options programmatically or from remote source.",
+    schema: z.string().min(1).url().optional(),
   }), // prettier-ignore
 
   inputExtendFromFunction: createStringField({
@@ -517,6 +522,7 @@ export const inputInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.inputExtendFromFunction, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.inputExtendFromFunction, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
 } satisfies Record<keyof InputActorInput, Field>;
 
@@ -534,6 +540,7 @@ export const crawlerInput = {
     sectionCaption: 'Crawler configuration (Advanced)',
     sectionDescription:
       "These options are applied directly to the Crawler. In majority of cases you don't need to change these. See https://crawlee.dev/api/basic-crawler/interface/BasicCrawlerOptions",
+    schema: z.number().int().min(0).optional(),
   }),
   maxRequestsPerMinute: createIntegerField({
     title: 'maxRequestsPerMinute',
@@ -544,6 +551,7 @@ export const crawlerInput = {
     prefill: 120,
     minimum: 1,
     nullable: true,
+    schema: z.number().int().min(1).optional(),
   }),
   maxRequestsPerCrawl: createIntegerField({
     title: 'maxRequestsPerCrawl',
@@ -552,6 +560,7 @@ export const crawlerInput = {
     ${newLine(1)} <strong>NOTE:</strong> In cases of parallel crawling, the actual number of pages visited might be slightly higher than this value.`,
     minimum: 1,
     nullable: true,
+    schema: z.number().int().min(1).optional(),
   }), // prettier-ignore
   maxCrawlDepth: createIntegerField({
     title: 'maxCrawlDepth',
@@ -561,6 +570,7 @@ export const crawlerInput = {
     ${newLine(1)} If not set, the crawl continues until all requests are processed.`,
     minimum: 0,
     nullable: true,
+    schema: z.number().int().min(0).optional(),
   }),
   minConcurrency: createIntegerField({
     title: 'minConcurrency',
@@ -571,6 +581,7 @@ export const crawlerInput = {
     prefill: 1,
     minimum: 1,
     nullable: true,
+    schema: z.number().int().min(1).optional(),
   }), // prettier-ignore
   maxConcurrency: createIntegerField({
     title: 'maxConcurrency',
@@ -578,6 +589,7 @@ export const crawlerInput = {
     description: 'Sets the maximum concurrency (parallelism) for the crawl.',
     minimum: 1,
     nullable: true,
+    schema: z.number().int().min(1).optional(),
   }),
   navigationTimeoutSecs: createIntegerField({
     title: 'navigationTimeoutSecs',
@@ -586,6 +598,7 @@ export const crawlerInput = {
       'Timeout in which the HTTP request to the resource needs to finish, given in seconds.',
     minimum: 0,
     nullable: true,
+    schema: z.number().int().min(0).optional(),
   }),
   requestHandlerTimeoutSecs: createIntegerField({
     title: 'requestHandlerTimeoutSecs',
@@ -596,6 +609,7 @@ export const crawlerInput = {
     prefill: 180,
     minimum: 0,
     nullable: true,
+    schema: z.number().int().min(0).optional(),
   }),
   keepAlive: createBooleanField({
     title: 'keepAlive',
@@ -603,12 +617,14 @@ export const crawlerInput = {
     description:
       'Allows to keep the crawler alive even if the RequestQueue gets empty. With keepAlive: true the crawler will keep running, waiting for more requests to come.',
     nullable: true,
+    schema: z.boolean().optional(),
   }),
   ignoreSslErrors: createBooleanField({
     title: 'ignoreSslErrors',
     type: 'boolean',
     description: 'If set to true, SSL certificate errors will be ignored.',
     nullable: true,
+    schema: z.boolean().optional(),
   }),
   additionalMimeTypes: createArrayField({
     title: 'additionalMimeTypes',
@@ -618,6 +634,7 @@ export const crawlerInput = {
     editor: 'stringList',
     uniqueItems: true,
     nullable: true,
+    schema: z.array(z.string().min(1)).optional(),
   }),
   suggestResponseEncoding: createStringField({
     title: 'suggestResponseEncoding',
@@ -626,6 +643,7 @@ export const crawlerInput = {
       'By default this crawler will extract correct encoding from the HTTP response headers. There are some websites which use invalid headers. Those are encoded using the UTF-8 encoding. If those sites actually use a different encoding, the response will be corrupted. You can use suggestResponseEncoding to fall back to a certain encoding, if you know that your target website uses it. To force a certain encoding, disregarding the response headers, use forceResponseEncoding.',
     editor: 'textfield',
     nullable: true,
+    schema: z.string().min(1).optional(),
   }),
   forceResponseEncoding: createStringField({
     title: 'forceResponseEncoding',
@@ -634,12 +652,13 @@ export const crawlerInput = {
       'By default this crawler will extract correct encoding from the HTTP response headers. Use forceResponseEncoding to force a certain encoding, disregarding the response headers. To only provide a default for missing encodings, use suggestResponseEncoding.',
     editor: 'textfield',
     nullable: true,
+    schema: z.string().min(1).optional(),
   }),
 } satisfies Record<keyof CrawlerConfigActorInput, Field>;
 
 /** Common input fields related to performance which are not part of the CrawlerConfig */
 export const perfInput = {
-  perfBatchSize: createIntegerField({
+  batchSize: createIntegerField({
     title: 'Batch requests',
     type: 'integer',
     description: `If set, multiple Requests will be handled by a single Actor instance.${newLine(1)}
@@ -650,8 +669,9 @@ export const perfInput = {
     nullable: true,
     sectionCaption: 'Performance configuration (Advanced)',
     sectionDescription: 'Standalone performance options. These are not passed to the Crawler.',
+    schema: z.number().int().min(0).optional(),
   }), // prettier-ignore
-  perfBatchWaitSecs: createIntegerField({
+  batchWaitSecs: createIntegerField({
     title: 'Wait (in seconds) between processing requests in a single batch',
     type: 'integer',
     description: `How long to wait between entries within a single batch.${newLine(1)}
@@ -660,6 +680,7 @@ export const perfInput = {
     example: 1,
     minimum: 0,
     nullable: true,
+    schema: z.number().int().min(0).optional(),
   }), // prettier-ignore
 } satisfies Record<keyof PerfActorInput, Field>;
 
@@ -671,6 +692,7 @@ export const startUrlsInput = {
     description: `List of URLs to scrape.`,
     editor: 'requestListSources',
     sectionCaption: 'Starting URLs',
+    schema: z.array(z.union([z.string().min(1), z.object({}).passthrough()])).optional(),
   }),
   startUrlsFromDataset: createStringField({
     title: 'Start URLs from Dataset',
@@ -682,6 +704,7 @@ export const startUrlsInput = {
     pattern: datasetIdWithFieldPattern,
     example: 'datasetid123#url',
     nullable: true,
+    schema: z.string().min(1).regex(datasetIdWithFieldRegex).optional(),
   }), // prettier-ignore
   startUrlsFromFunction: createStringField({
     title: 'Start URLs from custom function',
@@ -691,6 +714,7 @@ export const startUrlsInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, true),
     nullable: true,
+    schema: z.union([z.string().min(1), z.function()]).optional(),
   }), // prettier-ignore
 } satisfies Record<keyof StartUrlsActorInput, Field>;
 
@@ -701,7 +725,7 @@ export const loggingInput = {
     type: 'string',
     editor: 'select',
     description: 'Select how detailed should be the logging.',
-    enum: ['off', 'debug', 'info', 'warn', 'error'] satisfies LogLevel[],
+    enum: LOG_LEVEL,
     enumTitles: [
       'No logging (off)',
       'Debug and higher priority',
@@ -716,6 +740,7 @@ export const loggingInput = {
     sectionCaption: 'Logging & Error handling (Advanced)',
     sectionDescription:
       'Configure how to handle errors or what should be displayed in the log console.',
+    schema: z.enum(LOG_LEVEL).optional(),
   }),
   errorReportingDatasetId: createStringField({
     title: 'Error reporting dataset ID',
@@ -729,6 +754,7 @@ export const loggingInput = {
     default: 'REPORTING',
     pattern: datasetIdPattern,
     nullable: true,
+    schema: z.string().min(1).regex(datasetIdRegex).optional(),
   }),
   errorTelemetry: createBooleanField({
     title: 'Send errors to telemetry service like Sentry',
@@ -740,6 +766,7 @@ export const loggingInput = {
     example: true,
     default: true,
     nullable: true,
+    schema: z.boolean().optional(),
   }), // prettier-ignore
 } satisfies Record<keyof LoggingActorInput, Field>;
 
@@ -752,6 +779,7 @@ export const proxyInput = {
     editor: 'proxy',
     sectionCaption: 'Proxy',
     sectionDescription: 'Configure the proxy',
+    schema: z.object({}).passthrough().optional(),
   }),
 } satisfies Record<keyof ProxyActorInput, Field>;
 
@@ -766,6 +794,7 @@ export const privacyInput = {
     example: false,
     nullable: true,
     sectionCaption: 'Privacy & Data governance (GDPR)',
+    schema: z.boolean().optional(),
   }), // prettier-ignore
 } satisfies Record<keyof PrivacyActorInput, Field>;
 
@@ -782,6 +811,7 @@ export const requestInput = {
     minimum: 0,
     nullable: true,
     sectionCaption: 'Requests limit, transformation & filtering (Advanced)',
+    schema: z.number().int().min(0).optional(),
   }), // prettier-ignore
 
   requestTransform: createStringField({
@@ -793,6 +823,7 @@ export const requestInput = {
     example: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, false),
     prefill: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
   requestTransformBefore: createStringField({
     title: 'Transform requests - Setup',
@@ -802,6 +833,7 @@ export const requestInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
   requestTransformAfter: createStringField({
     title: 'Transform requests - Teardown',
@@ -811,6 +843,7 @@ export const requestInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
 
   requestFilter: createStringField({
@@ -823,6 +856,7 @@ export const requestInput = {
     example: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestFilter, false),
     prefill: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestFilter, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
   requestFilterBefore: createStringField({
     title: 'Filter requests - Setup',
@@ -832,6 +866,7 @@ export const requestInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.requestFilterBefore, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.requestFilterBefore, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
   requestFilterAfter: createStringField({
     title: 'Filter requests - Teardown',
@@ -841,6 +876,7 @@ export const requestInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.requestFilterAfter, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.requestFilterAfter, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
 
   requestQueueId: createStringField({
@@ -854,6 +890,7 @@ export const requestInput = {
     example: 'mIJVZsRQrDQf4rUAf',
     pattern: datasetIdPattern,
     nullable: true,
+    schema: z.string().min(1).regex(datasetIdRegex).optional(),
   }), // prettier-ignore
 } satisfies Record<keyof RequestActorInput, Field>;
 
@@ -870,6 +907,7 @@ export const outputInput = {
     minimum: 0,
     nullable: true,
     sectionCaption: 'Output size, transformation & filtering (T in ETL) (Advanced)',
+    schema: z.number().int().min(0).optional(),
   }),
   outputRenameFields: createObjectField({
     title: 'Rename dataset fields',
@@ -882,6 +920,7 @@ export const outputInput = {
     editor: 'json',
     example: { oldFieldName: 'newFieldName' },
     nullable: true,
+    schema: z.record(z.string().min(1), z.string().min(1)).optional(),
   }),
   outputPickFields: createArrayField({
     title: 'Pick dataset fields',
@@ -894,6 +933,7 @@ export const outputInput = {
     editor: 'stringList',
     example: ['fieldName', 'another.nested[0].field'],
     nullable: true,
+    schema: z.array(z.string().min(1)).optional(),
   }), // prettier-ignore
 
   outputTransform: createStringField({
@@ -906,6 +946,7 @@ export const outputInput = {
     example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, false),
     prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
   outputTransformBefore: createStringField({
     title: 'Transform entries - Setup',
@@ -915,6 +956,7 @@ export const outputInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
   outputTransformAfter: createStringField({
     title: 'Transform entries - Teardown',
@@ -924,6 +966,7 @@ export const outputInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
 
   outputFilter: createStringField({
@@ -936,6 +979,7 @@ export const outputInput = {
     example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, false),
     prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
   outputFilterBefore: createStringField({
     title: 'Filter entries - Setup',
@@ -945,6 +989,7 @@ export const outputInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
   outputFilterAfter: createStringField({
     title: 'Filter entries - Teardown',
@@ -954,6 +999,7 @@ export const outputInput = {
     example: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, false),
     prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, true),
     nullable: true,
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
 
   outputDatasetId: createStringField({
@@ -968,6 +1014,7 @@ export const outputInput = {
     pattern: datasetIdPattern,
     nullable: true,
     sectionCaption: 'Output Dataset & Caching (L in ETL) (Advanced)',
+    schema: z.string().min(1).regex(datasetIdRegex).optional(),
   }), // prettier-ignore
 
   outputCacheStoreId: createStringField({
@@ -981,8 +1028,9 @@ export const outputInput = {
     example: 'mIJVZsRQrDQf4rUAf',
     pattern: datasetIdPattern,
     nullable: true,
+    schema: z.string().min(1).regex(datasetIdRegex).optional(),
   }), // prettier-ignore
-  outputCachePrimaryKeys: createArrayField<string[]>({
+  outputCachePrimaryKeys: createArrayField({
     title: 'Cache primary keys',
     type: 'array',
     description: `Specify fields that uniquely identify entries (primary keys), so entries can be compared against the cache.${newLine(1)}
@@ -990,10 +1038,9 @@ export const outputInput = {
     editor: 'stringList',
     example: ['name', 'city'],
     nullable: true,
+    schema: z.array(z.string().min(1)).optional(),
   }), // prettier-ignore
-  outputCacheActionOnResult: createStringField<
-    NonNullable<OutputActorInput['outputCacheActionOnResult']>
-  >({
+  outputCacheActionOnResult: createStringField({
     title: 'Cache action on result',
     type: 'string',
     description: `Specify whether scraped results should be added to, removed from, or overwrite the cache.${newLine(1)}
@@ -1005,6 +1052,7 @@ export const outputInput = {
     enum: ['add', 'remove', 'overwrite'],
     example: 'add',
     nullable: true,
+    schema: z.enum(['add', 'remove', 'overwrite']).optional(),
   }), // prettier-ignore
 } satisfies Record<keyof OutputActorInput, Field>;
 
@@ -1019,6 +1067,7 @@ export const metamorphInput = {
     example: 'apify/web-scraper',
     nullable: true,
     sectionCaption: 'Integrations (Metamorphing) (Advanced)',
+    schema: z.string().min(1).optional(),
   }), // prettier-ignore
   metamorphActorBuild: createStringField({
     title: 'Metamorph actor build',
@@ -1027,6 +1076,7 @@ export const metamorphInput = {
     editor: 'textfield',
     example: '1.2.345',
     nullable: true,
+    schema: z.string().min(1).optional(),
   }),
   metamorphActorInput: createObjectField({
     title: 'Metamorph actor input',
@@ -1035,10 +1085,11 @@ export const metamorphInput = {
     editor: 'json',
     example: { uploadDatasetToGDrive: true },
     nullable: true,
+    schema: z.object({}).passthrough().optional(),
   }),
 } satisfies Record<keyof MetamorphActorInput, Field>;
 
-export const allActorInputs = {
+export const actorInput = {
   ...inputInput,
   ...startUrlsInput,
   ...proxyInput,
@@ -1049,103 +1100,4 @@ export const allActorInputs = {
   ...perfInput,
   ...loggingInput,
   ...metamorphInput,
-} satisfies Record<keyof AllActorInputs, Field>;
-
-export const crawlerInputValidationFields = {
-  navigationTimeoutSecs: Joi.number().integer().min(0).optional(),
-  ignoreSslErrors: Joi.boolean().optional(),
-  additionalMimeTypes: Joi.array().items(Joi.string().min(1)).optional(),
-  suggestResponseEncoding: Joi.string().min(1).optional(),
-  forceResponseEncoding: Joi.string().min(1).optional(),
-  requestHandlerTimeoutSecs: Joi.number().integer().min(0).optional(),
-  maxRequestRetries: Joi.number().integer().min(0).optional(),
-  maxRequestsPerCrawl: Joi.number().integer().min(0).optional(),
-  maxRequestsPerMinute: Joi.number().integer().min(0).optional(),
-  maxCrawlDepth: Joi.number().integer().min(0).optional(),
-  minConcurrency: Joi.number().integer().min(0).optional(),
-  maxConcurrency: Joi.number().integer().min(0).optional(),
-  keepAlive: Joi.boolean().optional(),
-} satisfies Record<keyof CrawlerConfigActorInput, Joi.Schema>;
-
-export const perfInputValidationFields = {
-  perfBatchSize: Joi.number().integer().min(0).optional(),
-  perfBatchWaitSecs: Joi.number().integer().min(0).optional(),
-} satisfies Record<keyof PerfActorInput, Joi.Schema>;
-
-export const inputInputValidationFields = {
-  inputExtendUrl: Joi.string().min(1).uri().optional(),
-  inputExtendFromFunction: Joi.string().min(1).optional(),
-} satisfies Record<keyof InputActorInput, Joi.Schema>;
-
-export const startUrlsInputValidationFields = {
-  startUrls: Joi.array().items(Joi.string().min(1), Joi.object()).optional(),
-  startUrlsFromDataset: Joi.string().min(1).pattern(new RegExp(datasetIdWithFieldPattern)).optional(), // prettier-ignore
-  startUrlsFromFunction: [Joi.string().min(1).optional(), Joi.func().optional()],
-} satisfies Record<keyof StartUrlsActorInput, Joi.Schema | Joi.Schema[]>;
-
-export const loggingInputValidationFields = {
-  logLevel: Joi.string().valid(...LOG_LEVEL).optional(), // prettier-ignore
-  errorReportingDatasetId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
-  errorTelemetry: Joi.boolean().optional(),
-} satisfies Record<keyof LoggingActorInput, Joi.Schema>;
-
-export const proxyInputValidationFields = {
-  proxy: Joi.object().optional(), // NOTE: Expand this type?
-} satisfies Record<keyof ProxyActorInput, Joi.Schema>;
-
-export const privacyInputValidationFields = {
-  includePersonalData: Joi.boolean().optional(),
-} satisfies Record<keyof PrivacyActorInput, Joi.Schema>;
-
-export const requestInputValidationFields = {
-  requestMaxEntries: Joi.number().integer().min(0).optional(),
-
-  requestTransform: Joi.string().min(1).optional(),
-  requestTransformBefore: Joi.string().min(1).optional(),
-  requestTransformAfter: Joi.string().min(1).optional(),
-  requestFilter: Joi.string().min(1).optional(),
-  requestFilterBefore: Joi.string().min(1).optional(),
-  requestFilterAfter: Joi.string().min(1).optional(),
-
-  requestQueueId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
-} satisfies Record<keyof RequestActorInput, Joi.Schema>;
-
-export const outputInputValidationFields = {
-  outputMaxEntries: Joi.number().integer().min(0).optional(),
-
-  outputPickFields: Joi.array().items(Joi.string().min(1)).optional(),
-  // https://stackoverflow.com/a/49898360/9788634
-  outputRenameFields: Joi.object().pattern(/./, Joi.string().min(1)).optional(),
-
-  outputTransform: Joi.string().min(1).optional(),
-  outputTransformBefore: Joi.string().min(1).optional(),
-  outputTransformAfter: Joi.string().min(1).optional(),
-  outputFilter: Joi.string().min(1).optional(),
-  outputFilterBefore: Joi.string().min(1).optional(),
-  outputFilterAfter: Joi.string().min(1).optional(),
-
-  outputCacheStoreId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
-  outputCachePrimaryKeys: Joi.array().items(Joi.string().min(1)).optional(),
-  outputCacheActionOnResult: Joi.string().min(1).allow('add', 'remove', 'overwrite').optional(), // prettier-ignore
-
-  outputDatasetId: Joi.string().min(1).pattern(new RegExp(datasetIdPattern)).optional(), // prettier-ignore
-} satisfies Record<keyof OutputActorInput, Joi.Schema>;
-
-export const metamorphInputValidationFields = {
-  metamorphActorId: Joi.string().min(1).optional(),
-  metamorphActorBuild: Joi.string().min(1).optional(),
-  metamorphActorInput: Joi.object().unknown(true).optional(),
-} satisfies Record<keyof MetamorphActorInput, Joi.Schema>;
-
-export const allActorInputValidationFields = {
-  ...inputInputValidationFields,
-  ...startUrlsInputValidationFields,
-  ...proxyInputValidationFields,
-  ...privacyInputValidationFields,
-  ...requestInputValidationFields,
-  ...outputInputValidationFields,
-  ...crawlerInputValidationFields,
-  ...perfInputValidationFields,
-  ...loggingInputValidationFields,
-  ...metamorphInputValidationFields,
-} satisfies Record<keyof AllActorInputs, Joi.Schema | Joi.Schema[]>;
+} satisfies Record<keyof ActorInput, Field>;

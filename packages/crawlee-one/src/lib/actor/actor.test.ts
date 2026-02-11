@@ -1,6 +1,8 @@
 import http from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
+import { z } from 'zod';
+import { createStringField, createIntegerField } from 'apify-actor-config';
 
 import { createHttpCrawlerOptions, runCrawleeOne } from './actor.js';
 import { actorClassByType } from '../../constants.js';
@@ -295,6 +297,196 @@ describe('runCrawleeOne', () => {
       });
 
       expect(validateInput).toHaveBeenCalledTimes(1);
+    });
+
+    describe('auto-validation from inputFields', () => {
+      it('passes when input matches field schemas', async () => {
+        const io = createMockIO({
+          input: { name: 'Alice', age: 30 },
+        });
+
+        const inputFields = {
+          name: createStringField({
+            title: 'Name',
+            type: 'string',
+            description: 'User name',
+            editor: 'textfield',
+            schema: z.string(),
+          }),
+          age: createIntegerField({
+            title: 'Age',
+            type: 'integer',
+            description: 'User age',
+            schema: z.number().int().min(0),
+          }),
+        };
+
+        // Should not throw
+        await runCrawleeOne({
+          actorType: 'basic',
+          actorConfig: {
+            io,
+            inputFields,
+            routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+          },
+          onReady: vi.fn(),
+        });
+      });
+
+      it('throws ZodError when input violates field schemas', async () => {
+        const io = createMockIO({
+          input: { name: 123, age: 'not-a-number' },
+        });
+
+        const inputFields = {
+          name: createStringField({
+            title: 'Name',
+            type: 'string',
+            description: 'User name',
+            editor: 'textfield',
+            schema: z.string(),
+          }),
+          age: createIntegerField({
+            title: 'Age',
+            type: 'integer',
+            description: 'User age',
+            schema: z.number().int(),
+          }),
+        };
+
+        await expect(
+          runCrawleeOne({
+            actorType: 'basic',
+            actorConfig: {
+              io,
+              inputFields,
+              routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+            },
+            onReady: vi.fn(),
+          })
+        ).rejects.toThrow(z.ZodError);
+      });
+
+      it('skips validation when inputFields is not provided', async () => {
+        const io = createMockIO({
+          input: { anything: 'goes' },
+        });
+
+        // Should not throw even with arbitrary input
+        await runCrawleeOne({
+          actorType: 'basic',
+          actorConfig: {
+            io,
+            routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+          },
+          onReady: vi.fn(),
+        });
+      });
+
+      it('ignores fields without a schema property', async () => {
+        const io = createMockIO({
+          input: { name: 'Alice', unvalidated: 12345 },
+        });
+
+        const inputFields = {
+          name: createStringField({
+            title: 'Name',
+            type: 'string',
+            description: 'User name',
+            editor: 'textfield',
+            schema: z.string(),
+          }),
+          // Field without schema - should not affect validation
+          unvalidated: createStringField({
+            title: 'Unvalidated',
+            type: 'string',
+            description: 'No schema',
+            editor: 'textfield',
+          }),
+        };
+
+        // Should not throw -- unvalidated field has no schema, so any value is ok
+        await runCrawleeOne({
+          actorType: 'basic',
+          actorConfig: {
+            io,
+            inputFields,
+            routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+          },
+          onReady: vi.fn(),
+        });
+      });
+
+      it('runs auto-validation before validateInput hook', async () => {
+        const callOrder: string[] = [];
+
+        const io = createMockIO({
+          input: { name: 123 }, // Invalid -- will fail schema validation
+        });
+
+        const inputFields = {
+          name: createStringField({
+            title: 'Name',
+            type: 'string',
+            description: 'User name',
+            editor: 'textfield',
+            schema: z.string(),
+          }),
+        };
+
+        const validateInput = vi.fn().mockImplementation(() => {
+          callOrder.push('validateInput');
+        });
+
+        await expect(
+          runCrawleeOne({
+            actorType: 'basic',
+            actorConfig: {
+              io,
+              inputFields,
+              validateInput,
+              routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+            },
+            onReady: vi.fn(),
+          })
+        ).rejects.toThrow(z.ZodError);
+
+        // validateInput should NOT have been called since auto-validation failed first
+        expect(validateInput).not.toHaveBeenCalled();
+      });
+
+      it('validates optional fields correctly', async () => {
+        const io = createMockIO({
+          input: {}, // All fields are optional
+        });
+
+        const inputFields = {
+          name: createStringField({
+            title: 'Name',
+            type: 'string',
+            description: 'User name',
+            editor: 'textfield',
+            schema: z.string().optional(),
+          }),
+          count: createIntegerField({
+            title: 'Count',
+            type: 'integer',
+            description: 'Count',
+            schema: z.number().int().optional(),
+          }),
+        };
+
+        // Should not throw since all schemas allow undefined
+        await runCrawleeOne({
+          actorType: 'basic',
+          actorConfig: {
+            io,
+            inputFields,
+            routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+          },
+          onReady: vi.fn(),
+        });
+      });
     });
 
     it('merges inputs when mergeInput is true', async () => {

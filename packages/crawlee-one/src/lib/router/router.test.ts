@@ -364,7 +364,7 @@ describe('default handler URL matching', () => {
       io,
       router: router as any,
       routes,
-      input: { perfBatchSize: 5 } as any,
+      input: { batchSize: 5 } as any,
     });
 
     const mockCtx = {
@@ -439,7 +439,7 @@ describe('default handler URL matching', () => {
     expect(capturedCtx).toHaveProperty('request');
   });
 
-  it('handles single perfBatchSize of 1 without error for non-page crawlers', async () => {
+  it('handles single batchSize of 1 without error for non-page crawlers', async () => {
     const router = Router.create();
     const io = createMockIO();
 
@@ -453,7 +453,7 @@ describe('default handler URL matching', () => {
       io,
       router: router as any,
       routes,
-      input: { perfBatchSize: 1 } as any,
+      input: { batchSize: 1 } as any,
     });
 
     const mockCtx = {
@@ -461,7 +461,7 @@ describe('default handler URL matching', () => {
       log: createRouterMockLog(),
     } as any;
 
-    // Should not throw - perfBatchSize of 1 is allowed for non-page crawlers
+    // Should not throw - batchSize of 1 is allowed for non-page crawlers
     await router(mockCtx);
     expect(handler).toHaveBeenCalled();
   });

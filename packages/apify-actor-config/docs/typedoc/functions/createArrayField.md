@@ -8,7 +8,7 @@
 
 > **createArrayField**\<`T`\>(`field`): [`ArrayField`](../type-aliases/ArrayField.md)\<`T`\>
 
-Defined in: [inputSchema.ts:591](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L591)
+Defined in: [inputSchema.ts:598](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L598)
 
 ## Type Parameters
 

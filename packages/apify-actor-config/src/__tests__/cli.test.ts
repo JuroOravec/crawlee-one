@@ -160,4 +160,214 @@ describe('CLI generate command', () => {
     // Should contain indentation (pretty-printed with 2 spaces)
     expect(rawContent).toContain('  "actorSpecification"');
   });
+
+  describe('schema stripping from Field objects', () => {
+    it('strips schema property from top-level Fields', async () => {
+      const configContent = `
+        export default {
+          actorSpecification: 1,
+          name: 'schema-strip-test',
+          version: '0.1',
+          input: {
+            schemaVersion: 1,
+            title: 'Test Input',
+            type: 'object',
+            properties: {
+              myField: {
+                title: 'My Field',
+                type: 'string',
+                description: 'A field',
+                editor: 'textfield',
+                schema: { _def: 'zod-string-schema' },
+              },
+              otherField: {
+                title: 'Other',
+                type: 'integer',
+                description: 'Count',
+                schema: { _def: 'zod-number-schema' },
+              },
+            },
+          },
+        };
+      `;
+      const configPath = path.join(tmpDir, 'config.mjs');
+      await fsp.writeFile(configPath, configContent, 'utf-8');
+
+      const outDir = path.join(tmpDir, 'output');
+      await generate({ config: configPath, outDir, silent: true });
+
+      const output = JSON.parse(await fsp.readFile(path.join(outDir, 'actor.json'), 'utf-8'));
+
+      // schema should be stripped from Fields
+      expect(output.input.properties.myField).not.toHaveProperty('schema');
+      expect(output.input.properties.otherField).not.toHaveProperty('schema');
+      // Other properties should be preserved
+      expect(output.input.properties.myField.title).toBe('My Field');
+      expect(output.input.properties.myField.type).toBe('string');
+      expect(output.input.properties.otherField.title).toBe('Other');
+    });
+
+    it('strips schema from nested ObjectField properties', async () => {
+      const configContent = `
+        export default {
+          actorSpecification: 1,
+          name: 'nested-schema-strip',
+          version: '0.1',
+          input: {
+            schemaVersion: 1,
+            title: 'Test Input',
+            type: 'object',
+            properties: {
+              nested: {
+                title: 'Nested',
+                type: 'object',
+                description: 'Nested object',
+                editor: 'json',
+                schema: { _def: 'zod-object-schema' },
+                properties: {
+                  innerField: {
+                    title: 'Inner',
+                    type: 'string',
+                    description: 'Inner field',
+                    editor: 'textfield',
+                    schema: { _def: 'zod-inner-string' },
+                  },
+                },
+              },
+            },
+          },
+        };
+      `;
+      const configPath = path.join(tmpDir, 'config.mjs');
+      await fsp.writeFile(configPath, configContent, 'utf-8');
+
+      const outDir = path.join(tmpDir, 'output');
+      await generate({ config: configPath, outDir, silent: true });
+
+      const output = JSON.parse(await fsp.readFile(path.join(outDir, 'actor.json'), 'utf-8'));
+
+      // schema stripped from outer ObjectField
+      expect(output.input.properties.nested).not.toHaveProperty('schema');
+      expect(output.input.properties.nested.title).toBe('Nested');
+      // schema stripped from inner Field too
+      expect(output.input.properties.nested.properties.innerField).not.toHaveProperty('schema');
+      expect(output.input.properties.nested.properties.innerField.title).toBe('Inner');
+    });
+
+    it('preserves schema properties outside of input.properties', async () => {
+      const configContent = `
+        export default {
+          actorSpecification: 1,
+          name: 'preserve-meta-schema',
+          version: '0.1',
+          meta: {
+            schema: 'https://json-schema.org/draft/2020-12/schema',
+            description: 'Some metadata',
+          },
+          input: {
+            schemaVersion: 1,
+            title: 'Test Input',
+            type: 'object',
+            properties: {
+              myField: {
+                title: 'Field',
+                type: 'string',
+                description: 'A field',
+                editor: 'textfield',
+                schema: { _def: 'zod-schema' },
+              },
+            },
+          },
+        };
+      `;
+      const configPath = path.join(tmpDir, 'config.mjs');
+      await fsp.writeFile(configPath, configContent, 'utf-8');
+
+      const outDir = path.join(tmpDir, 'output');
+      await generate({ config: configPath, outDir, silent: true });
+
+      const output = JSON.parse(await fsp.readFile(path.join(outDir, 'actor.json'), 'utf-8'));
+
+      // meta.schema should be preserved
+      expect(output.meta.schema).toBe('https://json-schema.org/draft/2020-12/schema');
+      // Field schema should be stripped
+      expect(output.input.properties.myField).not.toHaveProperty('schema');
+    });
+
+    it('handles Fields without schema property', async () => {
+      const configContent = `
+        export default {
+          actorSpecification: 1,
+          name: 'no-schema-field',
+          version: '0.1',
+          input: {
+            schemaVersion: 1,
+            title: 'Test Input',
+            type: 'object',
+            properties: {
+              plain: {
+                title: 'Plain Field',
+                type: 'string',
+                description: 'No schema attached',
+                editor: 'textfield',
+              },
+            },
+          },
+        };
+      `;
+      const configPath = path.join(tmpDir, 'config.mjs');
+      await fsp.writeFile(configPath, configContent, 'utf-8');
+
+      const outDir = path.join(tmpDir, 'output');
+      await generate({ config: configPath, outDir, silent: true });
+
+      const output = JSON.parse(await fsp.readFile(path.join(outDir, 'actor.json'), 'utf-8'));
+
+      expect(output.input.properties.plain).not.toHaveProperty('schema');
+      expect(output.input.properties.plain.title).toBe('Plain Field');
+      expect(output.input.properties.plain.type).toBe('string');
+    });
+
+    it('does not mutate the original config object', async () => {
+      // Use an async function config to capture the original reference
+      const configContent = `
+        const config = {
+          actorSpecification: 1,
+          name: 'no-mutation',
+          version: '0.1',
+          input: {
+            schemaVersion: 1,
+            title: 'Test',
+            type: 'object',
+            properties: {
+              field1: {
+                title: 'F1',
+                type: 'string',
+                description: 'test',
+                editor: 'textfield',
+                schema: { _def: 'should-remain' },
+              },
+            },
+          },
+        };
+
+        // Attach to global so we can check it after
+        globalThis.__testOrigConfig = config;
+        export default config;
+      `;
+      const configPath = path.join(tmpDir, 'config.mjs');
+      await fsp.writeFile(configPath, configContent, 'utf-8');
+
+      const outDir = path.join(tmpDir, 'output');
+      await generate({ config: configPath, outDir, silent: true });
+
+      // Import the config again to check it wasn't mutated
+      const { pathToFileURL } = await import('node:url');
+      const mod = await import(pathToFileURL(configPath).href);
+      const origConfig = mod.default;
+
+      // Original config should still have schema
+      expect(origConfig.input.properties.field1.schema).toEqual({ _def: 'should-remain' });
+    });
+  });
 });

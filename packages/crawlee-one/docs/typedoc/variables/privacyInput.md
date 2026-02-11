@@ -8,7 +8,7 @@
 
 > `const` **privacyInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:759](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L759)
+Defined in: [packages/crawlee-one/src/lib/input.ts:787](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L787)
 
 Common input fields related to proxy setup
 

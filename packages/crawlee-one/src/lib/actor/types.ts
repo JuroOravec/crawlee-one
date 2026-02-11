@@ -12,6 +12,8 @@ import type {
   RouterHandler,
 } from 'crawlee';
 import type { gotScraping } from 'got-scraping';
+import type { Field } from 'apify-actor-config';
+import type { z } from 'zod';
 
 import type { MaybeAsyncFn, MaybePromise, PickPartial } from '../../utils/types.js';
 import type { CrawlerUrl } from '../../types/index.js';
@@ -190,6 +192,13 @@ export interface CrawleeOneActorDef<T extends CrawleeOneCtx> {
       }) => MaybePromise<T['input']>);
   /** Validation for the actor input. Should throw error if validation fails. */
   validateInput?: (input: T['input'] | null) => MaybePromise<void>;
+  /**
+   * Field objects describing the actor input schema.
+   *
+   * If provided, crawlee-one auto-validates input against
+   * embedded Zod schemas before calling `validateInput`.
+   */
+  inputFields?: Record<string, Field>;
 
   // Router setup
   /**
@@ -217,7 +226,7 @@ export interface CrawleeOneActorDef<T extends CrawleeOneCtx> {
    *     // with label JOB_DETAIL.
    *     name: 'Job detail',
    *     label: routeLabels.JOB_DETAIL,
-   *     match: (url) => isUrlOfJobOffer(url),
+   *     match: (url) => isUrlJobOffer(url),
    *   }, {
    *     // Define custom action function:
    *     // If match returns true, we replace this request with new one
@@ -352,3 +361,26 @@ export interface CrawleeOneActorInst<T extends CrawleeOneCtx> {
   log: Log;
   handlerCtx: null | Parameters<CrawleeOneRouteHandler<T, CrawleeOneActorRouterCtx<T>>>[0];
 }
+
+/**
+ * Extract the input type from a record of Field objects with embedded Zod schemas.
+ *
+ * @example
+ * ```ts
+ * const fields = {
+ *   createStringField({
+ *     title: 'Target URL',
+ *     type: 'string',
+ *     description: 'URL to scrape',
+ *     editor: 'textfield',
+ *     schema: z.string().url(),
+ *   }),
+ * };
+ * type ActorInput = InputFromFields<typeof fields>;
+ * ```
+ */
+export type InputFromFields<F extends Record<string, Field>> = {
+  [K in keyof F]: NonNullable<F[K]['schema']> extends z.ZodType
+    ? z.infer<NonNullable<F[K]['schema']>>
+    : unknown;
+};

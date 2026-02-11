@@ -26,7 +26,6 @@ When you call `crawleeOne()`, the following happens:
 5. The handler may discover more URLs and enqueue them with `pushRequests`.
 6. When the RequestQueue is empty (and `keepAlive` is not set), the crawler stops.
 
-
 ```ts
 import { crawleeOne } from 'crawlee-one';
 
@@ -67,10 +66,25 @@ await crawleeOne({
   //
   // Use `input` for hardcoded config, `inputDefaults` for overridable defaults.
   input: {
-    outputTransform: (item) => { /* ... */ },
+    outputTransform: (item) => {
+      /* ... */
+    },
   },
   inputDefaults: {
     // Overridable defaults
+  },
+
+  // Pass Field objects with embedded Zod schemas for input validation.
+  // Input is validated against these schemas before the crawler starts.
+  inputFields: {
+    myField: createStringField({
+      title: 'Target URL',
+      type: 'string',
+      description: 'URL to scrape',
+      editor: 'textfield',
+      // Zod schema for this field
+      schema: z.string().url(),
+    },
   },
 
   // --- Input merging ---
@@ -105,7 +119,9 @@ await crawleeOne({
       handler: async (ctx) => {
         const { $, request, pushData, pushRequests } = ctx;
 
-        const data = [/* scraped items */];
+        const data = [
+          /* scraped items */
+        ];
         // pushData applies transforms, filtering, privacy masking, and caching.
         await pushData(data, {
           privacyMask: { author: true },
@@ -125,18 +141,24 @@ await crawleeOne({
       await actor.runCrawler(['https://example.com']);
     },
     // Called before/after each route handler.
-    onBeforeHandler: (ctx) => { /* ... */ },
-    onAfterHandler: (ctx) => { /* ... */ },
-    // Validate user input before the crawler starts.
+    onBeforeHandler: (ctx) => {
+      /* ... */
+    },
+    onAfterHandler: (ctx) => {
+      /* ... */
+    },
+    // Additional user input validation before the crawler starts.
     validateInput: (input) => {
-      Joi.assert(input, schema);
+      if (!input?.startUrls?.length) throw new Error('startUrls required');
     },
   },
 
   // --- Proxy ---
   // Crawlee proxy configuration. Do not set here if you want users to configure
   // proxy via the input field.
-  proxy: Actor.createProxyConfiguration({ /* ... */ }),
+  proxy: Actor.createProxyConfiguration({
+    /* ... */
+  }),
 
   // --- Telemetry ---
   // Pluggable error tracking. Sentry is supported out of the box.
@@ -168,12 +190,12 @@ For the full TypeScript definitions, see:
 
 Each route handler receives a context object from [Crawlee Router](https://crawlee.dev/api/core/class/Router), extended with CrawleeOne-specific properties:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `actor` | [`CrawleeOneActorInst`](./typedoc/interfaces/CrawleeOneActorInst.md) | The CrawleeOne instance. Access input, state, IO, and more. |
-| `pushData` | function | Save scraped items with transforms, filtering, privacy, and caching applied. |
-| `pushRequests` | function | Enqueue URLs with request filtering and transforms applied. |
-| `metamorph` | function | Trigger a downstream crawler/actor. |
+| Property       | Type                                                                 | Description                                                                  |
+| -------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `actor`        | [`CrawleeOneActorInst`](./typedoc/interfaces/CrawleeOneActorInst.md) | The CrawleeOne instance. Access input, state, IO, and more.                  |
+| `pushData`     | function                                                             | Save scraped items with transforms, filtering, privacy, and caching applied. |
+| `pushRequests` | function                                                             | Enqueue URLs with request filtering and transforms applied.                  |
+| `metamorph`    | function                                                             | Trigger a downstream crawler/actor.                                          |
 
 ```ts
 handler: async (ctx) => {
@@ -190,7 +212,9 @@ handler: async (ctx) => {
   await ctx.pushRequests([{ url: 'https://...' }]);
 
   // Access resolved input
-  if (ctx.actor.input.myCustomField) { /* ... */ }
+  if (ctx.actor.input.myCustomField) {
+    /* ... */
+  }
 
   // Access shared state (available in hooks like outputTransform)
   ctx.actor.state.counter = (ctx.actor.state.counter || 0) + 1;
@@ -198,7 +222,7 @@ handler: async (ctx) => {
   // Access storage directly
   const dataset = await ctx.actor.io.openDataset();
   const store = await ctx.actor.io.openKeyValueStore();
-}
+};
 ```
 
 The `actor` object is integral to CrawleeOne. [See the full list of properties](./typedoc/interfaces/CrawleeOneActorInst.md).

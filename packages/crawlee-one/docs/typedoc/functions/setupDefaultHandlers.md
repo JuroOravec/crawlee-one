@@ -8,7 +8,7 @@
 
 > **setupDefaultHandlers**\<`T`, `RouterCtx`\>(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/router/router.ts:326](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/router.ts#L326)
+Defined in: [packages/crawlee-one/src/lib/router/router.ts:325](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/router.ts#L325)
 
 Configures the default router handler to redirect URLs to labelled route handlers
 based on which route the URL matches first.

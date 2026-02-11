@@ -5,7 +5,6 @@ import type {
   CrawleeOneActorRouterCtx,
   CrawleeOneCtx,
 } from './lib/actor/types.js';
-import type { AllActorInputs } from './lib/input.js';
 import { logLevelHandlerWrapper } from './lib/log.js';
 import type { CrawleeOneRouteHandler, CrawleeOneRoute } from './lib/router/types.js';
 import type { CrawlerMeta, CrawlerType } from './types/index.js';
@@ -59,14 +58,19 @@ export interface CrawleeOneArgs<
    * ```
    */
   mergeInput?: boolean | ((sources: {
-    defaults: Partial<AllActorInputs>;
-    overrides: Partial<AllActorInputs>;
-    env: Partial<AllActorInputs>;
-  }) => MaybePromise<Partial<AllActorInputs>>);
+    defaults: Partial<T['input']>;
+    overrides: Partial<T['input']>;
+    env: Partial<T['input']>;
+  }) => MaybePromise<Partial<T['input']>>);
   /** Input configuration that CANNOT be overriden via `inputDefaults` and `io.getInput()` */
-  input?: Partial<AllActorInputs>;
+  input?: Partial<T['input']>;
   /** Input configuration that CAN be overriden via `input` and `io.getInput()` */
-  inputDefaults?: Partial<AllActorInputs>;
+  inputDefaults?: Partial<T['input']>;
+  /**
+   * Field objects with embedded Zod schemas for input validation.
+   * If provided, input is validated against these schemas automatically.
+   */
+  inputFields?: CrawleeOneActorDef<T>['inputFields'];
 
   // /////// Override services /////////
   /**
@@ -114,7 +118,7 @@ export interface CrawleeOneArgs<
 
   hooks?: {
     onReady?: (actor: CrawleeOneActorInst<T>) => MaybePromise<void>;
-    validateInput?: (input: AllActorInputs | null) => MaybePromise<void>;
+    validateInput?: (input: T['input'] | null) => MaybePromise<void>;
     onBeforeHandler?: CrawleeOneRouteHandler<T, CrawleeOneActorRouterCtx<T>>;
     onAfterHandler?: CrawleeOneRouteHandler<T, CrawleeOneActorRouterCtx<T>>;
   };
@@ -152,6 +156,7 @@ export const crawleeOne = <
       input: args.input,
       inputDefaults: args.inputDefaults,
       mergeInput: args.mergeInput,
+      inputFields: args.inputFields,
       validateInput: args.hooks?.validateInput,
 
       routes: args.routes,

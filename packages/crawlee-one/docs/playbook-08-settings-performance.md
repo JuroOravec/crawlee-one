@@ -63,8 +63,8 @@ Without batching, each request launches its own browser instance, processes the 
 
 ```json
 {
-  "perfBatchSize": 20,
-  "perfBatchWaitSecs": 1.5
+  "batchSize": 20,
+  "batchWaitSecs": 1.5
 }
 ```
 

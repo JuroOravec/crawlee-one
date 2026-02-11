@@ -1,5 +1,80 @@
 # Release notes
 
+## v3.1.0
+
+#### Breaking Changes 🚨
+
+- **`AllActorInputs` type renamed to `ActorInput`.** Update imports: `import type { ActorInput } from 'crawlee-one'`.
+- **`allActorInputs` value renamed to `actorInput`.** Update imports: `import { actorInput } from 'crawlee-one'`.
+- The `*ValidationFields` exports (`crawlerInputValidationFields`, etc.) have been removed. Use the embedded `schema` property on Field objects instead (e.g. `actorInput.startUrls.schema`).
+- **`perfBatchSize` and `perfBatchWaitSecs` actor input fields renamed to `batchSize` and `batchWaitSecs`.** The `perf` prefix was unnecessary -- update your actor input configs accordingly.
+- **`getDatasetCount` was removed.**
+
+  If you used `getDatasetCount()`, you can re-implement it youself as:
+
+  ```ts
+  import type { Log } from 'apify';
+  import type { CrawleeOneIO } from 'crawlee-one';
+
+  /**
+   * Given a Dataset ID, get the number of entries already in the Dataset.
+   */
+  export const getDatasetCount = async (
+    datasetNameOrId?: string,
+    options?: { io: CrawleeOneIO; log?: Log }
+  ) => {
+    const { io, log } = options ?? {};
+    if (!io) throw new Error('getDatasetCount requires an io option');
+
+    log?.debug('Opening dataset');
+    const dataset = await io.openDataset(datasetNameOrId);
+    log?.debug('Obtaining dataset entries count');
+    const count = await dataset.getItemCount();
+    if (typeof count !== 'number') {
+      log?.warning('Failed to get count of entries in dataset. We use this info to know how many items were scraped. More entries might be scraped than was set.'); // prettier-ignore
+    } else {
+      log?.debug(`Done obtaining dataset entries count (${count})`);
+    }
+    return count;
+  };
+  ```
+
+#### Features
+
+- Add `inputFields` option to `crawleeOne()` and `CrawleeOneActorDef`. Embed Zod schemas on Field objects for automatic input validation -- eliminates manual validation boilerplate in scrapers.
+
+  ```ts
+  import { z } from 'zod';
+  import { createStringField } from 'apify-actor-config';
+  import { crawleeOne, actorInput } from 'crawlee-one';
+
+  const fields = {
+    ...actorInput,
+
+    targetUrl: createStringField({
+      title: 'Target URL',
+      type: 'string',
+      description: 'URL to scrape',
+      editor: 'textfield',
+      schema: z.string().url(),
+    }),
+  };
+
+  await crawleeOne({
+    type: 'cheerio',
+    inputFields: fields,
+    routes: {
+      /* ... */
+    },
+  });
+  ```
+
+- Export `InputFromFields` type helper to infer `ActorInput` types directly from Field objects with embedded Zod schemas.
+
+#### Refactor
+
+- Replace Joi with Zod for input validation schemas. Zod schemas are now co-located on each Field object in `input.ts` instead of in separate `*ValidationFields` objects.
+
 ## v3.0.2
 
 _2026-02-09_

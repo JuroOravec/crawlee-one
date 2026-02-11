@@ -21,8 +21,14 @@ export const getPackageJsonInfo = <TFields extends string = string>(
   fields: TFields[],
   importMetaUrl: string
 ): Record<TFields, any> => {
+  let dir: string;
+  try {
+    dir = dirname(fileURLToPath(importMetaUrl));
+  } catch {
+    throw new Error(`No package.json found starting from ${importMetaUrl}`);
+  }
+
   const req = createRequire(importMetaUrl);
-  let dir = dirname(fileURLToPath(importMetaUrl));
 
   // Walk up directories to find the nearest package.json
   while (true) {

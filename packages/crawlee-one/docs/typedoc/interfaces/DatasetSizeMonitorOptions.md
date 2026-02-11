@@ -6,7 +6,7 @@
 
 # Interface: DatasetSizeMonitorOptions
 
-Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:67](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L67)
+Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:43](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L43)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:67](https://github.com/J
 
 > `optional` **datasetId**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:73](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L73)
+Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:49](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L49)
 
 ID or name of the Dataset that's monitored for size.
 
@@ -30,7 +30,7 @@ If omitted, the default Dataset is used.
 
 > `optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)\<`object`, `object`, `object`\>
 
-Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:81](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L81)
+Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:57](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L57)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:81](https://github.com/J
 
 > `optional` **requestQueueId**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:80](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L80)
+Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:56](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L56)
 
 ID of the RequestQueue that holds remaining requests. This queue will be
 emptied when Dataset reaches `maxSize`.
