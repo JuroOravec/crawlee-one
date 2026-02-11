@@ -1,6 +1,6 @@
 # Development Guide
 
-This document covers everything you need to build, test, and contribute to crawlee-one.
+This document covers everything you need to build, test, and contribute to the crawlee-one monorepo.
 
 ## Prerequisites
 
@@ -49,7 +49,7 @@ src/
 │   ├── router/           # Route matching and handler registration
 │   ├── io/               # Data and request I/O
 │   ├── error/            # Error capture and reporting
-│   ├── input.ts          # Actor input schemas and validation (Joi)
+│   ├── input.ts          # Actor input field definitions
 │   ├── log.ts            # Log level helpers
 │   ├── integrations/     # Platform-specific I/O implementations
 │   ├── telemetry/        # Error/performance telemetry
@@ -126,7 +126,7 @@ Coverage thresholds are configured in `vitest.config.ts`. CI enforces these -- t
 
 Some tests spin up a local HTTP server to test real fetch-parse-handle pipelines. These require unrestricted process spawning (Crawlee's Snapshotter spawns child processes for system info).
 
-See [testing-gotchas.md](./testing-gotchas.md) for project-specific pitfalls to be aware of when writing tests.
+See [testing-gotchas.md](../packages/crawlee-one/docs/development/testing-gotchas.md) for project-specific pitfalls to be aware of when writing tests.
 
 ## Benchmarking
 
@@ -160,7 +160,7 @@ pnpm bench:gen             # run benchmarks and transform into rich archive + da
 2. `benchmarks.json` is auto-generated from test metadata -- no manual registry updates needed.
 3. Run `pnpm bench:gen` to verify the new benchmark appears in the output.
 
-For configuration, file layout, the data pipeline, CI integration, and GitHub Pages setup, see the [benchmarks README](../../benchmarks/README.md).
+For configuration, file layout, the data pipeline, CI integration, and GitHub Pages setup, see the [benchmarks README](../packages/crawlee-one/benchmarks/README.md).
 
 ## Linting
 
@@ -232,9 +232,13 @@ This project uses [pnpm](https://pnpm.io/) workspaces.
 
 ```
 packages/
-  crawlee-one/        # The CrawleeOne library (published to npm)
+  crawlee-one/        # Core scraping framework (published to npm)
+  portadom/           # DOM abstraction -- Cheerio, Playwright, or Browser API (published to npm)
+  actor-spec/         # Cross-platform actor definitions (published to npm)
+  apify-actor-config/ # Type-safe Apify actor config generation (published to npm)
+  scraper-utils/      # Shared utilities for concrete scrapers (private)
 scrapers/
-  example-scraper/    # Example scraper using CrawleeOne
+  profesia-sk/        # Example scraper using CrawleeOne
 ```
 
 ```sh
@@ -259,43 +263,80 @@ pnpm --filter crawlee-one test
 pnpm --filter example-scraper start
 ```
 
+### Dependency catalogs
+
+All external dependency versions are defined once in [`pnpm-workspace.yaml`](../pnpm-workspace.yaml) using [pnpm catalogs](https://pnpm.io/catalogs). Every `package.json` references the catalog instead of hard-coding a version range. This is the single source of truth for dependency versions across the monorepo.
+
+There are two catalogs:
+
+| Protocol        | Purpose                                                       | Example                                         |
+| --------------- | ------------------------------------------------------------- | ----------------------------------------------- |
+| `catalog:`      | The actual version installed for development and testing      | `"apify": "catalog:"` resolves to `^3.3.1`      |
+| `catalog:peers` | The minimum version consumers must provide (peerDependencies) | `"apify": "catalog:peers"` resolves to `^3.1.0` |
+
+When the peer and actual versions are the same (e.g. `vitest`), use `catalog:` for both. Workspace references (`workspace:*`) cannot use catalogs.
+
+**Important:** `pnpm add` does not update catalog entries. It replaces the `catalog:` reference with a hard-coded version, which defeats the purpose. Always edit `pnpm-workspace.yaml` directly.
+
+**Adding a new dependency:**
+
+1. Look up the latest version (e.g. `npm info <pkg> version`).
+2. Add the version range to `pnpm-workspace.yaml` under `catalog:`. If it will also be a peerDependency, add the minimum compatible version under `catalogs.peers:`.
+3. In the `package.json` that needs it, add the dependency with `"catalog:"` (or `"catalog:peers"` for peerDependencies).
+4. Run `pnpm install` from the repo root.
+
+**Updating a dependency:**
+
+1. Edit the version in `pnpm-workspace.yaml` under `catalog:` (and/or `catalogs.peers:` if the peer minimum changes).
+2. Run `pnpm install` from the repo root. All packages referencing that catalog entry pick up the new version automatically.
+
+**Removing a dependency:**
+
+1. Remove the entry from the package.json that uses it.
+2. If no other package.json references it, remove the entry from `pnpm-workspace.yaml`.
+3. Run `pnpm install`.
+
 ### Adding a new scraper
 
 1. Create a new directory under `scrapers/`:
 
-```sh
-mkdir -p scrapers/my-scraper/src
-```
+    ```sh
+    mkdir -p scrapers/my-scraper/src
+    ```
 
 2. Add a `package.json`:
 
-```json
-{
-  "name": "my-scraper",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "start": "tsx src/main.ts"
-  },
-  "dependencies": {
-    "crawlee-one": "workspace:*",
-    "crawlee": "^3.16.0"
-  }
-}
-```
+    ```json
+    {
+      "name": "my-scraper",
+      "private": true,
+      "type": "module",
+      "scripts": {
+        "start": "tsx src/main.ts"
+      },
+      "dependencies": {
+        "crawlee-one": "workspace:*",
+        "crawlee": "catalog:"
+      }
+    }
+    ```
 
 3. Run `pnpm install` from the repo root to link everything.
 
 ### Packages
 
-| Package               | Description                                             | Published                                                                                     |
-| --------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| [crawlee-one](../../) | Production-ready web scraping in a single function call | [![npm](https://img.shields.io/npm/v/crawlee-one)](https://www.npmjs.com/package/crawlee-one) |
+| Package                                               | Description                                             | Published                                                                                                   |
+| ----------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [crawlee-one](../packages/crawlee-one/)               | Production-ready web scraping in a single function call | [![npm](https://img.shields.io/npm/v/crawlee-one)](https://www.npmjs.com/package/crawlee-one)               |
+| [portadom](../packages/portadom/)                     | DOM abstraction for Cheerio, Playwright, Browser API    | [![npm](https://img.shields.io/npm/v/portadom)](https://www.npmjs.com/package/portadom)                     |
+| [actor-spec](../packages/actor-spec/)                 | Cross-platform actor definitions                        | [![npm](https://img.shields.io/npm/v/actor-spec)](https://www.npmjs.com/package/actor-spec)                 |
+| [apify-actor-config](../packages/apify-actor-config/) | Type-safe Apify actor config generation                 | [![npm](https://img.shields.io/npm/v/apify-actor-config)](https://www.npmjs.com/package/apify-actor-config) |
+| [scraper-utils](../packages/scraper-utils/)           | Shared utilities for concrete scrapers                  | private                                                                                                     |
 
 ## Further reading
 
-- [CONTRIBUTING.md](../../CONTRIBUTING.md) -- how to submit PRs and report bugs
-- [testing-gotchas.md](./testing-gotchas.md) -- Crawlee-specific testing pitfalls
-- [benchmarks/README.md](../../benchmarks/README.md) -- benchmarking infrastructure deep dive
-- [Getting started](../getting-started.md) -- user-facing guide for the library API
-- [Features](../features.md) -- complete feature catalog
+- [CONTRIBUTING.md](../CONTRIBUTING.md) -- how to submit PRs and report bugs
+- [testing-gotchas.md](../packages/crawlee-one/docs/development/testing-gotchas.md) -- Crawlee-specific testing pitfalls
+- [benchmarks/README.md](../packages/crawlee-one/benchmarks/README.md) -- benchmarking infrastructure deep dive
+- [Getting started](../packages/crawlee-one/docs/getting-started.md) -- user-facing guide for the library API
+- [Features](../packages/crawlee-one/docs/features.md) -- complete feature catalog

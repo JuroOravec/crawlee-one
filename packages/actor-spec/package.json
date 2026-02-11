@@ -50,6 +50,6 @@
     "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
   },
   "dependencies": {
-    "commander": "^14.0.3"
+    "commander": "catalog:"
   }
 }

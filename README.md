@@ -234,7 +234,7 @@ When contributing code, please fork the repo and submit a pull request. See [CON
 
 ## Development
 
-Want to build, test, or hack on CrawleeOne? The [development guide](./packages/crawlee-one/docs/development/README.md) covers prerequisites, all npm scripts, project structure, architecture, and testing strategy.
+Want to build, test, or hack on CrawleeOne? The [development guide](./docs/development.md) covers prerequisites, all npm scripts, project structure, architecture, and testing strategy.
 
 ## Supporting CrawleeOne
 

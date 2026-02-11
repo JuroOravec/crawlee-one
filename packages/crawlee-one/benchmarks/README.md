@@ -2,7 +2,7 @@
 
 This document covers the internals of the benchmarking infrastructure: file layout, the data pipeline, configuration, result persistence, CI integration, and one-time setup steps.
 
-For a quick overview and day-to-day usage, see the [Benchmarking section in the Development Guide](../docs/development/README.md#benchmarking).
+For a quick overview and day-to-day usage, see the [Benchmarking section in the Development Guide](../../../docs/development.md#benchmarking).
 
 ## Architecture
 

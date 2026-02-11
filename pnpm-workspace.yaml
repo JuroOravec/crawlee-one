@@ -1,3 +1,57 @@
 packages:
   - 'packages/*'
   - 'scrapers/*'
+
+# Actual versions installed for production, development and testing.
+# Referenced as "catalog:" in package.json files.
+#
+# To add/remove/change installed dep version:
+# 1. Update the version in this file.
+# 2. Run `pnpm install` from the repo root.
+# 3. All packages referencing that catalog entry will pick up the new version automatically.
+catalog:
+  '@crawlee/browser-pool': ^3.16.0
+  '@crawlee/core': ^3.16.0
+  '@eslint/js': ^10.0.1
+  '@types/lodash': ^4.17.23
+  '@types/lodash-es': ^4.17.12
+  '@types/node': ^25.2.3
+  '@vitest/coverage-v8': ^4.0.18
+  apify: ^3.3.1
+  cheerio: ^1.0.0
+  commander: ^14.0.3
+  cosmiconfig: ^9.0.0
+  crawlee: ^3.16.0
+  domhandler: ^5.0.3
+  dotenv: ^17.2.4
+  eslint: ^10.0.0
+  eslint-config-prettier: ^10.0.0
+  eslint-plugin-prettier: ^5.5.5
+  eta: ^4.0.0
+  glob: ^13.0.2
+  lodash-es: ^4.17.23
+  millify: ^6.1.0
+  playwright: ^1.58.2
+  prettier: ^3.8.1
+  puppeteer: ^24.37.2
+  tsup: ^8.5.1
+  tsx: ^4.21.0
+  typedoc: ^0.28.16
+  typedoc-plugin-markdown: ^4.10.0
+  typescript: ^5.9.3
+  typescript-eslint: ^8.54.0
+  vitest: ^4.0.18
+  yaml: ^2.8.2
+  zod: ^3.24.2
+
+# Minimum versions consumers must provide (peerDependencies).
+# Referenced as "catalog:peers" in package.json files.
+catalogs:
+  peers:
+    '@sentry/node': '>=7.50.0'
+    apify: ^3.1.0
+    apify-client: ^2.7.0
+    cheerio: ^1.0.0-rc.12
+    crawlee: ^3.3.1
+    got-scraping: ^4.0.0
+    playwright: ^1.44.0

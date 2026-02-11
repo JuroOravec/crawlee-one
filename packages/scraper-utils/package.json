@@ -9,7 +9,10 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -26,11 +29,13 @@
   },
   "dependencies": {
     "actor-spec": "workspace:*",
-    "eta": "^4.0.0",
-    "lodash-es": "^4.17.21",
-    "millify": "^6.1.0"
+    "crawlee-one": "workspace:*",
+    "eta": "catalog:",
+    "lodash-es": "catalog:",
+    "millify": "catalog:"
   },
   "devDependencies": {
-    "@types/lodash-es": "^4.17.12"
+    "@types/lodash-es": "catalog:",
+    "apify": "catalog:"
   }
 }

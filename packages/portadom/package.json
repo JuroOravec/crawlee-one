@@ -49,14 +49,14 @@
     "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
   },
   "dependencies": {
-    "domhandler": "^5.0.3"
+    "domhandler": "catalog:"
   },
   "peerDependencies": {
-    "cheerio": "^1.0.0",
-    "playwright": "^1.44.0"
+    "cheerio": "catalog:peers",
+    "playwright": "catalog:peers"
   },
   "devDependencies": {
-    "cheerio": "^1.0.0"
+    "cheerio": "catalog:"
   },
   "peerDependenciesMeta": {
     "cheerio": {

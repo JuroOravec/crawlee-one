@@ -68,22 +68,22 @@
     "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
   },
   "dependencies": {
-    "commander": "^14.0.3",
-    "cosmiconfig": "^9.0.0",
-    "dotenv": "^17.2.4",
-    "glob": "^13.0.2",
-    "lodash-es": "^4.17.23"
+    "commander": "catalog:",
+    "cosmiconfig": "catalog:",
+    "dotenv": "catalog:",
+    "glob": "catalog:",
+    "lodash-es": "catalog:",
+    "zod": "catalog:"
   },
   "peerDependencies": {
-    "@sentry/node": ">=7.50.0",
-    "apify": "^3.1.0",
+    "@sentry/node": "catalog:peers",
+    "apify": "catalog:peers",
     "apify-actor-config": "workspace:*",
-    "apify-client": "^2.7.0",
-    "cheerio": "^1.0.0-rc.12",
-    "crawlee": "^3.3.1",
-    "got-scraping": "^4.0.0",
-    "joi": ">=17.9.2",
-    "playwright": "^1.44.0",
-    "vitest": "^4.0.18"
+    "apify-client": "catalog:peers",
+    "cheerio": "catalog:peers",
+    "crawlee": "catalog:peers",
+    "got-scraping": "catalog:peers",
+    "playwright": "catalog:peers",
+    "vitest": "catalog:"
   }
 }
