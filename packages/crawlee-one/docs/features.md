@@ -307,40 +307,73 @@ For browser-based crawlers (Playwright, Puppeteer), process multiple requests in
 }
 ```
 
-## Codegen for multi-crawler projects.
+## Unified code generation.
 
-For projects that manage multiple crawlers (e.g. one Playwright-based, one Cheerio-based), CrawleeOne can generate typed helper functions from a config file. This is similar to `create-react-app` -- define the structure, and the CLI scaffolds the types.
+A single `crawlee-one gen` command generates everything you need for an Apify scraper -- `actor.json`, `actorspec.json`, `README.md`, and TS types.
 
-```js
-// crawlee-one.config.js
-module.exports = {
+Everything is generated from `crawlee-one.config.ts`. Each section is optional.
+
+```ts
+// crawlee-one.config.ts
+import { defineConfig } from 'crawlee-one';
+
+import actorSpec from './src/readme.js';
+import actorSpec from './src/actorspec.js';
+import actorConfig from './src/config.js';
+import { readmeInput, readmeRenderer } from './src/readme.js';
+
+export default defineConfig({
   version: 1,
   schema: {
     crawlers: {
-      main: { type: 'playwright', routes: ['listingPage', 'detailPage'] },
-      lightweight: { type: 'cheerio', routes: ['staticPage'] },
+      amazon: {
+        type: 'playwright',
+        routes: ['main', 'productList', 'product'],
+      },
     },
   },
-};
+  // Generates TS shims
+  types: {
+    outFile: './src/__generated__/crawler.ts',
+  },
+  // Generates Apify's `actor.json`
+  actor: {
+    config: actorConfig,
+    outFile: '.actor/actor.json',
+  },
+  // Generates crawler metadata `actorspec.json`
+  actorspec: {
+    config: actorSpec,
+    outFile: '.actor/actorspec.json',
+  },
+  // Generates README for the scraper's Apify page
+  readme: {
+    actorSpec,
+    renderer: renderer,
+    input: readmeRenderer,
+  },
+});
 ```
 
-```sh
-npx crawlee-one generate -o ./src/__generated__/crawler.ts
-```
+To use the TypeScript types, import them like this:
 
 ```ts
-import { mainCrawler, lightweightCrawler } from './__generated__/crawler';
+// Import as [name]Crawler
+import { amazonCrawler } from './__generated__/crawler';
 
-// Each generated function is fully typed for its crawler type
-await mainCrawler({
+// amazonCrawler is automatically typed to use Playwright
+// in the route handlers
+await amazonCrawler({
   routes: {
-    listingPage: {
-      match: /example\.com\/listing/i,
+    // amazonCrawler allows only recognized
+    // routes - main, productList, product
+    productList: {
+      match: /amazon\.com\/listing/i,
       handler: (ctx) => {
         ctx.page.locator('...');
       },
     },
-    detailPage: {
+    product: {
       /* ... */
     },
   },

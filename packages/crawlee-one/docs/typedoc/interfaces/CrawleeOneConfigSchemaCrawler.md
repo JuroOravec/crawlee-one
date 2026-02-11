@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneConfigSchemaCrawler
 
-Defined in: [packages/crawlee-one/src/types/config.ts:29](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L29)
+Defined in: [packages/crawlee-one/src/types/config.ts:194](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L194)
 
 Part of the schema that defines a single crawler.
 
@@ -16,7 +16,7 @@ Part of the schema that defines a single crawler.
 
 > **routes**: `string`[]
 
-Defined in: [packages/crawlee-one/src/types/config.ts:37](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L37)
+Defined in: [packages/crawlee-one/src/types/config.ts:202](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L202)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/crawlee-one/src/types/config.ts:37](https://github.com/Jur
 
 > **type**: `"basic"` \| `"http"` \| `"jsdom"` \| `"cheerio"` \| `"playwright"` \| `"adaptive-playwright"` \| `"puppeteer"`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:36](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L36)
+Defined in: [packages/crawlee-one/src/types/config.ts:201](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L201)
 
 Crawler type - Each type is linked to a different Crawlee crawler class.
 Different classes may use different technologies / stack for scraping.

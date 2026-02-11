@@ -4,10 +4,18 @@
 
 #### Breaking Changes 🚨
 
-- **`AllActorInputs` type renamed to `ActorInput`.** Update imports: `import type { ActorInput } from 'crawlee-one'`.
-- **`allActorInputs` value renamed to `actorInput`.** Update imports: `import { actorInput } from 'crawlee-one'`.
-- The `*ValidationFields` exports (`crawlerInputValidationFields`, etc.) have been removed. Use the embedded `schema` property on Field objects instead (e.g. `actorInput.startUrls.schema`).
-- **`perfBatchSize` and `perfBatchWaitSecs` actor input fields renamed to `batchSize` and `batchWaitSecs`.** The `perf` prefix was unnecessary -- update your actor input configs accordingly.
+- **Command `crawlee-one generate`: Removed `-o` / `--out` flag.**
+  - Output path is now configured via `config.types.outFile` in the config file.
+- **`generateTypes()` no longer accepts an `outfile` parameter.**
+  - It now reads the output path from the loaded config (`config.types.outFile`). If `types` is not configured, generation is skipped.
+- **Renamed `AllActorInputs`, `allActorInputs` exports to `ActorInput`, `actorInput`.**
+  - Update imports:
+    ```ts
+    import { type ActorInput, actorInput } from 'crawlee-one';
+    ```
+- **Removed `*ValidationFields` exports** (`crawlerInputValidationFields`, etc.)
+  - Instead use `actorInput.startUrls.schema`, the embedded `schema` property on Field objects.
+- **Renamed actor input fields `perfBatchSize`, `perfBatchWaitSecs` to `batchSize`, `batchWaitSecs`.**
 - **`getDatasetCount` was removed.**
 
   If you used `getDatasetCount()`, you can re-implement it youself as:
@@ -41,13 +49,83 @@
 
 #### Features
 
-- Add `inputFields` option to `crawleeOne()` and `CrawleeOneActorDef`. Embed Zod schemas on Field objects for automatic input validation -- eliminates manual validation boilerplate in scrapers.
+- **Unified `crawlee-one gen` command.**
+
+  The command takes your config at `crawlee-one.config.ts` (or `.js`) and generates:
+  - Apify's `actor.json`
+  - `README.md` for the users of your scraper
+  - Type helpers for your TypeScript code
+
+  Config now has new fields: `actor`, `actorspec`, `readme`, `types`
+
+  README generation can be customized by providing custom `renderer`.
+
+  ```ts
+  // crawlee-one.config.ts
+  import { defineConfig } from 'crawlee-one';
+
+  import actorSpec from './src/readme.js';
+  import actorSpec from './src/actorspec.js';
+  import actorConfig from './src/config.js';
+  import { readmeInput, readmeRenderer } from './src/readme.js';
+
+  export default defineConfig({
+    version: 1,
+    schema: {
+      crawlers: {
+        myCrawler: {
+          type: 'cheerio',
+          routes: ['main'],
+        },
+      },
+    },
+    // New - Generates TS shims
+    types: {
+      outFile: './src/__generated__/crawler.ts',
+    },
+    // New - Generates Apify's `actor.json`
+    actor: {
+      config: actorConfig,
+      outFile: '.actor/actor.json',
+    },
+    // New - Generates crawler metadata `actorspec.json`
+    actorspec: {
+      config: actorSpec,
+      outFile: '.actor/actorspec.json',
+    },
+    // New - Generates README for the scraper's Apify page
+    readme: {
+      actorSpec,
+      renderer: renderer,
+      input: readmeRenderer,
+    },
+  });
+  ```
+
+- **`defineConfig()`** — Use this helper to add type hints to the `crawlee-one` config:
+
+  ```ts
+  // crawlee-one.config.ts
+  import { defineConfig } from 'crawlee-one';
+
+  export default defineConfig({
+    version: 1,
+    ...
+  })
+  ```
+
+- **Automatic input validation via `inputFields`.**
+
+  Pass your Field objects (with embedded Zod schemas) to `crawleeOne()` via the new `inputFields` option. The crawler validates actor input on startup -- no more manual `z.parse()` boilerplate.
+
+  Use the new `InputFromFields` type helper to infer a typed `ActorInput` directly from your fields.
 
   ```ts
   import { z } from 'zod';
   import { createStringField } from 'apify-actor-config';
-  import { crawleeOne, actorInput } from 'crawlee-one';
+  import { crawleeOne, actorInput type InputFromFields } from 'crawlee-one';
 
+  // Define crawler inputs - now you can set zod schema on Field.schema
   const fields = {
     ...actorInput,
 
@@ -56,20 +134,24 @@
       type: 'string',
       description: 'URL to scrape',
       editor: 'textfield',
+      // New!
       schema: z.string().url(),
     }),
   };
 
+  // Input object, e.g.
+  // { targetUrl: string; }
+  type ActorInput = InputFromFields<typeof fields>;
+
   await crawleeOne({
     type: 'cheerio',
+    // New - crawlee-one will validate input against the fields' schemas
     inputFields: fields,
     routes: {
       /* ... */
     },
   });
   ```
-
-- Export `InputFromFields` type helper to infer `ActorInput` types directly from Field objects with embedded Zod schemas.
 
 #### Refactor
 

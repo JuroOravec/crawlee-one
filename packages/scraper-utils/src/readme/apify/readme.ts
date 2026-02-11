@@ -1,9 +1,8 @@
 import { Eta } from 'eta';
-import fsp from 'fs/promises';
-import path from 'path';
 import millify from 'millify';
 import { capitalize, cloneDeep, defaults, round, uniqBy } from 'lodash-es';
 import type { DatasetPerfStat } from 'actor-spec';
+import type { ReadmeRenderer } from 'crawlee-one';
 
 import {
   ApifyReadmeTemplates,
@@ -105,7 +104,6 @@ const collectFilters = (it: any) => uniqBy(it.a.datasets.flatMap((d) => d.filter
 const collectModes = (it: any) => uniqBy(it.a.datasets.flatMap((d) => d.modes), (m: any) => m.name); // prettier-ignore
 const collectEmails = (it: any) => uniqBy(it.a.authors.flatMap((a) => a.email), e => e); // prettier-ignore
 
-// TODO
 /** Define the texts in features sections that are, by default, common across all actors */
 export const defaultFeatureTexts: ApifyReadmeTemplates['features'] = {
   datasets: {
@@ -488,7 +486,31 @@ email me at <%~ it.fn.email(it.fn.collectEmails(it)[0]) %>
 `;
 
 /**
- * Render a README.md file from a common template for a given Apify crawler.
+ * Renderer-specific input for {@link renderApifyReadme}.
+ *
+ * Everything the Apify README renderer needs beyond `actorSpec` is passed
+ * through this object -- templates, custom ETA helper functions, etc.
+ */
+export interface ApifyReadmeInput {
+  /**
+   * Custom eta template strings that plug into different
+   * parts of the README template.
+   *
+   * Inside the template during rendering, these templates
+   * can be accessed as `<%~ it.t.someTemplate %>`
+   */
+  templates: ApifyReadmeTemplatesOverrides;
+  /**
+   * Functions to be made available in the template.
+   *
+   * Inside the template during rendering, these functions
+   * can be accessed as `<%~ it.fn.funcName() %>`
+   */
+  fn?: Record<string, (...args: any[]) => any>;
+}
+
+/**
+ * Render a README string from a common template for a given Apify crawler.
  *
  * See https://docs.apify.com/academy/get-most-of-actors/actor-readme
  *
@@ -496,7 +518,7 @@ email me at <%~ it.fn.email(it.fn.collectEmails(it)[0]) %>
  *
  * Each template has access to `it` global variable. `it` has these props:
  *
- * - `it.fn` - The functions passed to this function + more (see below)
+ * - `it.fn` - The functions passed via `input.fn` + built-in helpers (see below)
  * - `it.t` - The templates object passed to this function
  * - `it.a` - The actorSpec object passed to this function
  *
@@ -517,36 +539,19 @@ email me at <%~ it.fn.email(it.fn.collectEmails(it)[0]) %>
  * - `it.fn.collectModes`
  * - `it.fn.collectEmails`
  *
- * See their definitions for details
+ * See their definitions for details.
+ *
+ * Returns the rendered README as a string. Does NOT write to the filesystem.
  */
-export const renderApifyReadme = async (input: {
-  /** Filepath (relative to CWD) where the generated README should be written. */
-  filepath: string;
-  /**
-   * Info about a particular actor.
-   *
-   * Inside the template during rendering, this object
-   * can be accessed as `<%~ it.a.platform.actorId %>`
-   */
-  actorSpec: ApifyScraperActorSpec;
-  /**
-   * Custom eta template strings that plug into different
-   * parts of the README template.
-   *
-   * Inside the template during rendering, these templates
-   * can be accessed as `<%~ it.t.someTemplate %>`
-   */
-  templates: ApifyReadmeTemplatesOverrides;
-  /**
-   * Functions to be made available in the template.
-   *
-   * Inside the template during rendering, these functions
-   * can be accessed as `<%~ it.fn.funcName() %>`
-   */
-  fn?: Record<string, (...args: any[]) => any>;
-}) => {
+export const renderApifyReadme: ReadmeRenderer<ApifyReadmeInput> = async (args) => {
+  const { actorSpec, input: rendererInput } = args;
+
+  if (!rendererInput?.templates) {
+    throw new Error('renderApifyReadme requires input.templates');
+  }
+
   // Assign the default values to a clone
-  const templates = cloneDeep(input.templates) as ApifyReadmeTemplates;
+  const templates = cloneDeep(rendererInput.templates) as ApifyReadmeTemplates;
   templates.features = templates.features || {};
   Object.entries(defaultFeatureTexts).forEach(([key, feat]) => {
     templates.features[key] = defaults(templates.features[key] || {}, feat);
@@ -582,13 +587,9 @@ export const renderApifyReadme = async (input: {
     collectFilters,
     collectModes,
     collectEmails,
-    ...input.fn,
+    ...rendererInput?.fn,
   };
 
-  const data = { fn, t: templates, a: input.actorSpec } satisfies RenderContext;
-  const readmeContent = eta.renderString(readmeTemplate, data);
-
-  const readmePath = path.resolve(process.cwd(), input.filepath);
-  await fsp.mkdir(path.dirname(readmePath), { recursive: true });
-  await fsp.writeFile(readmePath, readmeContent, 'utf-8');
+  const data = { fn, t: templates, a: actorSpec as ApifyScraperActorSpec } satisfies RenderContext;
+  return eta.renderString(readmeTemplate, data);
 };

@@ -1,43 +1,105 @@
-# Codegen
+# Code Generation
 
-For projects that manage multiple crawlers (e.g. one Playwright-based, one Cheerio-based), CrawleeOne can generate typed helper functions from a config file. This is similar to `create-react-app` -- define the structure, and the CLI scaffolds the types.
+A single `crawlee-one gen` command generates everything you need for an Apify scraper -- `actor.json`, `actorspec.json`, `README.md`, and TS types.
 
-## 1. Define the crawler schema
+Everything is generated from `crawlee-one.config.ts`. Each section is optional.
 
-Create a config file that describes your crawlers and their routes:
+- **TypeScript types** -- typed crawler helpers and route definitions
+- **actor.json** -- Apify actor configuration
+- **actorspec.json** -- actor specification metadata
+- **README.md** -- rendered README from a pluggable renderer
 
-```js
-// crawlee-one.config.js
-module.exports = {
+## 1. Define the config
+
+Create a `crawlee-one.config.ts` file. Use `defineConfig()` for type hints:
+
+```ts
+// crawlee-one.config.ts
+import { defineConfig } from 'crawlee-one';
+
+export default defineConfig({
   version: 1,
   schema: {
     crawlers: {
       main: {
-        // 'basic', 'http', 'jsdom', 'cheerio', 'playwright', 'puppeteer'
+        // One of:
+        // - 'basic'
+        // - 'http'
+        // - 'jsdom
+        // - 'cheerio'
+        // - 'playwright'
+        // - 'puppeteer'
         type: 'playwright',
-        routes: ['listingPage', 'detailPage'],
+        // Routes that your scraper defines
+        routes: [
+          'main',
+          'productList',
+          'product',
+        ],
       },
     },
   },
-};
+  // Generates TS shims
+  types: {
+    outFile: './src/__generated__/crawler.ts',
+  },
+  // Generates Apify's `actor.json`
+  actor: {
+    config: actorConfig,
+    outFile: '.actor/actor.json',
+  },
+  // Generates crawler metadata `actorspec.json`
+  actorspec: {
+    config: actorSpec,
+    outFile: '.actor/actorspec.json',
+  },
+  // Generates README for the scraper's Apify page
+  readme: {
+    actorSpec,
+    renderer: renderer,
+    input: readmeRenderer,
+  },
+});
 ```
 
-YAML is also supported:
+For Apify actors, you can also generate `actor.json`, `actorspec.json`, and a README:
 
-```yaml
-# .crawlee-onerc.yml
-version: 1
-schema:
-  crawlers:
-    main:
-      type: 'playwright'
-      routes: ['listingPage', 'detailPage']
-    lightweight:
-      type: 'cheerio'
-      routes: ['staticPage']
+```ts
+import { defineConfig } from 'crawlee-one';
+import { renderApifyReadme } from './src/readme.js';
+import actorSpec from './src/actorspec.js';
+import actorConfig from './src/config.js';
+
+export default defineConfig({
+  version: 1,
+  schema: {
+    crawlers: {
+      /* ... */
+    },
+  },
+  types: { outFile: './src/__generated__/crawler.ts' },
+  actor: {
+    config: actorConfig, // ActorConfig object
+    outFile: '.actor/actor.json',
+  },
+  actorspec: {
+    config: actorSpec, // ActorSpec object
+    outFile: '.actor/actorspec.json',
+  },
+  readme: {
+    outFile: '.actor/README.md',
+    actorSpec,
+    renderer: renderApifyReadme,
+    input: {
+      templates: {
+        /* ... renderer-specific templates */
+      },
+    },
+  },
+});
 ```
 
-CrawleeOne uses [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig) for config loading, so you can use any of:
+YAML and other formats are also supported via [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig):
 
 - `crawlee-one` property in `package.json`
 - `.crawlee-onerc` (JSON or YAML)
@@ -45,11 +107,21 @@ CrawleeOne uses [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig) for co
 - Files inside `.config/` subdirectory
 - `crawlee-one.config.js`, `crawlee-one.config.ts`, `crawlee-one.config.mjs`, `crawlee-one.config.cjs`
 
-## 2. Generate types
+## 2. Generate
 
 ```sh
-npx crawlee-one generate -o ./src/__generated__/crawler.ts
+npx crawlee-one gen
 ```
+
+With explicit config path:
+
+```sh
+npx crawlee-one gen -c ./path/to/config.ts
+```
+
+Each section (`types`, `actor`, `actorspec`, `readme`) is optional. Only the configured sections are generated.
+
+If `outFile` is omitted, the output defaults to `.actor/` (if the directory exists) or the current directory.
 
 ## 3. Use generated types
 
@@ -69,7 +141,9 @@ await mainCrawler({
     },
     detailPage: {
       match: /example\.com\/detail/i,
-      handler: (ctx) => { /* ... */ },
+      handler: (ctx) => {
+        /* ... */
+      },
     },
   },
 });
@@ -92,7 +166,9 @@ const mainPromise = mainCrawler({
         await ctx.pushRequests([{ url: '...' }], { requestQueueId: 'sharedQueue' });
       },
     },
-    detailPage: { /* ... */ },
+    detailPage: {
+      /* ... */
+    },
   },
 });
 
