@@ -8,7 +8,7 @@
 
 > `const` **perfInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:641](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L641)
+Defined in: [packages/crawlee-one/src/lib/input.ts:660](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L660)
 
 Common input fields related to performance which are not part of the CrawlerConfig
 

@@ -8,7 +8,7 @@
 
 > **createBooleanField**\<`T`\>(`field`): [`BooleanField`](../interfaces/BooleanField.md)\<`T`\>
 
-Defined in: [inputSchema.ts:587](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L587)
+Defined in: [inputSchema.ts:594](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L594)
 
 ## Type Parameters
 

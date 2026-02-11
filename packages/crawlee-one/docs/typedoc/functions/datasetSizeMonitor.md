@@ -8,7 +8,7 @@
 
 > **datasetSizeMonitor**(`maxSize`, `options?`): `object`
 
-Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:94](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L94)
+Defined in: [packages/crawlee-one/src/lib/io/dataset.ts:70](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/dataset.ts#L70)
 
 Semi-automatic monitoring of Dataset size. This is used in limiting the total of entries
 scraped per run / Dataset:

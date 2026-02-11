@@ -14,7 +14,7 @@ Common input fields related to extending Actor input with remote or generated da
 
 ### inputExtendFromFunction?
 
-> `optional` **inputExtendFromFunction**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<\[\], [`AllActorInputs`](../type-aliases/AllActorInputs.md)\>
+> `optional` **inputExtendFromFunction**: `string` \| [`CrawleeOneHookFn`](../type-aliases/CrawleeOneHookFn.md)\<\[\], [`ActorInput`](../type-aliases/ActorInput.md)\>
 
 Defined in: [packages/crawlee-one/src/lib/input.ts:69](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L69)
 

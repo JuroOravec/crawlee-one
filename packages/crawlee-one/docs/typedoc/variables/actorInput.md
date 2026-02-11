@@ -2,13 +2,13 @@
 
 ***
 
-[crawlee-one](../README.md) / allActorInputs
+[crawlee-one](../README.md) / actorInput
 
-# Variable: allActorInputs
+# Variable: actorInput
 
-> `const` **allActorInputs**: `object`
+> `const` **actorInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:1041](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L1041)
+Defined in: [packages/crawlee-one/src/lib/input.ts:1092](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L1092)
 
 ## Type Declaration
 
@@ -94,7 +94,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1041](https://github.com/Juro
 
 ### outputCacheActionOnResult
 
-> **outputCacheActionOnResult**: `StringField`\<`NonNullable`\<`"add"` \| `"remove"` \| `"overwrite"` \| `null` \| `undefined`\>, `string`\>
+> **outputCacheActionOnResult**: `StringField`\<`string`, `string`\>
 
 ### outputCachePrimaryKeys
 

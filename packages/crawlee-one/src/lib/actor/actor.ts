@@ -8,6 +8,7 @@ import {
 } from 'crawlee';
 import { omitBy, pick, defaults } from 'lodash-es';
 import { gotScraping } from 'got-scraping';
+import { z } from 'zod';
 
 import type { CrawlerMeta, CrawlerType } from '../../types/index.js';
 import { actorClassByType } from '../../constants.js';
@@ -255,6 +256,16 @@ const createCrawleeOne = async <T extends CrawleeOneCtx>(
   // Initialize actor inputs
   const input = await createActorInput({ ...config, io }, state);
 
+  // Auto-validate from Field schemas
+  if (config.inputFields) {
+    const fieldSchemas: Record<string, z.ZodType> = {};
+    for (const [key, field] of Object.entries(config.inputFields)) {
+      if (field.schema) fieldSchemas[key] = field.schema as z.ZodType;
+    }
+    z.object(fieldSchemas).parse(input);
+  }
+
+  // Then custom validation hook
   if (config.validateInput) await config.validateInput(input);
 
   const { logLevel } = (input ?? {}) as LoggingActorInput;

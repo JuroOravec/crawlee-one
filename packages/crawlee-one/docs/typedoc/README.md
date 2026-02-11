@@ -46,7 +46,7 @@
 
 ## Type Aliases
 
-- [AllActorInputs](type-aliases/AllActorInputs.md)
+- [ActorInput](type-aliases/ActorInput.md)
 - [ApifyCrawleeOneIO](type-aliases/ApifyCrawleeOneIO.md)
 - [ArrVal](type-aliases/ArrVal.md)
 - [CaptureError](type-aliases/CaptureError.md)
@@ -66,6 +66,7 @@
 - [ExtractErrorHandlerOptionsReport](type-aliases/ExtractErrorHandlerOptionsReport.md)
 - [ExtractIOReport](type-aliases/ExtractIOReport.md)
 - [GenRedactedValue](type-aliases/GenRedactedValue.md)
+- [InputFromFields](type-aliases/InputFromFields.md)
 - [LogLevel](type-aliases/LogLevel.md)
 - [MaybeArray](type-aliases/MaybeArray.md)
 - [MaybeAsyncFn](type-aliases/MaybeAsyncFn.md)
@@ -81,31 +82,20 @@
 
 ## Variables
 
-- [allActorInputs](variables/allActorInputs.md)
-- [allActorInputValidationFields](variables/allActorInputValidationFields.md)
+- [actorInput](variables/actorInput.md)
 - [apifyIO](variables/apifyIO.md)
 - [crawlerInput](variables/crawlerInput.md)
-- [crawlerInputValidationFields](variables/crawlerInputValidationFields.md)
 - [inputInput](variables/inputInput.md)
-- [inputInputValidationFields](variables/inputInputValidationFields.md)
 - [LOG\_LEVEL](variables/LOG_LEVEL.md)
 - [loggingInput](variables/loggingInput.md)
-- [loggingInputValidationFields](variables/loggingInputValidationFields.md)
 - [logLevelToCrawlee](variables/logLevelToCrawlee.md)
 - [metamorphInput](variables/metamorphInput.md)
-- [metamorphInputValidationFields](variables/metamorphInputValidationFields.md)
 - [outputInput](variables/outputInput.md)
-- [outputInputValidationFields](variables/outputInputValidationFields.md)
 - [perfInput](variables/perfInput.md)
-- [perfInputValidationFields](variables/perfInputValidationFields.md)
 - [privacyInput](variables/privacyInput.md)
-- [privacyInputValidationFields](variables/privacyInputValidationFields.md)
 - [proxyInput](variables/proxyInput.md)
-- [proxyInputValidationFields](variables/proxyInputValidationFields.md)
 - [requestInput](variables/requestInput.md)
-- [requestInputValidationFields](variables/requestInputValidationFields.md)
 - [startUrlsInput](variables/startUrlsInput.md)
-- [startUrlsInputValidationFields](variables/startUrlsInputValidationFields.md)
 
 ## Functions
 
@@ -130,7 +120,6 @@
 - [datasetSizeMonitor](functions/datasetSizeMonitor.md)
 - [generateTypes](functions/generateTypes.md)
 - [getColumnFromDataset](functions/getColumnFromDataset.md)
-- [getDatasetCount](functions/getDatasetCount.md)
 - [httpCaptureErrorRouteHandler](functions/httpCaptureErrorRouteHandler.md)
 - [itemCacheKey](functions/itemCacheKey.md)
 - [jsdomCaptureErrorRouteHandler](functions/jsdomCaptureErrorRouteHandler.md)

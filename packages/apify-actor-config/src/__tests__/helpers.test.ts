@@ -573,3 +573,86 @@ describe('Field creator functions', () => {
     });
   });
 });
+
+describe('Field schema property', () => {
+  it('createStringField preserves schema property', () => {
+    const schema = { _type: 'ZodString' }; // Simulated Zod schema
+    const field = createStringField({
+      title: 'URL',
+      type: 'string',
+      description: 'Enter a URL',
+      editor: 'textfield',
+      schema,
+    });
+    expect(field.schema).toBe(schema);
+    expect(field.title).toBe('URL');
+  });
+
+  it('createBooleanField preserves schema property', () => {
+    const schema = { _type: 'ZodBoolean' };
+    const field = createBooleanField({
+      title: 'Enabled',
+      type: 'boolean',
+      description: 'Toggle',
+      schema,
+    });
+    expect(field.schema).toBe(schema);
+  });
+
+  it('createIntegerField preserves schema property', () => {
+    const schema = { _type: 'ZodNumber' };
+    const field = createIntegerField({
+      title: 'Count',
+      type: 'integer',
+      description: 'Item count',
+      schema,
+    });
+    expect(field.schema).toBe(schema);
+  });
+
+  it('createNumberField preserves schema property', () => {
+    const schema = { _type: 'ZodNumber' };
+    const field = createNumberField({
+      title: 'Temp',
+      type: 'number',
+      description: 'Temperature',
+      schema,
+    });
+    expect(field.schema).toBe(schema);
+  });
+
+  it('createObjectField preserves schema property', () => {
+    const schema = { _type: 'ZodObject' };
+    const field = createObjectField({
+      title: 'Config',
+      type: 'object',
+      description: 'Configuration',
+      editor: 'json',
+      schema,
+    });
+    expect(field.schema).toBe(schema);
+  });
+
+  it('createArrayField preserves schema property', () => {
+    const schema = { _type: 'ZodArray' };
+    const field = createArrayField({
+      title: 'Tags',
+      type: 'array',
+      description: 'Tag list',
+      editor: 'stringList',
+      schema,
+    });
+    expect(field.schema).toBe(schema);
+  });
+
+  it('schema is optional and fields work without it', () => {
+    const field = createStringField({
+      title: 'Plain',
+      type: 'string',
+      description: 'No schema',
+      editor: 'textfield',
+    });
+    expect(field).not.toHaveProperty('schema');
+    expect(field.title).toBe('Plain');
+  });
+});

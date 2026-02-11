@@ -8,7 +8,7 @@
 
 > **createObjectField**\<`T`\>(`field`): [`ObjectField`](../interfaces/ObjectField.md)\<`T`\>
 
-Defined in: [inputSchema.ts:590](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L590)
+Defined in: [inputSchema.ts:597](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L597)
 
 ## Type Parameters
 

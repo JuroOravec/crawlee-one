@@ -8,7 +8,7 @@
 
 > **CrawleeOneHookCtx**\<`T`\> = `Pick`\<[`CrawleeOneActorInst`](../interfaces/CrawleeOneActorInst.md)\<`T`\>, `"input"` \| `"state"`\> & `object`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:104](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L104)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:106](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L106)
 
 Context passed to user-defined functions passed from input
 

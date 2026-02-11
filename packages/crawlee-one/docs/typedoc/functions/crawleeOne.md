@@ -8,7 +8,7 @@
 
 > **crawleeOne**\<`TType`, `T`\>(`args`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/api.ts:124](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/api.ts#L124)
+Defined in: [packages/crawlee-one/src/api.ts:128](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/api.ts#L128)
 
 ## Type Parameters
 

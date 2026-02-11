@@ -8,7 +8,7 @@
 
 > **RunCrawler**\<`Ctx`\> = (`requests?`, `options?`) => `ReturnType`\<`OrigRunCrawler`\<`Ctx`\>\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:32](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L32)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:34](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L34)
 
 Extended type of `crawler.run()` function
 

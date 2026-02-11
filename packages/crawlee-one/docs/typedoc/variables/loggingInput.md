@@ -8,7 +8,7 @@
 
 > `const` **loggingInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:698](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L698)
+Defined in: [packages/crawlee-one/src/lib/input.ts:722](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L722)
 
 Common input fields related to logging setup
 

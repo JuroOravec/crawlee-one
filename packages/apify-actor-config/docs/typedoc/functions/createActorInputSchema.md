@@ -8,7 +8,7 @@
 
 > **createActorInputSchema**\<`T`\>(`config`): `T`
 
-Defined in: [inputSchema.ts:583](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L583)
+Defined in: [inputSchema.ts:590](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L590)
 
 ## Type Parameters
 

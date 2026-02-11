@@ -236,15 +236,41 @@ await crawleeOne({
 });
 ```
 
+## Zod-powered input validation.
+
+Embed Zod schemas directly on your Field objects and pass them as `inputFields`. CrawleeOne validates actor input automatically before the crawler starts -- no manual validation boilerplate needed.
+
+```ts
+import { z } from 'zod';
+import { createStringField } from 'apify-actor-config';
+
+const inputFields = {
+  targetUrl: createStringField({
+    title: 'Target URL',
+    type: 'string',
+    description: 'URL to scrape',
+    editor: 'textfield',
+    schema: z.string().url(),
+  }),
+};
+
+await crawleeOne({
+  inputFields,
+  // ...
+});
+```
+
 ## Hook system.
 
-Extend the crawler lifecycle with hooks: `onBeforeHandler`, `onAfterHandler`, `onReady`, `validateInput`. Use them for logging, validation, custom initialization, or anything else.
+Extend the crawler lifecycle with hooks: `onBeforeHandler`, `onAfterHandler`, `onReady`, `validateInput`. Use them for logging, custom initialization, or anything else.
 
 ```ts
 await crawleeOne({
   hooks: {
     validateInput: (input) => {
-      Joi.assert(input, schema);
+      if (input?.mode === 'full' && !input?.apiKey) {
+        throw new Error('apiKey is required in full mode');
+      }
     },
     onBeforeHandler: (ctx) => {
       ctx.log.info('Processing:', ctx.request.url);

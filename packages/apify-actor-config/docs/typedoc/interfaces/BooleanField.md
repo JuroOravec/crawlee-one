@@ -6,7 +6,7 @@
 
 # Interface: BooleanField\<T\>
 
-Defined in: [inputSchema.ts:319](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L319)
+Defined in: [inputSchema.ts:326](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L326)
 
 See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#boolean-type
 
@@ -45,7 +45,7 @@ Example options with group caption:
 
 > `optional` **default**: `T`
 
-Defined in: [inputSchema.ts:157](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L157)
+Defined in: [inputSchema.ts:164](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L164)
 
 Default value that will be used when no value is provided.
 
@@ -73,7 +73,7 @@ Description of the field that will be displayed as help text in Actor input UI.
 
 > `optional` **editor**: `"hidden"` \| `"checkbox"`
 
-Defined in: [inputSchema.ts:323](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L323)
+Defined in: [inputSchema.ts:330](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L330)
 
 Visual editor used for the input field.
 
@@ -83,7 +83,7 @@ Visual editor used for the input field.
 
 > `optional` **errorMessage**: [`BooleanErrorMessage`](BooleanErrorMessage.md)
 
-Defined in: [inputSchema.ts:173](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L173)
+Defined in: [inputSchema.ts:180](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L180)
 
 Custom error messages for validation keywords.
 The allowed keys depend on the field's `type`.
@@ -100,7 +100,7 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 > `optional` **example**: `T`
 
-Defined in: [inputSchema.ts:166](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L166)
+Defined in: [inputSchema.ts:173](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L173)
 
 Sample value of this field for the actor to be displayed when
 actor is published in Apify Store.
@@ -115,7 +115,7 @@ actor is published in Apify Store.
 
 > `optional` **groupCaption**: `string`
 
-Defined in: [inputSchema.ts:328](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L328)
+Defined in: [inputSchema.ts:335](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L335)
 
 If you want to group multiple checkboxes together,
 add this option to the first of the group.
@@ -126,7 +126,7 @@ add this option to the first of the group.
 
 > `optional` **groupDescription**: `string`
 
-Defined in: [inputSchema.ts:330](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L330)
+Defined in: [inputSchema.ts:337](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L337)
 
 Description displayed as help text displayed of group title.
 
@@ -150,13 +150,30 @@ Specifies whether null is an allowed value.
 
 > `optional` **prefill**: `T`
 
-Defined in: [inputSchema.ts:161](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L161)
+Defined in: [inputSchema.ts:168](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L168)
 
 Value that will be prefilled in the actor input interface.
 
 #### Inherited from
 
 `BaseFieldTypedProps.prefill`
+
+***
+
+### schema?
+
+> `optional` **schema**: `any`
+
+Defined in: [inputSchema.ts:96](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L96)
+
+Optional validation schema for this field (e.g. a Zod schema).
+
+This property is NOT part of the Apify input schema spec and is
+automatically stripped when generating `actor.json`.
+
+#### Inherited from
+
+`BaseField.schema`
 
 ***
 
@@ -211,7 +228,7 @@ Title of the field in UI.
 
 > **type**: `"boolean"`
 
-Defined in: [inputSchema.ts:321](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L321)
+Defined in: [inputSchema.ts:328](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L328)
 
 Allowed type for the input value. Cannot be mixed.
 

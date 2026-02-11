@@ -8,7 +8,7 @@
 
 > **validateConfig**(`config`): `void`
 
-Defined in: [packages/crawlee-one/src/cli/commands/config.ts:40](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/cli/commands/config.ts#L40)
+Defined in: [packages/crawlee-one/src/cli/commands/config.ts:41](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/cli/commands/config.ts#L41)
 
 Validate given CrawleeOne config.
 

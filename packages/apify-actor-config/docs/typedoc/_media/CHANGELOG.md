@@ -1,5 +1,24 @@
 # Release notes
 
+## Unreleased
+
+#### Features
+
+- All `Field` objects now have an optional `schema` property for embedding validation schemas (e.g. Zod). The property is automatically stripped when generating `actor.json`.
+
+  ```ts
+  import { z } from 'zod';
+  import { createStringField } from 'apify-actor-config';
+
+  const myField = createStringField({
+    title: 'Target URL',
+    type: 'string',
+    description: 'URL to scrape',
+    editor: 'textfield',
+    schema: z.string().url(), // Embedded Zod schema -- stripped from actor.json
+  });
+  ```
+
 ## v2.0.0
 
 _2026-02-10_

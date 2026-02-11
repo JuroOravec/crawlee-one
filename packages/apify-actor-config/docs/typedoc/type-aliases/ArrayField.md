@@ -8,7 +8,7 @@
 
 > **ArrayField**\<`T`\> = `BaseArrayField`\<`T`\> \| `KeyValueArrayField`\<`T`\> \| `StringListArrayField`\<`T`\> \| `SelectArrayField`\<`T`\>
 
-Defined in: [inputSchema.ts:498](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L498)
+Defined in: [inputSchema.ts:505](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L505)
 
 See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#array
 

@@ -6,7 +6,7 @@
 
 # Interface: ObjectErrorMessage
 
-Defined in: [inputSchema.ts:129](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L129)
+Defined in: [inputSchema.ts:136](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L136)
 
 See [StringErrorMessage](StringErrorMessage.md)
 
@@ -16,7 +16,7 @@ See [StringErrorMessage](StringErrorMessage.md)
 
 > `optional` **maxProperties**: `string`
 
-Defined in: [inputSchema.ts:132](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L132)
+Defined in: [inputSchema.ts:139](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L139)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [inputSchema.ts:132](https://github.com/JuroOravec/crawlee-one/blob/
 
 > `optional` **minProperties**: `string`
 
-Defined in: [inputSchema.ts:131](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L131)
+Defined in: [inputSchema.ts:138](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L138)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [inputSchema.ts:131](https://github.com/JuroOravec/crawlee-one/blob/
 
 > `optional` **patternKey**: `string`
 
-Defined in: [inputSchema.ts:133](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L133)
+Defined in: [inputSchema.ts:140](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L140)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [inputSchema.ts:133](https://github.com/JuroOravec/crawlee-one/blob/
 
 > `optional` **patternValue**: `string`
 
-Defined in: [inputSchema.ts:134](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L134)
+Defined in: [inputSchema.ts:141](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L141)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: [inputSchema.ts:134](https://github.com/JuroOravec/crawlee-one/blob/
 
 > `optional` **type**: `string`
 
-Defined in: [inputSchema.ts:130](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L130)
+Defined in: [inputSchema.ts:137](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L137)
