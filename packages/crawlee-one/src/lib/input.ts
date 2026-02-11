@@ -78,7 +78,7 @@ export interface PerfActorInput {
    *
    * Example: If set to 20, then up to 20 requests will be handled in a single "go".
    */
-  perfBatchSize?: number;
+  batchSize?: number;
   /**
    * How long to wait between entries within a single batch.
    *
@@ -86,7 +86,7 @@ export interface PerfActorInput {
    *
    * Example: If set to 1, then after each entry in a batch, wait 1 second before continuing.
    */
-  perfBatchWaitSecs?: number;
+  batchWaitSecs?: number;
 }
 
 /** Common input fields for defining URLs to scrape */
@@ -658,7 +658,7 @@ export const crawlerInput = {
 
 /** Common input fields related to performance which are not part of the CrawlerConfig */
 export const perfInput = {
-  perfBatchSize: createIntegerField({
+  batchSize: createIntegerField({
     title: 'Batch requests',
     type: 'integer',
     description: `If set, multiple Requests will be handled by a single Actor instance.${newLine(1)}
@@ -671,7 +671,7 @@ export const perfInput = {
     sectionDescription: 'Standalone performance options. These are not passed to the Crawler.',
     schema: z.number().int().min(0).optional(),
   }), // prettier-ignore
-  perfBatchWaitSecs: createIntegerField({
+  batchWaitSecs: createIntegerField({
     title: 'Wait (in seconds) between processing requests in a single batch',
     type: 'integer',
     description: `How long to wait between entries within a single batch.${newLine(1)}

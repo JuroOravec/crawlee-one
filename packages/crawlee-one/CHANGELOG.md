@@ -7,6 +7,7 @@
 - **`AllActorInputs` type renamed to `ActorInput`.** Update imports: `import type { ActorInput } from 'crawlee-one'`.
 - **`allActorInputs` value renamed to `actorInput`.** Update imports: `import { actorInput } from 'crawlee-one'`.
 - The `*ValidationFields` exports (`crawlerInputValidationFields`, etc.) have been removed. Use the embedded `schema` property on Field objects instead (e.g. `actorInput.startUrls.schema`).
+- **`perfBatchSize` and `perfBatchWaitSecs` actor input fields renamed to `batchSize` and `batchWaitSecs`.** The `perf` prefix was unnecessary -- update your actor input configs accordingly.
 - **`getDatasetCount` was removed.**
 
   If you used `getDatasetCount()`, you can re-implement it youself as:
@@ -17,7 +18,7 @@
 
   /**
    * Given a Dataset ID, get the number of entries already in the Dataset.
-  */
+   */
   export const getDatasetCount = async (
     datasetNameOrId?: string,
     options?: { io: CrawleeOneIO; log?: Log }

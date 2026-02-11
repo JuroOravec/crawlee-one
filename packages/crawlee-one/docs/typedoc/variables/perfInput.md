@@ -14,10 +14,10 @@ Common input fields related to performance which are not part of the CrawlerConf
 
 ## Type Declaration
 
-### perfBatchSize
+### batchSize
 
-> **perfBatchSize**: `IntegerField`\<`number`, `string`\>
+> **batchSize**: `IntegerField`\<`number`, `string`\>
 
-### perfBatchWaitSecs
+### batchWaitSecs
 
-> **perfBatchWaitSecs**: `IntegerField`\<`number`, `string`\>
+> **batchWaitSecs**: `IntegerField`\<`number`, `string`\>

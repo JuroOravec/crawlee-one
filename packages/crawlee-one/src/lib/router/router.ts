@@ -135,7 +135,7 @@ const createDefaultHandler = <
   } & PerfActorInput &
     Pick<RequestActorInput, 'requestQueueId'>
 ) => {
-  const { io, routes, requestQueueId, perfBatchSize, perfBatchWaitSecs } = input;
+  const { io, routes, requestQueueId, batchSize, batchWaitSecs } = input;
 
   const resolvedRoutes = resolveRoutes(routes);
 
@@ -154,7 +154,7 @@ const createDefaultHandler = <
 
     log?.debug(`Checking for new Request in the queue. ${suffix}`);
 
-    if (perfBatchWaitSecs && perfBatchWaitSecs > 0) await wait(perfBatchWaitSecs);
+    if (batchWaitSecs && batchWaitSecs > 0) await wait(batchWaitSecs);
     const reqQueue = await openQueue();
     const newReq = (await reqQueue.fetchNextRequest()) ?? null;
 
@@ -202,7 +202,7 @@ const createDefaultHandler = <
     const { page, log: parentLog } = ctx;
     const log = parentLog.child({ prefix: '[Router] ' });
 
-    if (!page && perfBatchSize != null && perfBatchSize !== 1) {
+    if (!page && batchSize != null && batchSize !== 1) {
       throw Error(
         'Request batching is supported only for browser-based crawlers like PlaywrightCrawler or PuppeteerCrawler'
       );
@@ -211,14 +211,13 @@ const createDefaultHandler = <
     let handledRequestsCount = 0;
     let req: CrawlerRequest | null = ctx.request ?? null;
 
-    const hasBatchReqs = () =>
-      perfBatchSize != null && req != null && handledRequestsCount < perfBatchSize;
+    const hasBatchReqs = () => batchSize != null && req != null && handledRequestsCount < batchSize;
 
     const getUrl = () => (page ? (page as any as CommonPage).url() : req!.loadedUrl || req!.url);
 
     const onRequest = async () => {
       const url = await getUrl();
-      const logSuffix = `Batch ${handledRequestsCount + 1} of ${perfBatchSize ?? 1}. URL: ${url}`;
+      const logSuffix = `Batch ${handledRequestsCount + 1} of ${batchSize ?? 1}. URL: ${url}`;
 
       // Find route handler for given URL
       log.debug(`Searching for a handler for given Request. ${logSuffix}`);
@@ -265,7 +264,7 @@ const createDefaultHandler = <
       do {
         await onRequest();
       } while (hasBatchReqs() && page);
-      log.info(`Batch of ${perfBatchSize ?? 1} finished.`);
+      log.info(`Batch of ${batchSize ?? 1} finished.`);
     } catch (err) {
       await onError(err, req, log);
     }
@@ -343,15 +342,15 @@ export const setupDefaultHandlers = async <
   input?: T['input'] | null;
   onSetCtx?: (ctx: Parameters<CrawleeOneRouteHandler<T, RouterCtx>>[0] | null) => void;
 }) => {
-  const { perfBatchSize, perfBatchWaitSecs, requestQueueId } = (input || {}) as PerfActorInput &
+  const { batchSize, batchWaitSecs, requestQueueId } = (input || {}) as PerfActorInput &
     RequestActorInput;
 
   const defaultHandler = createDefaultHandler({
     io,
     routes,
     requestQueueId,
-    perfBatchSize,
-    perfBatchWaitSecs,
+    batchSize,
+    batchWaitSecs,
   });
 
   const wrappedHandler = await applyWrappersRight(defaultHandler, routeHandlerWrappers ?? []);

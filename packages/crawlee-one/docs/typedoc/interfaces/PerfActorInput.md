@@ -12,9 +12,9 @@ Common input fields related to performance which are not part of the CrawlerConf
 
 ## Properties
 
-### perfBatchSize?
+### batchSize?
 
-> `optional` **perfBatchSize**: `number`
+> `optional` **batchSize**: `number`
 
 Defined in: [packages/crawlee-one/src/lib/input.ts:81](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L81)
 
@@ -26,9 +26,9 @@ Example: If set to 20, then up to 20 requests will be handled in a single "go".
 
 ***
 
-### perfBatchWaitSecs?
+### batchWaitSecs?
 
-> `optional` **perfBatchWaitSecs**: `number`
+> `optional` **batchWaitSecs**: `number`
 
 Defined in: [packages/crawlee-one/src/lib/input.ts:89](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L89)
 

@@ -302,8 +302,8 @@ For browser-based crawlers (Playwright, Puppeteer), process multiple requests in
 
 ```json
 {
-  "perfBatchSize": 20,
-  "perfBatchWaitSecs": 1.5
+  "batchSize": 20,
+  "batchWaitSecs": 1.5
 }
 ```
 

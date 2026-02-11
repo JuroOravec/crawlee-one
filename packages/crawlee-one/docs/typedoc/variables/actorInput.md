@@ -144,13 +144,13 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1092](https://github.com/Juro
 
 > **outputTransformBefore**: `StringField`\<`string`, `string`\>
 
-### perfBatchSize
+### batchSize
 
-> **perfBatchSize**: `IntegerField`\<`number`, `string`\>
+> **batchSize**: `IntegerField`\<`number`, `string`\>
 
-### perfBatchWaitSecs
+### batchWaitSecs
 
-> **perfBatchWaitSecs**: `IntegerField`\<`number`, `string`\>
+> **batchWaitSecs**: `IntegerField`\<`number`, `string`\>
 
 ### proxy
 

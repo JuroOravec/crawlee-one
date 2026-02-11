@@ -51,7 +51,7 @@ const input = {
   minConcurrency: 1,
   maxConcurrency: 5,
   requestHandlerTimeoutSecs: 180,
-  perfBatchSize: 20,
+  batchSize: 20,
   logLevel: 'info',
   errorReportingDatasetId: 'REPORTING',
   errorTelemetry: true,
