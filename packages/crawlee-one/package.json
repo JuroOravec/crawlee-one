@@ -73,6 +73,7 @@
     "cosmiconfig": "catalog:",
     "dotenv": "catalog:",
     "glob": "catalog:",
+    "jiti": "catalog:",
     "lodash-es": "catalog:",
     "zod": "catalog:"
   },

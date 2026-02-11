@@ -1,4 +1,5 @@
 import { cosmiconfig } from 'cosmiconfig';
+import { createJiti } from 'jiti';
 import { z } from 'zod';
 
 import { getPackageJsonInfo } from '../../utils/package.js';
@@ -78,6 +79,18 @@ export const validateConfig = (config: unknown | string) => {
 };
 
 /**
+ * Custom TS loader using jiti so that config files in ESM projects (with
+ * `"type": "module"`) are loaded correctly. Cosmiconfig's built-in TS loader
+ * transpiles to a temp `.mjs` file and then tries `import()` / `require()`,
+ * which breaks on Node 23+ when the transpiled file contains TS-convention
+ * import paths (e.g. `./foo.js` pointing at `./foo.ts`).
+ */
+const loadTsWithJiti = async (filepath: string) => {
+  const jiti = createJiti(import.meta.url, { interopDefault: true });
+  return jiti.import(filepath);
+};
+
+/**
  * Load CrawleeOne config file. Config will be searched for using CosmicConfig.
  *
  * Optionally, you can supply path to the config file.
@@ -88,7 +101,11 @@ export const loadConfig = async (configFilePath?: string) => {
   const pkgJson = getPackageJsonInfo(import.meta.url, ['name']);
 
   // See https://github.com/cosmiconfig/cosmiconfig#usage-for-tooling-developers
-  const explorer = cosmiconfig(pkgJson.name);
+  const explorer = cosmiconfig(pkgJson.name, {
+    loaders: {
+      '.ts': loadTsWithJiti,
+    },
+  });
   const result = configFilePath ? await explorer.load(configFilePath) : await explorer.search();
   const config = (result?.config ?? null) as CrawleeOneConfig | null;
   return config;

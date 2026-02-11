@@ -157,6 +157,9 @@
 
 - Replace Joi with Zod for input validation schemas. Zod schemas are now co-located on each Field object in `input.ts` instead of in separate `*ValidationFields` objects.
 
+- The generated types files from `npx crawlee-one gen` now contains `/* eslint-disable */`
+  to work with ESLint.
+
 ## v3.0.2
 
 _2026-02-09_
