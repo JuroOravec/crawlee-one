@@ -16,6 +16,14 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1092](https://github.com/Juro
 
 > **additionalMimeTypes**: `ArrayField`\<`unknown`\>
 
+### batchSize
+
+> **batchSize**: `IntegerField`\<`number`, `string`\>
+
+### batchWaitSecs
+
+> **batchWaitSecs**: `IntegerField`\<`number`, `string`\>
+
 ### errorReportingDatasetId
 
 > **errorReportingDatasetId**: `StringField`\<`string`, `string`\>
@@ -143,14 +151,6 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1092](https://github.com/Juro
 ### outputTransformBefore
 
 > **outputTransformBefore**: `StringField`\<`string`, `string`\>
-
-### batchSize
-
-> **batchSize**: `IntegerField`\<`number`, `string`\>
-
-### batchWaitSecs
-
-> **batchWaitSecs**: `IntegerField`\<`number`, `string`\>
 
 ### proxy
 
