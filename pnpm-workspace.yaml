@@ -29,8 +29,8 @@ catalog:
   eslint-plugin-prettier: ^5.5.5
   eta: ^4.0.0
   glob: ^13.0.2
+  jiti: ^2.6.1
   lodash-es: ^4.17.23
-  millify: ^6.1.0
   playwright: ^1.58.2
   prettier: ^3.8.1
   puppeteer: ^24.37.2

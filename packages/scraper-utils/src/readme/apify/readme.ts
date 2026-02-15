@@ -1,6 +1,7 @@
 import { Eta } from 'eta';
-import millify from 'millify';
 import { capitalize, cloneDeep, defaults, round, uniqBy } from 'lodash-es';
+
+import { millify } from '../../millify.js';
 import type { DatasetPerfStat } from 'actor-spec';
 import type { ReadmeRenderer } from 'crawlee-one';
 
