@@ -18,31 +18,31 @@ catalog:
   '@types/node': ^25.2.3
   '@vitest/coverage-v8': ^4.0.18
   apify: ^3.3.1
-  cheerio: ^1.0.0
+  cheerio: ^1.2.0
   commander: ^14.0.3
   cosmiconfig: ^9.0.0
   crawlee: ^3.16.0
   domhandler: ^5.0.3
-  dotenv: ^17.2.4
+  dotenv: ^17.3.1
   eslint: ^10.0.0
   eslint-config-prettier: ^10.0.0
   eslint-plugin-prettier: ^5.5.5
   eta: ^4.0.0
-  glob: ^13.0.2
+  glob: ^13.0.3
   jiti: ^2.6.1
   lodash-es: ^4.17.23
   playwright: ^1.58.2
   prettier: ^3.8.1
-  puppeteer: ^24.37.2
+  puppeteer: ^24.37.3
   tsup: ^8.5.1
   tsx: ^4.21.0
-  typedoc: ^0.28.16
+  typedoc: ^0.28.17
   typedoc-plugin-markdown: ^4.10.0
   typescript: ^5.9.3
   typescript-eslint: ^8.54.0
   vitest: ^4.0.18
   yaml: ^2.8.2
-  zod: ^3.24.2
+  zod: ^4.3.6
 
 # Minimum versions consumers must provide (peerDependencies).
 # Referenced as "catalog:peers" in package.json files.
@@ -50,8 +50,8 @@ catalogs:
   peers:
     '@sentry/node': '>=7.50.0'
     apify: ^3.1.0
-    apify-client: ^2.7.0
-    cheerio: ^1.0.0-rc.12
+    apify-client: ^2.22.1
+    cheerio: ^1.2.0-rc.12
     crawlee: ^3.3.1
     got-scraping: ^4.0.0
     playwright: ^1.44.0
