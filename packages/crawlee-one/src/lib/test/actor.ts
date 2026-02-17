@@ -1,6 +1,6 @@
 import type { vi } from 'vitest';
-import { Actor, RequestQueue } from 'apify';
-import { Dictionary, KeyValueStore } from 'crawlee';
+import { Actor } from 'apify';
+import { Dictionary, KeyValueStore, RequestQueue } from 'crawlee';
 
 import type { MaybeArray, MaybePromise } from '../../utils/types.js';
 import {
@@ -28,9 +28,15 @@ export const setupMockApifyActor = async <
   onGetInfo?: (...args: any[]) => MaybePromise<void>;
 }) => {
   const mockStorageClient = createMockStorageClient({ log, onBatchAddRequests });
+  const sharedRequestQueue = new RequestQueue({
+    id: 'test',
+    client: mockStorageClient,
+  });
 
   viInstance.spyOn(Actor, 'main').mockImplementation(async (fn) => fn());
   viInstance.spyOn(Actor, 'getInput').mockImplementation(() => Promise.resolve(actorInput));
+
+  viInstance.spyOn(Actor, 'openRequestQueue').mockImplementation(async () => sharedRequestQueue);
 
   viInstance.spyOn(Actor, 'openDataset').mockImplementation(async (datasetId, options) => {
     console.log('Mock Actor.openDataset: ', datasetId);
@@ -41,13 +47,7 @@ export const setupMockApifyActor = async <
     if (onPushData) await onPushData(data as any);
   });
 
-  viInstance.spyOn(RequestQueue, 'open').mockImplementation(async () => {
-    const reqQueue = new RequestQueue({
-      id: 'test',
-      client: mockStorageClient,
-    });
-    return reqQueue;
-  });
+  viInstance.spyOn(RequestQueue, 'open').mockImplementation(async () => sharedRequestQueue);
 
   viInstance
     .spyOn(KeyValueStore, 'open')

@@ -2,6 +2,24 @@
 
 CrawleeOne extends [Crawlee](https://crawlee.dev/) with production-ready capabilities that you would otherwise build yourself. Here is the full catalog.
 
+## Extract data with AI.
+
+When DOM selectors fail (custom layouts, inconsistent markup), use an LLM to extract structured data from HTML. Configure `llmApiKey`, `llmProvider`, and `llmModel`; route handlers call `extractWithLLM` with a Zod schema. Two-phase flow: main scraper defers, `crawlee-one llm extract` processes, re-run to collect.
+
+```ts
+handler: async (ctx) => {
+  const { pushData, extractWithLLM } = ctx;
+  const result = await extractWithLLM({
+    schema: jobOfferSchema,
+    systemPrompt: 'Extract job details from this HTML. Use null for missing values.',
+  });
+  if (result == null) return;  // result not yet ready
+  await pushData(result.object);
+}
+```
+
+See the [LLM extraction guide](./llm-extraction-guide.md).
+
 ## One function. Full crawler.
 
 Replace 100+ lines of Actor + Router + input boilerplate with a single `crawleeOne()` call. CrawleeOne handles initialization, input resolution, routing, error handling, and teardown.

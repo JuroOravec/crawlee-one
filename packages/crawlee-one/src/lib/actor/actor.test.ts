@@ -6,7 +6,7 @@ import { createStringField, createIntegerField } from 'apify-actor-config';
 
 import { createHttpCrawlerOptions, runCrawleeOne } from './actor.js';
 import { actorClassByType } from '../../constants.js';
-import { CRAWLER_TYPE } from '../../types/index.js';
+import { CRAWLER_TYPE } from '../../types.js';
 import type {
   CrawleeOneIO,
   CrawleeOneRequestQueue,
@@ -212,7 +212,6 @@ describe('runCrawleeOne', () => {
       expect(capturedActor.log).toBeDefined();
       expect(typeof capturedActor.runCrawler).toBe('function');
       expect(typeof capturedActor.metamorph).toBe('function');
-      expect(typeof capturedActor.pushData).toBe('function');
       expect(typeof capturedActor.pushRequests).toBe('function');
       expect(Array.isArray(capturedActor.startUrls)).toBe(true);
     });
@@ -836,23 +835,6 @@ describe('runCrawleeOne', () => {
 
           await actor.pushRequests([{ url: 'https://example.com', uniqueKey: '1' }] as any);
           expect(reqQueue.addRequests).toHaveBeenCalled();
-        },
-      });
-    });
-
-    it('scoped pushData throws when called outside handler context', async () => {
-      const io = createMockIO();
-
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
-          io,
-          routes: { MAIN: { match: /.*/, handler: vi.fn() } },
-        },
-        onReady: async (actor) => {
-          await expect(actor.pushData({ data: 'test' }, { privacyMask: {} })).rejects.toThrow(
-            'outside of the crawling context'
-          );
         },
       });
     });

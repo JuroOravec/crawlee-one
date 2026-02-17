@@ -16,14 +16,14 @@ import type { Field } from 'apify-actor-config';
 import type { z } from 'zod';
 
 import type { MaybeAsyncFn, MaybePromise, PickPartial } from '../../utils/types.js';
-import type { CrawlerUrl } from '../../types/index.js';
+import type { CrawlerUrl } from '../../types.js';
 import type { PushDataOptions, itemCacheKey } from '../io/pushData.js';
 import type { PushRequestsOptions } from '../io/pushRequests.js';
+import type { CrawleeOneRoute, CrawleeOneRouteWrapper } from '../router/types.js';
 import type {
-  CrawleeOneRoute,
-  CrawleeOneRouteHandler,
-  CrawleeOneRouteWrapper,
-} from '../router/types.js';
+  ExtractWithLlmScopedOptions,
+  ExtractWithLlmScopedResult,
+} from '../llmExtract/extractWithLlmScoped.js';
 import type { MetamorphActorInput } from '../input.js';
 import type { CrawleeOneIO } from '../integrations/types.js';
 import type { CrawleeOneTelemetry } from '../telemetry/types.js';
@@ -100,6 +100,16 @@ export type CrawleeOneActorRouterCtx<T extends CrawleeOneCtx> = {
     oneOrManyItems: T | T[],
     options?: PushRequestsOptions<T>
   ) => Promise<any[]>;
+  /**
+   * Two-phase LLM extraction:
+   * - First pass defers to LLM queue and reclaims;
+   * - Second pass returns the extracted object from KVS.
+   *
+   * Returns `null` on first pass (caller should return). Returns the result on second pass.
+   */
+  extractWithLLM: <T>(
+    opts: ExtractWithLlmScopedOptions<T>
+  ) => Promise<ExtractWithLlmScopedResult<T> | null>;
 };
 
 /** Context passed to user-defined functions passed from input */
@@ -276,11 +286,14 @@ export interface CrawleeOneActorDef<T extends CrawleeOneCtx> {
   /** Client for telemetry like tracking errors. */
   telemetry?: MaybeAsyncFn<T['telemetry'], [CrawleeOneActorDefWithInput<T>]>;
 
+  /** Meta options (e.g. strict mode from CLI). When true, throw when a URL matches no route. */
+  crawleeOneOptions?: { strict?: boolean };
+
   // Crawler setup
   createCrawler: (
     actorCtx: Omit<
       CrawleeOneActorInst<T>,
-      'crawler' | 'runCrawler' | 'metamorph' | 'pushData' | 'pushRequests' | 'startUrls'
+      'crawler' | 'runCrawler' | 'metamorph' | 'startUrls' | 'pushRequests'
     >
   ) => MaybePromise<T['context']['crawler']>;
 }
@@ -307,18 +320,6 @@ export interface CrawleeOneActorInst<T extends CrawleeOneCtx> {
   /** Trigger actor metamorph, using actor's inputs as defaults. */
   metamorph: Metamorph;
   /**
-   * `Actor.pushData` with extra optional features:
-   *
-   * - Limit the number of entries pushed to the Dataset based on the Actor input
-   * - Transform and filter entries via Actor input.
-   * - Add metadata to entries before they are pushed to Dataset.
-   * - Set which (nested) properties are personal data optionally redact them for privacy compliance.
-   */
-  pushData: <T extends Record<any, any> = Record<any, any>>(
-    oneOrManyItems: T | T[],
-    options: PushDataOptions<T>
-  ) => Promise<any[]>;
-  /**
    * Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
    *
    * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
@@ -328,6 +329,14 @@ export interface CrawleeOneActorInst<T extends CrawleeOneCtx> {
     oneOrManyItems: T | T[],
     options?: PushRequestsOptions<T>
   ) => Promise<any[]>;
+  /**
+   * `Actor.pushData` with extra optional features:
+   *
+   * - Limit the number of entries pushed to the Dataset based on the Actor input
+   * - Transform and filter entries via Actor input.
+   * - Add metadata to entries before they are pushed to Dataset.
+   * - Set which (nested) properties are personal data optionally redact them for privacy compliance.
+   */
   /**
    * A list of resolved Requests to be scraped.
    *
@@ -359,7 +368,6 @@ export interface CrawleeOneActorInst<T extends CrawleeOneCtx> {
   telemetry?: T['telemetry'];
   /** Crawlee Log instance. */
   log: Log;
-  handlerCtx: null | Parameters<CrawleeOneRouteHandler<T, CrawleeOneActorRouterCtx<T>>>[0];
 }
 
 /**

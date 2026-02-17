@@ -10,7 +10,7 @@ import type { z } from 'zod';
 
 import type { CrawleeOneIO } from '../integrations/types.js';
 import type { LlmActorInput, RequestActorInput } from '../input.js';
-import { pushRequests } from '../io/pushRequests.js';
+import { addRequestOrReclaim } from '../io/utils.js';
 import { getLlmKeyValueStoreId, getLlmRequestQueueId, LLM_KVS_KEY_PREFIX } from './constants.js';
 
 /** Metadata attached to LLM-extracted objects. */
@@ -133,15 +133,14 @@ export function createExtractWithLlmForContext(
       },
     };
 
-    await pushRequests([llmRequest], {
-      io: actor.io,
-      log: actor.log,
-      requestQueueId: llmQueueId,
-    });
-
-    actor.log.info(
-      `Deferred LLM extraction for ${url}; will be re-queued after crawlee-one llm extract.`
-    );
+    try {
+      const llmQueue = await actor.io.openRequestQueue(llmQueueId);
+      await addRequestOrReclaim(llmQueue, llmRequest, actor.log);
+    } catch (err) {
+      const msg = `Failed to re-queue original request to LLM queue ${llmQueueId}: ${err instanceof Error ? err.message : String(err)}`;
+      log.error(msg);
+      throw new Error(msg, { cause: err });
+    }
 
     return null;
   };

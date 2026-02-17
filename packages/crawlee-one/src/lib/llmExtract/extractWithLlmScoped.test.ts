@@ -22,7 +22,9 @@ function createMockKeyValueStore(initialValue: unknown = undefined) {
 
 function createMockRequestQueue() {
   return {
+    addRequest: vi.fn().mockResolvedValue({ wasAlreadyHandled: false, requestId: 'mock-req-id' }),
     addRequests: vi.fn(),
+    getRequest: vi.fn().mockResolvedValue(null),
     markRequestHandled: vi.fn(),
     fetchNextRequest: vi.fn().mockResolvedValue(null),
     reclaimRequest: vi.fn(),
@@ -97,11 +99,10 @@ describe('createExtractWithLlmForContext', () => {
 
       expect(result).toBeNull();
       expect(kvs.getValue).toHaveBeenCalledWith('llm--req-1', undefined);
-      expect(io.openRequestQueue).toHaveBeenCalled();
-      expect(reqQueue.addRequests).toHaveBeenCalledTimes(1);
-      const added = reqQueue.addRequests.mock.calls[0][0];
-      expect(added).toHaveLength(1);
-      expect(added[0].userData).toMatchObject({
+      expect(io.openRequestQueue).toHaveBeenCalledWith('llm');
+      expect(reqQueue.addRequest).toHaveBeenCalledTimes(1);
+      const added = reqQueue.addRequest.mock.calls[0][0];
+      expect(added.userData).toMatchObject({
         html: '<html><body>Job offer</body></html>',
         systemPrompt: 'Extract job details.',
         apiKey: 'sk-test',
@@ -110,8 +111,8 @@ describe('createExtractWithLlmForContext', () => {
         originalRequestId: 'req-1',
         originalRequestQueueId: 'dev-main',
       });
-      expect(added[0].url).toBe('https://example.com/job/1');
-      expect(added[0].skipNavigation).toBe(true);
+      expect(added.url).toBe('https://example.com/job/1');
+      expect(added.skipNavigation).toBe(true);
     });
   });
 
@@ -201,7 +202,7 @@ describe('createExtractWithLlmForContext', () => {
 
       expect(await extractWithLLM({ schema: jobSchema, systemPrompt: 'Extract.' })).toBeNull();
 
-      const added = reqQueue.addRequests.mock.calls[0][0][0];
+      const added = reqQueue.addRequest.mock.calls[0][0];
       expect(added.userData).toMatchObject({
         apiKey: 'actor-key',
         provider: 'anthropic',
@@ -252,7 +253,7 @@ describe('createExtractWithLlmForContext', () => {
       });
 
       expect(result).toBeNull();
-      const added = reqQueue.addRequests.mock.calls[0][0][0];
+      const added = reqQueue.addRequest.mock.calls[0][0];
       expect(added.userData).toMatchObject({
         apiKey: 'override-key',
         provider: 'anthropic',
@@ -346,7 +347,7 @@ describe('createExtractWithLlmForContext', () => {
         })
       ).toBeNull();
 
-      const added = reqQueue.addRequests.mock.calls[0][0][0];
+      const added = reqQueue.addRequest.mock.calls[0][0];
       expect(added.userData.baseURL).toBe('https://override-base.com');
       expect(added.userData.headers).toEqual({ 'Override-Header': 'override' });
     });

@@ -10,7 +10,7 @@ import { omitBy, pick, defaults } from 'lodash-es';
 import { gotScraping } from 'got-scraping';
 import { z } from 'zod';
 
-import type { CrawlerMeta, CrawlerType } from '../../types/index.js';
+import type { CrawlerMeta, CrawlerType } from '../../types.js';
 import { actorClassByType } from '../../constants.js';
 import type { MaybePromise, PickPartial } from '../../utils/types.js';
 import { createErrorHandler } from '../error/errorHandler.js';
@@ -19,6 +19,7 @@ import { getColumnFromDataset } from '../io/dataset.js';
 import { PushRequestsOptions, pushRequests } from '../io/pushRequests.js';
 import type { CrawleeOneIO } from '../integrations/types.js';
 import { apifyIO } from '../integrations/apify.js';
+import { devContextStore } from '../dev/devContextStore.js';
 import { registerHandlers, setupDefaultHandlers } from '../router/router.js';
 import {
   CrawlerConfigActorInput,
@@ -31,6 +32,7 @@ import {
   RequestActorInput,
   LoggingActorInput,
 } from '../input.js';
+import { createExtractWithLlmForContext } from '../llmExtract/extractWithLlmScoped.js';
 import { logLevelHandlerWrapper, logLevelToCrawlee } from '../log.js';
 import type {
   CrawleeOneActorInst,
@@ -43,6 +45,7 @@ import type {
   CrawleeOneHookFn,
   CrawleeOneActorDefWithInput,
 } from './types.js';
+import type { CrawleeOneOptions } from '../../api.js';
 
 const isRouter = (r: any): r is RouterHandler<any> => {
   return !!((r as RouterHandler)?.addHandler && (r as RouterHandler)?.addDefaultHandler);
@@ -121,6 +124,8 @@ export interface RunCrawleeOneOptions<
    * the `Actor.main()` context.
    */
   onReady?: (actor: CrawleeOneActorInst<T>) => MaybePromise<void>;
+  /** Meta options (e.g. strict mode from CLI). */
+  crawleeOneOptions?: CrawleeOneOptions;
 }
 
 /**
@@ -160,7 +165,14 @@ export const runCrawleeOne = async <
 >(
   args: RunCrawleeOneOptions<TType, T>
 ): Promise<void> => {
-  const { actorType, actorConfig, crawlerConfigDefaults, crawlerConfigOverrides, onReady } = args;
+  const {
+    actorType,
+    actorConfig,
+    crawlerConfigDefaults,
+    crawlerConfigOverrides,
+    crawleeOneOptions,
+    onReady,
+  } = args;
 
   const { io = apifyIO as any as T['io'] } = actorConfig;
 
@@ -205,7 +217,16 @@ export const runCrawleeOne = async <
         routeHandlerWrappers:
           actorConfig.routeHandlerWrappers ?? (actorDefaults.routeHandlerWrappers as any),
         createCrawler: actorConfig.createCrawler ?? (actorDefaults.createCrawler as any),
+        crawleeOneOptions,
       });
+
+      // In dev mode, devOnReady runs before user's onReady. It populates the
+      // dev queue from actor.routes and patches the crawler, so scrapers don't
+      // need to export routes.
+      const devCtx = devContextStore.getStore();
+      if (devCtx?.devOnReady) {
+        await devCtx.devOnReady(actor);
+      }
 
       await onReady?.(actor);
     },
@@ -316,11 +337,8 @@ const createCrawleeOne = async <T extends CrawleeOneCtx>(
     input,
     state,
     log,
-    handlerCtx: null,
-  } satisfies Omit<
-    CrawleeOneActorInst<T>,
-    'crawler' | 'runCrawler' | 'metamorph' | 'pushData' | 'pushRequests' | 'startUrls'
-  >);
+    pushRequests: createScopedPushRequests({ io, log, state, input }),
+  } satisfies Omit<CrawleeOneActorInst<T>, 'crawler' | 'runCrawler' | 'metamorph' | 'startUrls'>);
 
   // Create Crawlee crawler
   const crawler = await config.createCrawler(getPreActorNoCrawler());
@@ -331,39 +349,38 @@ const createCrawleeOne = async <T extends CrawleeOneCtx>(
     ...getPreActor(),
     runCrawler: createScopedCrawlerRun(getPreActor),
     metamorph: createScopedMetamorph(getPreActor),
-    pushData: createScopedPushData(getPreActor),
-    pushRequests: createScopedPushRequests(getPreActor),
     startUrls: await getStartUrlsFromInput(getPreActor()),
   };
 
-  // Extra data that we make available to the route handlers
-  const routerContext: CrawleeOneActorRouterCtx<T> = {
+  // Callback that builds handler context from crawling ctx.
+  const getRouterContext = (
+    ctx: T['context'] & { routeLabel?: string }
+  ): CrawleeOneActorRouterCtx<T> => ({
     actor,
     metamorph: actor.metamorph,
-    pushData: actor.pushData,
     pushRequests: actor.pushRequests,
-  };
+    // Use ctx-bound pushData to avoid "pushData outside context" when handlers run concurrently.
+    pushData: createPushDataForContext(ctx, actor),
+    extractWithLLM: createExtractWithLlmForContext(ctx, actor),
+  });
 
   // Set up router
   await setupDefaultHandlers<T, CrawleeOneActorRouterCtx<T>>({
-    onSetCtx: (ctx) => {
-      actorCtx.handlerCtx = ctx;
-    },
     io,
     router,
     routeHandlerWrappers,
-    routerContext,
+    getRouterContext,
     routes,
     input,
+    crawleeOneOptions: config.crawleeOneOptions,
   });
 
   // Register labelled handlers
-  await registerHandlers<T, CrawleeOneActorRouterCtx<T>>(router, routes, {
-    routerContext,
+  await registerHandlers<T, CrawleeOneActorRouterCtx<T>>({
+    router,
+    routes,
+    getRouterContext,
     handlerWrappers: routeHandlerWrappers,
-    onSetCtx: (ctx) => {
-      actorCtx.handlerCtx = ctx;
-    },
   });
 
   // Prepare telemetry
@@ -438,14 +455,16 @@ const resolveInput = async <T extends Record<string, any> | null>(
 
 /**
  * Create a function that wraps `crawler.run(requests, runOtions)` with additional
- * features like:
+ * features:
  * - Automatically metamorph into another actor after the run finishes
+ * - Support transformation and filtering of (scraped) entries, configured via Actor input.
+ * - Support transformation and filtering of requests, configured via Actor input.
+ * - Support caching of scraped entries, configured via Actor input.
+ * - Support caching of requests, configured via Actor input.
+ * - Support caching of scraped entries, configured via Actor input.
  */
 const createScopedCrawlerRun = <T extends CrawleeOneCtx>(
-  getActor: () => Omit<
-    CrawleeOneActorInst<T>,
-    'runCrawler' | 'metamorph' | 'pushData' | 'pushRequests' | 'startUrls'
-  >
+  getActor: () => Omit<CrawleeOneActorInst<T>, 'runCrawler' | 'metamorph' | 'startUrls'>
 ) => {
   const metamorph = createScopedMetamorph(getActor);
 
@@ -514,65 +533,91 @@ const createScopedMetamorph = <T extends CrawleeOneCtx>(
   return metamorph;
 };
 
-/** pushData wrapper that pre-populates options based on actor input */
-const createScopedPushData = <T extends CrawleeOneCtx>(
-  getActor: () => Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log' | 'handlerCtx'>
+/** Build merged pushData options from actor input */
+const buildPushDataOptions = <T extends CrawleeOneCtx>(
+  actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log'>,
+  options?: PushDataOptions<object>
 ) => {
-  const scopedPushData: CrawleeOneActorInst<T>['pushData'] = async (entries, options) => {
-    const actor = getActor();
-    const handlerCtx = actor.handlerCtx;
-    if (!handlerCtx) {
-      throw Error(
-        'Function pushData scoped to crawler instance was called outside of the crawling context'
-      );
+  const {
+    includePersonalData,
+    requestQueueId,
+    outputMaxEntries,
+    outputTransform,
+    outputFilter,
+    outputDatasetId,
+    outputPickFields,
+    outputRenameFields,
+    outputCacheStoreId,
+    outputCachePrimaryKeys,
+    outputCacheActionOnResult,
+  } = (actor.input ?? {}) as OutputActorInput & PrivacyActorInput & RequestActorInput;
+
+  const transformFn = genHookFn(actor, outputTransform, 'outputTransform');
+  const filterFn = genHookFn(actor, outputFilter, 'outputFilter');
+
+  return {
+    io: actor.io,
+    log: actor.log,
+    showPrivate: includePersonalData,
+    maxCount: outputMaxEntries,
+    pickKeys: outputPickFields,
+    remapKeys: outputRenameFields,
+    transform: transformFn ?? undefined,
+    filter: filterFn ?? undefined,
+    datasetId: outputDatasetId,
+    requestQueueId,
+    cacheStoreId: outputCacheStoreId,
+    cachePrimaryKeys: outputCachePrimaryKeys,
+    cacheActionOnResult: outputCacheActionOnResult,
+    ...options,
+  };
+};
+
+/**
+ * Creates a pushData function bound to a specific crawling context.
+ * Use this when handlers run concurrently to avoid "pushData outside context" errors
+ * (the global handlerCtx gets cleared when any handler finishes).
+ */
+const createPushDataForContext = <T extends CrawleeOneCtx>(
+  ctx: Parameters<typeof pushData>[0] & { routeLabel?: string },
+  actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log'>
+): CrawleeOneActorRouterCtx<T>['pushData'] => {
+  return async (entries, options) => {
+    // When dev mode is active (`devContextStore` has `devDatasetIdPrefix`), datasetId is
+    // overridden to `{devDatasetIdPrefix}-{routeLabel}` so each route writes to its own
+    // dev dataset. Throws if `devDatasetIdPrefix` is set but `routeLabel` is missing from ctx.
+    const devDatasetIdPrefix = devContextStore.getStore()?.devDatasetIdPrefix;
+    let devDatasetOverride: { datasetId?: string } = {};
+    if (devDatasetIdPrefix) {
+      const routeLabel = ctx.routeLabel;
+      if (routeLabel == null || routeLabel === '') {
+        throw new Error(
+          'devDatasetIdPrefix is set but routeLabel is missing from context. ' +
+            'In dev mode, each route must have a label so pushData can be routed to dev-{crawler}-{route} dataset.'
+        );
+      }
+      devDatasetOverride = { datasetId: `${devDatasetIdPrefix}-${routeLabel}` };
     }
 
-    const {
-      includePersonalData,
-      requestQueueId,
-      outputMaxEntries,
-      outputTransform,
-      outputFilter,
-      outputDatasetId,
-      outputPickFields,
-      outputRenameFields,
-      outputCacheStoreId,
-      outputCachePrimaryKeys,
-      outputCacheActionOnResult,
-    } = (actor.input ?? {}) as OutputActorInput & PrivacyActorInput & RequestActorInput;
-
-    const transformFn = genHookFn(actor, outputTransform, 'outputTransform');
-    const filterFn = genHookFn(actor, outputFilter, 'outputFilter');
-
-    const mergedOptions = {
-      io: actor.io,
-      log: actor.log,
-      showPrivate: includePersonalData,
-      maxCount: outputMaxEntries,
-      pickKeys: outputPickFields,
-      remapKeys: outputRenameFields,
-      transform: transformFn ?? undefined,
-      filter: filterFn ?? undefined,
-      datasetId: outputDatasetId,
-      requestQueueId,
-      cacheStoreId: outputCacheStoreId,
-      cachePrimaryKeys: outputCachePrimaryKeys,
-      cacheActionOnResult: outputCacheActionOnResult,
-      ...options,
-    } satisfies PushDataOptions<object>;
-
-    return pushData(handlerCtx, entries, mergedOptions);
+    return pushData(
+      ctx,
+      entries,
+      buildPushDataOptions(actor, {
+        ...options,
+        ...devDatasetOverride,
+      } as PushDataOptions<object>) as PushDataOptions<any>
+    );
   };
-
-  return scopedPushData;
 };
 
 /** pushRequests wrapper that pre-populates options based on actor input */
 const createScopedPushRequests = <T extends CrawleeOneCtx>(
-  getActor: () => Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log'>
+  actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log'>
 ) => {
-  const scopedPushRequest: CrawleeOneActorInst<T>['pushRequests'] = async (entries, options) => {
-    const actor = getActor();
+  const scopedPushRequest: CrawleeOneActorRouterCtx<T>['pushRequests'] = async (
+    entries,
+    options
+  ) => {
     const { requestQueueId, requestMaxEntries, requestTransform, requestFilter } = (actor.input ??
       {}) as RequestActorInput;
 

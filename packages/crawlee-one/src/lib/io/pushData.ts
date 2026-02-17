@@ -1,9 +1,9 @@
-import { CrawlingContext, Log } from 'crawlee';
+import { type CrawlingContext, Log } from 'crawlee';
 import { get, pick, set, unset, uniq, sortBy, isPlainObject, fromPairs } from 'lodash-es';
 
 import { serialAsyncMap } from '../../utils/async.js';
 import type { CrawleeOneIO } from '../integrations/types.js';
-import { ApifyCrawleeOneIO, apifyIO } from '../integrations/apify.js';
+import { type ApifyCrawleeOneIO, apifyIO } from '../integrations/apify.js';
 import { datasetSizeMonitor } from './dataset.js';
 import type { MaybePromise } from '../../utils/types.js';
 
@@ -12,7 +12,7 @@ import type { MaybePromise } from '../../utils/types.js';
  *
  * If you pass it a Promise, it will be resolved.
  */
-export type GenRedactedValue<V, K, O> = (val: V, key: K, obj: O) => MaybePromise<any>;
+type GenRedactedValue<V, K, O> = (val: V, key: K, obj: O) => MaybePromise<any>;
 
 /**
  * Determine if the property is considered private (and hence may be hidden for privacy reasons).

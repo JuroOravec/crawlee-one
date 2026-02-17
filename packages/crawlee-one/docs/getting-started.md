@@ -230,6 +230,7 @@ The `actor` object is integral to CrawleeOne. [See the full list of properties](
 ## Next steps
 
 - [Features](./features.md) -- full catalog of what CrawleeOne offers.
+- [LLM extraction](./llm-extraction-guide.md) -- extract structured data with AI when DOM selectors fail.
 - [Use cases](./use-cases.md) -- common scraping scenarios with configuration examples.
 - [Input reference](./reference-input.md) -- all available input fields.
 - [Deploying to Apify](./deploying-to-apify.md) -- step-by-step deployment guide.

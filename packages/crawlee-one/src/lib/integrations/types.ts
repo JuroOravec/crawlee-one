@@ -230,6 +230,18 @@ export interface CrawleeOneKeyValueStore {
  * drop-in replacement with other integrations.
  */
 export interface CrawleeOneRequestQueue {
+  name?: string;
+  /**
+   * Adds a single request to the queue. Returns operation info including wasAlreadyHandled.
+   */
+  addRequest: (
+    requestLike: CrawleeRequest | Record<string, unknown>,
+    options?: { forefront?: boolean }
+  ) => MaybePromise<{ wasAlreadyHandled: boolean; wasAlreadyPresent: boolean; requestId: string }>;
+  /**
+   * Gets a request by ID. Used with reclaimRequest when addRequest returns wasAlreadyHandled.
+   */
+  getRequest: (id: string) => MaybePromise<CrawleeRequest | null>;
   /**
    * Adds requests to the queue.
    *

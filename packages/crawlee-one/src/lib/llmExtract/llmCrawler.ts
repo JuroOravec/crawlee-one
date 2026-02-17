@@ -1,8 +1,15 @@
-import { BasicCrawler, KeyValueStore, RequestQueue, type BasicCrawlingContext } from 'crawlee';
+import {
+  BasicCrawler,
+  KeyValueStore,
+  RequestQueue,
+  Source,
+  type BasicCrawlingContext,
+} from 'crawlee';
 
 import { getLlmKeyValueStoreId, getLlmRequestQueueId } from './constants.js';
 import { extractWithLlm } from './extractWithLlm.js';
 import type { ExtractWithLlmScopedResult } from './extractWithLlmScoped.js';
+import { addRequestOrReclaim } from '../io/utils.js';
 
 /** userData shape for requests in the LLM queue. */
 export interface LlmQueueRequestUserData {
@@ -119,11 +126,11 @@ export async function handleLlmQueueRequest(
   if (originalRequestQueueId) {
     try {
       const originalQueue = await RequestQueue.open(originalRequestQueueId);
-      await originalQueue.addRequest({
+      const newRequest: Source = {
         url: request.url,
         uniqueKey: request.uniqueKey,
-      });
-      log.info(`Re-queued original request to ${originalRequestQueueId} for ${request.url}`);
+      };
+      await addRequestOrReclaim(originalQueue, newRequest, log);
     } catch (err) {
       const msg = `Failed to re-queue original request to ${originalRequestQueueId}: ${err instanceof Error ? err.message : String(err)}`;
       log.error(msg);

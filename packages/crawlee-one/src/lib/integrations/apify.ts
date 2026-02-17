@@ -142,14 +142,18 @@ export const apifyIO: ApifyCrawleeOneIO = {
       } while (req);
     };
 
+    // prettier-ignore
     return {
-      addRequests: (...args) => queue.addRequests(...args),
-      markRequestHandled: (...args) => queue.markRequestHandled(...args),
-      fetchNextRequest: (...args) => queue.fetchNextRequest(...args),
-      reclaimRequest: (...args) => queue.reclaimRequest(...args),
-      isFinished: (...args) => queue.isFinished(...args),
-      handledCount: (...args) => queue.handledCount(...args),
-      drop: (...args) => queue.drop(...args),
+      name: queue.name,
+      addRequest: (...args: Parameters<typeof queue.addRequest>) => queue.addRequest(...args),
+      addRequests: (...args: Parameters<typeof queue.addRequests>) => queue.addRequests(...args),
+      getRequest: (...args: Parameters<typeof queue.getRequest>) => queue.getRequest(...args),
+      markRequestHandled: (...args: Parameters<typeof queue.markRequestHandled>) => queue.markRequestHandled(...args),
+      fetchNextRequest: (...args: Parameters<typeof queue.fetchNextRequest>) => queue.fetchNextRequest(...args),
+      reclaimRequest: (...args: Parameters<typeof queue.reclaimRequest>) => queue.reclaimRequest(...args),
+      isFinished: (...args: Parameters<typeof queue.isFinished>) => queue.isFinished(...args),
+      handledCount: (...args: Parameters<typeof queue.handledCount>) => queue.handledCount(...args),
+      drop: (...args: Parameters<typeof queue.drop>) => queue.drop(...args),
       clear,
     };
   },

@@ -1,7 +1,7 @@
 import { Log, RequestQueueOperationOptions } from 'crawlee';
 
 import type { MaybePromise } from '../../utils/types.js';
-import type { CrawlerUrl } from '../../types/index.js';
+import type { CrawlerUrl } from '../../types.js';
 import type { CrawleeOneIO } from '../integrations/types.js';
 import { apifyIO } from '../integrations/apify.js';
 import { requestQueueSizeMonitor } from './requestQueue.js';
