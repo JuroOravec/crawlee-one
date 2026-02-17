@@ -172,7 +172,7 @@ Generate `actor.json` from a compiled JS config module.
 
 | Document                                  | Description                         |
 | ----------------------------------------- | ----------------------------------- |
-| [API reference](_media/README.md) | Auto-generated TypeScript API docs. |
+| [API reference](./docs/typedoc/README.md) | Auto-generated TypeScript API docs. |
 | [Changelog](_media/CHANGELOG.md)               | Release history.                    |
 
 ## License

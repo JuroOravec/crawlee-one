@@ -10,7 +10,7 @@ import {
 } from 'apify-actor-config';
 import { z } from 'zod';
 
-import type { CrawlerUrl } from '../types/index.js';
+import type { CrawlerUrl } from '../types.js';
 import { LOG_LEVEL, type LogLevel } from './log.js';
 import type { CrawleeOneHookFn } from './actor/types.js';
 
@@ -23,7 +23,8 @@ export type ActorInput = InputActorInput &
   PrivacyActorInput &
   RequestActorInput &
   OutputActorInput &
-  MetamorphActorInput;
+  MetamorphActorInput &
+  LlmActorInput;
 
 /** Crawler config fields that can be overriden from the actor input */
 export type CrawlerConfigActorInput = Pick<
@@ -329,6 +330,55 @@ export interface OutputActorInput {
   outputCachePrimaryKeys?: string[];
   /** Define whether we want to add, remove, or overwrite cached entries with results from the actor run */
   outputCacheActionOnResult?: 'add' | 'remove' | 'overwrite' | null;
+}
+
+/** Common input fields for LLM-based extraction (e.g. custom page extraction fallback) */
+export interface LlmActorInput {
+  /**
+   * API key for the LLM provider.
+   *
+   * When set, scrapers can use AI to extract data from pages where DOM-based extraction fails.
+   *
+   * Overrides environment variables like `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`.
+   */
+  llmApiKey?: string;
+  /**
+   * LLM provider identifier (e.g. `openai`, `anthropic`, `google`).
+   *
+   * Combined with `llmModel` as `{provider}:{model}` when calling the LLM.
+   *
+   * Custom / unknown providers are supported via OpenAI-compatible APIs.
+   */
+  llmProvider?: string;
+  /**
+   * Model ID for the LLM (e.g. `gpt-4o`, `claude-3-5-sonnet-20241022`).
+   *
+   * To see available models per provider, see:
+   * - OpenAI - https://developers.openai.com/api/docs/models
+   * - Anthropic - https://docs.anthropic.com/en/docs/about-claude/models
+   * - Google - https://cloud.google.com/vertex-ai/generative-ai/docs/models
+   * - DeepSeek - https://api-docs.deepseek.com/quick_start/pricing
+   * - Ollama - https://ollama.com/models
+   */
+  llmModel?: string;
+  /**
+   * Base URL for the LLM API (e.g. custom OpenAI-compatible endpoint, Azure OpenAI).
+   *
+   * When set, overrides the default provider endpoint. Requires a valid URL.
+   */
+  llmBaseUrl?: string;
+  /**
+   * Custom headers to include in LLM API requests (e.g. `X-API-Version`, `OpenAI-Organization`).
+   */
+  llmHeaders?: Record<string, string>;
+  /**
+   * Override the LLM request queue ID (default from env CRAWLEE_LLM_REQUEST_QUEUE_ID or 'llm').
+   */
+  llmRequestQueueId?: string;
+  /**
+   * Override the LLM key-value store ID (default from env CRAWLEE_LLM_KEY_VALUE_STORE_ID or 'llm').
+   */
+  llmKeyValueStoreId?: string;
 }
 
 /** Common input fields related to actor metamorphing */
@@ -720,7 +770,7 @@ export const startUrlsInput = {
 
 /** Common input fields related to logging setup */
 export const loggingInput = {
-  logLevel: createStringField<LogLevel>({
+  logLevel: createStringField({
     title: 'Log Level',
     type: 'string',
     editor: 'select',
@@ -1089,6 +1139,79 @@ export const metamorphInput = {
   }),
 } satisfies Record<keyof MetamorphActorInput, Field>;
 
+const llmInput = {
+  llmApiKey: createStringField({
+    title: 'LLM API key',
+    type: 'string',
+    description: `API key for the LLM provider. When set, scrapers can use AI to extract data from pages where DOM-based extraction fails. Can override env (e.g. OPENAI_API_KEY, ANTHROPIC_API_KEY).`,
+    editor: 'hidden',
+    isSecret: true,
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+  llmProvider: createStringField({
+    title: 'LLM provider',
+    type: 'string',
+    description: `LLM provider identifier (e.g. openai, anthropic, google). Combined with Model as provider:model when calling the LLM. Custom providers are supported via OpenAI-compatible APIs.`,
+    editor: 'select',
+    enumSuggestedValues: ['openai', 'anthropic', 'google', 'deepseek', 'ollama'],
+    enumTitles: ['OpenAI', 'Anthropic', 'Google', 'DeepSeek', 'Ollama'],
+    example: 'openai',
+    default: 'openai',
+    prefill: 'openai',
+    sectionCaption: 'AI extraction (fallback for custom pages)',
+    sectionDescription: `When DOM-based extraction fails on custom-design pages, an LLM can extract structured data. Requires an API key.`,
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+  llmModel: createStringField({
+    title: 'LLM model',
+    type: 'string',
+    description: `Model ID for the LLM (e.g. gpt-4o, claude-3-5-sonnet). See <a href="https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/docs/llm-models.md">supported models</a> per provider.`,
+    editor: 'textfield',
+    example: 'gpt-4o',
+    default: 'gpt-4o',
+    prefill: 'gpt-4o',
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+  llmBaseUrl: createStringField({
+    title: 'LLM base URL',
+    type: 'string',
+    description: `Base URL for the LLM API. Use for custom OpenAI-compatible endpoints (e.g. Azure OpenAI, local inference). When set, overrides the default provider endpoint.`,
+    editor: 'textfield',
+    example: 'https://your-gateway.example.com/v1',
+    nullable: true,
+    schema: z.string().min(1).url().optional(),
+  }),
+  llmHeaders: createObjectField({
+    title: 'LLM headers',
+    type: 'object',
+    description: `Custom headers to include in LLM API requests (e.g. {"X-API-Version": "2024-01-01", "OpenAI-Organization": "org-xxx"}).`,
+    editor: 'json',
+    nullable: true,
+    schema: z.record(z.string(), z.string()).optional(),
+  }),
+  llmRequestQueueId: createStringField({
+    title: 'LLM request queue ID',
+    type: 'string',
+    description: `Request queue for deferred LLM extraction jobs. Overrides env CRAWLEE_LLM_REQUEST_QUEUE_ID. Default: 'llm'.`,
+    editor: 'textfield',
+    example: 'llm',
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+  llmKeyValueStoreId: createStringField({
+    title: 'LLM key-value store ID',
+    type: 'string',
+    description: `Key-value store for LLM extraction results. Overrides env CRAWLEE_LLM_KEY_VALUE_STORE_ID. Default: 'llm'.`,
+    editor: 'textfield',
+    example: 'llm',
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+} satisfies Record<keyof LlmActorInput, Field>;
+
 export const actorInput = {
   ...inputInput,
   ...startUrlsInput,
@@ -1097,6 +1220,7 @@ export const actorInput = {
   ...requestInput,
   ...outputInput,
   ...crawlerInput,
+  ...llmInput,
   ...perfInput,
   ...loggingInput,
   ...metamorphInput,

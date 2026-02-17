@@ -6,9 +6,9 @@
 
 # Function: createIntegerField()
 
-> **createIntegerField**\<`T`, `U`\>(`field`): [`IntegerField`](../interfaces/IntegerField.md)\<`T`, `U`\>
+> **createIntegerField**\<`T`, `U`, `TSchema`\>(`field`): [`IntegerField`](../interfaces/IntegerField.md)\<`T`, `U`, `TSchema`\>
 
-Defined in: [inputSchema.ts:595](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L595)
+Defined in: [inputSchema.ts:617](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L617)
 
 ## Type Parameters
 
@@ -20,12 +20,16 @@ Defined in: [inputSchema.ts:595](https://github.com/JuroOravec/crawlee-one/blob/
 
 `U` *extends* `string` = `string`
 
+### TSchema
+
+`TSchema` = `any`
+
 ## Parameters
 
 ### field
 
-[`IntegerField`](../interfaces/IntegerField.md)\<`T`, `U`\>
+[`IntegerField`](../interfaces/IntegerField.md)\<`T`, `U`, `TSchema`\>
 
 ## Returns
 
-[`IntegerField`](../interfaces/IntegerField.md)\<`T`, `U`\>
+[`IntegerField`](../interfaces/IntegerField.md)\<`T`, `U`, `TSchema`\>

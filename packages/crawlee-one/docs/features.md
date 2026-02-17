@@ -315,10 +315,10 @@ Everything is generated from `crawlee-one.config.ts`. Each section is optional.
 
 ```ts
 // crawlee-one.config.ts
-import { defineConfig } from 'crawlee-one';
+import { defineConfig, defineCrawler } from 'crawlee-one';
+import type { ActorInput } from './src/config.js';
 
-import actorSpec from './src/readme.js';
-import actorSpec from './src/actorspec.js';
+import actorSpec from './src/metadata.js';
 import actorConfig from './src/config.js';
 import { readmeInput, readmeRenderer } from './src/readme.js';
 
@@ -326,31 +326,33 @@ export default defineConfig({
   version: 1,
   schema: {
     crawlers: {
-      amazon: {
+      amazon: defineCrawler<Partial<ActorInput>>({
         type: 'playwright',
         routes: ['main', 'productList', 'product'],
-      },
+      }),
     },
   },
-  // Generates TS shims
-  types: {
-    outFile: './src/__generated__/crawler.ts',
-  },
-  // Generates Apify's `actor.json`
-  actor: {
-    config: actorConfig,
-    outFile: '.actor/actor.json',
-  },
-  // Generates crawler metadata `actorspec.json`
-  actorspec: {
-    config: actorSpec,
-    outFile: '.actor/actorspec.json',
-  },
-  // Generates README for the scraper's Apify page
-  readme: {
-    actorSpec,
-    renderer: renderer,
-    input: readmeRenderer,
+  generate: {
+    // Generates TS shims
+    types: {
+      outFile: './src/__generated__/crawler.ts',
+    },
+    // Generates Apify's `actor.json`
+    actor: {
+      config: actorConfig,
+      outFile: '.actor/actor.json',
+    },
+    // Generates crawler metadata `actorspec.json`
+    actorspec: {
+      config: actorSpec,
+      outFile: '.actor/actorspec.json',
+    },
+    // Generates README for the scraper's Apify page
+    readme: {
+      actorSpec,
+      renderer: renderer,
+      input: readmeRenderer,
+    },
   },
 });
 ```
@@ -388,13 +390,4 @@ Mock the Apify Actor environment for unit and integration tests. Includes helper
 
 ```ts
 import { setupMockApifyActor, runCrawlerTest } from 'crawlee-one';
-```
-
-## Actor migrations.
-
-Version-based migration system, conceptually similar to database migrations, for updating deployed actors via the Apify API.
-
-```sh
-npx crawlee-one migrate --config ./migrations
-npx crawlee-one unmigrate --config ./migrations
 ```

@@ -8,7 +8,7 @@
 
 > **ReadmeRenderer**\<`TInput`\> = (`args`) => `string` \| `Promise`\<`string`\>
 
-Defined in: [packages/crawlee-one/src/types/config.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L21)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:22
 
 A README renderer function.
 
@@ -31,9 +31,9 @@ Shape of renderer-specific data (opaque to crawlee-one).
 
 ### args
 
-#### actorSpec
+#### actorSpec?
 
-`unknown`
+`ActorSpec`
 
 #### input?
 

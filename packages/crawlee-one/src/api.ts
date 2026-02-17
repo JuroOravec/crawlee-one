@@ -7,7 +7,7 @@ import type {
 } from './lib/actor/types.js';
 import { logLevelHandlerWrapper } from './lib/log.js';
 import type { CrawleeOneRouteHandler, CrawleeOneRoute } from './lib/router/types.js';
-import type { CrawlerMeta, CrawlerType } from './types/index.js';
+import type { CrawlerMeta, CrawlerType } from './types.js';
 import type { MaybePromise } from './utils/types.js';
 
 /** Args object passed to `crawleeOne` */
@@ -123,7 +123,18 @@ export interface CrawleeOneArgs<
     onAfterHandler?: CrawleeOneRouteHandler<T, CrawleeOneActorRouterCtx<T>>;
   };
   routes: Record<T['labels'], CrawleeOneRoute<T, CrawleeOneActorRouterCtx<T>>>;
+  /**
+   * Meta options (e.g. from CLI --strict). When provided
+   * overrides options in the second argument.
+   */
+  crawleeOneOptions?: CrawleeOneOptions;
 } // prettier-ignore
+
+/** Meta options passed as second argument to crawleeOne() or via args.crawleeOneOptions */
+export interface CrawleeOneOptions {
+  /** When true, throw when a URL matches no route instead of logging and skipping. */
+  strict?: boolean;
+}
 
 export const crawleeOne = <
   TType extends CrawlerType,
@@ -131,8 +142,10 @@ export const crawleeOne = <
     CrawlerMeta<TType>['context']
   >,
 >(
-  args: CrawleeOneArgs<TType, T>
+  args: CrawleeOneArgs<TType, T>,
+  options?: CrawleeOneOptions
 ) => {
+  const mergedOptions: CrawleeOneOptions = { ...args.crawleeOneOptions, ...options };
   const hookHandlerWrapper = (handler: CrawleeOneRouteHandler<T, CrawleeOneActorRouterCtx<T>>) => {
     const innerHandler = async (ctx: any) => {
       await args.hooks?.onBeforeHandler?.(ctx as any);
@@ -147,6 +160,7 @@ export const crawleeOne = <
     actorType: args.type as TType,
     crawlerConfigDefaults: args.crawlerConfigDefaults,
     crawlerConfigOverrides: args.crawlerConfig,
+    crawleeOneOptions: mergedOptions,
     actorConfig: {
       telemetry: args.telemetry,
       router: args.router,

@@ -8,7 +8,7 @@
 
 > **CrawleeOneRouteWrapper**\<`T`, `RouterCtx`\> = (`handler`) => [`MaybePromise`](MaybePromise.md)\<(`ctx`) => `Promise`\<`void`\> \| `Awaitable`\<`void`\>\>
 
-Defined in: [packages/crawlee-one/src/lib/router/types.ts:19](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L19)
+Defined in: [packages/crawlee-one/src/lib/router/types.ts:20](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L20)
 
 Wrapper that modifies behavior of CrawleeOneRouteHandler
 

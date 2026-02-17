@@ -4,11 +4,11 @@
 
 [apify-actor-config](../globals.md) / ArrayField
 
-# Type Alias: ArrayField\<T\>
+# Type Alias: ArrayField\<T, TSchema\>
 
-> **ArrayField**\<`T`\> = `BaseArrayField`\<`T`\> \| `KeyValueArrayField`\<`T`\> \| `StringListArrayField`\<`T`\> \| `SelectArrayField`\<`T`\>
+> **ArrayField**\<`T`, `TSchema`\> = `BaseArrayField`\<`T`, `TSchema`\> \| `KeyValueArrayField`\<`T`, `TSchema`\> \| `StringListArrayField`\<`T`, `TSchema`\> \| `SelectArrayField`\<`T`, `TSchema`\>
 
-Defined in: [inputSchema.ts:505](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L505)
+Defined in: [inputSchema.ts:461](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L461)
 
 See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#array
 
@@ -45,3 +45,7 @@ Example of an array:
 ### T
 
 `T` = `unknown`
+
+### TSchema
+
+`TSchema` = `any`

@@ -10,6 +10,9 @@ packages:
 # 2. Run `pnpm install` from the repo root.
 # 3. All packages referencing that catalog entry will pick up the new version automatically.
 catalog:
+  '@ai-sdk/anthropic': ^3.0.0
+  '@sentry/node': ^10.38.0
+  '@ai-sdk/openai': ^3.0.0
   '@crawlee/browser-pool': ^3.16.0
   '@crawlee/core': ^3.16.0
   '@eslint/js': ^10.0.1
@@ -18,8 +21,12 @@ catalog:
   '@types/node': ^25.2.3
   '@vitest/coverage-v8': ^4.0.18
   apify: ^3.3.1
+  apify-client: ^2.22.0
+  'actor-spec': ^0.5.0
+  'apify-actor-config': ^2.0.0
   cheerio: ^1.0.0
   commander: ^14.0.3
+  crawlee-one: ^3.0.2
   cosmiconfig: ^9.0.0
   crawlee: ^3.16.0
   domhandler: ^5.0.3
@@ -27,11 +34,15 @@ catalog:
   eslint: ^10.0.0
   eslint-config-prettier: ^10.0.0
   eslint-plugin-prettier: ^5.5.5
+  ai: ^6.0.0
   eta: ^4.0.0
+  express: ^4.21.0
   glob: ^13.0.2
+  got-scraping: ^4.1.3
   jiti: ^2.6.1
   lodash-es: ^4.17.23
   playwright: ^1.58.2
+  portadom: ^2.0.0
   prettier: ^3.8.1
   puppeteer: ^24.37.2
   tsup: ^8.5.1
@@ -43,6 +54,7 @@ catalog:
   vitest: ^4.0.18
   yaml: ^2.8.2
   zod: ^3.24.2
+  zod-to-json-schema: ^3.25.1
 
 # Minimum versions consumers must provide (peerDependencies).
 # Referenced as "catalog:peers" in package.json files.

@@ -8,7 +8,7 @@
 
 > **CrawleeOneHookCtx**\<`T`\> = `Pick`\<[`CrawleeOneActorInst`](../interfaces/CrawleeOneActorInst.md)\<`T`\>, `"input"` \| `"state"`\> & `object`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:106](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L106)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:116](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L116)
 
 Context passed to user-defined functions passed from input
 
@@ -24,7 +24,7 @@ By default this is the Apify Actor class, see https://docs.apify.com/sdk/js/refe
 
 ### itemCacheKey
 
-> **itemCacheKey**: *typeof* [`itemCacheKey`](../functions/itemCacheKey.md)
+> **itemCacheKey**: *typeof* `itemCacheKey`
 
 A function you can use to get cacheID for current `entry`.
 It takes the entry itself, and a list of properties to be used for hashing.

@@ -18,13 +18,24 @@ Args object passed to `crawleeOne`
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)\<`CrawlerMeta`\<`TType`\>\[`"context"`\]\>
+`T` *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`\>\[`"context"`\]\>
 
 ## Properties
 
+### crawleeOneOptions?
+
+> `optional` **crawleeOneOptions**: [`CrawleeOneOptions`](CrawleeOneOptions.md)
+
+Defined in: [packages/crawlee-one/src/api.ts:130](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/api.ts#L130)
+
+Meta options (e.g. from CLI --strict). When provided
+overrides options in the second argument.
+
+***
+
 ### crawlerConfig?
 
-> `optional` **crawlerConfig**: `Omit`\<`CrawlerMeta`\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
+> `optional` **crawlerConfig**: `Omit`\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
 Defined in: [packages/crawlee-one/src/api.ts:24](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/api.ts#L24)
 
@@ -34,7 +45,7 @@ Crawlee crawler configuration that CANNOT be overriden via `input` and `crawlerC
 
 ### crawlerConfigDefaults?
 
-> `optional` **crawlerConfigDefaults**: `Omit`\<`CrawlerMeta`\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
+> `optional` **crawlerConfigDefaults**: `Omit`\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
 Defined in: [packages/crawlee-one/src/api.ts:26](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/api.ts#L26)
 

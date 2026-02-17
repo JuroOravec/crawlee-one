@@ -6,9 +6,9 @@
 
 # Function: crawleeOne()
 
-> **crawleeOne**\<`TType`, `T`\>(`args`): `Promise`\<`void`\>
+> **crawleeOne**\<`TType`, `T`\>(`args`, `options?`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/api.ts:128](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/api.ts#L128)
+Defined in: [packages/crawlee-one/src/api.ts:139](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/api.ts#L139)
 
 ## Type Parameters
 
@@ -18,13 +18,17 @@ Defined in: [packages/crawlee-one/src/api.ts:128](https://github.com/JuroOravec/
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`CrawlerMeta`\<`TType`\>\[`"context"`\], `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\> = [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`CrawlerMeta`\<`TType`\>\[`"context"`\], `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`\>\[`"context"`\], `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\> = [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`\>\[`"context"`\], `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
 
 ## Parameters
 
 ### args
 
 [`CrawleeOneArgs`](../interfaces/CrawleeOneArgs.md)\<`TType`, `T`\>
+
+### options?
+
+[`CrawleeOneOptions`](../interfaces/CrawleeOneOptions.md)
 
 ## Returns
 

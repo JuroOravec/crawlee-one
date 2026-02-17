@@ -8,7 +8,7 @@
 
 > **runCrawleeOne**\<`TType`, `T`\>(`args`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:157](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L157)
+Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:162](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L162)
 
 Create opinionated Crawlee crawler that uses, and run it within Apify's `Actor.main()` context.
 
@@ -48,7 +48,7 @@ configured via Actor input.
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`CrawlerMeta`\<`TType`\>\[`"context"`\], `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
+`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`\>\[`"context"`\], `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
 
 ## Parameters
 

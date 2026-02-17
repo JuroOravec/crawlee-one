@@ -6,7 +6,7 @@
 
 # Interface: ProxyActorInput
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:140](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L140)
+Defined in: [packages/crawlee-one/src/lib/input.ts:141](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L141)
 
 Common input fields related to proxy setup
 
@@ -16,7 +16,7 @@ Common input fields related to proxy setup
 
 > `optional` **proxy**: `ProxyConfigurationOptions` & `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:141](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L141)
+Defined in: [packages/crawlee-one/src/lib/input.ts:142](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L142)
 
 #### Type Declaration
 

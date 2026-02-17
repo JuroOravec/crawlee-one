@@ -8,7 +8,7 @@
 
 > **createMockStorageClient**(`__namedParameters?`): `StorageClient`
 
-Defined in: [packages/crawlee-one/src/lib/test/mockApifyClient.ts:229](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/test/mockApifyClient.ts#L229)
+Defined in: [packages/crawlee-one/src/lib/test/mockApifyClient.ts:281](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/test/mockApifyClient.ts#L281)
 
 ## Parameters
 

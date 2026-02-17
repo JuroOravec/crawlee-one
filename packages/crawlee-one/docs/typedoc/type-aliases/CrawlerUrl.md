@@ -8,6 +8,6 @@
 
 > **CrawlerUrl** = `Source` \| `string`
 
-Defined in: [packages/crawlee-one/src/types/index.ts:83](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/index.ts#L83)
+Defined in: packages/crawlee-one/src/types.ts:83
 
 URL string or object passed to Crawler.run

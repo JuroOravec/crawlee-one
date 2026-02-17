@@ -6,9 +6,9 @@
 
 # Function: createBooleanField()
 
-> **createBooleanField**\<`T`\>(`field`): [`BooleanField`](../interfaces/BooleanField.md)\<`T`\>
+> **createBooleanField**\<`T`, `TSchema`\>(`field`): [`BooleanField`](../interfaces/BooleanField.md)\<`T`, `TSchema`\>
 
-Defined in: [inputSchema.ts:594](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L594)
+Defined in: [inputSchema.ts:616](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L616)
 
 ## Type Parameters
 
@@ -16,12 +16,16 @@ Defined in: [inputSchema.ts:594](https://github.com/JuroOravec/crawlee-one/blob/
 
 `T` *extends* `boolean` = `boolean`
 
+### TSchema
+
+`TSchema` = `any`
+
 ## Parameters
 
 ### field
 
-[`BooleanField`](../interfaces/BooleanField.md)\<`T`\>
+[`BooleanField`](../interfaces/BooleanField.md)\<`T`, `TSchema`\>
 
 ## Returns
 
-[`BooleanField`](../interfaces/BooleanField.md)\<`T`\>
+[`BooleanField`](../interfaces/BooleanField.md)\<`T`, `TSchema`\>

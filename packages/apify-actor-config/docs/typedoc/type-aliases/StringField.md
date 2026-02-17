@@ -4,11 +4,11 @@
 
 [apify-actor-config](../globals.md) / StringField
 
-# Type Alias: StringField\<TEnum, TEnumTitles\>
+# Type Alias: StringField\<TEnum, TEnumTitles, TSchema\>
 
-> **StringField**\<`TEnum`, `TEnumTitles`\> = `SelectStringField`\<`TEnum`, `TEnumTitles`\> \| `TextStringField`\<`TEnum`\> \| `DatePickerStringField`\<`TEnum`\> \| `BaseStringField`\<`TEnum`\>
+> **StringField**\<`TEnum`, `TEnumTitles`, `TSchema`\> = `SelectStringField`\<`TEnum`, `TEnumTitles`, `TSchema`\> \| `TextStringField`\<`TEnum`, `TSchema`\> \| `DatePickerStringField`\<`TEnum`, `TSchema`\> \| `BaseStringField`\<`TEnum`, `TSchema`\>
 
-Defined in: [inputSchema.ts:212](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L212)
+Defined in: [inputSchema.ts:150](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L150)
 
 See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#string
 
@@ -47,3 +47,7 @@ Example of country selection using a select input:
 ### TEnumTitles
 
 `TEnumTitles` *extends* `string` = `string`
+
+### TSchema
+
+`TSchema` = `any`

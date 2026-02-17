@@ -21,19 +21,22 @@ npx playwright install --with-deps chromium
 
 ## Commands
 
-| Command           | What it does                                                    |
-| ----------------- | --------------------------------------------------------------- |
-| `pnpm build`      | Bundle with tsup + emit declarations with tsc                   |
-| `pnpm test`       | Run all tests once (Vitest)                                     |
-| `pnpm coverage`   | Run tests with v8 coverage report                               |
-| `pnpm bench`      | Run benchmarks with table output (interactive)                  |
-| `pnpm bench:gen`  | Run benchmarks and transform into rich archive + dashboard JSON |
-| `pnpm lint`       | Lint `src/` with ESLint                                         |
-| `pnpm lint:fix`   | Lint and auto-fix                                               |
-| `pnpm start:dev`  | Run `src/index.ts` directly via tsx (for local experimentation) |
-| `pnpm start:prod` | Run the built `dist/index.js`                                   |
-| `pnpm validate`   | Run project constraint validation scripts                       |
-| `pnpm docs:gen`   | Regenerate TypeDoc API docs into `docs/typedoc/`                |
+| Command                             | What it does                                                                                                                                        |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npx crawlee-one run <crawler>`     | Run a crawler (uses `input` from config). Use `-c` to specify config path. See [testing.md](../packages/crawlee-one/docs/testing.md).               |
+| `npx crawlee-one dev [crawlers...]` | Run crawler with dev queue (caches responses). Add `--fetch` to pre-populate cache only. See [testing.md](../packages/crawlee-one/docs/testing.md). |
+| `pnpm build`                        | Bundle with tsup + emit declarations with tsc                                                                                                       |
+| `pnpm test`                         | Run all tests once (Vitest)                                                                                                                         |
+| `pnpm coverage`                     | Run tests with v8 coverage report                                                                                                                   |
+| `pnpm bench`                        | Run benchmarks with table output (interactive)                                                                                                      |
+| `pnpm bench:gen`                    | Run benchmarks and transform into rich archive + dashboard JSON                                                                                     |
+| `pnpm lint`                         | Lint `src/` with ESLint                                                                                                                             |
+| `pnpm lint:fix`                     | Lint and auto-fix                                                                                                                                   |
+| `pnpm start:dev`                    | Run `src/index.ts` directly via tsx (for local experimentation)                                                                                     |
+| `pnpm start:prod`                   | Run the built `dist/index.js`                                                                                                                       |
+| `pnpm validate`                     | Run project constraint validation scripts                                                                                                           |
+| `pnpm docs:gen`                     | Regenerate TypeDoc API docs into `docs/typedoc/`                                                                                                    |
+| `pnpm docker:profesia`              | Build profesia Docker image (pack + docker build from monorepo root)                                                                                |
 
 ## Project structure
 
@@ -54,7 +57,6 @@ src/
 │   ├── integrations/     # Platform-specific I/O implementations
 │   ├── telemetry/        # Error/performance telemetry
 │   ├── actions/          # High-level scraping patterns
-│   ├── migrate/          # Data migration utilities
 │   └── test/             # Shared test utilities
 └── utils/                # General-purpose utilities
 ```
@@ -335,6 +337,8 @@ When the peer and actual versions are the same (e.g. `vitest`), use `catalog:` f
 
 ## Further reading
 
+- [Crawlee execution flow](../packages/crawlee-one/docs/development/crawlee-execution-flow.md) -- internal flow from `crawler.run()` through `RequestQueue`, HTTP fetch, and caching interception points
+- [LLM extraction flow](../packages/crawlee-one/docs/development/llm-extraction-flow.md) -- two-phase deferred LLM extraction, `extractWithLLM` API, and `crawlee-one llm extract` command
 - [CONTRIBUTING.md](../CONTRIBUTING.md) -- how to submit PRs and report bugs
 - [testing-gotchas.md](../packages/crawlee-one/docs/development/testing-gotchas.md) -- Crawlee-specific testing pitfalls
 - [benchmarks/README.md](../packages/crawlee-one/benchmarks/README.md) -- benchmarking infrastructure deep dive

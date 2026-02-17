@@ -28,6 +28,36 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:78](https://github.com/
 
 ***
 
+### extractWithLLM()
+
+> **extractWithLLM**: \<`T`\>(`opts`) => `Promise`\<[`ExtractWithLlmScopedResult`](../interfaces/ExtractWithLlmScopedResult.md)\<`T`\> \| `null`\>
+
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:110](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L110)
+
+Two-phase LLM extraction:
+- First pass defers to LLM queue and reclaims;
+- Second pass returns the extracted object from KVS.
+
+Returns `null` on first pass (caller should return). Returns the result on second pass.
+
+#### Type Parameters
+
+##### T
+
+`T`
+
+#### Parameters
+
+##### opts
+
+[`ExtractWithLlmScopedOptions`](../interfaces/ExtractWithLlmScopedOptions.md)\<`T`\>
+
+#### Returns
+
+`Promise`\<[`ExtractWithLlmScopedResult`](../interfaces/ExtractWithLlmScopedResult.md)\<`T`\> \| `null`\>
+
+***
+
 ### metamorph
 
 > **metamorph**: [`Metamorph`](Metamorph.md)

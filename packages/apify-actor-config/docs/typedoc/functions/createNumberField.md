@@ -6,9 +6,9 @@
 
 # Function: createNumberField()
 
-> **createNumberField**\<`T`, `U`\>(`field`): [`NumberField`](../interfaces/NumberField.md)\<`T`, `U`\>
+> **createNumberField**\<`T`, `U`, `TSchema`\>(`field`): [`NumberField`](../interfaces/NumberField.md)\<`T`, `U`, `TSchema`\>
 
-Defined in: [inputSchema.ts:596](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L596)
+Defined in: [inputSchema.ts:618](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L618)
 
 ## Type Parameters
 
@@ -20,12 +20,16 @@ Defined in: [inputSchema.ts:596](https://github.com/JuroOravec/crawlee-one/blob/
 
 `U` *extends* `string` = `string`
 
+### TSchema
+
+`TSchema` = `any`
+
 ## Parameters
 
 ### field
 
-[`NumberField`](../interfaces/NumberField.md)\<`T`, `U`\>
+[`NumberField`](../interfaces/NumberField.md)\<`T`, `U`, `TSchema`\>
 
 ## Returns
 
-[`NumberField`](../interfaces/NumberField.md)\<`T`, `U`\>
+[`NumberField`](../interfaces/NumberField.md)\<`T`, `U`, `TSchema`\>

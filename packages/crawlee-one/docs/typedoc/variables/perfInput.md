@@ -8,7 +8,7 @@
 
 > `const` **perfInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:660](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L660)
+Defined in: [packages/crawlee-one/src/lib/input.ts:710](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L710)
 
 Common input fields related to performance which are not part of the CrawlerConfig
 
@@ -16,8 +16,8 @@ Common input fields related to performance which are not part of the CrawlerConf
 
 ### batchSize
 
-> **batchSize**: `IntegerField`\<`number`, `string`\>
+> **batchSize**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### batchWaitSecs
 
-> **batchWaitSecs**: `IntegerField`\<`number`, `string`\>
+> **batchWaitSecs**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>

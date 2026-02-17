@@ -4,9 +4,15 @@
 
 [crawlee-one](../README.md) / CrawleeOneConfigReadme
 
-# Interface: CrawleeOneConfigReadme
+# Interface: CrawleeOneConfigReadme\<TRenderer\>
 
-Defined in: [packages/crawlee-one/src/types/config.ts:92](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L92)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:95
+
+## Type Parameters
+
+### TRenderer
+
+`TRenderer` *extends* [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\> = [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`unknown`\>
 
 ## Properties
 
@@ -14,7 +20,7 @@ Defined in: [packages/crawlee-one/src/types/config.ts:92](https://github.com/Jur
 
 > `optional` **actorSpec**: `ActorSpec`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:100](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L100)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:105
 
 The `ActorSpec` data passed to the renderer.
 
@@ -22,9 +28,9 @@ The `ActorSpec` data passed to the renderer.
 
 ### input?
 
-> `optional` **input**: `unknown`
+> `optional` **input**: `TRenderer` *extends* [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`I`\> ? `I` : `unknown`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:113](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L113)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:118
 
 Renderer-specific data. Shape depends on the renderer.
 
@@ -37,7 +43,7 @@ is passed through this single object.
 
 > `optional` **outFile**: `string`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:98](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L98)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:103
 
 Output file path (relative to cwd).
 
@@ -47,9 +53,9 @@ Defaults to `.actor/README.md` if `.actor/` exists, otherwise `./README.md`.
 
 ### renderer?
 
-> `optional` **renderer**: [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\>
+> `optional` **renderer**: `TRenderer`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:106](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L106)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:111
 
 The renderer function that produces the README string.
 

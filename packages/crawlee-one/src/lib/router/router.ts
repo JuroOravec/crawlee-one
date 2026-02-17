@@ -11,7 +11,6 @@ import type { MaybePromise } from '../../utils/types.js';
 import type { PerfActorInput, RequestActorInput } from '../input.js';
 import type {
   CrawleeOneRouteWrapper,
-  CrawleeOneRouteHandler,
   CrawleeOneRouteCtx,
   CrawleeOneRouteMatcherFn,
   CrawleeOneRoute,
@@ -88,38 +87,35 @@ const resolveRoutes = <
  * A list of wrappers `[a, b, c]` will be applied to the handlers right-to-left as so
  * `a( b( c( handler ) ) )`.
  *
- * The entries on the `routerContext` object will be made available to all handlers.
+ * The entries from `getRouterContext(ctx)` will be made available to all handlers.
  */
 export const registerHandlers = async <
   T extends CrawleeOneCtx,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
->(
-  router: CrawlerRouter<T['context']>,
-  routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>,
-  options?: {
-    routerContext?: RouterCtx;
-    handlerWrappers?: CrawleeOneRouteWrapper<T, RouterCtx>[];
-    onSetCtx?: (ctx: Parameters<CrawleeOneRouteHandler<T, RouterCtx>>[0] | null) => void;
-  }
-) => {
-  const { routerContext, handlerWrappers, onSetCtx } = options ?? {};
+>(input: {
+  router: CrawlerRouter<T['context']>;
+  routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>;
+  getRouterContext: (ctx: T['context'] & { routeLabel?: string }) => RouterCtx;
+  handlerWrappers?: CrawleeOneRouteWrapper<T, RouterCtx>[];
+}) => {
+  const { router, routes, getRouterContext, handlerWrappers } = input;
 
   // For each handler
   for (const [key, route] of Object.entries<CrawleeOneRoute<T, RouterCtx>>(routes)) {
     // First apply all wrappers onto the handler
-    const wrappedHandler = await applyWrappersRight(route.handler, handlerWrappers ?? []);
+    // NOTE: `route.handler` is nested in another function that reassignments
+    // to `route.handler` would be reflected even after the routes were registered.
+    const wrappedHandler = await applyWrappersRight(
+      (...args) => route.handler(...args),
+      handlerWrappers ?? []
+    );
 
     // Then register the composite handler
     await router.addHandler<T['context']>(key, async (ctx) => {
-      // For the duration of the handler execution, set the actor.handlerCtx to the value of `ctx`,
-      // and then set it back to null;
-      onSetCtx?.(ctx as any);
-      let result;
-      try {
-        result = await wrappedHandler({ ...routerContext, ...ctx } as any);
-      } finally {
-        onSetCtx?.(null);
-      }
+      // Pass routeLabel so dev mode can route pushData to dev-{crawler}-{route} dataset.
+      const ctxWithRoute = { ...ctx, routeLabel: key };
+      const handlerCtx = { ...ctxWithRoute, ...getRouterContext(ctxWithRoute) };
+      const result = await wrappedHandler(handlerCtx as any);
       return result;
     });
   }
@@ -132,10 +128,21 @@ const createDefaultHandler = <
   input: {
     io: T['io'];
     routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>;
+    getRouterContext: (ctx: T['context'] & { routeLabel?: string }) => RouterCtx;
+    crawleeOneOptions?: { strict?: boolean };
   } & PerfActorInput &
     Pick<RequestActorInput, 'requestQueueId'>
 ) => {
-  const { io, routes, requestQueueId, batchSize, batchWaitSecs } = input;
+  const {
+    io,
+    routes,
+    getRouterContext,
+    requestQueueId,
+    batchSize,
+    batchWaitSecs,
+    crawleeOneOptions,
+  } = input;
+  const strict = crawleeOneOptions?.strict ?? false;
 
   const resolvedRoutes = resolveRoutes(routes);
 
@@ -183,17 +190,20 @@ const createDefaultHandler = <
 
   /** Redirect the URL to the labelled route identical to route's name */
   const defaultAction = async (
-    ctx: CrawleeOneRouteCtx<T, RouterCtx>,
+    handlerCtx: CrawleeOneRouteCtx<T, RouterCtx>,
     url: string,
     routeName: string,
     route: CrawleeOneRoute<T, RouterCtx>
   ) => {
     if (!route.handler) {
-      ctx.log.error(`No handler found for route "${routeName}". URL will not be processed. URL: ${url}`); // prettier-ignore
+      handlerCtx.log.error(`No handler found for route "${routeName}". URL will not be processed. URL: ${url}`); // prettier-ignore
       return;
     }
-    ctx.log.info(`Passing URL to handler for route "${routeName}". URL: ${url}`);
-    await route.handler(ctx);
+    handlerCtx.log.info(`Passing URL to handler for route "${routeName}". URL: ${url}`);
+    const ctxWithRoute = { ...handlerCtx, routeLabel: routeName };
+    const routeContext = getRouterContext(ctxWithRoute);
+    const handlerCtxWithRoute = { ...ctxWithRoute, ...routeContext };
+    await route.handler(handlerCtxWithRoute);
   };
 
   const defaultHandler = async <TCtx extends CrawleeOneRouteCtx<T, RouterCtx>>(
@@ -246,6 +256,9 @@ const createDefaultHandler = <
         log.info(`URL matched route "${routeName}". ${logSuffix}`);
         await defaultAction(ctx, url, routeName ?? '', route);
       } else {
+        if (strict) {
+          throw new Error(`No route matched URL. URL will not be processed. ${logSuffix}`);
+        }
         log.error(`No route matched URL. URL will not be processed. ${logSuffix}`);
       }
 
@@ -266,7 +279,12 @@ const createDefaultHandler = <
       } while (hasBatchReqs() && page);
       log.info(`Batch of ${batchSize ?? 1} finished.`);
     } catch (err) {
+      // In strict mode, propagate "no route matched" errors instead of reclaiming
+      if (strict && err instanceof Error && err.message.includes('No route matched URL')) {
+        throw err;
+      }
       await onError(err, req, log);
+      throw err;
     }
   };
 
@@ -286,7 +304,7 @@ const createDefaultHandler = <
  *
  * const routeLabels = {
  *   MAIN_PAGE: 'MAIN_PAGE',
- *   JOB_LISTING: 'JOB_LISTING',
+ *   JOB_LIST: 'JOB_LIST',
  *   JOB_DETAIL: 'JOB_DETAIL',
  *   JOB_RELATED_LIST: 'JOB_RELATED_LIST',
  *   PARTNERS: 'PARTNERS',
@@ -310,7 +328,7 @@ const createDefaultHandler = <
  *     action: async (ctx) => {
  *       await ctx.crawler.addRequests([{
  *         url: 'https://profesia.sk/praca',
- *         label: routeLabels.JOB_LISTING,
+ *         label: routeLabels.JOB_LIST,
  *       }]);
  *     },
  *   },
@@ -320,7 +338,7 @@ const createDefaultHandler = <
  * setupDefaultHandlers({ router, routes });
  *
  * // Now set up the labelled routes
- * await router.addHandler(routeLabels.JOB_LISTING, async (ctx) => { ... }
+ * await router.addHandler(routeLabels.JOB_LIST, async (ctx) => { ... }
  */
 export const setupDefaultHandlers = async <
   T extends CrawleeOneCtx,
@@ -329,18 +347,18 @@ export const setupDefaultHandlers = async <
   io,
   router,
   routeHandlerWrappers,
-  routerContext,
+  getRouterContext,
   routes,
   input,
-  onSetCtx,
+  crawleeOneOptions,
 }: {
   io: T['io'];
   router: CrawlerRouter<T['context']>;
   routeHandlerWrappers?: CrawleeOneRouteWrapper<T, RouterCtx>[];
-  routerContext?: RouterCtx;
+  getRouterContext: (ctx: T['context'] & { routeLabel?: string }) => RouterCtx;
   routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>;
   input?: T['input'] | null;
-  onSetCtx?: (ctx: Parameters<CrawleeOneRouteHandler<T, RouterCtx>>[0] | null) => void;
+  crawleeOneOptions?: { strict?: boolean };
 }) => {
   const { batchSize, batchWaitSecs, requestQueueId } = (input || {}) as PerfActorInput &
     RequestActorInput;
@@ -348,22 +366,18 @@ export const setupDefaultHandlers = async <
   const defaultHandler = createDefaultHandler({
     io,
     routes,
+    getRouterContext,
     requestQueueId,
     batchSize,
     batchWaitSecs,
+    crawleeOneOptions,
   });
 
   const wrappedHandler = await applyWrappersRight(defaultHandler, routeHandlerWrappers ?? []);
   await router.addDefaultHandler<T['context']>(async (ctx) => {
-    // For the duration of the handler execution, set the actor.handlerCtx to the value of `ctx`,
-    // and then set it back to null;
-    onSetCtx?.(ctx as any);
-    let result;
-    try {
-      result = await wrappedHandler({ ...routerContext, ...ctx } as any);
-    } finally {
-      onSetCtx?.(null);
-    }
+    const routerCtx = getRouterContext(ctx);
+    const handlerCtx = { ...ctx, ...routerCtx };
+    const result = await wrappedHandler(handlerCtx);
     return result;
   });
 };

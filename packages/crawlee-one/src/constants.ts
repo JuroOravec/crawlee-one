@@ -14,7 +14,7 @@ import {
   type PuppeteerCrawlingContext,
 } from 'crawlee';
 
-import type { CrawlerType } from './types/index.js';
+import type { CrawlerType } from './types.js';
 
 export const actorClassByType = {
   basic: BasicCrawler,

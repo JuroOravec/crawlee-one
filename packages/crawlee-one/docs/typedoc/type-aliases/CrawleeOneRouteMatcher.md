@@ -8,7 +8,7 @@
 
 > **CrawleeOneRouteMatcher**\<`T`, `RouterCtx`\> = [`MaybeArray`](MaybeArray.md)\<`RegExp` \| [`CrawleeOneRouteMatcherFn`](CrawleeOneRouteMatcherFn.md)\<`T`, `RouterCtx`\>\>
 
-Defined in: [packages/crawlee-one/src/lib/router/types.ts:56](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L56)
+Defined in: [packages/crawlee-one/src/lib/router/types.ts:101](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L101)
 
 Function or RegExp that checks if the [CrawleeOneRoute](../interfaces/CrawleeOneRoute.md) this Matcher belongs to
 should handle the given request.

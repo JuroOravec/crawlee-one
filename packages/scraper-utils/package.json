@@ -31,7 +31,8 @@
     "actor-spec": "workspace:*",
     "crawlee-one": "workspace:*",
     "eta": "catalog:",
-    "lodash-es": "catalog:"
+    "lodash-es": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/lodash-es": "catalog:",

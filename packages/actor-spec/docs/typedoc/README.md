@@ -110,7 +110,7 @@ The config file must have a default export -- either an `ActorSpec` object or an
 
 | Document                                  | Description                         |
 | ----------------------------------------- | ----------------------------------- |
-| [API reference](_media/README.md) | Auto-generated TypeScript API docs. |
+| [API reference](./docs/typedoc/README.md) | Auto-generated TypeScript API docs. |
 | [Changelog](_media/CHANGELOG.md)               | Release history.                    |
 
 ## License

@@ -7,12 +7,6 @@ export type MaybeAsyncFn<R, Args extends any[]> = R | ((...args: Args) => MaybeP
 
 /** Unwrap Array to its item(s) */
 export type ArrVal<T extends any[] | readonly any[]> = T[number];
-export const enumFromArray = <T extends readonly string[]>(arr: T) => {
-  return arr.reduce<{ [Key in ArrVal<T>]: Key }>((agg, k) => {
-    agg[k] = k;
-    return agg;
-  }, {} as any);
-};
 
 /** Pick properties that should be optional */
 export type PickPartial<T extends object, Keys extends keyof T> = Omit<T, Keys> &

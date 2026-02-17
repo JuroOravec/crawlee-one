@@ -8,7 +8,7 @@
 
 > **CrawleeOneRouteCtx**\<`T`, `RouterCtx`\> = `Parameters`\<`Parameters`\<`CrawlerRouter`\<`T`\[`"context"`\] & `RouterCtx`\>\[`"addHandler"`\]\>\[`1`\]\>\[`0`\]
 
-Defined in: [packages/crawlee-one/src/lib/router/types.ts:7](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L7)
+Defined in: [packages/crawlee-one/src/lib/router/types.ts:8](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L8)
 
 Context object provided in CrawlerRouter
 

@@ -18,7 +18,6 @@ Because scrapers are deployed as Docker images without access to the monorepo, w
 | `async`          | `wait`, `retryAsync`, `serialAsyncMap`, `serialAsyncFilter`, `serialAsyncFind`, `deferredPromise` | Serial async iteration, retries, delays                          |
 | `format`         | `strOrNull`, `strAsNumber`                                                                        | String parsing and coercion                                      |
 | `url`            | `validateUrl`, `resolveUrlPath`, `sortUrl`, `equalUrls`                                           | URL manipulation and comparison                                  |
-| `package`        | `getPackageJsonInfo`                                                                              | Read fields from the nearest `package.json` relative to a module |
 | `readme/apify/*` | `renderApifyReadme`, `defaultFeatureTexts`, Apify README types                                    | Generate Apify actor README from a template and actorspec        |
 
 ## Usage
@@ -30,24 +29,13 @@ import { wait, serialAsyncMap, equalUrls } from 'scraper-utils';
 import type { MaybePromise, ApifyScraperActorSpec } from 'scraper-utils';
 ```
 
-### `getPackageJsonInfo`
-
-This function walks up from the caller's directory to find the nearest `package.json`. Pass `import.meta.url` so it resolves relative to your scraper, not relative to scraper-utils:
-
-```typescript
-import { getPackageJsonInfo } from 'scraper-utils';
-
-const pkg = getPackageJsonInfo(['name', 'version'], import.meta.url);
-console.log(pkg.name); // "my-scraper"
-```
-
 ### Apify README generation
 
-Generate a rich README for an Apify actor from an actorspec and template overrides:
+Generate a rich README for an Apify actor from scraper metadata and template overrides:
 
 ```typescript
 import { renderApifyReadme } from 'scraper-utils';
-import actorSpec from './actorspec.js';
+import actorSpec from './metadata.js';
 
 await renderApifyReadme({
   filepath: './.actor/README.md',

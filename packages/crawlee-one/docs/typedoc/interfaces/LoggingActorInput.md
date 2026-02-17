@@ -6,7 +6,7 @@
 
 # Interface: LoggingActorInput
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:122](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L122)
+Defined in: [packages/crawlee-one/src/lib/input.ts:123](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L123)
 
 Common input fields related to logging setup
 
@@ -16,7 +16,7 @@ Common input fields related to logging setup
 
 > `optional` **errorReportingDatasetId**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:136](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L136)
+Defined in: [packages/crawlee-one/src/lib/input.ts:137](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L137)
 
 Dataset ID to which errors should be captured.
 
@@ -28,7 +28,7 @@ Default: `'REPORTING'`.
 
 > `optional` **errorTelemetry**: `boolean`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:130](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L130)
+Defined in: [packages/crawlee-one/src/lib/input.ts:131](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L131)
 
 Whether to report actor errors to telemetry such as <a href="https://sentry.io/">Sentry</a>.
 
@@ -41,4 +41,4 @@ and track down and fix issues.
 
 > `optional` **logLevel**: `"error"` \| `"debug"` \| `"info"` \| `"warn"` \| `"off"`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:123](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L123)
+Defined in: [packages/crawlee-one/src/lib/input.ts:124](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L124)

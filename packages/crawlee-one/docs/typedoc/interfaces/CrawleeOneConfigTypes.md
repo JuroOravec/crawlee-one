@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneConfigTypes
 
-Defined in: [packages/crawlee-one/src/types/config.ts:61](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L61)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:64
 
 ## Properties
 
@@ -14,6 +14,6 @@ Defined in: [packages/crawlee-one/src/types/config.ts:61](https://github.com/Jur
 
 > **outFile**: `string`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:63](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L63)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:66
 
 Output file path for generated TypeScript types (relative to cwd).

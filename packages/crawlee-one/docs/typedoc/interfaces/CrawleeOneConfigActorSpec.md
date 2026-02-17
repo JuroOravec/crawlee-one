@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneConfigActorSpec
 
-Defined in: [packages/crawlee-one/src/types/config.ts:79](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L79)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:82
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/crawlee-one/src/types/config.ts:79](https://github.com/Jur
 
 > **config**: `ActorSpec`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:83](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L83)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:86
 
 The `ActorSpec` object to serialize.
 
@@ -24,7 +24,7 @@ The `ActorSpec` object to serialize.
 
 > `optional` **outFile**: `string`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:89](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L89)
+Defined in: packages/crawlee-one/src/lib/config/types.ts:92
 
 Output file path (relative to cwd).
 

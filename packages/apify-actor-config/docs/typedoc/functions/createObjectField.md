@@ -6,9 +6,9 @@
 
 # Function: createObjectField()
 
-> **createObjectField**\<`T`\>(`field`): [`ObjectField`](../interfaces/ObjectField.md)\<`T`\>
+> **createObjectField**\<`T`, `TSchema`\>(`field`): [`ObjectField`](../interfaces/ObjectField.md)\<`T`, `TSchema`\>
 
-Defined in: [inputSchema.ts:597](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L597)
+Defined in: [inputSchema.ts:619](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L619)
 
 ## Type Parameters
 
@@ -16,12 +16,16 @@ Defined in: [inputSchema.ts:597](https://github.com/JuroOravec/crawlee-one/blob/
 
 `T` *extends* `object` = `object`
 
+### TSchema
+
+`TSchema` = `any`
+
 ## Parameters
 
 ### field
 
-[`ObjectField`](../interfaces/ObjectField.md)\<`T`\>
+[`ObjectField`](../interfaces/ObjectField.md)\<`T`, `TSchema`\>
 
 ## Returns
 
-[`ObjectField`](../interfaces/ObjectField.md)\<`T`\>
+[`ObjectField`](../interfaces/ObjectField.md)\<`T`, `TSchema`\>

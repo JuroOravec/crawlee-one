@@ -4,9 +4,9 @@
 
 [apify-actor-config](../globals.md) / ObjectField
 
-# Interface: ObjectField\<T\>
+# Interface: ObjectField\<T, TSchema\>
 
-Defined in: [inputSchema.ts:432](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L432)
+Defined in: [inputSchema.ts:388](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L388)
 
 See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#object-type
 
@@ -39,7 +39,7 @@ Example of a blackbox object:
 
 ## Extends
 
-- `BaseField`.`BaseFieldTypedProps`\<`T`, `"object"`\>
+- `BaseField`.`BaseFieldTypedProps`\<`T`, `"object"`, `TSchema`\>
 
 ## Type Parameters
 
@@ -47,13 +47,17 @@ Example of a blackbox object:
 
 `T` *extends* `object` = `object`
 
+### TSchema
+
+`TSchema` = `any`
+
 ## Properties
 
 ### additionalProperties?
 
 > `optional` **additionalProperties**: `boolean`
 
-Defined in: [inputSchema.ts:464](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L464)
+Defined in: [inputSchema.ts:420](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L420)
 
 Controls if sub-properties not listed in `properties` are allowed.
 Defaults to `true`. Set to `false` to make requests with extra
@@ -65,7 +69,7 @@ properties fail.
 
 > `optional` **default**: `T`
 
-Defined in: [inputSchema.ts:164](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L164)
+Defined in: [inputSchema.ts:95](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L95)
 
 Default value that will be used when no value is provided.
 
@@ -93,7 +97,7 @@ Description of the field that will be displayed as help text in Actor input UI.
 
 > **editor**: `"hidden"` \| `"json"` \| `"proxy"` \| `"schemaBased"`
 
-Defined in: [inputSchema.ts:436](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L436)
+Defined in: [inputSchema.ts:392](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L392)
 
 Visual editor used for the input field.
 
@@ -103,7 +107,7 @@ Visual editor used for the input field.
 
 > `optional` **errorMessage**: [`ObjectErrorMessage`](ObjectErrorMessage.md)
 
-Defined in: [inputSchema.ts:180](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L180)
+Defined in: [inputSchema.ts:111](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L111)
 
 Custom error messages for validation keywords.
 The allowed keys depend on the field's `type`.
@@ -120,7 +124,7 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 > `optional` **example**: `T`
 
-Defined in: [inputSchema.ts:173](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L173)
+Defined in: [inputSchema.ts:104](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L104)
 
 Sample value of this field for the actor to be displayed when
 actor is published in Apify Store.
@@ -135,7 +139,7 @@ actor is published in Apify Store.
 
 > `optional` **isSecret**: `boolean`
 
-Defined in: [inputSchema.ts:449](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L449)
+Defined in: [inputSchema.ts:405](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L405)
 
 Specifies whether the input field will be stored encrypted.
 Only available with `json` and `hidden` editors.
@@ -146,7 +150,7 @@ Only available with `json` and `hidden` editors.
 
 > `optional` **maxProperties**: `number`
 
-Defined in: [inputSchema.ts:442](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L442)
+Defined in: [inputSchema.ts:398](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L398)
 
 Maximum number of properties the object can have.
 
@@ -156,7 +160,7 @@ Maximum number of properties the object can have.
 
 > `optional` **minProperties**: `number`
 
-Defined in: [inputSchema.ts:444](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L444)
+Defined in: [inputSchema.ts:400](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L400)
 
 Minimum number of properties the object can have.
 
@@ -180,7 +184,7 @@ Specifies whether null is an allowed value.
 
 > `optional` **patternKey**: `string`
 
-Defined in: [inputSchema.ts:438](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L438)
+Defined in: [inputSchema.ts:394](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L394)
 
 Regular expression that will be used to validate the keys of the object.
 
@@ -190,7 +194,7 @@ Regular expression that will be used to validate the keys of the object.
 
 > `optional` **patternValue**: `string`
 
-Defined in: [inputSchema.ts:440](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L440)
+Defined in: [inputSchema.ts:396](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L396)
 
 Regular expression that will be used to validate the values of object.
 
@@ -200,7 +204,7 @@ Regular expression that will be used to validate the values of object.
 
 > `optional` **prefill**: `T`
 
-Defined in: [inputSchema.ts:168](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L168)
+Defined in: [inputSchema.ts:99](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L99)
 
 Value that will be prefilled in the actor input interface.
 
@@ -214,7 +218,7 @@ Value that will be prefilled in the actor input interface.
 
 > `optional` **properties**: `Record`\<`string`, [`Field`](../type-aliases/Field.md)\>
 
-Defined in: [inputSchema.ts:458](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L458)
+Defined in: [inputSchema.ts:414](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L414)
 
 Defines the sub-schema properties for the object, used for validation
 and UI rendering with the `schemaBased` editor. Each sub-property can
@@ -229,7 +233,7 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 > `optional` **required**: `string`[]
 
-Defined in: [inputSchema.ts:471](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L471)
+Defined in: [inputSchema.ts:427](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L427)
 
 An array of sub-property keys that are required.
 Note: This applies only if the object field itself is present.
@@ -240,9 +244,9 @@ its required subfields are not validated.
 
 ### schema?
 
-> `optional` **schema**: `any`
+> `optional` **schema**: `TSchema`
 
-Defined in: [inputSchema.ts:96](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L96)
+Defined in: [inputSchema.ts:118](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L118)
 
 Optional validation schema for this field (e.g. a Zod schema).
 
@@ -251,7 +255,7 @@ automatically stripped when generating `actor.json`.
 
 #### Inherited from
 
-`BaseField.schema`
+`BaseFieldTypedProps.schema`
 
 ***
 
@@ -306,7 +310,7 @@ Title of the field in UI.
 
 > **type**: `"object"`
 
-Defined in: [inputSchema.ts:434](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L434)
+Defined in: [inputSchema.ts:390](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L390)
 
 Allowed type for the input value. Cannot be mixed.
 
