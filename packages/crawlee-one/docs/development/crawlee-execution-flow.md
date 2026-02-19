@@ -63,7 +63,7 @@ If same-domain throttling is enabled, `delayRequest()` may postpone processing. 
 Once a request is available, `BasicCrawler._runRequestHandler()` (line ~1620) is called. It:
 
 1. Passes the request to `BasicCrawler.requestHandler`
-2. In crawlee-one, the `requestHandler` is the Crawlee `Router` (see actor.ts, lines 183–184)
+2. In crawlee-one, the `requestHandler` is the Crawlee `Router` (see context.ts, lines 183–184)
 
 The Router executes middlewares and the route handler, but **the Router does not perform the HTTP fetch itself**. This is done **BEFORE** the context is handed over to the Router. That responsibility lies in crawler subclasses (e.g. `HttpCrawler`).
 
@@ -111,7 +111,7 @@ The `httpClient` implements the `BaseHttpClient` interface (core, base-http-clie
 
 ## 4. Crawlee-One Integration: Router as `requestHandler`
 
-In crawlee-one (actor.ts, lines 183–185):
+In crawlee-one (context.ts, lines 183–185):
 
 ```typescript
 overrides: {

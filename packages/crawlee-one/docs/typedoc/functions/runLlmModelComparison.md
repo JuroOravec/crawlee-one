@@ -8,7 +8,7 @@
 
 > **runLlmModelComparison**\<`TData`\>(`opts`): `Promise`\<[`LlmModelCompareReport`](../interfaces/LlmModelCompareReport.md)\<`TData`\>\>
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:50](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L50)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:50
 
 Run LLM model comparison: fetch URLs with HttpCrawler, extract with each model
 with `extractWithLlm`, then compare outputs field-by-field against the reference model.

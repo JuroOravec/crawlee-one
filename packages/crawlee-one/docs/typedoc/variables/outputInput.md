@@ -8,7 +8,7 @@
 
 > `const` **outputInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:948](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L948)
+Defined in: [packages/crawlee-one/src/lib/input.ts:962](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L962)
 
 Common input fields related to actor output
 

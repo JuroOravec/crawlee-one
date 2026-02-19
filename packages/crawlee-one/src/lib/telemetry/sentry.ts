@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/node';
 
 import type { CrawleeOneTelemetry } from './types.js';
-import type { CrawleeOneTypes } from '../actor/types.js';
+import type { CrawleeOneTypes } from '../context/types.js';
 
 /**
  * Sentry configuration common to all crawlers.

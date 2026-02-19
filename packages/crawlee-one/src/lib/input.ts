@@ -12,7 +12,7 @@ import { z } from 'zod';
 
 import type { CrawlerUrl } from '../types.js';
 import { LOG_LEVEL, type LogLevel } from './log.js';
-import type { CrawleeOneHookFn } from './actor/types.js';
+import type { CrawleeOneHookFn } from './context/types.js';
 
 export type ActorInput = InputActorInput &
   CrawlerConfigActorInput &

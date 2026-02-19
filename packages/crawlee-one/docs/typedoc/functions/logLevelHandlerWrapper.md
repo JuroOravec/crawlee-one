@@ -6,7 +6,7 @@
 
 # Function: logLevelHandlerWrapper()
 
-> **logLevelHandlerWrapper**\<`T`, `RouterCtx`\>(`logLevel`): [`CrawleeOneRouteWrapper`](../type-aliases/CrawleeOneRouteWrapper.md)\<`T`, `RouterCtx`\>
+> **logLevelHandlerWrapper**\<`T`\>(`logLevel`): [`CrawleeOneRouteMiddleware`](../type-aliases/CrawleeOneRouteMiddleware.md)\<`T`\>
 
 Defined in: [packages/crawlee-one/src/lib/log.ts:49](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/log.ts#L49)
 
@@ -44,10 +44,6 @@ const actor = await createCrawleeOne<CheerioCrawlingContext>({
 
 `T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)\<`CrawlingContext`\<`JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler` \| `BasicCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\> \| `HttpCrawler`\<`InternalHttpCrawlingContext`\<`any`, `any`, `HttpCrawler`\<`any`\>\>\>, `Dictionary`\>, `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
 
-### RouterCtx
-
-`RouterCtx` *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](../type-aliases/CrawleeOneRouteCtx.md)\<`T`\>
-
 ## Parameters
 
 ### logLevel
@@ -56,4 +52,4 @@ const actor = await createCrawleeOne<CheerioCrawlingContext>({
 
 ## Returns
 
-[`CrawleeOneRouteWrapper`](../type-aliases/CrawleeOneRouteWrapper.md)\<`T`, `RouterCtx`\>
+[`CrawleeOneRouteMiddleware`](../type-aliases/CrawleeOneRouteMiddleware.md)\<`T`\>

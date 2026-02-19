@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneTypes\<Ctx, Labels, Input, TIO, Telem\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:48](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L48)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:48](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L48)
 
 Abstract type that holds all variable (generic) types used in CrawleeOne.
 
@@ -41,7 +41,7 @@ have to pass through many times, but only one that describes them all.
 
 > **context**: `Ctx`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:69](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L69)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:69](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L69)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:69](https://github.com/
 
 > **input**: `Input`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:71](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L71)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:71](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L71)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:71](https://github.com/
 
 > **io**: `TIO`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:72](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L72)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:72](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L72)
 
 ***
 
@@ -65,7 +65,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:72](https://github.com/
 
 > **labels**: `Labels`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:70](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L70)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:70](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L70)
 
 ***
 
@@ -73,4 +73,4 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:70](https://github.com/
 
 > **telemetry**: `Telem`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:73](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L73)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:73](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L73)

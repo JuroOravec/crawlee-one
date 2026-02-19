@@ -8,7 +8,7 @@
 
 > `const` **actorInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:1213](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L1213)
+Defined in: [packages/crawlee-one/src/lib/input.ts:1236](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L1236)
 
 ## Type Declaration
 
@@ -79,6 +79,10 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:1213](https://github.com/Juro
 ### llmProvider
 
 > **llmProvider**: `StringField`\<`string`, `string`, `ZodOptional`\<`ZodString`\>\>
+
+### llmQueueDrainCheckIntervalMs
+
+> **llmQueueDrainCheckIntervalMs**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### llmRequestQueueId
 

@@ -8,12 +8,12 @@
 
 > **crawleeOne**\<`TType`, `T`\>(`opts`, `onReady?`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:209](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L209)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:210](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L210)
 
 Create and run an opinionated Crawlee crawler that uses router for handling requests,
 and runs within Apify's `Actor.main()` context.
 
-Apify context can be replaced with custom implementation using the `actorConfig.io` option.
+Apify context can be replaced with custom implementation using the `io` option.
 
 This function does the following for you:
 
@@ -59,7 +59,7 @@ configured via Actor input.
 
 ### onReady?
 
-(`actor`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
+(`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 ## Returns
 

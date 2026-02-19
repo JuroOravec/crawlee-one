@@ -8,7 +8,7 @@
 
 > `const` **crawlerInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:580](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L580)
+Defined in: [packages/crawlee-one/src/lib/input.ts:594](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L594)
 
 Common input fields related to crawler setup
 

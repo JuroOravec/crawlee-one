@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import { addRequests } from './pushRequests.js';
+import { addRequests } from './addRequests.js';
 import type { CrawleeOneIO, CrawleeOneRequestQueue } from '../integrations/types.js';
 
 const createMockRequestQueue = (

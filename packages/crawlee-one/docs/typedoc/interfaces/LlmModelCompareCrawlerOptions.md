@@ -6,7 +6,7 @@
 
 # Interface: LlmModelCompareCrawlerOptions
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:28](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L28)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:28
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:28](https
 
 > **models**: [`LlmModelCompareConfig`](LlmModelCompareConfig.md)[]
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:31](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L31)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:31
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:31](https
 
 > **reportName**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:29](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L29)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:29
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:29](https
 
 > **schema**: `unknown`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:32](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L32)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:32
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:32](https
 
 > **systemPrompt**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:33](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L33)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:33
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:33](https
 
 > **urls**: [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:30](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L30)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:30

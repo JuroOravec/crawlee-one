@@ -8,7 +8,7 @@
 
 > **CrawleeOneHookFn**\<`TArgs`, `TReturn`, `T`\> = (...`args`) => [`MaybePromise`](MaybePromise.md)\<`TReturn`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:141](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L141)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:145](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L145)
 
 ## Type Parameters
 

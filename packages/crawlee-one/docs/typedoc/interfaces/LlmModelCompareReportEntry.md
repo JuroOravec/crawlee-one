@@ -6,7 +6,7 @@
 
 # Interface: LlmModelCompareReportEntry
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:24](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L24)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:24
 
 Result of comparing one model against the source of truth
 
@@ -16,7 +16,7 @@ Result of comparing one model against the source of truth
 
 > **agreementByField**: `Record`\<`string`, `number`\>
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:34](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L34)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:34
 
 Per-field agreement rate (e.g. { title: 0.95, description: 0.72 })
 
@@ -26,7 +26,7 @@ Per-field agreement rate (e.g. { title: 0.95, description: 0.72 })
 
 > **agreementRate**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:32](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L32)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:32
 
 Fraction of field comparisons that match (0–1)
 
@@ -36,7 +36,7 @@ Fraction of field comparisons that match (0–1)
 
 > `optional` **completionTokensAvg**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:46](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L46)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:46
 
 Average completion tokens per request
 
@@ -46,7 +46,7 @@ Average completion tokens per request
 
 > **errorCount**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:30](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L30)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:30
 
 Number of extractions that errored (LLM call failed)
 
@@ -56,7 +56,7 @@ Number of extractions that errored (LLM call failed)
 
 > `optional` **extractionSecAvg**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:42](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L42)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:42
 
 Average LLM extraction time per request in seconds (from _extractionMeta.extractionMs)
 
@@ -66,7 +66,7 @@ Average LLM extraction time per request in seconds (from _extractionMeta.extract
 
 > **id**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:25](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L25)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:25
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:25](https://github
 
 > `optional` **label**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:26](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L26)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:26
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:26](https://github
 
 > **matchedIds**: `string`[]
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:36](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L36)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:36
 
 IDs where both reference and this model have a result, and all fields match field-by-field
 
@@ -92,7 +92,7 @@ IDs where both reference and this model have a result, and all fields match fiel
 
 > **mismatchedIds**: `string`[]
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:38](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L38)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:38
 
 IDs where both reference and this model have a result, but at least one field differs
 
@@ -102,7 +102,7 @@ IDs where both reference and this model have a result, but at least one field di
 
 > **missingIds**: `string`[]
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:40](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L40)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:40
 
 IDs the reference has but this model has no result for (comparison gap)
 
@@ -112,7 +112,7 @@ IDs the reference has but this model has no result for (comparison gap)
 
 > `optional` **promptTokensAvg**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:44](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L44)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:44
 
 Average prompt tokens per request
 
@@ -122,7 +122,7 @@ Average prompt tokens per request
 
 > **succeededCount**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:28](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L28)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:28
 
 Number of extractions that succeeded (data returned)
 
@@ -132,6 +132,6 @@ Number of extractions that succeeded (data returned)
 
 > `optional` **totalTokensAvg**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:48](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L48)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:48
 
 Average total tokens per request

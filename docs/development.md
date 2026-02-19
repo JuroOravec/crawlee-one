@@ -43,12 +43,12 @@ npx playwright install --with-deps chromium
 ```
 src/
 ├── index.ts              # Public API -- re-exports everything consumers import
-├── lib/actor/actor.ts     # Top-level crawleeOne()
+├── lib/context/context.ts # Top-level crawleeOne()
 ├── cli/                  # CLI entry point (npx crawlee-one ...)
 │   └── commands/         #   Subcommands (codegen, config)
 ├── types/                # Shared type definitions and config schema
 ├── lib/
-│   ├── actor/            # Core actor logic
+│   ├── context/          # Core CrawleeOne context logic
 │   ├── router/           # Route matching and handler registration
 │   ├── io/               # Data and request I/O
 │   ├── error/            # Error capture and reporting
@@ -93,7 +93,7 @@ The mapping lives in `src/constants.ts` (`actorClassByType`).
 
 ### Core flow
 
-1. **`crawleeOne()`** (in `src/lib/actor/actor.ts`) is the main entry point. It resolves input, creates scoped push/metamorph functions, registers routes, instantiates the correct crawler class, and runs it.
+1. **`crawleeOne()`** (in `src/lib/context/context.ts`) is the main entry point. It resolves input, creates scoped push/metamorph functions, registers routes, instantiates the correct crawler class, and runs it.
 3. **Route matching** (in `src/lib/router/router.ts`) uses `registerHandlers` to wire named routes to the Crawlee Router. The default handler matches unlabeled requests against route matchers (regex, string, function) and re-enqueues them with the correct label.
 4. **Data I/O** (in `src/lib/io/`) handles pushing data to datasets and requests to queues, with transforms, filters, privacy masking, and size limits applied.
 

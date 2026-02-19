@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { z } from 'zod';
 import { createStringField, createIntegerField } from 'apify-actor-config';
 
-import { createHttpCrawlerOptions, crawleeOne } from './actor.js';
+import { createHttpCrawlerOptions, crawleeOne } from './context.js';
 import { actorClassByType } from '../../constants.js';
 import { CRAWLER_TYPE, CrawlerType } from '../../types.js';
 import type {
@@ -185,8 +185,8 @@ describe('createHttpCrawlerOptions', () => {
 describe('crawleeOne', () => {
   // Requires Puppeteer to be installed as a devDependency
   describe.each(CRAWLER_TYPE)('with %s crawler', (type: CrawlerType) => {
-    it('creates the correct crawler class and exposes actor properties', async () => {
-      let capturedActor: any = null;
+    it('creates the correct crawler class and exposes context properties', async () => {
+      let capturedContext: any = null;
       const io = createMockIO();
 
       await crawleeOne(
@@ -200,25 +200,25 @@ describe('crawleeOne', () => {
             maxRequestRetries: 0,
           },
         },
-        async (actor) => {
-          capturedActor = actor;
+        async (context) => {
+          capturedContext = context;
         }
       );
 
-      expect(capturedActor).not.toBeNull();
-      expect(capturedActor.crawler).toBeDefined();
-      expect(capturedActor.crawler).toBeInstanceOf(actorClassByType[type]);
+      expect(capturedContext).not.toBeNull();
+      expect(capturedContext.crawler).toBeDefined();
+      expect(capturedContext.crawler).toBeInstanceOf(actorClassByType[type]);
 
-      // Verify actor has expected properties
-      expect(capturedActor.io).toBe(io);
-      expect(capturedActor.router).toBeDefined();
-      expect(capturedActor.input).toBeDefined();
-      expect(capturedActor.state).toBeDefined();
-      expect(capturedActor.log).toBeDefined();
-      expect(typeof capturedActor.crawler.run).toBe('function');
-      expect(typeof capturedActor.metamorph).toBe('function');
-      expect(typeof capturedActor.addRequests).toBe('function');
-      expect(Array.isArray(capturedActor.startUrls)).toBe(true);
+      // Verify context has expected properties
+      expect(capturedContext.io).toBe(io);
+      expect(capturedContext.router).toBeDefined();
+      expect(capturedContext.input).toBeDefined();
+      expect(capturedContext.state).toBeDefined();
+      expect(capturedContext.log).toBeDefined();
+      expect(typeof capturedContext.crawler.run).toBe('function');
+      expect(typeof capturedContext.metamorph).toBe('function');
+      expect(typeof capturedContext.addRequests).toBe('function');
+      expect(Array.isArray(capturedContext.startUrls)).toBe(true);
     });
   });
 
@@ -234,8 +234,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedInput = actor.input;
+        async (context) => {
+          capturedInput = context.input;
         }
       );
 
@@ -259,8 +259,8 @@ describe('crawleeOne', () => {
           input: configInput,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedInput = actor.input;
+        async (context) => {
+          capturedInput = context.input;
         }
       );
 
@@ -283,8 +283,8 @@ describe('crawleeOne', () => {
           input: inputFn,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedInput = actor.input;
+        async (context) => {
+          capturedInput = context.input;
         }
       );
 
@@ -513,8 +513,8 @@ describe('crawleeOne', () => {
           mergeInput: true,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedInput = actor.input;
+        async (context) => {
+          capturedInput = context.input;
         }
       );
 
@@ -537,8 +537,8 @@ describe('crawleeOne', () => {
           inputDefaults: { defaultField: 'default-value', fromIO: 'should-be-overridden' },
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedInput = actor.input;
+        async (context) => {
+          capturedInput = context.input;
         }
       );
 
@@ -562,8 +562,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedStartUrls = actor.startUrls;
+        async (context) => {
+          capturedStartUrls = context.startUrls;
         }
       );
 
@@ -600,8 +600,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedStartUrls = actor.startUrls;
+        async (context) => {
+          capturedStartUrls = context.startUrls;
         }
       );
 
@@ -624,8 +624,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedStartUrls = actor.startUrls;
+        async (context) => {
+          capturedStartUrls = context.startUrls;
         }
       );
 
@@ -647,8 +647,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedStartUrls = actor.startUrls;
+        async (context) => {
+          capturedStartUrls = context.startUrls;
         }
       );
 
@@ -698,8 +698,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedStartUrls = actor.startUrls;
+        async (context) => {
+          capturedStartUrls = context.startUrls;
         }
       );
 
@@ -728,8 +728,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          capturedStartUrls = actor.startUrls;
+        async (context) => {
+          capturedStartUrls = context.startUrls;
         }
       );
 
@@ -773,8 +773,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          await actor.metamorph();
+        async (context) => {
+          await context.metamorph();
 
           expect(io.triggerDownstreamCrawler).toHaveBeenCalledWith(
             'downstream-actor',
@@ -794,8 +794,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          await actor.metamorph();
+        async (context) => {
+          await context.metamorph();
           expect(io.triggerDownstreamCrawler).not.toHaveBeenCalled();
         }
       );
@@ -815,8 +815,8 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
-          await actor.metamorph({
+        async (context) => {
+          await context.metamorph({
             metamorphActorId: 'override-actor',
             metamorphActorInput: { overrideKey: 'yes' },
           });
@@ -840,11 +840,11 @@ describe('crawleeOne', () => {
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        async (actor) => {
+        async (context) => {
           // Reset call count after init pushes startUrls
           vi.mocked(reqQueue.addRequests).mockClear();
 
-          await actor.addRequests([{ url: 'https://example.com', uniqueKey: '1' }] as any);
+          await context.addRequests([{ url: 'https://example.com', uniqueKey: '1' }] as any);
           expect(reqQueue.addRequests).toHaveBeenCalled();
         }
       );
@@ -889,7 +889,7 @@ describe('crawleeOne', () => {
   });
 
   describe('onReady callback', () => {
-    it('calls onReady with the created actor', async () => {
+    it('calls onReady with the created context', async () => {
       const onReady = vi.fn();
       const io = createMockIO();
 
@@ -986,8 +986,8 @@ describe('crawleeOne integration', () => {
           maxConcurrency: 1,
         } as any,
       },
-      async (actor) => {
-        await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?type=cheerio` }]);
+      async (context) => {
+        await context.crawler.run([{ url: `http://127.0.0.1:${port}/?type=cheerio` }]);
       }
     );
 
@@ -1024,8 +1024,8 @@ describe('crawleeOne integration', () => {
           maxConcurrency: 1,
         } as any,
       },
-      async (actor) => {
-        await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?type=http` }]);
+      async (context) => {
+        await context.crawler.run([{ url: `http://127.0.0.1:${port}/?type=http` }]);
       }
     );
 
@@ -1060,8 +1060,8 @@ describe('crawleeOne integration', () => {
           maxConcurrency: 1,
         } as any,
       },
-      async (actor) => {
-        await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?type=jsdom` }]);
+      async (context) => {
+        await context.crawler.run([{ url: `http://127.0.0.1:${port}/?type=jsdom` }]);
       }
     );
 
@@ -1095,8 +1095,8 @@ describe('crawleeOne integration', () => {
           maxConcurrency: 1,
         } as any,
       },
-      async (actor) => {
-        await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?type=basic` }]);
+      async (context) => {
+        await context.crawler.run([{ url: `http://127.0.0.1:${port}/?type=basic` }]);
       }
     );
 

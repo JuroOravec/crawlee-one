@@ -8,7 +8,7 @@
 
 > **createHttpCrawlerOptions**\<`T`, `TOpts`\>(`__namedParameters`): `Partial`\<`TOpts`\> & `Dictionary`\<`TOpts`\[`"requestHandler"`\] \| `TOpts`\[`"handleRequestFunction"`\] \| `TOpts`\[`"requestList"`\] \| `TOpts`\[`"requestQueue"`\] \| `TOpts`\[`"requestManager"`\] \| `TOpts`\[`"requestHandlerTimeoutSecs"`\] \| `TOpts`\[`"handleRequestTimeoutSecs"`\] \| `TOpts`\[`"errorHandler"`\] \| `TOpts`\[`"failedRequestHandler"`\] \| `TOpts`\[`"handleFailedRequestFunction"`\] \| `TOpts`\[`"maxRequestRetries"`\] \| `TOpts`\[`"sameDomainDelaySecs"`\] \| `TOpts`\[`"maxSessionRotations"`\] \| `TOpts`\[`"maxRequestsPerCrawl"`\] \| `TOpts`\[`"maxCrawlDepth"`\] \| `TOpts`\[`"autoscaledPoolOptions"`\] \| `TOpts`\[`"minConcurrency"`\] \| `TOpts`\[`"maxConcurrency"`\] \| `TOpts`\[`"maxRequestsPerMinute"`\] \| `TOpts`\[`"keepAlive"`\] \| `TOpts`\[`"useSessionPool"`\] \| `TOpts`\[`"sessionPoolOptions"`\] \| `TOpts`\[`"statusMessageLoggingInterval"`\] \| `TOpts`\[`"statusMessageCallback"`\] \| `TOpts`\[`"retryOnBlocked"`\] \| `TOpts`\[`"respectRobotsTxtFile"`\] \| `TOpts`\[`"onSkippedRequest"`\] \| `TOpts`\[`"log"`\] \| `TOpts`\[`"experiments"`\] \| `TOpts`\[`"statisticsOptions"`\] \| `TOpts`\[`"httpClient"`\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:763](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L763)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:771](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L771)
 
 Given the actor input, create common crawler options.
 

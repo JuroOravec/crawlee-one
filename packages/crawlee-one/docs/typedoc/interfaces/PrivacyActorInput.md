@@ -6,7 +6,7 @@
 
 # Interface: PrivacyActorInput
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:409](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L409)
+Defined in: [packages/crawlee-one/src/lib/input.ts:423](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L423)
 
 Common input fields related to privacy setup
 
@@ -16,4 +16,4 @@ Common input fields related to privacy setup
 
 > `optional` **includePersonalData**: `boolean`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:410](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L410)
+Defined in: [packages/crawlee-one/src/lib/input.ts:424](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L424)

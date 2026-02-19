@@ -7,16 +7,16 @@ import type { CrawleeOneConfig, CrawleeOneConfigSchema } from '../config/types.j
 import { loadConfig, validateConfig } from '../config/config.js';
 // NOTE: We intentionally import these to know when their names change
 import type { ActorInput } from '../../lib/input.js';
-import type { CrawleeOneActorInst, CrawleeOneActorRouterCtx } from '../../lib/actor/types.js';
+import type { CrawleeOneContext } from '../context/types.js';
 import type {
   CrawleeOneRoute,
   CrawleeOneRouteHandler,
   CrawleeOneRouteMatcher,
   CrawleeOneRouteMatcherFn,
-  CrawleeOneRouteWrapper,
+  CrawleeOneRouteMiddleware,
 } from '../../lib/router/types.js';
 import type { MaybePromise } from '../../utils/types.js';
-import type { CrawleeOneOptions, crawleeOne } from '../actor/actor.js';
+import type { CrawleeOneOptions, crawleeOne } from '../context/context.js';
 
 const makeUnion = (items: string[]) => items.map((s) => `"${s}"`).join(` | `);
 const makeEnum = (items: string[]) =>
@@ -84,11 +84,10 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
   // 1. Define imports
   const {
     ActorInput: actorInputType,
-    CrawleeOneActorRouterCtx: actorRouterCtx,
-    CrawleeOneActorInst: actorCtx,
+    CrawleeOneContext: actorCtx,
     CrawleeOneRoute: routeType,
     CrawleeOneRouteHandler: routeHandler,
-    CrawleeOneRouteWrapper: routeWrapper,
+    CrawleeOneRouteMiddleware: routeWrapper,
     CrawleeOneRouteMatcher: routeMatcher,
     CrawleeOneRouteMatcherFn: routeMatcherFn,
     CrawleeOneIO: ioType,
@@ -98,11 +97,10 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     crawleeOne: crawleeOneFn,
   } = addImports('crawlee-one', [
     'ActorInput',
-    'CrawleeOneActorRouterCtx',
-    'CrawleeOneActorInst',
+    'CrawleeOneContext',
     'CrawleeOneRoute',
     'CrawleeOneRouteHandler',
-    'CrawleeOneRouteWrapper',
+    'CrawleeOneRouteMiddleware',
     'CrawleeOneRouteMatcher',
     'CrawleeOneRouteMatcherFn',
     'CrawleeOneIO',
@@ -145,7 +143,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
       { typeArgs: ctxTypeArgs }
     );
 
-    // 5. Get actor context (`CrawleeOneActorInst`) - needed for crawler and onReady
+    // 5. Get CrawleeOne context - needed for crawler and onReady
     const actorCtxKey = define(
       `${crawlerName}ActorCtx`,
       `${actorCtx}<${ctxKey}<TInput, TIO, Telem>>`,
@@ -155,51 +153,38 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     // 6. Create CrawleeOne instance
     const crawlerKey = define(
       `${crawlerName}Crawler`,
-      `(args: Omit<${argsType}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>, 'type'>, onReady?: (actor: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>) => ${crawleeOneFn}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>({ ...args, type: "${crawlerType}"}, onReady);`,
+      `(args: Omit<${argsType}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>, 'type'>, onReady?: (context: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>) => ${crawleeOneFn}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>({ ...args, type: "${crawlerType}"}, onReady);`,
       { kind: 'func', typeArgs: ctxTypeArgs }
     );
 
-    // 7. Get actor router context (`CrawleeOneActorRouterCtx`)
-    const routerCtxKey = define(
-      `${crawlerName}RouterContext`,
-      `${actorRouterCtx}<${ctxKey}<TInput, TIO, Telem>>`,
-      { typeArgs: ctxTypeArgs }
-    );
+    // 7. Create Route types (single-param: CrawleeOneRoute<T>, etc.)
+    const routeKey = define(`${crawlerName}Route`, `${routeType}<${ctxKey}<TInput, TIO, Telem>>`, {
+      typeArgs: ctxTypeArgs,
+    });
 
-    // 8. Create Route types
-    // E.g. `type `crawlerName`Route = CrawleeOneRout<`CrawlerName`Ctx>`
-    const routeKey = define(
-      `${crawlerName}Route`,
-      `${routeType}<${ctxKey}<TInput, TIO, Telem>, ${routerCtxKey}<TInput, TIO, Telem>>`,
-      {
-        typeArgs: ctxTypeArgs,
-      }
-    );
-
-    // E.g. `type `crawlerName`RouteHandler = CrawleeOneRouteHandler<`CrawlerName`Ctx, CrawlerName`ActorRouterCtx>`
-    const routeHandlerValue = `${routeHandler}<${ctxKey}<TInput, TIO, Telem>, ${routerCtxKey}<TInput, TIO, Telem>>`;
+    const routeHandlerValue = `${routeHandler}<${ctxKey}<TInput, TIO, Telem>>`;
     const routeHandlerKey = define(`${crawlerName}RouteHandler`, routeHandlerValue, {
       typeArgs: ctxTypeArgs,
     });
 
-    // E.g. `type `crawlerName`RouteWrapper = CrawleeOneRouteWrapper<`CrawlerName`Ctx, CrawlerName`ActorRouterCtx>`
+    // E.g. `type `crawlerName`RouteWrapper = CrawleeOneRouteMiddleware<`CrawlerName`Ctx>`
     const routeWrapperKey = define(
       `${crawlerName}RouteWrapper`,
-      `${routeWrapper}<${ctxKey}<TInput, TIO, Telem>, ${routerCtxKey}<TInput, TIO, Telem>>`,
+      `${routeWrapper}<${ctxKey}<TInput, TIO, Telem>>`,
       { typeArgs: ctxTypeArgs }
     );
 
-    // E.g. `type `crawlerName`Matcher = CrawleeOneRouteMatcher<`CrawlerName`Ctx, CrawlerName`ActorRouterCtx>`
+    // E.g. `type `crawlerName`Matcher = CrawleeOneRouteMatcher<`CrawlerName`Ctx>`
     const routeMatcherKey = define(
       `${crawlerName}RouteMatcher`,
-      `${routeMatcher}<${ctxKey}<TInput, TIO, Telem>, ${routerCtxKey}<TInput, TIO, Telem>>`,
+      `${routeMatcher}<${ctxKey}<TInput, TIO, Telem>>`,
       { typeArgs: ctxTypeArgs }
     );
 
-    // E.g. `type `crawlerName`Matcher = CrawleeOneRouteMatcher<`CrawlerName`Ctx, CrawlerName`ActorRouterCtx>`
+    // E.g. `type `crawlerName`MatcherFn = CrawleeOneRouteMatcherFn<`CrawlerName`Ctx>`
     const routeMatcherFnKey = define(
       `${crawlerName}RouteMatcherFn`,
-      `${routeMatcherFn}<${ctxKey}<TInput, TIO, Telem>, ${routerCtxKey}<TInput, TIO, Telem>>`,
+      `${routeMatcherFn}<${ctxKey}<TInput, TIO, Telem>>`,
       { typeArgs: ctxTypeArgs }
     );
 
@@ -215,10 +200,10 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
       typeArgs: ctxTypeArgs,
     });
 
-    // type `CrawlerName`OnReady = <TIO, Telem>(actor: CrawleeOneActorInst<`CrawlerName`Label, ActorInput, TIO, Telem, `type`CrawlingContext>) => MaybePromise<void>;
+    // type `CrawlerName`OnReady = <TIO, Telem>(context: CrawleeOneContext<`CrawlerName`Ctx>) => MaybePromise<void>;
     const onReadyKey = define(
       `${crawlerName}OnReady`,
-      `(actor: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>;`,
+      `(context: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>;`,
       { kind: 'typeFunc', typeArgs: ctxTypeArgs }
     );
   });

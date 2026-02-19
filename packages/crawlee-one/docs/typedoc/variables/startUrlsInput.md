@@ -8,7 +8,7 @@
 
 > `const` **startUrlsInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:738](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L738)
+Defined in: [packages/crawlee-one/src/lib/input.ts:752](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L752)
 
 Common input fields for defining URLs to scrape
 

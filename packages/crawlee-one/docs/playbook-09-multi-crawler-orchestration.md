@@ -84,7 +84,7 @@ For each crawler, include:
 
 ### Step 2: Call `orchestrate()` inside `onReady` callback
 
-`onReady` callback is where you normally start the crawler (`actor.crawler.run()`).
+`onReady` callback is where you normally start the crawler (`context.crawler.run()`).
 
 It's also when you should start your multi-crawler orchestration.
 
@@ -101,20 +101,20 @@ await crawleeOne(
     type: 'cheerio',
     routes: { ... },
   },
-  async (actor) => {
+  async (context) => {
     // Step 1a: Create the LLM crawler
     // (keepAlive — runs until we stop it)
     const llmCrawler = await createLlmCrawler({
-      requestQueueId: actor.input?.llmRequestQueueId ?? 'llm',
-      keyValueStoreId: actor.input?.llmKeyValueStoreId ?? 'llm',
+      requestQueueId: context.input?.llmRequestQueueId ?? 'llm',
+      keyValueStoreId: context.input?.llmKeyValueStoreId ?? 'llm',
       keepAlive: true,
     });
 
     // Step 1b: Main crawler (wrapped to pass startUrls)
     // (not keepAlive — exits when queue empty)
-    let urlsToPass = actor.startUrls;
+    let urlsToPass = context.startUrls;
     const mainRun = async () => {
-      await actor.crawler.run(actor.startUrls);
+      await context.crawler.run(context.startUrls);
       urlsToPass = [];
     };
 
@@ -122,17 +122,17 @@ await crawleeOne(
     const crawlers: OrchestratedCrawler[] = [
       {
         crawler: { run: mainRun, stop: () => {} },
-        queueId: actor.input?.requestQueueId,
+        queueId: context.input?.requestQueueId,
         isKeepAlive: false,
       },
       {
         crawler: llmCrawler,
-        queueId: actor.input?.llmRequestQueueId ?? 'llm',
+        queueId: context.input?.llmRequestQueueId ?? 'llm',
         isKeepAlive: true,
       },
     ];
 
-    await orchestrate({ actor, crawlers, checkIntervalMs: 5000 });
+    await orchestrate({ context, crawlers, checkIntervalMs: 5000 });
   }
 );
 ```

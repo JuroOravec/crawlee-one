@@ -8,7 +8,7 @@
 
 > **createErrorHandler**\<`T`\>(`options`): `ErrorHandler`\<`T`\[`"context"`\]\>
 
-Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:133](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L133)
+Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:135](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L135)
 
 Create an `ErrorHandler` function that can be assigned to
 `failedRequestHandler` option of `BasicCrawlerOptions`.

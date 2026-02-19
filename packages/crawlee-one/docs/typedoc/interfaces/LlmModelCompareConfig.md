@@ -6,7 +6,7 @@
 
 # Interface: LlmModelCompareConfig
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:2](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L2)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:2
 
 Configuration for one LLM model in a comparison run
 
@@ -16,7 +16,7 @@ Configuration for one LLM model in a comparison run
 
 > **apiKey**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:10](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L10)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:10
 
 API key for the provider
 
@@ -26,7 +26,7 @@ API key for the provider
 
 > `optional` **baseUrl**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:12](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L12)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:12
 
 Base URL for OpenAI-compatible APIs
 
@@ -36,7 +36,7 @@ Base URL for OpenAI-compatible APIs
 
 > `optional` **headers**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:14](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L14)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:14
 
 Custom headers
 
@@ -46,7 +46,7 @@ Custom headers
 
 > **id**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:4](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L4)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:4
 
 Unique identifier (e.g. 'gpt-4o', 'claude-3-5-sonnet')
 
@@ -56,7 +56,7 @@ Unique identifier (e.g. 'gpt-4o', 'claude-3-5-sonnet')
 
 > `optional` **label**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:16](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L16)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:16
 
 Human-readable label (e.g. 'GPT-4o (OpenAI)')
 
@@ -66,7 +66,7 @@ Human-readable label (e.g. 'GPT-4o (OpenAI)')
 
 > **model**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:8](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L8)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:8
 
 Model ID (e.g. 'gpt-4o', 'claude-3-5-sonnet')
 
@@ -76,7 +76,7 @@ Model ID (e.g. 'gpt-4o', 'claude-3-5-sonnet')
 
 > `optional` **priceInputPer1MToken**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:18](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L18)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:18
 
 Price per 1M input tokens (USD), for cost estimate in reports
 
@@ -86,7 +86,7 @@ Price per 1M input tokens (USD), for cost estimate in reports
 
 > `optional` **priceOutputPer1MToken**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:20](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L20)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:20
 
 Price per 1M output tokens (USD), for cost estimate in reports
 
@@ -96,6 +96,6 @@ Price per 1M output tokens (USD), for cost estimate in reports
 
 > **provider**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/types.ts:6](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/types.ts#L6)
+Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:6
 
 Provider (e.g. 'openai', 'anthropic')

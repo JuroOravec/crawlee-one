@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneOptions\<TType, T\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:53](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L53)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:54](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L54)
 
 Options object passed to `crawleeOne`
 
@@ -26,7 +26,7 @@ Options object passed to `crawleeOne`
 
 > `optional` **crawlerConfigDefaults**: `Omit`\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:65](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L65)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:66](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L66)
 
 Default crawler configuration that may be overriden via `input` and `crawlerConfigOverrides`
 
@@ -36,7 +36,7 @@ Default crawler configuration that may be overriden via `input` and `crawlerConf
 
 > `optional` **crawlerConfigOverrides**: `Omit`\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`, `CrawlingContext`\<`unknown`, `Dictionary`\>, `Record`\<`string`, `any`\>\>\[`"options"`\], `"requestHandler"`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:63](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L63)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:64](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L64)
 
 Crawler configuration that is applied at the end and overrides `crawlerConfigDefaults` and `input` settings.
 
@@ -46,15 +46,15 @@ Crawler configuration that is applied at the end and overrides `crawlerConfigDef
 
 > `optional` **hooks**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:160](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L160)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:161](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L161)
 
 #### onAfterHandler?
 
-> `optional` **onAfterHandler**: [`CrawleeOneRouteHandler`](../type-aliases/CrawleeOneRouteHandler.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>
+> `optional` **onAfterHandler**: [`CrawleeOneRouteHandler`](../type-aliases/CrawleeOneRouteHandler.md)\<`T`\>
 
 #### onBeforeHandler?
 
-> `optional` **onBeforeHandler**: [`CrawleeOneRouteHandler`](../type-aliases/CrawleeOneRouteHandler.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>
+> `optional` **onBeforeHandler**: [`CrawleeOneRouteHandler`](../type-aliases/CrawleeOneRouteHandler.md)\<`T`\>
 
 #### validateInput()?
 
@@ -76,7 +76,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:160](https://github.com
 
 > `optional` **input**: `Partial`\<`T`\[`"input"`\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:105](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L105)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:106](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L106)
 
 Input configuration that CANNOT be overriden via `inputDefaults` and `io.getInput()`
 
@@ -86,7 +86,7 @@ Input configuration that CANNOT be overriden via `inputDefaults` and `io.getInpu
 
 > `optional` **inputDefaults**: `Partial`\<`T`\[`"input"`\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:107](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L107)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:108](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L108)
 
 Input configuration that CAN be overriden via `input` and `io.getInput()`
 
@@ -96,7 +96,7 @@ Input configuration that CAN be overriden via `input` and `io.getInput()`
 
 > `optional` **inputFields**: `Record`\<`string`, `Field`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:112](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L112)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:113](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L113)
 
 Field objects with embedded Zod schemas for input validation.
 If provided, input is validated against these schemas automatically.
@@ -107,7 +107,7 @@ If provided, input is validated against these schemas automatically.
 
 > `optional` **io**: `T`\[`"io"`\]
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:144](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L144)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:145](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L145)
 
 Provide an instance that is responsible for state management:
 - Adding scraped data to datasets
@@ -131,7 +131,7 @@ See [CrawleeOneIO](CrawleeOneIO.md)
 
 > `optional` **mergeInput**: `boolean` \| (`sources`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`Partial`\<`T`\[`"input"`\]\>\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:99](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L99)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:100](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L100)
 
 If `mergeInput` is truthy, will merge input settings from `inputDefaults`, `input`,
 and `io.getInput()`.
@@ -170,7 +170,7 @@ Alternatively, you can supply your own function that merges the sources:
 
 > `optional` **name**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:60](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L60)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:61](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L61)
 
 Unique name of the crawler instance. The name may be used in codegen and logging.
 
@@ -178,9 +178,9 @@ Unique name of the crawler instance. The name may be used in codegen and logging
 
 ### proxy?
 
-> `optional` **proxy**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`ProxyConfiguration`, \[[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>\]\>
+> `optional` **proxy**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`ProxyConfiguration`, \[[`CrawleeOneInternalOptionsWithInput`](../type-aliases/CrawleeOneInternalOptionsWithInput.md)\<`T`\>\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:120](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L120)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:121](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L121)
 
 Configure the Crawlee proxy.
 
@@ -190,9 +190,9 @@ See ProxyConfiguration
 
 ### router?
 
-> `optional` **router**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`RouterHandler`\<`T`\[`"context"`\]\>, \[[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>\]\>
+> `optional` **router**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`RouterHandler`\<`T`\[`"context"`\]\>, \[[`CrawleeOneInternalOptionsWithInput`](../type-aliases/CrawleeOneInternalOptionsWithInput.md)\<`T`\>\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:156](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L156)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:157](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L157)
 
 Provide a custom router instance.
 
@@ -208,9 +208,9 @@ See Router
 
 ### routes
 
-> **routes**: `Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](CrawleeOneRoute.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>\>
+> **routes**: `Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](CrawleeOneRoute.md)\<`T`\>\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:158](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L158)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:159](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L159)
 
 Routes that are used to redirect requests to the appropriate handler.
 
@@ -220,7 +220,7 @@ Routes that are used to redirect requests to the appropriate handler.
 
 > `optional` **strict**: `boolean`
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:174](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L174)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:175](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L175)
 
 When `true`, throw when a URL does not match any route.
 
@@ -232,9 +232,9 @@ Defaults to `false`.
 
 ### telemetry?
 
-> `optional` **telemetry**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`T`\[`"telemetry"`\], \[[`CrawleeOneActorDefWithInput`](../type-aliases/CrawleeOneActorDefWithInput.md)\<`T`\>\]\>
+> `optional` **telemetry**: [`MaybeAsyncFn`](../type-aliases/MaybeAsyncFn.md)\<`T`\[`"telemetry"`\], \[[`CrawleeOneInternalOptionsWithInput`](../type-aliases/CrawleeOneInternalOptionsWithInput.md)\<`T`\>\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:126](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L126)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:127](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L127)
 
 Provide a telemetry instance that is used for tracking errors.
 
@@ -246,6 +246,6 @@ See [CrawleeOneTelemetry](CrawleeOneTelemetry.md)
 
 > **type**: `"basic"` \| `"http"` \| `"jsdom"` \| `"cheerio"` \| `"playwright"` \| `"adaptive-playwright"` \| `"puppeteer"`
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:58](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L58)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:59](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L59)
 
 Type specifying the Crawlee crawler class, input options, and more.

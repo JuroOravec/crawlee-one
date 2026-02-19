@@ -8,7 +8,7 @@
 
 > `const` **proxyInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:824](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L824)
+Defined in: [packages/crawlee-one/src/lib/input.ts:838](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L838)
 
 Common input fields related to proxy setup
 

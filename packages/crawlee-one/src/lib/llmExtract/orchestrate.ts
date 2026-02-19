@@ -1,5 +1,5 @@
 import type { MaybePromise } from '../../utils/types.js';
-import type { CrawleeOneActorInst } from '../actor/types.js';
+import type { CrawleeOneContext } from '../context/types.js';
 import { orchestrate, type OrchestratedCrawler } from '../orchestrate.js';
 import { createLlmCrawler } from './llmCrawler.js';
 
@@ -14,14 +14,15 @@ import { createLlmCrawler } from './llmCrawler.js';
  * Delegates to {@link orchestrate} for reactive per-crawler coordination.
  */
 export async function orchestrateWithLlm(input: {
-  actor: CrawleeOneActorInst<any>;
+  context: CrawleeOneContext<any>;
   llmRequestQueueId: string;
   llmKeyValueStoreId: string;
   /** Interval in ms between queue-drain checks. Default: 5000. Use 0 in tests to avoid timeouts. */
   llmQueueDrainCheckIntervalMs?: number;
   run: () => MaybePromise<void>;
 }): Promise<void> {
-  const { actor, llmRequestQueueId, llmKeyValueStoreId, llmQueueDrainCheckIntervalMs, run } = input;
+  const { context, llmRequestQueueId, llmKeyValueStoreId, llmQueueDrainCheckIntervalMs, run } =
+    input;
 
   const llmCrawler = await createLlmCrawler({
     requestQueueId: llmRequestQueueId,
@@ -31,7 +32,7 @@ export async function orchestrateWithLlm(input: {
   });
 
   // On the first run we call the provided `run` function as that may populate the queue.
-  // If the crawler is needed to be re-started, we then call only `actor.crawler.run([])`
+  // If the crawler is needed to be re-started, we then call only `context.crawler.run([])`
   // so that we only run the crawler without adding new requests to the queue.
   let hasRunInitial = false;
   const mainRun = async (): Promise<void> => {
@@ -39,14 +40,14 @@ export async function orchestrateWithLlm(input: {
       hasRunInitial = true;
       await run();
     } else {
-      await actor.crawler.run([]);
+      await context.crawler.run([]);
     }
   };
 
   const crawlers: OrchestratedCrawler[] = [
     {
       crawler: { run: mainRun, stop: () => {} }, // Stops by itself when queue is empty
-      queueId: actor.input?.requestQueueId,
+      queueId: context.input?.requestQueueId,
       isKeepAlive: false,
     },
     {
@@ -57,7 +58,7 @@ export async function orchestrateWithLlm(input: {
   ];
 
   await orchestrate({
-    actor,
+    context,
     crawlers,
     checkIntervalMs: llmQueueDrainCheckIntervalMs,
   });

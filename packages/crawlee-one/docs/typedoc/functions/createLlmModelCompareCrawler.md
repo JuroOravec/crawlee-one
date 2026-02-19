@@ -8,7 +8,7 @@
 
 > **createLlmModelCompareCrawler**(`opts`): `Promise`\<`LLMCompareCrawler`\>
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:43](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L43)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:43
 
 Create HttpCrawler that fetches each URL, runs extractWithLlm for each model,
 and pushes results to dataset `llm-compare--{reportName}`.

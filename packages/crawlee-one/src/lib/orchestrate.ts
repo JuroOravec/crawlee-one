@@ -1,4 +1,4 @@
-import type { CrawleeOneActorInst } from './actor/types.js';
+import type { CrawleeOneContext } from './context/types.js';
 import type { MaybePromise } from '../utils/types.js';
 import type { CrawleeOneIO } from './integrations/types.js';
 
@@ -102,14 +102,14 @@ export type OrchestratedCrawler = {
  *   a future reconciliation.
  */
 export async function orchestrate(input: {
-  actor: Pick<CrawleeOneActorInst<any>, 'io' | 'log'>;
+  context: Pick<CrawleeOneContext<any>, 'io' | 'log'>;
   crawlers: OrchestratedCrawler[];
   /** Interval in ms between queue-drain checks. Default: 5000. Use 0 in tests. */
   checkIntervalMs?: number;
 }): Promise<void> {
-  const { actor, crawlers } = input;
+  const { context, crawlers } = input;
 
-  const io: CrawleeOneIO = actor.io;
+  const io: CrawleeOneIO = context.io;
   const checkIntervalMs = input.checkIntervalMs ?? DEFAULT_QUEUE_DRAIN_CHECK_INTERVAL_MS;
 
   const keptAliveCrawlers = crawlers.filter((c) => c.isKeepAlive);
@@ -179,7 +179,7 @@ export async function orchestrate(input: {
         if (hasPendingWork && !running.has(crawler)) {
           const prom = Promise.resolve(crawler.crawler.run());
           running.set(crawler, prom);
-          actor.log.info(
+          context.log.info(
             `Starting crawler for queue with pending requests: ${crawler.queueId ?? 'default'}`
           );
         }
@@ -194,7 +194,7 @@ export async function orchestrate(input: {
           break;
         }
         // Keep-alive queues still have pending; wait and recheck.
-        actor.log.info(
+        context.log.info(
           `Queue(s) with pending requests. Waiting ${checkIntervalMs / 1000}s before rechecking...`
         );
       }

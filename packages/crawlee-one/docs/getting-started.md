@@ -172,9 +172,9 @@ await crawleeOne({
   // --- Router ---
   // Custom Crawlee Router instance. Optional.
   router: myCustomRouter(),
-}, async (actor) => {
-  // Optional: called after initialization. If provided, you must call actor.crawler.run() yourself.
-  await actor.crawler.run(['https://example.com']);
+}, async (context) => {
+  // Optional: called after initialization. If provided, you must call context.crawler.run() yourself.
+  await context.crawler.run(['https://example.com']);
 });
 ```
 
@@ -191,7 +191,7 @@ Each route handler receives a context object from [Crawlee Router](https://crawl
 
 | Property       | Type                                                                 | Description                                                                  |
 | -------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `actor`        | [`CrawleeOneActorInst`](./typedoc/interfaces/CrawleeOneActorInst.md) | The CrawleeOne instance. Access input, state, IO, and more.                  |
+| `one`          | [`CrawleeOneContext`](./typedoc/interfaces/CrawleeOneContext.md)     | The CrawleeOne context. Access input, state, IO, crawler, and more.          |
 | `pushData`     | function                                                             | Save scraped items with transforms, filtering, privacy, and caching applied. |
 | `addRequests` | function                                                             | Enqueue URLs with request filtering and transforms applied.                  |
 | `metamorph`    | function                                                             | Trigger a downstream crawler/actor.                                          |
@@ -211,20 +211,20 @@ handler: async (ctx) => {
   await ctx.addRequests([{ url: 'https://...' }]);
 
   // Access resolved input
-  if (ctx.actor.input.myCustomField) {
+  if (ctx.one.input.myCustomField) {
     /* ... */
   }
 
   // Access shared state (available in hooks like outputTransform)
-  ctx.actor.state.counter = (ctx.actor.state.counter || 0) + 1;
+  ctx.one.state.counter = (ctx.one.state.counter || 0) + 1;
 
   // Access storage directly
-  const dataset = await ctx.actor.io.openDataset();
-  const store = await ctx.actor.io.openKeyValueStore();
+  const dataset = await ctx.one.io.openDataset();
+  const store = await ctx.one.io.openKeyValueStore();
 };
 ```
 
-The `actor` object is integral to CrawleeOne. [See the full list of properties](./typedoc/interfaces/CrawleeOneActorInst.md).
+The `one` object is integral to CrawleeOne. [See the full list of properties](./typedoc/interfaces/CrawleeOneContext.md).
 
 ## Next steps
 

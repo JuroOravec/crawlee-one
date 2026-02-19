@@ -3,7 +3,7 @@ import type {
   CrawleeOneErrorHandlerOptions,
   ExtractErrorHandlerOptionsReport,
 } from '../integrations/types.js';
-import type { CrawleeOneActorInst, CrawleeOneTypes } from '../actor/types.js';
+import type { CrawleeOneContext, CrawleeOneTypes } from '../context/types.js';
 
 /**
  * Interface for sending error reports to a telemetry service:
@@ -16,7 +16,7 @@ export interface CrawleeOneTelemetry<
   T extends CrawleeOneTypes,
   THandlerOptions extends CrawleeOneErrorHandlerOptions<any> = CrawleeOneErrorHandlerOptions,
 > {
-  setup: (actor: CrawleeOneActorInst<T>) => MaybePromise<void>;
+  setup: (context: CrawleeOneContext<T>) => MaybePromise<void>;
   onSendErrorToTelemetry: (
     error: Error,
     report: ExtractErrorHandlerOptionsReport<THandlerOptions>,

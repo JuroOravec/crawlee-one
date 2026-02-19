@@ -8,7 +8,7 @@
 
 > `const` **requestInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:852](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L852)
+Defined in: [packages/crawlee-one/src/lib/input.ts:866](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L866)
 
 Common input fields related to actor request
 

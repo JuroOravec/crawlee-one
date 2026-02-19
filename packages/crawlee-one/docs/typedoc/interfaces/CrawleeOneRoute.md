@@ -4,9 +4,9 @@
 
 [crawlee-one](../README.md) / CrawleeOneRoute
 
-# Interface: CrawleeOneRoute\<T, RouterCtx\>
+# Interface: CrawleeOneRoute\<T\>
 
-Defined in: [packages/crawlee-one/src/lib/router/types.ts:37](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L37)
+Defined in: [packages/crawlee-one/src/lib/router/types.ts:40](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L40)
 
 Route that a request will be sent to if the request doesn't have a label yet,
 and if the `match` function returns truthy value.
@@ -23,10 +23,6 @@ a request will process that request.
 
 `T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)
 
-### RouterCtx
-
-`RouterCtx` *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](../type-aliases/CrawleeOneRouteCtx.md)\<`T`\>
-
 ## Properties
 
 ### handler()
@@ -39,7 +35,7 @@ Defined in: [packages/crawlee-one/src/lib/router/types.ts:42](https://github.com
 
 ##### ctx
 
-`Omit`\<`T`\[`"context"`\] & `RouterCtx`, `"request"`\> & `object`
+`Omit`\<`T`\[`"context"`\] & [`CrawleeOneRouteHandlerCtxExtras`](../type-aliases/CrawleeOneRouteHandlerCtxExtras.md)\<`T`\>, `"request"`\> & `object`
 
 #### Returns
 
@@ -49,7 +45,7 @@ Defined in: [packages/crawlee-one/src/lib/router/types.ts:42](https://github.com
 
 ### match
 
-> **match**: [`CrawleeOneRouteMatcher`](../type-aliases/CrawleeOneRouteMatcher.md)\<`T`, `RouterCtx`\>
+> **match**: [`CrawleeOneRouteMatcher`](../type-aliases/CrawleeOneRouteMatcher.md)\<`T`\>
 
 Defined in: [packages/crawlee-one/src/lib/router/types.ts:41](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L41)
 

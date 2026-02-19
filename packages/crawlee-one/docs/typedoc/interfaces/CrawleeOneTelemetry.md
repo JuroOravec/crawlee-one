@@ -58,15 +58,15 @@ Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:20](https://github.
 
 ### setup()
 
-> **setup**: (`actor`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
+> **setup**: (`context`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
 Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:19](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/telemetry/types.ts#L19)
 
 #### Parameters
 
-##### actor
+##### context
 
-[`CrawleeOneActorInst`](CrawleeOneActorInst.md)\<`T`\>
+[`CrawleeOneContext`](CrawleeOneContext.md)\<`T`\>
 
 #### Returns
 

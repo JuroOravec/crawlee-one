@@ -2,14 +2,14 @@ import type { ErrorHandler } from 'crawlee';
 import type { Page } from 'playwright';
 
 import type { MaybePromise, PickRequired } from '../../utils/types.js';
-import type { CrawleeOneRouteHandler, CrawleeOneRouteCtx } from '../router/types.js';
+import type { CrawleeOneRouteHandler, CrawleeOneRouteHandlerCtx } from '../router/types.js';
 import type {
   CrawleeOneErrorHandlerInput,
   CrawleeOneErrorHandlerOptions,
   CrawleeOneIO,
   ExtractIOReport,
 } from '../integrations/types.js';
-import type { CrawleeOneTypes } from '../actor/types.js';
+import type { CrawleeOneTypes } from '../context/types.js';
 import { apifyIO } from '../integrations/apify.js';
 
 export type CaptureErrorInput = PickRequired<Partial<CrawleeOneErrorHandlerInput>, 'error'>;
@@ -100,11 +100,13 @@ export const captureErrorWrapper = async <TIO extends CrawleeOneIO = CrawleeOneI
  * );
  */
 export const captureErrorRouteHandler = <T extends CrawleeOneTypes>(
-  handler: (ctx: CrawleeOneRouteCtx<T> & { captureError: CaptureError }) => MaybePromise<void>,
+  handler: (
+    ctx: CrawleeOneRouteHandlerCtx<T> & { captureError: CaptureError }
+  ) => MaybePromise<void>,
   options: CrawleeOneErrorHandlerOptions<T['io']>
 ) => {
   // Wrap the original handler, so we can additionally pass it the captureError function
-  const wrapperHandler: CrawleeOneRouteHandler<T, CrawleeOneRouteCtx<T>> = (ctx) => {
+  const wrapperHandler: CrawleeOneRouteHandler<T> = (ctx) => {
     return captureErrorWrapper(({ captureError }) => {
       return handler({
         ...(ctx as any),

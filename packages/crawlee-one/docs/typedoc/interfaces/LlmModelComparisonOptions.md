@@ -6,7 +6,7 @@
 
 # Interface: LlmModelComparisonOptions\<_TData\>
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:19](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L19)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:19
 
 Options for runLlmModelComparison — matches LlmCompareReportDefinition fields.
 
@@ -22,7 +22,7 @@ Options for runLlmModelComparison — matches LlmCompareReportDefinition fields.
 
 > **modelConfigs**: [`LlmModelCompareConfig`](LlmModelCompareConfig.md)[]
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L23)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:23
 
 Model configs to compare
 
@@ -32,7 +32,7 @@ Model configs to compare
 
 > `optional` **outputFormat**: `"json"` \| `"html"`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:33](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L33)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:33
 
 Output format: 'html' (default) or 'json'
 
@@ -42,7 +42,7 @@ Output format: 'html' (default) or 'json'
 
 > `optional` **outputPath**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:31](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L31)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:31
 
 Output file path (e.g. report.html or report.json)
 
@@ -52,7 +52,7 @@ Output file path (e.g. report.html or report.json)
 
 > **referenceModel**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:25](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L25)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:25
 
 ID of the model whose output is the reference for comparison
 
@@ -62,7 +62,7 @@ ID of the model whose output is the reference for comparison
 
 > `optional` **reportName**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:35](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L35)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:35
 
 Optional report name for queue/dataset IDs (default: 'default')
 
@@ -72,7 +72,7 @@ Optional report name for queue/dataset IDs (default: 'default')
 
 > `optional` **reportOnly**: `boolean`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:37](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L37)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:37
 
 If true, skip crawl and drop; read from existing dataset only (no new extractions)
 
@@ -82,7 +82,7 @@ If true, skip crawl and drop; read from existing dataset only (no new extraction
 
 > **schema**: `unknown`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:27](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L27)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:27
 
 JSON schema or Zod schema for extraction output
 
@@ -92,7 +92,7 @@ JSON schema or Zod schema for extraction output
 
 > **systemPrompt**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:29](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L29)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:29
 
 System prompt for LLM extraction
 
@@ -102,6 +102,6 @@ System prompt for LLM extraction
 
 > **urls**: [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L21)
+Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:21
 
 URLs or RequestOptions to fetch and extract (no function support)

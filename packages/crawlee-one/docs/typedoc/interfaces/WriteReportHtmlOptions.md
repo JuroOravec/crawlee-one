@@ -6,7 +6,7 @@
 
 # Interface: WriteReportHtmlOptions
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:20](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/reportHtml.ts#L20)
+Defined in: packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:20
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:20](https://g
 
 > **modelConfigs**: [`LlmModelCompareConfig`](LlmModelCompareConfig.md)[]
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:22](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/reportHtml.ts#L22)
+Defined in: packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:22
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:22](https://g
 
 > **outputPath**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:26](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/reportHtml.ts#L26)
+Defined in: packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:26
 
 Path to write the HTML file to
 
@@ -32,7 +32,7 @@ Path to write the HTML file to
 
 > `optional` **referenceModelId**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:24](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/reportHtml.ts#L24)
+Defined in: packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:24
 
 Reference model ID (defaults to `report.referenceModelId`)
 
@@ -42,4 +42,4 @@ Reference model ID (defaults to `report.referenceModelId`)
 
 > **report**: [`LlmModelCompareReport`](LlmModelCompareReport.md)\<`Dictionary`\>
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/reportHtml.ts#L21)
+Defined in: packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:21

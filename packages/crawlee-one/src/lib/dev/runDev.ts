@@ -51,7 +51,7 @@ export interface RunDevOptions {
  * - When fetchOnly: replace handlers with no-ops to only populate cache.
  * - Otherwise: run with real handlers.
  *
- * Routes handlers are accessed from `actor.routes` at `onReady` hook.
+ * Routes handlers are accessed from `context.routes` at `onReady` hook.
  */
 export async function runDev(opts: RunDevOptions): Promise<void> {
   const {
@@ -65,7 +65,7 @@ export async function runDev(opts: RunDevOptions): Promise<void> {
   } = opts;
 
   // Open dev RequestQueue (empty). Population happens in devOnReady when
-  // `actor.routes` are available.
+  // `context.routes` are available.
   const devQueue = await openDevRequestQueue(crawlerName);
 
   // Use APIFY_LOCAL_STORAGE_DIR if set, otherwise use `{configDir}/storage`.
@@ -110,26 +110,26 @@ export async function runDev(opts: RunDevOptions): Promise<void> {
   }
 
   // devOnReady runs before user's `onReady` hook. We populate
-  // the queue from `actor.routes`, patch the crawler, and optionally stash
+  // the queue from `context.routes`, patch the crawler, and optionally stash
   // handlers for `--fetch` mode.
-  const devOnReady: DevContext['devOnReady'] = async (actor) => {
-    await populateDevRequestQueue(devQueue, actor.routes, { configDir, crawlerName });
+  const devOnReady: DevContext['devOnReady'] = async (context) => {
+    await populateDevRequestQueue(devQueue, context.routes, { configDir, crawlerName });
 
     // Patch different parts methods on the Crawler instance
     // depending on the crawler type (browser vs http).
     if (willSetHttpClient) {
-      const orig = (actor.crawler as any)._runRequestHandler?.bind(actor.crawler);
+      const orig = (context.crawler as any)._runRequestHandler?.bind(context.crawler);
       if (orig) {
-        (actor.crawler as any)._runRequestHandler = async (ctx: { request: any }) => {
+        (context.crawler as any)._runRequestHandler = async (ctx: { request: any }) => {
           return devRequestStore.run(ctx.request, () => orig(ctx));
         };
       }
     } else if (willPatchBrowserCrawler) {
       // For browser-based crawlers (Playwright, Puppeteer), we patch the navigation handler.
       // We intercept `page.goto()` and `page.waitForNavigation()` to check/save the response.
-      const orig = (actor.crawler as any)._navigationHandler?.bind(actor.crawler);
+      const orig = (context.crawler as any)._navigationHandler?.bind(context.crawler);
       if (orig) {
-        (actor.crawler as any)._navigationHandler = wrapNavigationHandler(orig, { devQueue });
+        (context.crawler as any)._navigationHandler = wrapNavigationHandler(orig, { devQueue });
       }
     }
 
@@ -137,10 +137,10 @@ export async function runDev(opts: RunDevOptions): Promise<void> {
     // so we can cache the responses.
     // This is implemented by temporarily replacing handlers with noop functions.
     if (fetchOnly) {
-      const originalHandlers = stashAndReplaceHandlers(actor.routes, () => Promise.resolve());
+      const originalHandlers = stashAndReplaceHandlers(context.routes, () => Promise.resolve());
       const store = devContextStore.getStore();
       if (store) {
-        store.restore = () => restoreHandlers(actor.routes, originalHandlers);
+        store.restore = () => restoreHandlers(context.routes, originalHandlers);
       }
     }
   };

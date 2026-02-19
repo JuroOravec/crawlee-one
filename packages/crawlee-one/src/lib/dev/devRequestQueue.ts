@@ -59,7 +59,7 @@ export function openDevRequestQueue(crawlerName: string): Promise<RequestQueue> 
  * Add sample URLs from routes to the dev RequestQueue and reclaim any
  * that were already present and handled (so they get re-fetched).
  *
- * Used in dev mode when actor.routes is available (e.g. from devOnReady).
+ * Used in dev mode when context.routes is available (e.g. from devOnReady).
  */
 export async function populateDevRequestQueue<T extends CrawleeOneRoute<any>>(
   devQueue: RequestQueue,

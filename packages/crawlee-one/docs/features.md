@@ -296,18 +296,18 @@ await crawleeOne(
     type: 'cheerio',
     routes: { ... },
   },
-  async (actor) => {
+  async (context) => {
     // Define cralwers to run side by side
     const llmCrawler = await createLlmCrawler({
-      requestQueueId: actor.input?.llmRequestQueueId ?? 'llm',
-      keyValueStoreId: actor.input?.llmKeyValueStoreId ?? 'llm',
+      requestQueueId: context.input?.llmRequestQueueId ?? 'llm',
+      keyValueStoreId: context.input?.llmKeyValueStoreId ?? 'llm',
       keepAlive: true,
     });
 
     // Main crawler - pass startUrls on first run
-    let urlsToPass = actor.startUrls;
+    let urlsToPass = context.startUrls;
     const mainRun = async () => {
-      await actor.crawler.run(actor.startUrls);
+      await context.crawler.run(context.startUrls);
       urlsToPass = [];
     };
 
@@ -315,7 +315,7 @@ await crawleeOne(
       {
         // Runs until all requests are processed, then stops by itself.
         crawler: { run: mainRun, stop: () => {} },
-        queueId: actor.input?.requestQueueId,
+        queueId: context.input?.requestQueueId,
         isKeepAlive: false,
       },
       {
@@ -326,7 +326,7 @@ await crawleeOne(
       },
     ];
 
-    await orchestrate({ actor, crawlers, checkIntervalMs: 5000 });
+    await orchestrate({ context, crawlers, checkIntervalMs: 5000 });
   }
 );
 ```

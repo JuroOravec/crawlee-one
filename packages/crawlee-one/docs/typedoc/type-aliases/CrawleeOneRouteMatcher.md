@@ -4,9 +4,9 @@
 
 [crawlee-one](../README.md) / CrawleeOneRouteMatcher
 
-# Type Alias: CrawleeOneRouteMatcher\<T, RouterCtx\>
+# Type Alias: CrawleeOneRouteMatcher\<T\>
 
-> **CrawleeOneRouteMatcher**\<`T`, `RouterCtx`\> = [`MaybeArray`](MaybeArray.md)\<`RegExp` \| [`CrawleeOneRouteMatcherFn`](CrawleeOneRouteMatcherFn.md)\<`T`, `RouterCtx`\>\>
+> **CrawleeOneRouteMatcher**\<`T`\> = [`MaybeArray`](MaybeArray.md)\<`RegExp` \| [`CrawleeOneRouteMatcherFn`](CrawleeOneRouteMatcherFn.md)\<`T`\>\>
 
 Defined in: [packages/crawlee-one/src/lib/router/types.ts:101](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L101)
 
@@ -26,7 +26,3 @@ The Matcher can be:
 ### T
 
 `T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
-
-### RouterCtx
-
-`RouterCtx` *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](CrawleeOneRouteCtx.md)\<`T`\>

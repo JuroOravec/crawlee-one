@@ -89,6 +89,26 @@ Custom / unknown providers are supported via OpenAI-compatible APIs.
 
 ***
 
+### llmQueueDrainCheckIntervalMs?
+
+> `optional` **llmQueueDrainCheckIntervalMs**: `number`
+
+Defined in: [packages/crawlee-one/src/lib/input.ts:395](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L395)
+
+After the main crawler finishes, this is how long we wait before
+we check if either the main queue or LLM queue have any more requests left.
+
+You likely don't need to change this.
+
+When using LLM to extract data, the requsts may ping-pong between the LLM
+and the main queue. The default 5s is set to give time for the dust to settle.
+
+Default: 5000.
+
+Set to 0 in tests to avoid timeouts.
+
+***
+
 ### llmRequestQueueId?
 
 > `optional` **llmRequestQueueId**: `string`

@@ -118,7 +118,7 @@ describe('registerHandlers', () => {
       TEST: { match: /test/, handler },
     } as any;
 
-    const getRouterContext = () => ({ actor: 'test-actor', pushData: vi.fn() });
+    const getRouterContext = () => ({ one: {}, pushData: vi.fn() });
 
     await registerHandlers({ router, routes, getRouterContext: getRouterContext as any });
 

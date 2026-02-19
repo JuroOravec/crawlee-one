@@ -10,7 +10,7 @@ Track errors to any service by implementing the `CrawleeOneTelemetry` interface 
 
 ```ts
 interface CrawleeOneTelemetry {
-  setup: (actor: CrawleeOneActorInst) => Promise<void> | void;
+  setup: (context: CrawleeOneContext) => Promise<void> | void;
   onSendErrorToTelemetry: (
     error: Error,
     report: object,

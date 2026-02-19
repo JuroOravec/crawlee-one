@@ -6,7 +6,7 @@
 
 # Interface: LlmModelCompareDatasetItem
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:15](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L15)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:15
 
 Dataset item shape for LLM compare runs
 
@@ -16,7 +16,7 @@ Dataset item shape for LLM compare runs
 
 > `optional` **completionTokens**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:24](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L24)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:24
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:24](https
 
 > **data**: `Record`\<`string`, `unknown`\> \| `null`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:17](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L17)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:17
 
 Extracted object on success, null on failure
 
@@ -34,7 +34,7 @@ Extracted object on success, null on failure
 
 > **error**: `string` \| `null`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:19](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L19)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:19
 
 Error message on failure, null on success
 
@@ -44,7 +44,7 @@ Error message on failure, null on success
 
 > `optional` **extractionMs**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:22](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L22)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:22
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:22](https
 
 > **modelId**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:20](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L20)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:20
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:20](https
 
 > `optional` **promptTokens**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L23)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:23
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:23](https
 
 > `optional` **totalTokens**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:25](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L25)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:25
 
 ***
 
@@ -76,4 +76,4 @@ Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:25](https
 
 > **url**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts#L21)
+Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:21

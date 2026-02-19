@@ -1,5 +1,9 @@
 // Main API
-export { crawleeOne, createHttpCrawlerOptions, type CrawleeOneOptions } from './lib/actor/actor.js';
+export {
+  crawleeOne,
+  createHttpCrawlerOptions,
+  type CrawleeOneOptions,
+} from './lib/context/context.js';
 
 // Low-level API + types + helpers
 export type { CrawlerUrl, CrawlerType, CrawlerMeta, HttpResponse, SampleUrlItem } from './types.js';
@@ -13,15 +17,15 @@ export type {
 } from './utils/types.js';
 export {
   type InputFromFields,
-  type CrawleeOneActorInst,
-  type CrawleeOneActorDefWithInput,
-  type CrawleeOneActorDef,
+  type CrawleeOneContext,
+  type CrawleeOneInternalOptionsWithInput,
+  type CrawleeOneInternalOptions,
   type CrawleeOneHookFn,
   type CrawleeOneHookCtx,
-  type CrawleeOneActorRouterCtx,
+  type CrawleeOneRouteHandlerCtxExtras,
   type CrawleeOneTypes,
   type Metamorph,
-} from './lib/actor/types.js';
+} from './lib/context/types.js';
 export {
   type ActorInput,
   type CrawlerConfigActorInput,
@@ -48,11 +52,11 @@ export {
   actorInput,
 } from './lib/input.js';
 export { type PushDataOptions, type PrivacyFilter, type PrivacyMask } from './lib/io/pushData.js';
-export { type AddRequestsOptions } from './lib/io/pushRequests.js';
+export { type AddRequestsOptions } from './lib/io/addRequests.js';
 export {
-  type CrawleeOneRouteCtx,
+  type CrawleeOneRouteHandlerCtx,
   type CrawleeOneRouteHandler,
-  type CrawleeOneRouteWrapper,
+  type CrawleeOneRouteMiddleware,
   type CrawleeOneRoute,
   type CrawleeOneRouteMatcher,
   type CrawleeOneRouteMatcherFn,

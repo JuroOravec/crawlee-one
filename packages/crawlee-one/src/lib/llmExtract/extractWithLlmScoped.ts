@@ -77,7 +77,7 @@ export interface ExtractWithLlmScopedOptions<T> {
  */
 export function createExtractWithLlmForContext(outerOpts: {
   ctx: CrawlingContext & { routeLabel?: string };
-  actor: {
+  context: {
     input: LlmActorInput | null;
     io: CrawleeOneIO;
     log: Log;
@@ -85,7 +85,7 @@ export function createExtractWithLlmForContext(outerOpts: {
   llmRequestQueueId: string;
   llmKeyValueStoreId: string;
 }): <T>(opts: ExtractWithLlmScopedOptions<T>) => Promise<LlmExtractionResult<T> | null> {
-  const { ctx, actor, llmRequestQueueId, llmKeyValueStoreId } = outerOpts;
+  const { ctx, context, llmRequestQueueId, llmKeyValueStoreId } = outerOpts;
 
   return async <T>(
     opts: ExtractWithLlmScopedOptions<T>
@@ -102,7 +102,7 @@ export function createExtractWithLlmForContext(outerOpts: {
       throw new Error('Request has neither id nor uniqueKey; cannot key LLM result.');
     }
 
-    const store = await actor.io.openKeyValueStore(llmStoreId);
+    const store = await context.io.openKeyValueStore(llmStoreId);
     const existing = await store.getValue<LlmExtractionResult<T> | LlmExtractionError | null>(
       requestId,
       null
@@ -134,7 +134,7 @@ export function createExtractWithLlmForContext(outerOpts: {
     // and reprocessed before the LLM queue completes.
 
     const originalRequestQueueId =
-      (actor.input as RequestActorInput | undefined)?.requestQueueId ?? 'default';
+      (context.input as RequestActorInput | undefined)?.requestQueueId ?? 'default';
 
     const url = request.loadedUrl || request.url;
     const text = opts.text ?? (await getDefaultExtractionText(ctx));
@@ -149,11 +149,11 @@ export function createExtractWithLlmForContext(outerOpts: {
         html: text,
         jsonSchema,
         systemPrompt: opts.systemPrompt,
-        apiKey: opts.apiKey ?? actor.input?.llmApiKey,
-        provider: opts.provider ?? actor.input?.llmProvider,
-        model: opts.model ?? actor.input?.llmModel,
-        baseURL: opts.baseURL ?? actor.input?.llmBaseUrl,
-        headers: opts.headers ?? actor.input?.llmHeaders,
+        apiKey: opts.apiKey ?? context.input?.llmApiKey,
+        provider: opts.provider ?? context.input?.llmProvider,
+        model: opts.model ?? context.input?.llmModel,
+        baseURL: opts.baseURL ?? context.input?.llmBaseUrl,
+        headers: opts.headers ?? context.input?.llmHeaders,
         url,
         /** Used by LLM crawler to write result to KVS under the ID of the original request */
         originalRequestId: requestId,
@@ -163,8 +163,8 @@ export function createExtractWithLlmForContext(outerOpts: {
     };
 
     try {
-      const llmQueue = await actor.io.openRequestQueue(llmQueueId);
-      await addRequestOrReclaim(llmQueue, llmRequest, actor.log);
+      const llmQueue = await context.io.openRequestQueue(llmQueueId);
+      await addRequestOrReclaim(llmQueue, llmRequest, context.log);
     } catch (err) {
       const msg = `Failed to re-queue original request to LLM queue ${llmQueueId}: ${err instanceof Error ? err.message : String(err)}`;
       log.error(msg);

@@ -11,7 +11,7 @@ import { vi } from 'vitest';
 
 import { measurePerf, measureMemory } from './helpers.js';
 
-import { crawleeOne } from '../src/lib/actor/actor.js';
+import { crawleeOne } from '../src/lib/context/context.js';
 import type {
   CrawleeOneIO,
   CrawleeOneRequestQueue,
@@ -21,7 +21,7 @@ import type {
 import type { CrawlerType } from '../src/types.js';
 
 // ---------------------------------------------------------------------------
-// Mock helpers (same pattern as src/lib/actor/actor.test.ts)
+// Mock helpers (same pattern as src/lib/context/context.test.ts)
 // ---------------------------------------------------------------------------
 
 const createMockRequestQueue = (): CrawleeOneRequestQueue => ({
@@ -167,8 +167,8 @@ const crawlOnce = async (type: CrawlerType, handler: (ctx: any) => void) => {
         maxConcurrency: 1,
       } as any,
     },
-    async (actor) => {
-      await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?bench=${type}&id=${id}` }]);
+    async (context) => {
+      await context.crawler.run([{ url: `http://127.0.0.1:${port}/?bench=${type}&id=${id}` }]);
     }
   );
 };
