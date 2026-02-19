@@ -16,44 +16,43 @@ const createMockQueue = (overrides?: Partial<CrawleeOneRequestQueue>): CrawleeOn
   ...overrides,
 });
 
-const createMockCrawleeOneContext = (overrides?: {
+const createMockIoAndLog = (overrides?: {
   mainQueue?: CrawleeOneRequestQueue;
   llmQueue?: CrawleeOneRequestQueue;
 }) => {
   const mainQueue = overrides?.mainQueue ?? createMockQueue();
   const llmQueue = overrides?.llmQueue ?? createMockQueue();
 
-  return {
-    io: {
-      openRequestQueue: vi.fn().mockImplementation((id?: string | null) => {
-        if (id === 'llm-queue' || id === 'llm') return Promise.resolve(llmQueue);
-        return Promise.resolve(mainQueue);
-      }),
-    },
-    log: { info: vi.fn(), warning: vi.fn(), error: vi.fn(), debug: vi.fn() },
+  const io = {
+    openRequestQueue: vi.fn().mockImplementation((id?: string | null) => {
+      if (id === 'llm-queue' || id === 'llm') return Promise.resolve(llmQueue);
+      return Promise.resolve(mainQueue);
+    }),
   } as any;
+  const log = { info: vi.fn(), warning: vi.fn(), error: vi.fn(), debug: vi.fn() } as any;
+  return { io, log };
 };
 
 describe('orchestrate', () => {
   it('exits when all queues are empty (no keep-alive crawlers)', async () => {
     const mainQueue = createMockQueue({ isFinished: vi.fn().mockResolvedValue(true) });
-    const context = createMockCrawleeOneContext({ mainQueue });
+    const { io, log } = createMockIoAndLog({ mainQueue });
 
     const runMain = vi.fn().mockResolvedValue(undefined);
     const crawlers: OrchestratedCrawler[] = [
       { crawler: { run: runMain, stop: vi.fn() }, queueId: 'main', isKeepAlive: false },
     ];
 
-    await orchestrate({ context, crawlers, checkIntervalMs: 0 });
+    await orchestrate({ log, io, crawlers, checkIntervalMs: 0 });
 
     expect(runMain).toHaveBeenCalledTimes(1);
-    expect(context.io.openRequestQueue).toHaveBeenCalledWith('main');
+    expect(io.openRequestQueue).toHaveBeenCalledWith('main');
   });
 
   it('exits when all queues are empty (with keep-alive crawlers)', async () => {
     const mainQueue = createMockQueue({ isFinished: vi.fn().mockResolvedValue(true) });
     const llmQueue = createMockQueue({ isFinished: vi.fn().mockResolvedValue(true) });
-    const context = createMockCrawleeOneContext({ mainQueue, llmQueue });
+    const { io, log } = createMockIoAndLog({ mainQueue, llmQueue });
 
     const runMain = vi.fn().mockResolvedValue(undefined);
     const runLlm = vi
@@ -66,7 +65,7 @@ describe('orchestrate', () => {
       { crawler: { run: runLlm, stop: stopLlm }, queueId: 'llm-queue', isKeepAlive: true },
     ];
 
-    await orchestrate({ context, crawlers, checkIntervalMs: 0 });
+    await orchestrate({ log, io, crawlers, checkIntervalMs: 0 });
 
     expect(runMain).toHaveBeenCalledTimes(1);
     expect(runLlm).toHaveBeenCalledTimes(1);
@@ -80,19 +79,17 @@ describe('orchestrate', () => {
         .mockResolvedValueOnce(false) // after first run, queue has pending
         .mockResolvedValueOnce(true), // after second run, queue empty
     });
-    const context = createMockCrawleeOneContext({ mainQueue });
+    const { io, log } = createMockIoAndLog({ mainQueue });
 
     const runMain = vi.fn().mockResolvedValue(undefined);
     const crawlers: OrchestratedCrawler[] = [
       { crawler: { run: runMain, stop: vi.fn() }, queueId: 'main', isKeepAlive: false },
     ];
 
-    await orchestrate({ context, crawlers, checkIntervalMs: 0 });
+    await orchestrate({ log, io, crawlers, checkIntervalMs: 0 });
 
     expect(runMain).toHaveBeenCalledTimes(2);
-    expect(context.log.info).toHaveBeenCalledWith(
-      'Starting crawler for queue with pending requests: main'
-    );
+    expect(log.info).toHaveBeenCalledWith('Starting crawler for queue with pending requests: main');
   });
 
   it('polls when keep-alive queue has pending and no non-keep-alive crawlers running', async () => {
@@ -103,7 +100,7 @@ describe('orchestrate', () => {
         .mockResolvedValueOnce(false) // first check: keep-alive has pending
         .mockResolvedValueOnce(true), // second check: drained
     });
-    const context = createMockCrawleeOneContext({ mainQueue, llmQueue });
+    const { io, log } = createMockIoAndLog({ mainQueue, llmQueue });
 
     const runMain = vi.fn().mockResolvedValue(undefined);
     const runLlm = vi.fn().mockResolvedValue(undefined);
@@ -114,16 +111,16 @@ describe('orchestrate', () => {
       { crawler: { run: runLlm, stop: stopLlm }, queueId: 'llm-queue', isKeepAlive: true },
     ];
 
-    await orchestrate({ context, crawlers, checkIntervalMs: 0 });
+    await orchestrate({ log, io, crawlers, checkIntervalMs: 0 });
 
     expect(runMain).toHaveBeenCalledTimes(1);
     expect(stopLlm).toHaveBeenCalledTimes(1);
-    expect(context.log.info).toHaveBeenCalledWith(expect.stringContaining('Waiting'));
+    expect(log.info).toHaveBeenCalledWith(expect.stringContaining('Waiting'));
   });
 
   it('does not call stop on non-keep-alive crawlers', async () => {
     const mainQueue = createMockQueue({ isFinished: vi.fn().mockResolvedValue(true) });
-    const context = createMockCrawleeOneContext({ mainQueue });
+    const { io, log } = createMockIoAndLog({ mainQueue });
 
     const runMain = vi.fn().mockResolvedValue(undefined);
     const stopMain = vi.fn();
@@ -131,23 +128,28 @@ describe('orchestrate', () => {
       { crawler: { run: runMain, stop: stopMain }, queueId: 'main', isKeepAlive: false },
     ];
 
-    await orchestrate({ context, crawlers, checkIntervalMs: 0 });
+    await orchestrate({ log, io, crawlers, checkIntervalMs: 0 });
 
     expect(stopMain).not.toHaveBeenCalled();
   });
 
+  it('uses default log and io when omitted (crawlers can be empty)', async () => {
+    const crawlers: OrchestratedCrawler[] = [];
+    await orchestrate({ crawlers, checkIntervalMs: 0 });
+  });
+
   it('uses default queue when queueId is undefined', async () => {
     const defaultQueue = createMockQueue({ isFinished: vi.fn().mockResolvedValue(true) });
-    const context = createMockCrawleeOneContext({ mainQueue: defaultQueue });
+    const { io, log } = createMockIoAndLog({ mainQueue: defaultQueue });
 
     const runMain = vi.fn().mockResolvedValue(undefined);
     const crawlers: OrchestratedCrawler[] = [
       { crawler: { run: runMain, stop: vi.fn() }, queueId: undefined, isKeepAlive: false },
     ];
 
-    await orchestrate({ context, crawlers, checkIntervalMs: 0 });
+    await orchestrate({ log, io, crawlers, checkIntervalMs: 0 });
 
-    expect(context.io.openRequestQueue).toHaveBeenCalledWith(undefined);
+    expect(io.openRequestQueue).toHaveBeenCalledWith(undefined);
     expect(runMain).toHaveBeenCalledTimes(1);
   });
 });

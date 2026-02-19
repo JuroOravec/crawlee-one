@@ -58,7 +58,8 @@ export async function orchestrateWithLlm(input: {
   ];
 
   await orchestrate({
-    context,
+    log: context.log,
+    io: context.io,
     crawlers,
     checkIntervalMs: llmQueueDrainCheckIntervalMs,
   });

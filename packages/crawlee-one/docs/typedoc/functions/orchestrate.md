@@ -96,9 +96,17 @@ Throughput is not limited by the slowest crawler.
 
 Interval in ms between queue-drain checks. Default: 5000. Use 0 in tests.
 
-#### context
+#### io?
 
-`Pick`\<[`CrawleeOneContext`](../interfaces/CrawleeOneContext.md)\<`any`\>, `"io"` \| `"log"`\>
+[`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)
+
+IO instance for opening queues, datasets, etc. Defaults to Apify's `apifyIO` when omitted.
+
+#### log?
+
+`Log`
+
+Log instance. Defaults to Crawlee's default log when omitted.
 
 #### crawlers
 

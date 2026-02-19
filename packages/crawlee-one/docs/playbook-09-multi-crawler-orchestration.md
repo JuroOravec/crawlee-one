@@ -132,7 +132,7 @@ await crawleeOne(
       },
     ];
 
-    await orchestrate({ context, crawlers, checkIntervalMs: 5000 });
+    await orchestrate({ crawlers, checkIntervalMs: 5000 });
   }
 );
 ```

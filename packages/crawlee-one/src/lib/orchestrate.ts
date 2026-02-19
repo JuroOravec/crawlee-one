@@ -1,6 +1,8 @@
-import type { CrawleeOneContext } from './context/types.js';
+import { Log } from 'crawlee';
+
 import type { MaybePromise } from '../utils/types.js';
 import type { CrawleeOneIO } from './integrations/types.js';
+import { apifyIO } from './integrations/apify.js';
 
 const DEFAULT_QUEUE_DRAIN_CHECK_INTERVAL_MS = 5_000;
 
@@ -102,14 +104,17 @@ export type OrchestratedCrawler = {
  *   a future reconciliation.
  */
 export async function orchestrate(input: {
-  context: Pick<CrawleeOneContext<any>, 'io' | 'log'>;
   crawlers: OrchestratedCrawler[];
   /** Interval in ms between queue-drain checks. Default: 5000. Use 0 in tests. */
   checkIntervalMs?: number;
+  /** Log instance. Defaults to Apify/Crawlee's default log when omitted. */
+  log?: Log;
+  /** IO instance for opening queues, datasets, etc. Defaults to Apify's `apifyIO` when omitted. */
+  io?: CrawleeOneIO;
 }): Promise<void> {
-  const { context, crawlers } = input;
-
-  const io: CrawleeOneIO = context.io;
+  const { crawlers } = input;
+  const log = input.log ?? new Log();
+  const io: CrawleeOneIO = input.io ?? apifyIO;
   const checkIntervalMs = input.checkIntervalMs ?? DEFAULT_QUEUE_DRAIN_CHECK_INTERVAL_MS;
 
   const keptAliveCrawlers = crawlers.filter((c) => c.isKeepAlive);
@@ -179,7 +184,7 @@ export async function orchestrate(input: {
         if (hasPendingWork && !running.has(crawler)) {
           const prom = Promise.resolve(crawler.crawler.run());
           running.set(crawler, prom);
-          context.log.info(
+          log.info(
             `Starting crawler for queue with pending requests: ${crawler.queueId ?? 'default'}`
           );
         }
@@ -194,7 +199,7 @@ export async function orchestrate(input: {
           break;
         }
         // Keep-alive queues still have pending; wait and recheck.
-        context.log.info(
+        log.info(
           `Queue(s) with pending requests. Waiting ${checkIntervalMs / 1000}s before rechecking...`
         );
       }
