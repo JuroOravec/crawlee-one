@@ -296,10 +296,7 @@ export interface CrawleeOneActorDef<T extends CrawleeOneCtx> {
 
   // Crawler setup
   createCrawler: (
-    actorCtx: Omit<
-      CrawleeOneActorInst<T>,
-      'crawler' | 'runCrawler' | 'metamorph' | 'startUrls' | 'pushRequests'
-    >
+    actorCtx: Omit<CrawleeOneActorInst<T>, 'crawler' | 'metamorph' | 'startUrls' | 'pushRequests'>
   ) => MaybePromise<T['context']['crawler']>;
 }
 
@@ -314,14 +311,13 @@ export type CrawleeOneActorDefWithInput<T extends CrawleeOneCtx> = Omit<
 
 /** Context available while creating a Crawlee crawler/actor */
 export interface CrawleeOneActorInst<T extends CrawleeOneCtx> {
-  /** The Crawlee crawler instance used by this instance of CrawleeOne  */
-  crawler: T['context']['crawler'];
   /**
-   * This function wraps `crawler.run(requests, runOtions)` with additional
-   * features:
-   * - Optionally metamorph into another actor after the run finishes
+   * The Crawlee crawler instance. Its `run()` method is wrapped with additional
+   * features (metamorph, transform/filter hooks, output cache).
+   *
+   * Call `actor.crawler.run(requests?, options?)` to start crawling.
    */
-  runCrawler: RunCrawler;
+  crawler: T['context']['crawler'];
   /** Trigger actor metamorph, using actor's inputs as defaults. */
   metamorph: Metamorph;
   /**

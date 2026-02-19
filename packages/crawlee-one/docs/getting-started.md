@@ -173,8 +173,8 @@ await crawleeOne({
   // Custom Crawlee Router instance. Optional.
   router: myCustomRouter(),
 }, async (actor) => {
-  // Optional: called after initialization. If provided, you must call actor.runCrawler() yourself.
-  await actor.runCrawler(['https://example.com']);
+  // Optional: called after initialization. If provided, you must call actor.crawler.run() yourself.
+  await actor.crawler.run(['https://example.com']);
 });
 ```
 

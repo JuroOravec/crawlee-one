@@ -299,7 +299,7 @@ export const crawleeOne = <
           if (onReady) {
             await onReady(actor); // Call user's onReady
           } else {
-            await actor.runCrawler(); // Default
+            await actor.crawler.run(); // Default
           }
         },
       });
@@ -455,16 +455,20 @@ const createCrawleeOne = async <T extends CrawleeOneCtx>(opts: {
     state,
     log,
     pushRequests: createScopedPushRequests({ io, log, state, input }),
-  } satisfies Omit<CrawleeOneActorInst<T>, 'crawler' | 'runCrawler' | 'metamorph' | 'startUrls'>);
+  } satisfies Omit<CrawleeOneActorInst<T>, 'crawler' | 'metamorph' | 'startUrls'>);
 
   // Create Crawlee crawler
   const crawler = await config.createCrawler(getPreActorNoCrawler());
   const getPreActor = actorCtxFactory({ ...getPreActorNoCrawler(), crawler });
 
+  // Wrap `crawler.run()` with additional features: metamorph, transform/filter hooks, output cache, etc.
+  const originalRun = crawler.run.bind(crawler);
+  const wrappedRun = createScopedCrawlerRun(getPreActor, originalRun);
+  crawler.run = wrappedRun;
+
   // Create actor (our custom entity)
   const actor: CrawleeOneActorInst<T> = {
     ...getPreActor(),
-    runCrawler: createScopedCrawlerRun(getPreActor),
     metamorph: createScopedMetamorph(getPreActor),
     startUrls: await getStartUrlsFromInput(getPreActor()),
   };
@@ -576,7 +580,7 @@ const resolveInput = async <T extends Record<string, any> | null>(
 };
 
 /**
- * Create a function that wraps `crawler.run(requests, runOtions)` with additional
+ * Create a function that wraps `crawler.run(requests, runOptions)` with additional
  * features:
  * - Automatically metamorph into another actor after the run finishes
  * - Support transformation and filtering of (scraped) entries, configured via Actor input.
@@ -586,11 +590,12 @@ const resolveInput = async <T extends Record<string, any> | null>(
  * - Support caching of scraped entries, configured via Actor input.
  */
 const createScopedCrawlerRun = <T extends CrawleeOneCtx>(
-  getActor: () => Omit<CrawleeOneActorInst<T>, 'runCrawler' | 'metamorph' | 'startUrls'>
-) => {
+  getActor: () => Omit<CrawleeOneActorInst<T>, 'metamorph' | 'startUrls'>,
+  originalRun: RunCrawler
+): RunCrawler => {
   const metamorph = createScopedMetamorph(getActor);
 
-  const runCrawler: RunCrawler = async (requests, options) => {
+  const wrappedRun: RunCrawler = async (requests, options) => {
     const actor = getActor();
     const {
       requestTransformBefore,
@@ -616,7 +621,7 @@ const createScopedCrawlerRun = <T extends CrawleeOneCtx>(
     await genHookFn(actor, requestTransformBefore, 'requestTransformBefore')?.(); // prettier-ignore
     await genHookFn(actor, requestFilterBefore, 'requestFilterBefore')?.(); // prettier-ignore
 
-    const runRes = await actor.crawler.run(requests, options);
+    const runRes = await originalRun(requests, options);
 
     await genHookFn(actor, outputTransformAfter, 'outputTransformAfter')?.(); // prettier-ignore
     await genHookFn(actor, outputFilterAfter, 'outputFilterAfter')?.(); // prettier-ignore
@@ -629,7 +634,7 @@ const createScopedCrawlerRun = <T extends CrawleeOneCtx>(
     return runRes;
   };
 
-  return runCrawler;
+  return wrappedRun;
 };
 
 /** Create a function that triggers metamorph, using Actor's inputs as defaults. */

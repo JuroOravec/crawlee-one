@@ -168,7 +168,7 @@ const crawlOnce = async (type: CrawlerType, handler: (ctx: any) => void) => {
       } as any,
     },
     async (actor) => {
-      await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?bench=${type}&id=${id}` }]);
+      await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?bench=${type}&id=${id}` }]);
     }
   );
 };

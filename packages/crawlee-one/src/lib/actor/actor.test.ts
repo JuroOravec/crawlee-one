@@ -215,7 +215,7 @@ describe('crawleeOne', () => {
       expect(capturedActor.input).toBeDefined();
       expect(capturedActor.state).toBeDefined();
       expect(capturedActor.log).toBeDefined();
-      expect(typeof capturedActor.runCrawler).toBe('function');
+      expect(typeof capturedActor.crawler.run).toBe('function');
       expect(typeof capturedActor.metamorph).toBe('function');
       expect(typeof capturedActor.pushRequests).toBe('function');
       expect(Array.isArray(capturedActor.startUrls)).toBe(true);
@@ -987,7 +987,7 @@ describe('crawleeOne integration', () => {
         } as any,
       },
       async (actor) => {
-        await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?type=cheerio` }]);
+        await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?type=cheerio` }]);
       }
     );
 
@@ -1025,7 +1025,7 @@ describe('crawleeOne integration', () => {
         } as any,
       },
       async (actor) => {
-        await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?type=http` }]);
+        await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?type=http` }]);
       }
     );
 
@@ -1061,7 +1061,7 @@ describe('crawleeOne integration', () => {
         } as any,
       },
       async (actor) => {
-        await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?type=jsdom` }]);
+        await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?type=jsdom` }]);
       }
     );
 
@@ -1096,7 +1096,7 @@ describe('crawleeOne integration', () => {
         } as any,
       },
       async (actor) => {
-        await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?type=basic` }]);
+        await actor.crawler.run([{ url: `http://127.0.0.1:${port}/?type=basic` }]);
       }
     );
 

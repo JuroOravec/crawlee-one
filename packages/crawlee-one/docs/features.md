@@ -307,7 +307,7 @@ await crawleeOne(
     // Main crawler - pass startUrls on first run
     let urlsToPass = actor.startUrls;
     const mainRun = async () => {
-      await actor.runCrawler(actor.startUrls);
+      await actor.crawler.run(actor.startUrls);
       urlsToPass = [];
     };
 

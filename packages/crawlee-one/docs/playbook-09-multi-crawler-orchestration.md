@@ -84,7 +84,7 @@ For each crawler, include:
 
 ### Step 2: Call `orchestrate()` inside `onReady` callback
 
-`onReady` callback is where you normally start the crawler (`actor.runCrawler()`).
+`onReady` callback is where you normally start the crawler (`actor.crawler.run()`).
 
 It's also when you should start your multi-crawler orchestration.
 
@@ -114,7 +114,7 @@ await crawleeOne(
     // (not keepAlive — exits when queue empty)
     let urlsToPass = actor.startUrls;
     const mainRun = async () => {
-      await actor.runCrawler(actor.startUrls);
+      await actor.crawler.run(actor.startUrls);
       urlsToPass = [];
     };
 

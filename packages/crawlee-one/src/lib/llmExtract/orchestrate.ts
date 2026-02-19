@@ -31,7 +31,7 @@ export async function orchestrateWithLlm(input: {
   });
 
   // On the first run we call the provided `run` function as that may populate the queue.
-  // If the crawler is needed to be re-started, we then call only `actor.runCrawler([])`
+  // If the crawler is needed to be re-started, we then call only `actor.crawler.run([])`
   // so that we only run the crawler without adding new requests to the queue.
   let hasRunInitial = false;
   const mainRun = async (): Promise<void> => {
@@ -39,7 +39,7 @@ export async function orchestrateWithLlm(input: {
       hasRunInitial = true;
       await run();
     } else {
-      await actor.runCrawler([]);
+      await actor.crawler.run([]);
     }
   };
 

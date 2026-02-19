@@ -21,7 +21,6 @@ export {
   type CrawleeOneActorRouterCtx,
   type CrawleeOneCtx,
   type Metamorph,
-  type RunCrawler,
 } from './lib/actor/types.js';
 export {
   type ActorInput,
