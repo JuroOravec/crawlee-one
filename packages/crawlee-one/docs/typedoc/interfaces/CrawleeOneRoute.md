@@ -21,7 +21,7 @@ a request will process that request.
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)
 
 ### RouterCtx
 

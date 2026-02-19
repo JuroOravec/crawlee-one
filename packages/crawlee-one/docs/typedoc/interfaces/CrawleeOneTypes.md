@@ -2,9 +2,9 @@
 
 ***
 
-[crawlee-one](../README.md) / CrawleeOneCtx
+[crawlee-one](../README.md) / CrawleeOneTypes
 
-# Interface: CrawleeOneCtx\<Ctx, Labels, Input, TIO, Telem\>
+# Interface: CrawleeOneTypes\<Ctx, Labels, Input, TIO, Telem\>
 
 Defined in: [packages/crawlee-one/src/lib/actor/types.ts:48](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L48)
 

@@ -15,7 +15,7 @@ import type {
   CrawleeOneRouteMatcherFn,
   CrawleeOneRoute,
 } from './types.js';
-import type { CrawleeOneCtx } from '../actor/types.js';
+import type { CrawleeOneTypes } from '../actor/types.js';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
 
@@ -37,7 +37,7 @@ const applyWrappersRight = <TFn extends (...args: any[]) => any>(
 };
 
 const resolveRoutes = <
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 >(
   routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>
@@ -90,7 +90,7 @@ const resolveRoutes = <
  * The entries from `getRouterContext(ctx)` will be made available to all handlers.
  */
 export const registerHandlers = async <
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 >(input: {
   router: CrawlerRouter<T['context']>;
@@ -122,7 +122,7 @@ export const registerHandlers = async <
 };
 
 const createDefaultHandler = <
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 >(
   input: {
@@ -331,7 +331,7 @@ const createDefaultHandler = <
  * await router.addHandler(routeLabels.JOB_LIST, async (ctx) => { ... }
  */
 export const setupDefaultHandlers = async <
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 >({
   io,

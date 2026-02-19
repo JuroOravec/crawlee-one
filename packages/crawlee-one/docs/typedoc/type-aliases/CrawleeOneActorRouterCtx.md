@@ -16,7 +16,7 @@ Context passed from actor to route handlers
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ## Properties
 

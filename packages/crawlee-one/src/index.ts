@@ -19,7 +19,7 @@ export {
   type CrawleeOneHookFn,
   type CrawleeOneHookCtx,
   type CrawleeOneActorRouterCtx,
-  type CrawleeOneCtx,
+  type CrawleeOneTypes,
   type Metamorph,
 } from './lib/actor/types.js';
 export {

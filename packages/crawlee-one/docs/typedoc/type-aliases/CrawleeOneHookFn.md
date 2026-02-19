@@ -22,7 +22,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:141](https://github.com
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md) = [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md) = [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ## Parameters
 

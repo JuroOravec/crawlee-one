@@ -45,7 +45,7 @@ export type Metamorph = (overrides?: MetamorphActorInput) => Promise<void>;
  * This type is not constructed anywhere. It is simply a shorthand, so we don't
  * have to pass through many times, but only one that describes them all.
  */
-export interface CrawleeOneCtx<
+export interface CrawleeOneTypes<
   Ctx extends CrawlingContext<
     | BasicCrawler
     | HttpCrawler<InternalHttpCrawlingContext>
@@ -74,7 +74,7 @@ export interface CrawleeOneCtx<
 }
 
 /** Context passed from actor to route handlers */
-export type CrawleeOneActorRouterCtx<T extends CrawleeOneCtx> = {
+export type CrawleeOneActorRouterCtx<T extends CrawleeOneTypes> = {
   actor: CrawleeOneActorInst<T>;
   /** Trigger actor metamorph, using actor's inputs as defaults. */
   metamorph: Metamorph;
@@ -113,7 +113,7 @@ export type CrawleeOneActorRouterCtx<T extends CrawleeOneCtx> = {
 };
 
 /** Context passed to user-defined functions passed from input */
-export type CrawleeOneHookCtx<T extends CrawleeOneCtx> = Pick<
+export type CrawleeOneHookCtx<T extends CrawleeOneTypes> = Pick<
   CrawleeOneActorInst<T>,
   'input' | 'state'
 > & {
@@ -141,11 +141,11 @@ export type CrawleeOneHookCtx<T extends CrawleeOneCtx> = Pick<
 export type CrawleeOneHookFn<
   TArgs extends any[] = [],
   TReturn = void,
-  T extends CrawleeOneCtx = CrawleeOneCtx,
+  T extends CrawleeOneTypes = CrawleeOneTypes,
 > = (...args: [...TArgs, CrawleeOneHookCtx<T>]) => MaybePromise<TReturn>;
 
 /** All that's necessary to define a single CrawleeOne actor/crawler. */
-export interface CrawleeOneActorDef<T extends CrawleeOneCtx> {
+export interface CrawleeOneActorDef<T extends CrawleeOneTypes> {
   /** Client for communicating with cloud/local storage. */
   io: T['io'];
 
@@ -301,7 +301,7 @@ export interface CrawleeOneActorDef<T extends CrawleeOneCtx> {
 }
 
 /** CrawleeOneActorDef object where the input is already resolved */
-export type CrawleeOneActorDefWithInput<T extends CrawleeOneCtx> = Omit<
+export type CrawleeOneActorDefWithInput<T extends CrawleeOneTypes> = Omit<
   CrawleeOneActorDef<T>,
   'input'
 > & {
@@ -310,7 +310,7 @@ export type CrawleeOneActorDefWithInput<T extends CrawleeOneCtx> = Omit<
 };
 
 /** Context available while creating a Crawlee crawler/actor */
-export interface CrawleeOneActorInst<T extends CrawleeOneCtx> {
+export interface CrawleeOneActorInst<T extends CrawleeOneTypes> {
   /**
    * The Crawlee crawler instance. Its `run()` method is wrapped with additional
    * features (metamorph, transform/filter hooks, output cache).

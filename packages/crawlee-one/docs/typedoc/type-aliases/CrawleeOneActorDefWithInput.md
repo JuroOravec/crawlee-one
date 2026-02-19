@@ -26,4 +26,4 @@ CrawleeOneActorDef object where the input is already resolved
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)

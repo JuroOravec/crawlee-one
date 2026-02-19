@@ -14,7 +14,7 @@ Context available while creating a Crawlee crawler/actor
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)
 
 ## Properties
 

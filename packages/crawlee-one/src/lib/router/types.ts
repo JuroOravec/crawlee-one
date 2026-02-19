@@ -2,23 +2,23 @@ import type { RouterHandler as CrawlerRouter, Awaitable } from 'crawlee';
 
 import type { SampleUrlItem } from '../../types.js';
 import type { MaybeArray, MaybePromise } from '../../utils/types.js';
-import type { CrawleeOneCtx } from '../actor/types.js';
+import type { CrawleeOneTypes } from '../actor/types.js';
 
 /** Context object provided in CrawlerRouter */
 export type CrawleeOneRouteCtx<
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = {},
 > = Parameters<Parameters<CrawlerRouter<T['context'] & RouterCtx>['addHandler']>[1]>[0];
 
 /** Function that's passed to `router.addHandler(label, handler)` */
 export type CrawleeOneRouteHandler<
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 > = Parameters<CrawlerRouter<T['context'] & RouterCtx>['addHandler']>[1]; // prettier-ignore
 
 /** Wrapper that modifies behavior of CrawleeOneRouteHandler */
 export type CrawleeOneRouteWrapper<
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 > = (
   handler: (ctx: CrawleeOneRouteCtx<T, RouterCtx>) => Promise<void> | Awaitable<void>
@@ -35,7 +35,7 @@ export type CrawleeOneRouteWrapper<
  * a request will process that request.
  */
 export interface CrawleeOneRoute<
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 > {
   match: CrawleeOneRouteMatcher<T, RouterCtx>;
@@ -99,7 +99,7 @@ export interface CrawleeOneRoute<
  * - Array of <RegExp | Function>
  */
 export type CrawleeOneRouteMatcher<
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 > = MaybeArray<RegExp | CrawleeOneRouteMatcherFn<T, RouterCtx>>;
 
@@ -111,7 +111,7 @@ export type CrawleeOneRouteMatcher<
  * function of the same CrawleeOneRoute.
  */
 export type CrawleeOneRouteMatcherFn<
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
 > = (
   url: string,

@@ -18,7 +18,7 @@ drop-in replacement with other telemetry services.
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)
 
 ### THandlerOptions
 

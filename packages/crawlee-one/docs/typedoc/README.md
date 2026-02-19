@@ -19,7 +19,7 @@
 - [CrawleeOneConfigSchema](interfaces/CrawleeOneConfigSchema.md)
 - [CrawleeOneConfigSchemaCrawler](interfaces/CrawleeOneConfigSchemaCrawler.md)
 - [CrawleeOneConfigTypes](interfaces/CrawleeOneConfigTypes.md)
-- [CrawleeOneCtx](interfaces/CrawleeOneCtx.md)
+- [CrawleeOneTypes](interfaces/CrawleeOneTypes.md)
 - [CrawleeOneDataset](interfaces/CrawleeOneDataset.md)
 - [CrawleeOneErrorHandlerInput](interfaces/CrawleeOneErrorHandlerInput.md)
 - [CrawleeOneErrorHandlerOptions](interfaces/CrawleeOneErrorHandlerOptions.md)

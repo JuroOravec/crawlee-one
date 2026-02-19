@@ -20,7 +20,7 @@ function of the same CrawleeOneRoute.
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ### RouterCtx
 

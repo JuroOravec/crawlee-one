@@ -43,4 +43,4 @@ See https://crawlee.dev/docs/guides/got-scraping
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)

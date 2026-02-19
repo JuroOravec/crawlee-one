@@ -14,7 +14,7 @@ All that's necessary to define a single CrawleeOne actor/crawler.
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)
 
 ## Properties
 

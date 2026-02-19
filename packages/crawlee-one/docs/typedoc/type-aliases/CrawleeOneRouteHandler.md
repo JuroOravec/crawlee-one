@@ -16,7 +16,7 @@ Function that's passed to `router.addHandler(label, handler)`
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ### RouterCtx
 

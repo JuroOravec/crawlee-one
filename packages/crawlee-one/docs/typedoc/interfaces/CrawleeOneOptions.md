@@ -18,7 +18,7 @@ Options object passed to `crawleeOne`
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](CrawleeOneCtx.md)\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`\>\[`"context"`\]\>
+`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`\>\[`"context"`\]\>
 
 ## Properties
 

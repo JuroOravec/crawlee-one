@@ -44,7 +44,7 @@ import type {
   CrawleeOneActorRouterCtx,
   Metamorph,
   RunCrawler,
-  CrawleeOneCtx,
+  CrawleeOneTypes,
   CrawleeOneHookFn,
   CrawleeOneActorDefWithInput,
 } from './types.js';
@@ -53,7 +53,7 @@ import type { CrawleeOneRouteHandler, CrawleeOneRoute } from '../router/types.js
 /** Options object passed to `crawleeOne` */
 export interface CrawleeOneOptions<
   TType extends CrawlerType,
-  T extends CrawleeOneCtx<CrawlerMeta<TType>['context']>
+  T extends CrawleeOneTypes<CrawlerMeta<TType>['context']>
 > {
   /** Type specifying the Crawlee crawler class, input options, and more. */
   type: CrawlerType;
@@ -209,7 +209,7 @@ export interface CrawleeOneOptions<
  */
 export const crawleeOne = <
   TType extends CrawlerType,
-  T extends CrawleeOneCtx<CrawlerMeta<TType>['context']> = CrawleeOneCtx<
+  T extends CrawleeOneTypes<CrawlerMeta<TType>['context']> = CrawleeOneTypes<
     CrawlerMeta<TType>['context']
   >,
 >(
@@ -311,7 +311,7 @@ export const crawleeOne = <
 /** Default implementation of `createCrawler` function. Used when `createCrawler` is not provided. */
 function defaultCreateCrawlerFactory<
   TType extends CrawlerType,
-  T extends CrawleeOneCtx<CrawlerMeta<TType>['context']>,
+  T extends CrawleeOneTypes<CrawlerMeta<TType>['context']>,
 >(params: {
   type: TType;
   io: T['io'];
@@ -380,7 +380,7 @@ function defaultCreateCrawlerFactory<
  * 9) Apify context (e.g. calling `Actor.getInput`) can be replaced with custom
  *  implementation using the `io` option.
  */
-const createCrawleeOne = async <T extends CrawleeOneCtx>(opts: {
+const createCrawleeOne = async <T extends CrawleeOneTypes>(opts: {
   config: PickPartial<CrawleeOneActorDef<T>, 'io'>;
   llmRequestQueueId: string;
   llmKeyValueStoreId: string;
@@ -521,7 +521,7 @@ const createCrawleeOne = async <T extends CrawleeOneCtx>(opts: {
   return actor;
 };
 
-const createActorInput = async <T extends CrawleeOneCtx>(
+const createActorInput = async <T extends CrawleeOneTypes>(
   config: CrawleeOneActorDef<T>,
   state: Record<string, any>
 ) => {
@@ -589,7 +589,7 @@ const resolveInput = async <T extends Record<string, any> | null>(
  * - Support caching of requests, configured via Actor input.
  * - Support caching of scraped entries, configured via Actor input.
  */
-const createScopedCrawlerRun = <T extends CrawleeOneCtx>(
+const createScopedCrawlerRun = <T extends CrawleeOneTypes>(
   getActor: () => Omit<CrawleeOneActorInst<T>, 'metamorph' | 'startUrls'>,
   originalRun: RunCrawler
 ): RunCrawler => {
@@ -638,7 +638,7 @@ const createScopedCrawlerRun = <T extends CrawleeOneCtx>(
 };
 
 /** Create a function that triggers metamorph, using Actor's inputs as defaults. */
-const createScopedMetamorph = <T extends CrawleeOneCtx>(
+const createScopedMetamorph = <T extends CrawleeOneTypes>(
   getActor: () => Pick<CrawleeOneActorInst<T>, 'input' | 'io'>
 ) => {
   // Trigger metamorph if it was set from the input
@@ -661,7 +661,7 @@ const createScopedMetamorph = <T extends CrawleeOneCtx>(
 };
 
 /** Build merged pushData options from actor input */
-const buildPushDataOptions = <T extends CrawleeOneCtx>(
+const buildPushDataOptions = <T extends CrawleeOneTypes>(
   actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log'>,
   options?: PushDataOptions<object>
 ) => {
@@ -705,7 +705,7 @@ const buildPushDataOptions = <T extends CrawleeOneCtx>(
  * Use this when handlers run concurrently to avoid "pushData outside context" errors
  * (the global handlerCtx gets cleared when any handler finishes).
  */
-const createPushDataForContext = <T extends CrawleeOneCtx>(
+const createPushDataForContext = <T extends CrawleeOneTypes>(
   ctx: Parameters<typeof pushData>[0] & { routeLabel?: string },
   actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log'>
 ): CrawleeOneActorRouterCtx<T>['pushData'] => {
@@ -738,7 +738,7 @@ const createPushDataForContext = <T extends CrawleeOneCtx>(
 };
 
 /** pushRequests wrapper that pre-populates options based on actor input */
-const createScopedPushRequests = <T extends CrawleeOneCtx>(
+const createScopedPushRequests = <T extends CrawleeOneTypes>(
   actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log'>
 ) => {
   const scopedPushRequest: CrawleeOneActorRouterCtx<T>['pushRequests'] = async (
@@ -769,7 +769,7 @@ const createScopedPushRequests = <T extends CrawleeOneCtx>(
 
 /** Given the actor input, create common crawler options. */
 export const createHttpCrawlerOptions = <
-  T extends CrawleeOneCtx,
+  T extends CrawleeOneTypes,
   TOpts extends BasicCrawlerOptions<T['context']>,
 >({
   input,
@@ -802,7 +802,7 @@ export const createHttpCrawlerOptions = <
   } satisfies Partial<TOpts>;
 };
 
-const getStartUrlsFromInput = async <T extends CrawleeOneCtx>(
+const getStartUrlsFromInput = async <T extends CrawleeOneTypes>(
   actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log'>
 ) => {
   const { startUrls, startUrlsFromDataset, startUrlsFromFunction } = (actor.input ??
@@ -844,7 +844,7 @@ const isFunc = (f: any): f is (...args: any[]) => any => {
 const genHookFn = <
   TArgs extends any[] = [],
   TReturn = unknown,
-  T extends CrawleeOneCtx = CrawleeOneCtx,
+  T extends CrawleeOneTypes = CrawleeOneTypes,
 >(
   actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io'>,
   fnOrStr: string | CrawleeOneHookFn<TArgs, TReturn, T> | undefined | null,

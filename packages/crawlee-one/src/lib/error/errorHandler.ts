@@ -9,7 +9,7 @@ import type {
   CrawleeOneIO,
   ExtractIOReport,
 } from '../integrations/types.js';
-import type { CrawleeOneCtx } from '../actor/types.js';
+import type { CrawleeOneTypes } from '../actor/types.js';
 import { apifyIO } from '../integrations/apify.js';
 
 export type CaptureErrorInput = PickRequired<Partial<CrawleeOneErrorHandlerInput>, 'error'>;
@@ -99,7 +99,7 @@ export const captureErrorWrapper = async <TIO extends CrawleeOneIO = CrawleeOneI
  *  })
  * );
  */
-export const captureErrorRouteHandler = <T extends CrawleeOneCtx>(
+export const captureErrorRouteHandler = <T extends CrawleeOneTypes>(
   handler: (ctx: CrawleeOneRouteCtx<T> & { captureError: CaptureError }) => MaybePromise<void>,
   options: CrawleeOneErrorHandlerOptions<T['io']>
 ) => {
@@ -130,7 +130,7 @@ export const captureErrorRouteHandler = <T extends CrawleeOneCtx>(
  *
  * By default, error reports are saved to Apify Dataset.
  */
-export const createErrorHandler = <T extends CrawleeOneCtx>(
+export const createErrorHandler = <T extends CrawleeOneTypes>(
   options: CrawleeOneErrorHandlerOptions<T['io']> & {
     sendToTelemetry?: boolean;
     onSendErrorToTelemetry?: T['telemetry']['onSendErrorToTelemetry'];
