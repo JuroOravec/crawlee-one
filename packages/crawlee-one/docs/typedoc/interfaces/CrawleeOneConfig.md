@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneConfig\<TCrawlers, TRenderer\>
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:52
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:66](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L66)
 
 ## Type Parameters
 
@@ -24,9 +24,31 @@ Defined in: packages/crawlee-one/src/lib/config/types.ts:52
 
 > `optional` **generate**: [`CrawleeOneConfigGenerate`](CrawleeOneConfigGenerate.md)\<`TRenderer`\>
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:61
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:75](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L75)
 
 Code generation settings. If omitted, all generation is skipped.
+
+***
+
+### llm?
+
+> `optional` **llm**: `object`
+
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:77](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L77)
+
+LLM-related settings
+
+#### compare?
+
+> `optional` **compare**: `object`
+
+##### compare.reports?
+
+> `optional` **reports**: `Record`\<`string`, [`LlmCompareReportDefinition`](LlmCompareReportDefinition.md)\>
+
+Reports that compare different models against each other
+
+Run with `crawlee-one llm compare`
 
 ***
 
@@ -34,7 +56,7 @@ Code generation settings. If omitted, all generation is skipped.
 
 > **schema**: [`CrawleeOneConfigSchema`](CrawleeOneConfigSchema.md)\<`TCrawlers`\>
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:59
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:73](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L73)
 
 Schema defining the crawlers in this project. This schema is used for code generation.
 
@@ -44,6 +66,6 @@ Schema defining the crawlers in this project. This schema is used for code gener
 
 > **version**: `1`
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:57
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:71](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L71)
 
 Version of the CrawleeOne config.

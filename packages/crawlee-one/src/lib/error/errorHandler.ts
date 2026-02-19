@@ -1,12 +1,4 @@
-import type {
-  BasicCrawlingContext,
-  CheerioCrawlingContext,
-  ErrorHandler,
-  HttpCrawlingContext,
-  JSDOMCrawlingContext,
-  PlaywrightCrawlingContext,
-  PuppeteerCrawlingContext,
-} from 'crawlee';
+import type { ErrorHandler } from 'crawlee';
 import type { Page } from 'playwright';
 
 import type { MaybePromise, PickRequired } from '../../utils/types.js';
@@ -129,13 +121,6 @@ export const captureErrorRouteHandler = <T extends CrawleeOneCtx>(
   };
   return wrapperHandler;
 };
-
-export const basicCaptureErrorRouteHandler = <T extends CrawleeOneCtx<BasicCrawlingContext>,>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const httpCaptureErrorRouteHandler = <T extends CrawleeOneCtx<HttpCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const jsdomCaptureErrorRouteHandler = <T extends CrawleeOneCtx<JSDOMCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const cheerioCaptureErrorRouteHandler = <T extends CrawleeOneCtx<CheerioCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const playwrightCaptureErrorRouteHandler = <T extends CrawleeOneCtx<PlaywrightCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const puppeteerCaptureErrorRouteHandler = <T extends CrawleeOneCtx<PuppeteerCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
 
 /**
  * Create an `ErrorHandler` function that can be assigned to

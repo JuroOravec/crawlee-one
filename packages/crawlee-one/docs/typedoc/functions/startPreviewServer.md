@@ -8,7 +8,7 @@
 
 > **startPreviewServer**(`options?`): `Promise`\<\{ `port`: `number`; `url`: `string`; \}\>
 
-Defined in: packages/crawlee-one/src/lib/preview/server.ts:147
+Defined in: [packages/crawlee-one/src/lib/preview/server.ts:318](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/preview/server.ts#L318)
 
 Start the preview server. Uses APIFY_LOCAL_STORAGE_DIR or ./storage.
 

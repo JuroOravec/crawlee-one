@@ -233,6 +233,7 @@ export const createMockStorageClient = ({
   log?: (args: any) => void;
   onBatchAddRequests?: OnBatchAddRequests;
 } = {}): StorageClient => {
+  const sharedRequestQueueClient = createMockRequestQueueClient({ log, onBatchAddRequests });
   return {
     datasets: (...args: any[]): DatasetCollectionClient => {
       log?.(`Called MockStorageClient.datasets with ${JSON.stringify(args)}`);
@@ -240,7 +241,7 @@ export const createMockStorageClient = ({
     },
     requestQueue: (...args: any[]) => {
       log?.(`Called MockStorageClient.requestQueue with ${JSON.stringify(args)}`);
-      return createMockRequestQueueClient({ log, onBatchAddRequests });
+      return sharedRequestQueueClient;
     },
     keyValueStore: (...args: any[]) => {
       log?.(`Called MockStorageClient.keyValueStore with ${JSON.stringify(args)}`);

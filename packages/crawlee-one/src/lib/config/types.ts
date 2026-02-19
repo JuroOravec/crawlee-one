@@ -1,7 +1,7 @@
 import type { ActorSpec } from 'actor-spec';
 
-import type { CrawlerMeta, CrawlerType } from '../../types.js';
-import type { CrawleeOneOptions } from '../../api.js';
+import type { LlmModelCompareConfig } from '../llmCompare/types.js';
+import type { CrawlerMeta, CrawlerType, CrawlerUrl } from '../../types.js';
 
 // ---------------------------------------------------------------------------
 // README renderer
@@ -49,6 +49,20 @@ export interface CrawleeOneConfigGenerate<
   readme?: CrawleeOneConfigReadme<TRenderer>;
 }
 
+/** LLM compare report definition. Used in crawlee-one.config.ts `llm.compare.reports`. */
+export interface LlmCompareReportDefinition {
+  /** Model configs to compare */
+  models: LlmModelCompareConfig[];
+  /** ID of the model whose output is the reference for comparison */
+  referenceModel: string;
+  /** URLs or RequestOptions to fetch and extract (no function support) */
+  urls: CrawlerUrl[];
+  /** JSON schema or Zod schema for extraction output */
+  schema: unknown;
+  /** System prompt for LLM extraction */
+  systemPrompt: string;
+}
+
 export interface CrawleeOneConfig<
   TCrawlers extends CrawlersRecord = CrawlersRecord,
   TRenderer extends ReadmeRenderer<any> = ReadmeRenderer<any>,
@@ -59,6 +73,17 @@ export interface CrawleeOneConfig<
   schema: CrawleeOneConfigSchema<TCrawlers>;
   /** Code generation settings. If omitted, all generation is skipped. */
   generate?: CrawleeOneConfigGenerate<TRenderer>;
+  /** LLM-related settings */
+  llm?: {
+    compare?: {
+      /**
+       * Reports that compare different models against each other
+       *
+       * Run with `crawlee-one llm compare`
+       */
+      reports?: Record<string, LlmCompareReportDefinition>;
+    };
+  };
 }
 
 export interface CrawleeOneConfigTypes {
@@ -269,6 +294,17 @@ export interface CrawleeOneConfigSchemaCrawler<TInput = Record<string, unknown>>
   input?: TInput;
 }
 
+/** Meta options passed via CrawleeOneOptions */
+export interface CrawleeOneConfigRunMetaOptions {
+  /** When `true`, throw when a URL does not match any route.
+   *
+   * If `false`, log an error and skip the URL.
+   *
+   * Defaults to `false`.
+   */
+  strict?: boolean;
+}
+
 /**
  * Options passed to the scraper's run function by `crawlee-one run` and `crawlee-one dev`.
  *
@@ -281,7 +317,7 @@ export type CrawleeOneConfigRunOptions<
 > = {
   crawlerOptions?: CrawlerMeta<TCrawlerType>['options'];
   input?: TInput;
-  crawleeOneOptions?: CrawleeOneOptions;
+  crawleeOneOptions?: CrawleeOneConfigRunMetaOptions;
 };
 
 /**
@@ -295,7 +331,7 @@ export type CrawleeOneConfigRunOptions<
  * const run = async (opts?: CrawleeOneConfigRunOptions<'cheerio', ActorInput>) => {
  *   const { crawlerOptions, input, crawleeOneOptions } = opts ?? {};
  *   await myCrawler({
- *     crawlerConfig: crawlerOptions,
+ *     crawlerConfigOverrides: crawlerOptions,
  *     input,
  *     crawleeOneOptions,
  *     routes: { ... },

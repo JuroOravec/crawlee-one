@@ -8,7 +8,7 @@
 
 > **defineConfig**\<`TCrawlers`, `TRenderer`\>(`config`): [`CrawleeOneConfig`](../interfaces/CrawleeOneConfig.md)\<`TCrawlers`, `TRenderer`\>
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:195
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:220](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L220)
 
 Type-safe config helper.
 

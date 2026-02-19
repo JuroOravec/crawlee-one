@@ -11,20 +11,23 @@ import { vi } from 'vitest';
 
 import { measurePerf, measureMemory } from './helpers.js';
 
-import { runCrawleeOne } from '../src/lib/actor/actor.js';
+import { crawleeOne } from '../src/lib/actor/actor.js';
 import type {
   CrawleeOneIO,
   CrawleeOneRequestQueue,
   CrawleeOneDataset,
   CrawleeOneKeyValueStore,
 } from '../src/lib/integrations/types.js';
+import type { CrawlerType } from '../src/types.js';
 
 // ---------------------------------------------------------------------------
 // Mock helpers (same pattern as src/lib/actor/actor.test.ts)
 // ---------------------------------------------------------------------------
 
 const createMockRequestQueue = (): CrawleeOneRequestQueue => ({
+  addRequest: vi.fn(),
   addRequests: vi.fn(),
+  getRequest: vi.fn().mockResolvedValue(null),
   markRequestHandled: vi.fn(),
   fetchNextRequest: vi.fn().mockResolvedValue(null),
   reclaimRequest: vi.fn(),
@@ -145,13 +148,13 @@ afterAll(async () => {
 // Helper: run a single crawl cycle
 // ---------------------------------------------------------------------------
 
-const crawlOnce = async (actorType: string, handler: (ctx: any) => void) => {
+const crawlOnce = async (type: CrawlerType, handler: (ctx: any) => void) => {
   const io = createMockIO();
   const id = ++reqCounter;
 
-  await runCrawleeOne({
-    actorType: actorType as any,
-    actorConfig: {
+  await crawleeOne(
+    {
+      type,
       io,
       routes: {
         MAIN: {
@@ -159,15 +162,15 @@ const crawlOnce = async (actorType: string, handler: (ctx: any) => void) => {
           handler: async (ctx: any) => handler(ctx),
         },
       },
+      crawlerConfigOverrides: {
+        maxRequestRetries: 0,
+        maxConcurrency: 1,
+      } as any,
     },
-    crawlerConfigOverrides: {
-      maxRequestRetries: 0,
-      maxConcurrency: 1,
-    } as any,
-    onReady: async (actor) => {
-      await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?bench=${actorType}&id=${id}` }]);
-    },
-  });
+    async (actor) => {
+      await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?bench=${type}&id=${id}` }]);
+    }
+  );
 };
 
 // ---------------------------------------------------------------------------

@@ -11,7 +11,6 @@ import type { z } from 'zod';
 import type { CrawleeOneIO } from '../integrations/types.js';
 import type { LlmActorInput, RequestActorInput } from '../input.js';
 import { addRequestOrReclaim } from '../io/utils.js';
-import { getLlmKeyValueStoreId, getLlmRequestQueueId, LLM_KVS_KEY_PREFIX } from './constants.js';
 
 /** Metadata attached to LLM-extracted objects. */
 export interface LlmExtractionMeta {
@@ -25,9 +24,27 @@ export interface LlmExtractionMeta {
 }
 
 /** Result returned by scoped extractWithLLM when the result is available. */
-export interface ExtractWithLlmScopedResult<T> {
+export interface LlmExtractionResult<T> {
   object: T;
   _extractionMeta?: LlmExtractionMeta;
+}
+
+/**
+ * Error payload stored in KVS when LLM extraction fails.
+ * Scoped extractWithLLM rethrows on second pass.
+ */
+export interface LlmExtractionError {
+  _extractionError: {
+    message: string;
+    name?: string;
+    /** Serialized cause message when original error had a cause */
+    causeMessage?: string;
+  };
+}
+
+function isLlmExtractionError(value: unknown): value is LlmExtractionError {
+  const err = (value as LlmExtractionError)?._extractionError;
+  return typeof err === 'object' && err != null && typeof err.message === 'string';
 }
 
 /** Options for the scoped extractWithLLM function. */
@@ -58,57 +75,69 @@ export interface ExtractWithLlmScopedOptions<T> {
  * The second pass is triggered when the LLM crawler processes the request, after which
  * it adds the original request back to its queue.
  */
-export function createExtractWithLlmForContext(
-  ctx: CrawlingContext & { routeLabel?: string },
+export function createExtractWithLlmForContext(outerOpts: {
+  ctx: CrawlingContext & { routeLabel?: string };
   actor: {
     input: LlmActorInput | null;
     io: CrawleeOneIO;
     log: Log;
-  }
-): <T>(opts: ExtractWithLlmScopedOptions<T>) => Promise<ExtractWithLlmScopedResult<T> | null> {
+  };
+  llmRequestQueueId: string;
+  llmKeyValueStoreId: string;
+}): <T>(opts: ExtractWithLlmScopedOptions<T>) => Promise<LlmExtractionResult<T> | null> {
+  const { ctx, actor, llmRequestQueueId, llmKeyValueStoreId } = outerOpts;
+
   return async <T>(
     opts: ExtractWithLlmScopedOptions<T>
-  ): Promise<ExtractWithLlmScopedResult<T> | null> => {
+  ): Promise<LlmExtractionResult<T> | null> => {
     const { request, log } = ctx;
-    const url = request.loadedUrl || request.url;
 
-    const input = (actor.input ?? {}) as LlmActorInput;
-    const apiKey = opts.apiKey ?? input.llmApiKey;
-    const provider = opts.provider ?? input.llmProvider;
-    const model = opts.model ?? input.llmModel;
-
-    if (!apiKey || !provider || !model) {
-      const msg = `LLM extraction is not configured (missing llmApiKey, llmProvider, or llmModel). URL: ${url}`;
-      log.error(msg);
-      throw new Error(msg);
-    }
-
-    const text = opts.text ?? (await getDefaultExtractionText(ctx));
-
-    const llmQueueId = getLlmRequestQueueId({
-      llmRequestQueueId: opts.llmRequestQueueId ?? input.llmRequestQueueId,
-    });
-    const llmStoreId = getLlmKeyValueStoreId({
-      llmKeyValueStoreId: opts.llmKeyValueStoreId ?? input.llmKeyValueStoreId,
-    });
+    // Check if we're in phase 2 - result is already in key-value store.
+    // If yes, `extractWithLLM` was called before to trigger the LLM job
+    // and now we got back the results.
+    const llmQueueId = opts.llmRequestQueueId ?? llmRequestQueueId;
+    const llmStoreId = opts.llmKeyValueStoreId ?? llmKeyValueStoreId;
     const requestId = request.id ?? request.uniqueKey;
     if (!requestId) {
       throw new Error('Request has neither id nor uniqueKey; cannot key LLM result.');
     }
-    const kvsKey = `${LLM_KVS_KEY_PREFIX}${requestId}`;
 
     const store = await actor.io.openKeyValueStore(llmStoreId);
-    const existing = await store.getValue(kvsKey, undefined);
+    const existing = await store.getValue<LlmExtractionResult<T> | LlmExtractionError | null>(
+      requestId,
+      null
+    );
 
-    if (existing != null) {
-      await store.setValue(kvsKey, null);
-      const parsed = existing as ExtractWithLlmScopedResult<T>;
-      return parsed;
+    // Process result if it exists. The result was set on the key-value store by the LLM crawler.
+    if (existing) {
+      await store.setValue(requestId, null);
+      if (isLlmExtractionError(existing)) {
+        // We got back error! Rethrow it, so the error shows up for this crawler.
+        const { message, name, causeMessage } = existing._extractionError;
+        const err = new Error(message, {
+          cause: causeMessage ? new Error(causeMessage) : undefined,
+        });
+        if (name) err.name = name;
+        throw err;
+      }
+      // We successfully got back the result!
+      return existing;
     }
+
+    // We're in phase 1 - result is not in key-value store yet.
+    // Push a job to the LLM request queue and return `null`.
+    // After the user returns `null` from the route handler,
+    // the original request will be marked handled and **not** reinserted
+    // into the queue for processing (reclaimed).
+    // This is desired and intended - if we reclaimed the request NOW,
+    // we would end up in an infinite loop - the same URL would be reclaimed
+    // and reprocessed before the LLM queue completes.
 
     const originalRequestQueueId =
       (actor.input as RequestActorInput | undefined)?.requestQueueId ?? 'default';
 
+    const url = request.loadedUrl || request.url;
+    const text = opts.text ?? (await getDefaultExtractionText(ctx));
     const jsonSchema = zodToJsonSchema(opts.schema) as Record<string, unknown>;
     const llmRequest = {
       url: request.url,
@@ -120,13 +149,13 @@ export function createExtractWithLlmForContext(
         html: text,
         jsonSchema,
         systemPrompt: opts.systemPrompt,
-        apiKey,
-        provider,
-        model,
-        baseURL: opts.baseURL ?? input.llmBaseUrl,
-        headers: opts.headers ?? input.llmHeaders,
+        apiKey: opts.apiKey ?? actor.input?.llmApiKey,
+        provider: opts.provider ?? actor.input?.llmProvider,
+        model: opts.model ?? actor.input?.llmModel,
+        baseURL: opts.baseURL ?? actor.input?.llmBaseUrl,
+        headers: opts.headers ?? actor.input?.llmHeaders,
         url,
-        /** Used by LLM crawler to write result to KVS under llm--{originalRequestId} */
+        /** Used by LLM crawler to write result to KVS under the ID of the original request */
         originalRequestId: requestId,
         /** Used by LLM crawler to add original request back to its queue when done */
         originalRequestQueueId,

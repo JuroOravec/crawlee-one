@@ -6,7 +6,7 @@
 
 # Interface: ExportOptions
 
-Defined in: packages/crawlee-one/src/lib/export/runExport.ts:15
+Defined in: [packages/crawlee-one/src/lib/export/runExport.ts:15](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/runExport.ts#L15)
 
 Options for the programmatic export API.
 All types are "clean" — no string parsing; pass parsed/typed values.
@@ -21,7 +21,7 @@ All types are "clean" — no string parsing; pass parsed/typed values.
 
 > **datasetId**: `string`
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:18
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:18](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L18)
 
 Dataset ID to export.
 
@@ -35,7 +35,7 @@ Dataset ID to export.
 
 > `optional` **fields**: `string`[]
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:24
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:24](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L24)
 
 Fields to include (dot notation, e.g. nested.prop).
 
@@ -49,7 +49,7 @@ Fields to include (dot notation, e.g. nested.prop).
 
 > `optional` **fieldsOmit**: `string`[]
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:26
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:26](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L26)
 
 Fields to exclude.
 
@@ -63,7 +63,7 @@ Fields to exclude.
 
 > **format**: `"json"` \| `"csv"`
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:20
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:20](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L20)
 
 Output format.
 
@@ -77,7 +77,7 @@ Output format.
 
 > `optional` **io**: [`CrawleeOneIO`](CrawleeOneIO.md)\<`object`, `object`, `object`\>
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:32
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:32](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L32)
 
 IO for opening the dataset. Defaults to Crawlee local/cloud storage.
 
@@ -91,7 +91,7 @@ IO for opening the dataset. Defaults to Crawlee local/cloud storage.
 
 > `optional` **maxEntries**: `number`
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:30
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:30](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L30)
 
 Max entries per file (splits into multiple files when exceeded).
 
@@ -105,7 +105,7 @@ Max entries per file (splits into multiple files when exceeded).
 
 > `optional` **maxSizeBytes**: `number`
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:28
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:28](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L28)
 
 Max size per file in bytes (splits into multiple files when exceeded).
 
@@ -119,6 +119,6 @@ Max size per file in bytes (splits into multiple files when exceeded).
 
 > `optional` **output**: `string`
 
-Defined in: packages/crawlee-one/src/lib/export/runExport.ts:17
+Defined in: [packages/crawlee-one/src/lib/export/runExport.ts:17](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/runExport.ts#L17)
 
 Output file path. Defaults to storage/exports/{datasetId}.{format} when omitted.

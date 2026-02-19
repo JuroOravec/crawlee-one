@@ -6,7 +6,7 @@
 
 # Interface: LlmExtractionMetadata
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:27
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:27](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L27)
 
 Metadata for LLM extraction (timing and optional token usage).
 
@@ -16,7 +16,7 @@ Metadata for LLM extraction (timing and optional token usage).
 
 > `optional` **completionTokens**: `number`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:33
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:33](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L33)
 
 Output (completion) tokens
 
@@ -26,7 +26,7 @@ Output (completion) tokens
 
 > **extractionMs**: `number`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:29
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:29](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L29)
 
 Elapsed time in milliseconds for the LLM API call
 
@@ -36,7 +36,7 @@ Elapsed time in milliseconds for the LLM API call
 
 > `optional` **promptTokens**: `number`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:31
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:31](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L31)
 
 Input (prompt) tokens
 
@@ -46,6 +46,6 @@ Input (prompt) tokens
 
 > `optional` **totalTokens**: `number`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:35
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:35](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L35)
 
 Total tokens

@@ -8,7 +8,7 @@
 
 > **extractWithLlm**\<`T`\>(`opts`): `Promise`\<[`ExtractWithLlmResult`](../interfaces/ExtractWithLlmResult.md)\<`T`\>\>
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:64
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:64](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L64)
 
 Extract structured data from HTML using an LLM with a JSON schema.
 

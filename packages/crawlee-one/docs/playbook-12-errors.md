@@ -1,4 +1,4 @@
-# 11. Error capture
+# 12. Error capture
 
 > **TL;DR:** Errors are automatically saved to a dedicated dataset for persistent, centralized monitoring across scrapers.
 

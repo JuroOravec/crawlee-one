@@ -8,7 +8,7 @@
 
 > `const` **actorInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:1215](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L1215)
+Defined in: [packages/crawlee-one/src/lib/input.ts:1213](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L1213)
 
 ## Type Declaration
 

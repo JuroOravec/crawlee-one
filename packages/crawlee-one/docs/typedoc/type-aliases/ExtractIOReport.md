@@ -8,7 +8,7 @@
 
 > **ExtractIOReport**\<`T`\> = `T` *extends* [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, infer U\> ? `U` : `never`
 
-Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:325](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L325)
+Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:337](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L337)
 
 ## Type Parameters
 

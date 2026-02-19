@@ -18,25 +18,11 @@ All that's necessary to define a single CrawleeOne actor/crawler.
 
 ## Properties
 
-### crawleeOneOptions?
-
-> `optional` **crawleeOneOptions**: `object`
-
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:290](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L290)
-
-Meta options (e.g. strict mode from CLI). When true, throw when a URL matches no route.
-
-#### strict?
-
-> `optional` **strict**: `boolean`
-
-***
-
 ### createCrawler()
 
 > **createCrawler**: (`actorCtx`) => [`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`\[`"context"`\]\[`"crawler"`\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:293](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L293)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:298](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L298)
 
 #### Parameters
 
@@ -226,6 +212,20 @@ the request is passed to the `action` function for processing.
   }],
 })
 ```
+
+***
+
+### strict?
+
+> `optional` **strict**: `boolean`
+
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:295](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L295)
+
+When `true`, throw when a URL does not match any route.
+
+If `false`, log an error and skip the URL.
+
+Defaults to `false`.
 
 ***
 

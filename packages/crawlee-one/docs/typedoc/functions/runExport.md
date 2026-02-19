@@ -8,7 +8,7 @@
 
 > **runExport**(`options`): `Promise`\<[`ExportResult`](../interfaces/ExportResult.md)\>
 
-Defined in: packages/crawlee-one/src/lib/export/runExport.ts:29
+Defined in: [packages/crawlee-one/src/lib/export/runExport.ts:29](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/runExport.ts#L29)
 
 Export a dataset to JSON or CSV files.
 

@@ -6,54 +6,31 @@
 
 # Function: runLlmModelComparison()
 
-> **runLlmModelComparison**\<`TData`, `TInput`\>(`opts`): `Promise`\<[`LlmComparisonReport`](../interfaces/LlmComparisonReport.md)\<`TData`\>\>
+> **runLlmModelComparison**\<`TData`\>(`opts`): `Promise`\<[`LlmModelCompareReport`](../interfaces/LlmModelCompareReport.md)\<`TData`\>\>
 
-Defined in: packages/crawlee-one/src/lib/llmCompare/comparison.ts:84
+Defined in: [packages/crawlee-one/src/lib/llmCompare/comparison.ts:50](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmCompare/comparison.ts#L50)
+
+Run LLM model comparison: fetch URLs with HttpCrawler, extract with each model
+with `extractWithLlm`, then compare outputs field-by-field against the reference model.
+
+If `outputPath` is set, the report is written to the file.
+
+If `outputFormat` is "json", the report is written to the file in JSON format.
+
+Uses queue/dataset `llm-compare--{reportName}`.
 
 ## Type Parameters
 
 ### TData
 
-`TData` *extends* `Dictionary`
-
-### TInput
-
-`TInput` *extends* `object`
+`TData` *extends* `Dictionary` = `Dictionary`
 
 ## Parameters
 
 ### opts
 
-#### baseInput?
-
-`Partial`\<`TInput`\>
-
-#### getResultId
-
-(`item`) => `string` \| `undefined`
-
-#### modelConfigs
-
-[`LlmModelConfig`](../interfaces/LlmModelConfig.md)[]
-
-#### outputHtmlPath?
-
-`string`
-
-When set, generate an HTML comparison report at this path
-
-#### runCrawler
-
-() => `Promise`\<`void`\>
-
-#### urls
-
-`string`[]
-
-#### vi
-
-`VitestUtils`
+[`LlmModelComparisonOptions`](../interfaces/LlmModelComparisonOptions.md)\<`TData`\>
 
 ## Returns
 
-`Promise`\<[`LlmComparisonReport`](../interfaces/LlmComparisonReport.md)\<`TData`\>\>
+`Promise`\<[`LlmModelCompareReport`](../interfaces/LlmModelCompareReport.md)\<`TData`\>\>

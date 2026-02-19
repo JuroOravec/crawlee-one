@@ -1,7 +1,9 @@
 import type {
   BasicCrawler,
   CheerioCrawler,
+  CrawlerRunOptions,
   CrawlingContext,
+  FinalStatistics,
   HttpCrawler,
   InternalHttpCrawlingContext,
   JSDOMCrawler,
@@ -22,19 +24,17 @@ import type { PushRequestsOptions } from '../io/pushRequests.js';
 import type { CrawleeOneRoute, CrawleeOneRouteWrapper } from '../router/types.js';
 import type {
   ExtractWithLlmScopedOptions,
-  ExtractWithLlmScopedResult,
+  LlmExtractionResult,
 } from '../llmExtract/extractWithLlmScoped.js';
 import type { MetamorphActorInput } from '../input.js';
 import type { CrawleeOneIO } from '../integrations/types.js';
 import type { CrawleeOneTelemetry } from '../telemetry/types.js';
 
-type OrigRunCrawler<T extends CrawlingContext<any, any>> = BasicCrawler<T>['run'];
-
 /** Extended type of `crawler.run()` function */
-export type RunCrawler<Ctx extends CrawlingContext = CrawlingContext<BasicCrawler>> = (
+export type RunCrawler = (
   requests?: CrawlerUrl[],
-  options?: Parameters<OrigRunCrawler<Ctx>>[1]
-) => ReturnType<OrigRunCrawler<Ctx>>;
+  options?: CrawlerRunOptions
+) => Promise<FinalStatistics>;
 
 /** Trigger actor metamorph, using actor's inputs as defaults. */
 export type Metamorph = (overrides?: MetamorphActorInput) => Promise<void>;
@@ -109,7 +109,7 @@ export type CrawleeOneActorRouterCtx<T extends CrawleeOneCtx> = {
    */
   extractWithLLM: <T>(
     opts: ExtractWithLlmScopedOptions<T>
-  ) => Promise<ExtractWithLlmScopedResult<T> | null>;
+  ) => Promise<LlmExtractionResult<T> | null>;
 };
 
 /** Context passed to user-defined functions passed from input */
@@ -286,8 +286,13 @@ export interface CrawleeOneActorDef<T extends CrawleeOneCtx> {
   /** Client for telemetry like tracking errors. */
   telemetry?: MaybeAsyncFn<T['telemetry'], [CrawleeOneActorDefWithInput<T>]>;
 
-  /** Meta options (e.g. strict mode from CLI). When true, throw when a URL matches no route. */
-  crawleeOneOptions?: { strict?: boolean };
+  /** When `true`, throw when a URL does not match any route.
+   *
+   * If `false`, log an error and skip the URL.
+   *
+   * Defaults to `false`.
+   */
+  strict?: boolean;
 
   // Crawler setup
   createCrawler: (
@@ -316,7 +321,7 @@ export interface CrawleeOneActorInst<T extends CrawleeOneCtx> {
    * features:
    * - Optionally metamorph into another actor after the run finishes
    */
-  runCrawler: RunCrawler<T['context']>;
+  runCrawler: RunCrawler;
   /** Trigger actor metamorph, using actor's inputs as defaults. */
   metamorph: Metamorph;
   /**

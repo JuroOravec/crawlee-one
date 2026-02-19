@@ -8,7 +8,7 @@
 
 > **SampleUrlItem** = [`CrawlerUrl`](CrawlerUrl.md) \| \{ `request`: [`CrawlerUrl`](CrawlerUrl.md); `response`: [`HttpResponse`](../interfaces/HttpResponse.md); \}
 
-Defined in: packages/crawlee-one/src/types.ts:120
+Defined in: [packages/crawlee-one/src/types.ts:120](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types.ts#L120)
 
 Single entry in `route.sampleUrls` array.
 

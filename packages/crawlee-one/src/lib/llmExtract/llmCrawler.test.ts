@@ -76,7 +76,7 @@ describe('handleLlmQueueRequest (LLM crawler handler)', () => {
     );
 
     const store = await KeyValueStore.open(storeId);
-    const stored = await store.getValue('llm--orig-req-1', undefined);
+    const stored = await store.getValue('orig-req-1', undefined);
     expect(stored).toEqual(
       expect.objectContaining({
         object: { title: 'Extracted Job', salary: '80k' },
@@ -165,5 +165,45 @@ describe('handleLlmQueueRequest (LLM crawler handler)', () => {
     );
 
     expect(mockExtractWithLlm).not.toHaveBeenCalled();
+  });
+
+  it('when extractWithLlm throws, stores error payload and re-queues original request', async () => {
+    mockExtractWithLlm.mockRejectedValue(new Error('LLM API rate limit exceeded'));
+
+    const userData: LlmQueueRequestUserData = {
+      html: '<html></html>',
+      jsonSchema: { type: 'object', properties: {} },
+      systemPrompt: 'Extract.',
+      apiKey: 'sk-test',
+      provider: 'openai',
+      model: 'gpt-4o',
+      originalRequestId: 'orig-req-error',
+      originalRequestQueueId: 'dev-main',
+    };
+
+    const ctx = {
+      request: {
+        url: 'https://example.com/job/error',
+        uniqueKey: 'llm-job-error',
+        userData,
+      },
+      log: { info: vi.fn(), warning: vi.fn(), error: vi.fn(), debug: vi.fn() },
+    } as any;
+
+    const storeId = `llm-store-${Date.now()}`;
+    await handleLlmQueueRequest(ctx, { storeId });
+
+    const store = await KeyValueStore.open(storeId);
+    const stored = await store.getValue('orig-req-error', undefined);
+    expect(stored).toEqual({
+      _extractionError: {
+        message: 'LLM API rate limit exceeded',
+        name: 'Error',
+      },
+    });
+
+    const origQueue = await RequestQueue.open('dev-main');
+    const reclaimedReq = await origQueue.fetchNextRequest();
+    expect(reclaimedReq).toBeDefined();
   });
 });

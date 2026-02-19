@@ -1,4 +1,4 @@
-# 10. Privacy compliance: Include or omit personal data
+# 11. Privacy compliance: Include or omit personal data
 
 > **TL;DR:** Toggle personal data inclusion with a single flag -- PII fields are automatically redacted when disabled.
 

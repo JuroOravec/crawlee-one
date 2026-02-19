@@ -8,7 +8,7 @@
 
 > **defineCrawler**\<`TActorInput`\>(`config`): [`CrawleeOneConfigSchemaCrawler`](../interfaces/CrawleeOneConfigSchemaCrawler.md)\<`Partial`\<`TActorInput`\>\>
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:143
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:168](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L168)
 
 Type-safe crawler config helper.
 

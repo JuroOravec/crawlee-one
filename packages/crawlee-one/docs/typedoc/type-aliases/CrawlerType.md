@@ -8,4 +8,4 @@
 
 > **CrawlerType** = [`ArrVal`](ArrVal.md)\<*typeof* `CRAWLER_TYPE`\>
 
-Defined in: packages/crawlee-one/src/types.ts:38
+Defined in: [packages/crawlee-one/src/types.ts:38](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types.ts#L38)

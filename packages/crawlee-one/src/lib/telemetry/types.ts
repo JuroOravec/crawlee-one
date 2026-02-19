@@ -6,13 +6,11 @@ import type {
 import type { CrawleeOneActorInst, CrawleeOneCtx } from '../actor/types.js';
 
 /**
- * Interface for storing and retrieving:
- * - Scraped data
- * - Requests (URLs) to scrape
- * - Cache data
+ * Interface for sending error reports to a telemetry service:
+ * - Error reports
  *
- * This interface is based on Crawlee/Apify, but defined separately to allow
- * drop-in replacement with other integrations.
+ * This interface is based on Sentry, but defined separately to allow
+ * drop-in replacement with other telemetry services.
  */
 export interface CrawleeOneTelemetry<
   T extends CrawleeOneCtx,

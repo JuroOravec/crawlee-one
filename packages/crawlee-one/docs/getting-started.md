@@ -100,11 +100,11 @@ await crawleeOne({
   // --- Crawler config ---
   // Passed directly to the Crawler constructor (e.g. new CheerioCrawler(crawlerConfig)).
   // Use for settings that should not be user-overridable.
-  crawlerConfig: {
+  crawlerConfigOverrides: {
     maxRequestsPerMinute: 120,
     requestHandlerTimeoutSecs: 180,
   },
-  // Same as crawlerConfig, but can be overridden by user input.
+  // Same as crawlerConfigOverrides, but can be overridden by user input.
   crawlerConfigDefaults: {
     // ...
   },
@@ -136,10 +136,6 @@ await crawleeOne({
 
   // --- Hooks ---
   hooks: {
-    // Called after initialization. If provided, you must call actor.runCrawler() yourself.
-    onReady: async (actor) => {
-      await actor.runCrawler(['https://example.com']);
-    },
     // Called before/after each route handler.
     onBeforeHandler: (ctx) => {
       /* ... */
@@ -176,13 +172,16 @@ await crawleeOne({
   // --- Router ---
   // Custom Crawlee Router instance. Optional.
   router: myCustomRouter(),
+}, async (actor) => {
+  // Optional: called after initialization. If provided, you must call actor.runCrawler() yourself.
+  await actor.runCrawler(['https://example.com']);
 });
 ```
 
 For the full TypeScript definitions, see:
 
 - [`crawleeOne`](./typedoc/functions/crawleeOne.md)
-- [`CrawleeOneArgs`](./typedoc/interfaces/CrawleeOneArgs.md)
+- [`CrawleeOneOptions`](./typedoc/interfaces/CrawleeOneOptions.md)
 - [`pushData`](./typedoc/functions/pushData.md)
 - [`pushRequests`](./typedoc/functions/pushRequests.md)
 

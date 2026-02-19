@@ -82,7 +82,7 @@ export const runCrawlerTest = async <TData extends MaybeArray<Dictionary>, TInpu
 
   await setupMockApifyActor<TInput, TData>({
     vi: viInstance,
-    actorInput: { ...input },
+    actorInput: { llmQueueDrainCheckIntervalMs: 0, ...input },
     log,
     onPushData: (data) => onPushData?.(data, done),
     onBatchAddRequests,

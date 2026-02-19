@@ -1,6 +1,6 @@
 # Preview datasets
 
-The `crawlee-one preview` command starts a local web server to browse scraped datasets. It reads from local storage (`storage/datasets` or `APIFY_LOCAL_STORAGE_DIR`) and serves a simple UI to list datasets, view entries in tabular form, and inspect individual items as JSON.
+The `crawlee-one preview` command starts a local web server to browse scraped datasets, request queues, and reports. It reads from local storage (`storage/datasets`, `storage/request_queues`, `storage/reports`, or `APIFY_LOCAL_STORAGE_DIR`) and serves a simple UI to list datasets, request queues, and reports; view entries in tabular form with sorting and filtering; inspect individual items as JSON; and view LLM comparison reports.
 
 ![Preview UI](./crawlee-one-preview.png)
 
@@ -63,16 +63,23 @@ console.log(`Preview at ${url}`);
 - **`/datasets`** — List of datasets with item counts
 - **`/datasets/:id`** — Paginated table of entries (100 per page). Nested objects are flattened with dot notation; array fields are shown as JSON. Supports filtering and column sorting.
 - **`/datasets/:id/:entryId`** — Single entry as pretty-printed JSON
+- **`/requests`** — List of request queues with request counts
+- **`/requests/:id`** — Paginated table of requests (100 per page). Same features as dataset entries: sort by column, filter by JS expression.
+- **`/requests/:id/:requestId`** — Single request as pretty-printed JSON. Only request files (`*.json`) are shown; `*.response.json` files are excluded.
+- **`/reports`** — List of reports in `storage/reports` (e.g. `llm-compare--jobDetail` from `crawlee-one llm compare`)
+- **`/reports/:id`** — Report detail with embedded HTML (report.html displayed in an iframe)
 
 ## Filter
 
-A textarea above the table lets you filter entries with a JavaScript expression. The expression receives `obj` (the entry's data object) and should return truthy to include the entry.
+A textarea above the table lets you filter entries (datasets or requests) with a JavaScript expression. The expression receives `obj` (the entry's data object) and should return truthy to include the entry.
 
 ```javascript
 obj.name === 'Alice';
 obj.count > 100;
 obj.metadata?.actorRunUrl?.includes('profesia');
 obj.tags?.includes('remote');
+obj.url?.includes('example.com');  // for requests
+obj.method === 'POST';             // for requests
 ```
 
 **Security:** The script runs on the server. Use only for local preview; never publish this page.

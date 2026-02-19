@@ -1,4 +1,4 @@
-# 12. Source control: Keep scraper configuration in sync
+# 13. Source control: Keep scraper configuration in sync
 
 > **TL;DR:** Import scraper configuration from a remote URL or source control to keep multiple scraper instances in sync.
 

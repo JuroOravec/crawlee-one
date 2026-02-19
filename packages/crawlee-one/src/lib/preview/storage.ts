@@ -88,6 +88,53 @@ export async function listDatasets(storageDir: string): Promise<DatasetSummary[]
   return summaries;
 }
 
+export interface ReportSummary {
+  id: string;
+  hasHtml: boolean;
+  hasJson: boolean;
+}
+
+/**
+ * List all reports in storage/reports. Each report is a directory (e.g. llm-compare--jobDetail)
+ * that may contain report.html and/or report.json.
+ */
+export async function listReports(storageDir: string): Promise<ReportSummary[]> {
+  const reportsDir = path.join(storageDir, 'reports');
+  const exists = await fsp.stat(reportsDir).catch(() => null);
+  if (!exists || !exists.isDirectory()) {
+    return [];
+  }
+
+  const entries = await fsp.readdir(reportsDir, { withFileTypes: true });
+  const summaries: ReportSummary[] = [];
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const reportPath = path.join(reportsDir, entry.name);
+    const files: string[] = await fsp.readdir(reportPath).catch(() => []);
+    const hasHtml = files.includes('report.html');
+    const hasJson = files.includes('report.json');
+    if (hasHtml || hasJson) {
+      summaries.push({ id: entry.name, hasHtml, hasJson });
+    }
+  }
+
+  summaries.sort((a, b) => a.id.localeCompare(b.id));
+  return summaries;
+}
+
+/**
+ * Read report HTML from storage/reports/{reportId}/report.html.
+ */
+export async function readReportHtml(storageDir: string, reportId: string): Promise<string | null> {
+  const filePath = path.join(storageDir, 'reports', reportId, 'report.html');
+  try {
+    return await fsp.readFile(filePath, 'utf-8');
+  } catch {
+    return null;
+  }
+}
+
 /**
  * List entry IDs (filename stems) for a dataset, sorted lexicographically.
  * E.g. ["000000001", "000000002", ...]
@@ -190,4 +237,144 @@ export async function readEntry(
   } catch {
     return null;
   }
+}
+
+export interface RequestQueueSummary {
+  id: string;
+  requestCount: number;
+}
+
+/**
+ * Request queue dirs may contain extra files like `xxx.response.json` (used by `crawlee-one dev`
+ * to cache responses). Only treat `xxx.json` as request files, exclude `*.response.json` files.
+ */
+async function readRequestQueueFiles(queuePath: string): Promise<string[]> {
+  const files = await fsp.readdir(queuePath);
+  return files.filter((f) => f.endsWith('.json') && !f.endsWith('.response.json'));
+}
+
+/**
+ * List all request queues in storage/request_queues.
+ */
+export async function listRequestQueues(storageDir: string): Promise<RequestQueueSummary[]> {
+  const queuesDir = path.join(storageDir, 'request_queues');
+  const exists = await fsp.stat(queuesDir).catch(() => null);
+  if (!exists || !exists.isDirectory()) {
+    return [];
+  }
+
+  const entries = await fsp.readdir(queuesDir, { withFileTypes: true });
+  const summaries: RequestQueueSummary[] = [];
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const queuePath = path.join(queuesDir, entry.name);
+    const requestFiles = await readRequestQueueFiles(queuePath);
+    if (requestFiles.length > 0) {
+      summaries.push({ id: entry.name, requestCount: requestFiles.length });
+    }
+  }
+
+  summaries.sort((a, b) => a.id.localeCompare(b.id));
+  return summaries;
+}
+
+/**
+ * List request IDs for a queue. Only includes *.json, excludes *.response.json.
+ */
+export async function listRequestIds(storageDir: string, queueId: string): Promise<string[]> {
+  const queuePath = path.join(storageDir, 'request_queues', queueId);
+  const exists = await fsp.stat(queuePath).catch(() => null);
+  if (!exists || !exists.isDirectory()) return [];
+
+  const requestFiles = await readRequestQueueFiles(queuePath);
+  const ids = requestFiles.map((f) => f.replace(/\.json$/, ''));
+  ids.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  return ids;
+}
+
+/**
+ * Read a single request by ID.
+ */
+export async function readRequest(
+  storageDir: string,
+  queueId: string,
+  requestId: string
+): Promise<object | null> {
+  const filePath = path.join(storageDir, 'request_queues', queueId, `${requestId}.json`);
+  try {
+    const content = await fsp.readFile(filePath, 'utf-8');
+    return JSON.parse(content) as object;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Get a page of requests from a queue.
+ */
+export async function getRequestsPage(
+  storageDir: string,
+  queueId: string,
+  offset: number,
+  limit: number
+): Promise<{ id: string; data: object }[]> {
+  const ids = await listRequestIds(storageDir, queueId);
+  const pageIds = ids.slice(offset, offset + limit);
+  const result: { id: string; data: object }[] = [];
+
+  for (const id of pageIds) {
+    const data = await readRequest(storageDir, queueId, id);
+    if (data !== null) result.push({ id, data });
+  }
+
+  return result;
+}
+
+export type RequestFilterFn = (entry: { id: string; data: object }) => boolean;
+
+export interface RequestsPageResult {
+  entries: { id: string; data: object }[];
+  totalCount: number;
+}
+
+/**
+ * Get a page of requests with optional sort and filter.
+ */
+export async function getRequestsPageWithSort(
+  storageDir: string,
+  queueId: string,
+  offset: number,
+  limit: number,
+  sortSpec: SortSpec[],
+  filterFn?: RequestFilterFn
+): Promise<RequestsPageResult> {
+  const ids = await listRequestIds(storageDir, queueId);
+  let allEntries: { id: string; data: object }[] = [];
+
+  for (const id of ids) {
+    const data = await readRequest(storageDir, queueId, id);
+    if (data !== null) allEntries.push({ id, data });
+  }
+
+  if (filterFn) {
+    allEntries = allEntries.filter(filterFn);
+  }
+
+  const totalCount = allEntries.length;
+
+  if (sortSpec.length > 0) {
+    allEntries.sort((a, b) => {
+      for (const { path: p, dir } of sortSpec) {
+        const va = get(a.data, p);
+        const vb = get(b.data, p);
+        const cmp = compareValues(va, vb);
+        if (cmp !== 0) return dir === 'asc' ? cmp : -cmp;
+      }
+      return 0;
+    });
+  }
+
+  const entries = allEntries.slice(offset, offset + limit);
+  return { entries, totalCount };
 }

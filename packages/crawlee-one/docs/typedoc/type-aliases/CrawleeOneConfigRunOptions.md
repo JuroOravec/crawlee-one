@@ -8,7 +8,7 @@
 
 > **CrawleeOneConfigRunOptions**\<`TCrawlerType`, `TInput`\> = `object`
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:278
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:314](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L314)
 
 Options passed to the scraper's run function by `crawlee-one run` and `crawlee-one dev`.
 
@@ -30,9 +30,9 @@ Actor input shape; types the `input` field.
 
 ### crawleeOneOptions?
 
-> `optional` **crawleeOneOptions**: [`CrawleeOneOptions`](../interfaces/CrawleeOneOptions.md)
+> `optional` **crawleeOneOptions**: [`CrawleeOneConfigRunMetaOptions`](../interfaces/CrawleeOneConfigRunMetaOptions.md)
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:284
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:320](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L320)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/crawlee-one/src/lib/config/types.ts:284
 
 > `optional` **crawlerOptions**: [`CrawlerMeta`](CrawlerMeta.md)\<`TCrawlerType`\>\[`"options"`\]
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:282
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L318)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: packages/crawlee-one/src/lib/config/types.ts:282
 
 > `optional` **input**: `TInput`
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:283
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:319](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L319)

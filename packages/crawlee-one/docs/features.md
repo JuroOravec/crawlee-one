@@ -20,6 +20,8 @@ handler: async (ctx) => {
 
 See the [LLM extraction guide](./llm-extraction-guide.md).
 
+**LLM model comparison** — Compare multiple models (gpt-4o, gpt-5-mini, claude, etc.) on the same URLs to find the best accuracy, cost, and speed. See the [LLM compare guide](./llm-compare-guide.md).
+
 ## One function. Full crawler.
 
 Replace 100+ lines of Actor + Router + input boilerplate with a single `crawleeOne()` call. CrawleeOne handles initialization, input resolution, routing, error handling, and teardown.
@@ -278,9 +280,62 @@ await crawleeOne({
 });
 ```
 
+## Multi-crawler orchestration.
+
+Run multiple crawlers side-by-side in a single process until all their queues drain. Use this when crawlers exchange work between each other. Focus on the business logic and let CrawleeOne handle the orchestration.
+
+**Use `orchestrate` inside the `onReady` callback** so it runs when the crawler would normally start. 
+
+Simply define individual crawlers and pass them to the `orchestrate()` function:
+
+```ts
+import { crawleeOne, orchestrate, createLlmCrawler, type OrchestratedCrawler } from 'crawlee-one';
+
+await crawleeOne(
+  {
+    type: 'cheerio',
+    routes: { ... },
+  },
+  async (actor) => {
+    // Define cralwers to run side by side
+    const llmCrawler = await createLlmCrawler({
+      requestQueueId: actor.input?.llmRequestQueueId ?? 'llm',
+      keyValueStoreId: actor.input?.llmKeyValueStoreId ?? 'llm',
+      keepAlive: true,
+    });
+
+    // Main crawler - pass startUrls on first run
+    let urlsToPass = actor.startUrls;
+    const mainRun = async () => {
+      await actor.runCrawler(actor.startUrls);
+      urlsToPass = [];
+    };
+
+    const crawlers: OrchestratedCrawler[] = [
+      {
+        // Runs until all requests are processed, then stops by itself.
+        crawler: { run: mainRun, stop: () => {} },
+        queueId: actor.input?.requestQueueId,
+        isKeepAlive: false,
+      },
+      {
+        // Never stops, even when there are no requests in the queue.
+        crawler: llmCrawler,
+        queueId: 'llm',
+        isKeepAlive: true,
+      },
+    ];
+
+    await orchestrate({ actor, crawlers, checkIntervalMs: 5000 });
+  }
+);
+```
+
+CrawleeOne wires this pattern automatically when LLM extraction is configured (`llmApiKey`, `llmProvider`, `llmModel`), so you typically use `orchestrate` only for custom multi-crawler setups.
+
 ## Hook system.
 
-Extend the crawler lifecycle with hooks: `onBeforeHandler`, `onAfterHandler`, `onReady`, `validateInput`. Use them for logging, custom initialization, or anything else.
+Extend the crawler lifecycle with hooks: `onBeforeHandler`, `onAfterHandler`, `validateInput`. Pass `onReady` as the second argument to `crawleeOne()` for custom initialization.
 
 ```ts
 await crawleeOne({

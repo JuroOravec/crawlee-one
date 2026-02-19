@@ -1,4 +1,4 @@
-# 9. Data pipelines with metamorph
+# 10. Data pipelines with metamorph
 
 > **TL;DR:** Chain scrapers into data pipelines -- when one finishes, it triggers the next, with shared access to the same datasets.
 

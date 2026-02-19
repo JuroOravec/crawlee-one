@@ -129,21 +129,11 @@ const createDefaultHandler = <
     io: T['io'];
     routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>;
     getRouterContext: (ctx: T['context'] & { routeLabel?: string }) => RouterCtx;
-    crawleeOneOptions?: { strict?: boolean };
+    strict?: boolean;
   } & PerfActorInput &
     Pick<RequestActorInput, 'requestQueueId'>
 ) => {
-  const {
-    io,
-    routes,
-    getRouterContext,
-    requestQueueId,
-    batchSize,
-    batchWaitSecs,
-    crawleeOneOptions,
-  } = input;
-  const strict = crawleeOneOptions?.strict ?? false;
-
+  const { io, routes, getRouterContext, requestQueueId, batchSize, batchWaitSecs, strict } = input;
   const resolvedRoutes = resolveRoutes(routes);
 
   // NOTE: Because we "clear" the queue by replacing it,
@@ -350,7 +340,7 @@ export const setupDefaultHandlers = async <
   getRouterContext,
   routes,
   input,
-  crawleeOneOptions,
+  strict,
 }: {
   io: T['io'];
   router: CrawlerRouter<T['context']>;
@@ -358,7 +348,7 @@ export const setupDefaultHandlers = async <
   getRouterContext: (ctx: T['context'] & { routeLabel?: string }) => RouterCtx;
   routes: Record<T['labels'], CrawleeOneRoute<T, RouterCtx>>;
   input?: T['input'] | null;
-  crawleeOneOptions?: { strict?: boolean };
+  strict?: boolean;
 }) => {
   const { batchSize, batchWaitSecs, requestQueueId } = (input || {}) as PerfActorInput &
     RequestActorInput;
@@ -370,7 +360,7 @@ export const setupDefaultHandlers = async <
     requestQueueId,
     batchSize,
     batchWaitSecs,
-    crawleeOneOptions,
+    strict,
   });
 
   const wrappedHandler = await applyWrappersRight(defaultHandler, routeHandlerWrappers ?? []);

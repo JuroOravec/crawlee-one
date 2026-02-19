@@ -6,7 +6,7 @@
 
 # Interface: ExportResult
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:35
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:35](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L35)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:35
 
 > **filesWritten**: `string`[]
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:36
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:36](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L36)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:36
 
 > **totalEntries**: `number`
 
-Defined in: packages/crawlee-one/src/lib/export/exportDataset.ts:37
+Defined in: [packages/crawlee-one/src/lib/export/exportDataset.ts:37](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/export/exportDataset.ts#L37)

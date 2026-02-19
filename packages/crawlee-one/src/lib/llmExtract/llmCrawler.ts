@@ -6,9 +6,8 @@ import {
   type BasicCrawlingContext,
 } from 'crawlee';
 
-import { getLlmKeyValueStoreId, getLlmRequestQueueId } from './constants.js';
 import { extractWithLlm } from './extractWithLlm.js';
-import type { ExtractWithLlmScopedResult } from './extractWithLlmScoped.js';
+import type { LlmExtractionError, LlmExtractionResult } from './extractWithLlmScoped.js';
 import { addRequestOrReclaim } from '../io/utils.js';
 
 /** userData shape for requests in the LLM queue. */
@@ -22,7 +21,7 @@ export interface LlmQueueRequestUserData {
   url?: string;
   baseURL?: string;
   headers?: Record<string, string>;
-  /** Original request ID for KVS key llm--{originalRequestId} */
+  /** Original request ID also serves as the KVS key */
   originalRequestId: string;
   /** Original request queue ID; used to add request back when LLM extraction completes */
   originalRequestQueueId?: string;
@@ -34,26 +33,24 @@ class LLMCrawler<T extends BasicCrawlingContext> extends BasicCrawler<T> {}
 /**
  * BasicCrawler that processes LLM extraction jobs from the LLM request queue.
  * Each request's userData contains html, jsonSchema, systemPrompt, and LLM config.
- * On success, writes the extracted object to the LLM KeyValueStore under llm--{originalRequestId}.
+ * On success, writes the extracted object to the LLM KeyValueStore under the ID of the original request.
  *
  * When keepAlive is true, the crawler will not resolve run() when the queue is empty;
  * it keeps running until crawler.stop() is called. Used for orchestrator mode where
  * the scraper and LLM worker run concurrently.
  */
-export async function createLlmCrawler(options?: {
-  requestQueueId?: string;
-  keyValueStoreId?: string;
+export async function createLlmCrawler(options: {
+  requestQueueId: string;
+  keyValueStoreId: string;
   /** When true, crawler stays alive after queue is empty until stop() is called. */
   keepAlive?: boolean;
 }) {
-  const queueId = getLlmRequestQueueId({ llmRequestQueueId: options?.requestQueueId });
-  const storeId = getLlmKeyValueStoreId({ llmKeyValueStoreId: options?.keyValueStoreId });
-
+  const { requestQueueId: queueId, keyValueStoreId: storeId } = options;
   const queue = await RequestQueue.open(queueId);
 
   const crawler = new LLMCrawler<BasicCrawlingContext>({
     requestQueue: queue,
-    keepAlive: options?.keepAlive ?? false,
+    keepAlive: options.keepAlive ?? false,
     requestHandler: async (ctx) => {
       await handleLlmQueueRequest(ctx, { storeId });
     },
@@ -80,42 +77,56 @@ export async function handleLlmQueueRequest(
 
   log.info(`Extracting via LLM (${userData.provider}:${userData.model}) for ${request.url}...`);
 
-  // This is where we actually call the LLM and get the result
-  const result = await extractWithLlm({
-    html,
-    jsonSchema,
-    systemPrompt,
-    apiKey: userData.apiKey,
-    provider: userData.provider,
-    model: userData.model,
-    url: userData.url,
-    baseURL: userData.baseURL,
-    headers: userData.headers,
-  });
-
-  // Once done, store the result in the KVS, so in the main crawler
-  // it can picked up simply by knowing the original request ID.
-  const { metadata } = result;
-  // e.g. llm--1234567890
-  const kvsKey = `llm--${originalRequestId}`;
   const store = await KeyValueStore.open(options.storeId);
 
-  const value = {
-    object: result.object,
-    _extractionMeta: {
-      extractedByLlm: true,
-      llmProvider: userData.provider,
-      llmModel: userData.model,
-      extractionMs: metadata.extractionMs,
-      promptTokens: metadata.promptTokens,
-      completionTokens: metadata.completionTokens,
-      totalTokens: metadata.totalTokens,
-    },
-  } satisfies ExtractWithLlmScopedResult<unknown>;
+  let value: LlmExtractionResult<unknown> | LlmExtractionError;
+  try {
+    // This is where we actually call the LLM and get the result
+    const result = await extractWithLlm({
+      html,
+      jsonSchema,
+      systemPrompt,
+      apiKey: userData.apiKey,
+      provider: userData.provider,
+      model: userData.model,
+      url: userData.url,
+      baseURL: userData.baseURL,
+      headers: userData.headers,
+    });
 
-  await store.setValue(kvsKey, value);
+    // Once done, store the result in the KVS, so in the main crawler
+    // it can picked up simply by knowing the original request ID.
+    const { metadata } = result;
+    value = {
+      object: result.object,
+      _extractionMeta: {
+        extractedByLlm: true,
+        llmProvider: userData.provider,
+        llmModel: userData.model,
+        extractionMs: metadata.extractionMs,
+        promptTokens: metadata.promptTokens,
+        completionTokens: metadata.completionTokens,
+        totalTokens: metadata.totalTokens,
+      },
+    } satisfies LlmExtractionResult<unknown>;
+    log.info(`LLM extraction done for ${request.url}; stored under ${originalRequestId}`);
+  } catch (extractionErr) {
+    // If extraction fails, store the error in the KVS, so in the main crawler
+    // it can be picked up by and re-thrown in `extractWithLLM`.
+    const err = extractionErr instanceof Error ? extractionErr : new Error(String(extractionErr));
+    value = {
+      _extractionError: {
+        message: err.message,
+        name: err.name,
+        causeMessage: err.cause instanceof Error ? err.cause.message : undefined,
+      },
+    } satisfies LlmExtractionError;
+    log.error(
+      `LLM extraction failed for ${request.url}: ${err.message}; stored error under ${originalRequestId}`
+    );
+  }
 
-  log.info(`LLM extraction done for ${request.url}; stored under ${kvsKey}`);
+  await store.setValue(originalRequestId, value);
 
   // Add original request back to its queue so the main crawler can process it again
   // and pick up the result from KVS

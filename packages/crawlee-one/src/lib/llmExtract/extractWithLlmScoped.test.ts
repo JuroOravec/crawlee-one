@@ -89,7 +89,12 @@ describe('createExtractWithLlmForContext', () => {
         log: ctx.log,
       };
 
-      const extractWithLLM = createExtractWithLlmForContext(ctx, actor);
+      const extractWithLLM = createExtractWithLlmForContext({
+        ctx,
+        actor,
+        llmRequestQueueId: 'llm-run123',
+        llmKeyValueStoreId: 'llm-run123',
+      });
 
       const result = await extractWithLLM({
         schema: jobSchema,
@@ -98,8 +103,8 @@ describe('createExtractWithLlmForContext', () => {
       });
 
       expect(result).toBeNull();
-      expect(kvs.getValue).toHaveBeenCalledWith('llm--req-1', undefined);
-      expect(io.openRequestQueue).toHaveBeenCalledWith('llm');
+      expect(kvs.getValue).toHaveBeenCalledWith('req-1', null);
+      expect(io.openRequestQueue).toHaveBeenCalledWith(expect.stringMatching(/^llm-.+$/));
       expect(reqQueue.addRequest).toHaveBeenCalledTimes(1);
       const added = reqQueue.addRequest.mock.calls[0][0];
       expect(added.userData).toMatchObject({
@@ -117,6 +122,54 @@ describe('createExtractWithLlmForContext', () => {
   });
 
   describe('when result IS in key-value store', () => {
+    it('when stored value is _extractionError, rethrows', async () => {
+      const storedError = {
+        _extractionError: {
+          message: 'LLM API rate limit exceeded',
+          name: 'Error',
+        },
+      };
+      const kvs = createMockKeyValueStore(storedError);
+      const reqQueue = createMockRequestQueue();
+      const io = createMockIO({ kvs, reqQueue });
+
+      const ctx = {
+        request: {
+          id: 'req-error',
+          uniqueKey: 'key-error',
+          url: 'https://example.com/job/error',
+          loadedUrl: 'https://example.com/job/error',
+          method: 'GET' as const,
+          headers: {},
+        },
+        log: { info: vi.fn(), warning: vi.fn(), error: vi.fn(), debug: vi.fn() },
+        $: { html: () => '<html></html>' },
+      } as any;
+
+      const actor = {
+        input: {
+          llmApiKey: 'sk-test',
+          llmProvider: 'openai',
+          llmModel: 'gpt-4o',
+        },
+        io,
+        log: ctx.log,
+      };
+
+      const extractWithLLM = createExtractWithLlmForContext({
+        ctx,
+        actor,
+        llmRequestQueueId: 'llm-run123',
+        llmKeyValueStoreId: 'llm-run123',
+      });
+
+      await expect(extractWithLLM({ schema: jobSchema, systemPrompt: 'Extract.' })).rejects.toThrow(
+        'LLM API rate limit exceeded'
+      );
+      expect(kvs.setValue).toHaveBeenCalledWith('req-error', null);
+      expect(reqQueue.addRequests).not.toHaveBeenCalled();
+    });
+
     it('pops value from store and returns it', async () => {
       const storedResult = {
         object: { title: 'Software Engineer', salary: '100k' },
@@ -154,7 +207,12 @@ describe('createExtractWithLlmForContext', () => {
         log: ctx.log,
       };
 
-      const extractWithLLM = createExtractWithLlmForContext(ctx, actor);
+      const extractWithLLM = createExtractWithLlmForContext({
+        ctx,
+        actor,
+        llmRequestQueueId: 'llm-run123',
+        llmKeyValueStoreId: 'llm-run123',
+      });
 
       const result = await extractWithLLM({
         schema: jobSchema,
@@ -162,7 +220,7 @@ describe('createExtractWithLlmForContext', () => {
       });
 
       expect(result).toEqual(storedResult);
-      expect(kvs.setValue).toHaveBeenCalledWith('llm--req-2', null);
+      expect(kvs.setValue).toHaveBeenCalledWith('req-2', null);
       expect(reqQueue.addRequests).not.toHaveBeenCalled();
     });
   });
@@ -198,7 +256,12 @@ describe('createExtractWithLlmForContext', () => {
         log: ctx.log,
       };
 
-      const extractWithLLM = createExtractWithLlmForContext(ctx, actor);
+      const extractWithLLM = createExtractWithLlmForContext({
+        ctx,
+        actor,
+        llmRequestQueueId: 'llm-run123',
+        llmKeyValueStoreId: 'llm-run123',
+      });
 
       expect(await extractWithLLM({ schema: jobSchema, systemPrompt: 'Extract.' })).toBeNull();
 
@@ -242,7 +305,12 @@ describe('createExtractWithLlmForContext', () => {
         log: ctx.log,
       };
 
-      const extractWithLLM = createExtractWithLlmForContext(ctx, actor);
+      const extractWithLLM = createExtractWithLlmForContext({
+        ctx,
+        actor,
+        llmRequestQueueId: 'llm-run123',
+        llmKeyValueStoreId: 'llm-run123',
+      });
 
       const result = await extractWithLLM({
         schema: jobSchema,
@@ -291,7 +359,12 @@ describe('createExtractWithLlmForContext', () => {
         log: ctx.log,
       };
 
-      const extractWithLLM = createExtractWithLlmForContext(ctx, actor);
+      const extractWithLLM = createExtractWithLlmForContext({
+        ctx,
+        actor,
+        llmRequestQueueId: 'base-queue',
+        llmKeyValueStoreId: 'base-store',
+      });
 
       expect(
         await extractWithLLM({
@@ -336,7 +409,12 @@ describe('createExtractWithLlmForContext', () => {
         log: ctx.log,
       };
 
-      const extractWithLLM = createExtractWithLlmForContext(ctx, actor);
+      const extractWithLLM = createExtractWithLlmForContext({
+        ctx,
+        actor,
+        llmRequestQueueId: 'llm-run123',
+        llmKeyValueStoreId: 'llm-run123',
+      });
 
       expect(
         await extractWithLLM({
@@ -350,38 +428,6 @@ describe('createExtractWithLlmForContext', () => {
       const added = reqQueue.addRequest.mock.calls[0][0];
       expect(added.userData.baseURL).toBe('https://override-base.com');
       expect(added.userData.headers).toEqual({ 'Override-Header': 'override' });
-    });
-  });
-
-  describe('when LLM not configured', () => {
-    it('throws when apiKey, provider, or model missing', async () => {
-      const ctx = {
-        request: {
-          id: 'req-6',
-          uniqueKey: 'key-6',
-          url: 'https://example.com/job/6',
-          loadedUrl: 'https://example.com/job/6',
-        },
-        log: { info: vi.fn(), warning: vi.fn(), error: vi.fn(), debug: vi.fn() },
-      } as any;
-
-      const actor = {
-        input: { llmApiKey: 'sk-x' },
-        io: createMockIO(),
-        log: ctx.log,
-      };
-
-      const extractWithLLM = createExtractWithLlmForContext(ctx, actor);
-
-      await expect(
-        extractWithLLM({
-          schema: jobSchema,
-          systemPrompt: 'Extract.',
-        })
-      ).rejects.toThrow(/LLM extraction is not configured/);
-      expect(ctx.log.error).toHaveBeenCalledWith(
-        expect.stringContaining('LLM extraction is not configured')
-      );
     });
   });
 });

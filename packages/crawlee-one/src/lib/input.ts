@@ -372,13 +372,27 @@ export interface LlmActorInput {
    */
   llmHeaders?: Record<string, string>;
   /**
-   * Override the LLM request queue ID (default from env CRAWLEE_LLM_REQUEST_QUEUE_ID or 'llm').
+   * Override the LLM request queue ID. When unset, crawlee-one uses run-scoped ID `llm-{runId}`.
    */
   llmRequestQueueId?: string;
   /**
-   * Override the LLM key-value store ID (default from env CRAWLEE_LLM_KEY_VALUE_STORE_ID or 'llm').
+   * Override the LLM key-value store ID. When unset, crawlee-one uses run-scoped ID `llm-{runId}`.
    */
   llmKeyValueStoreId?: string;
+  /**
+   * After the main crawler finishes, this is how long we wait before
+   * we check if either the main queue or LLM queue have any more requests left.
+   *
+   * You likely don't need to change this.
+   *
+   * When using LLM to extract data, the requsts may ping-pong between the LLM
+   * and the main queue. The default 5s is set to give time for the dust to settle.
+   *
+   * Default: 5000.
+   *
+   * Set to 0 in tests to avoid timeouts.
+   */
+  llmQueueDrainCheckIntervalMs?: number;
 }
 
 /** Common input fields related to actor metamorphing */
@@ -1144,7 +1158,7 @@ const llmInput = {
     title: 'LLM API key',
     type: 'string',
     description: `API key for the LLM provider. When set, scrapers can use AI to extract data from pages where DOM-based extraction fails. Can override env (e.g. OPENAI_API_KEY, ANTHROPIC_API_KEY).`,
-    editor: 'hidden',
+    editor: 'textfield',
     isSecret: true,
     nullable: true,
     schema: z.string().min(1).optional(),
@@ -1195,20 +1209,27 @@ const llmInput = {
   llmRequestQueueId: createStringField({
     title: 'LLM request queue ID',
     type: 'string',
-    description: `Request queue for deferred LLM extraction jobs. Overrides env CRAWLEE_LLM_REQUEST_QUEUE_ID. Default: 'llm'.`,
+    description: `Override the LLM request queue ID. When unset, crawlee-one uses run-scoped ID llm-{runId}.`,
     editor: 'textfield',
-    example: 'llm',
     nullable: true,
     schema: z.string().min(1).optional(),
   }),
   llmKeyValueStoreId: createStringField({
     title: 'LLM key-value store ID',
     type: 'string',
-    description: `Key-value store for LLM extraction results. Overrides env CRAWLEE_LLM_KEY_VALUE_STORE_ID. Default: 'llm'.`,
+    description: `Override the LLM key-value store ID. When unset, crawlee-one uses run-scoped ID llm-{runId}.`,
     editor: 'textfield',
-    example: 'llm',
     nullable: true,
     schema: z.string().min(1).optional(),
+  }),
+  llmQueueDrainCheckIntervalMs: createIntegerField({
+    title: 'LLM queue drain check interval (ms)',
+    type: 'integer',
+    editor: 'hidden',
+    description: `Interval in ms between queue-drain checks in LLM orchestration. You likely don't need to change this. Default: 5000.`,
+    minimum: 0,
+    nullable: true,
+    schema: z.number().int().min(0).optional(),
   }),
 } satisfies Record<keyof LlmActorInput, Field>;
 

@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneConfigSchema\<TCrawlers\>
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:207
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:232](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L232)
 
 Schema defining the crawlers in a project. This schema is used for code generation.
 
@@ -22,7 +22,7 @@ Schema defining the crawlers in a project. This schema is used for code generati
 
 > **crawlers**: `TCrawlers`
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:231
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:256](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L256)
 
 Object holding crawler configurations. Each crawler is identified by its key.
 

@@ -12,7 +12,9 @@ import type {
   CrawleeOneConfigSchema,
   CrawleeOneConfigSchemaCrawler,
   CrawleeOneConfigTypes,
+  LlmCompareReportDefinition,
 } from './types.js';
+import type { LlmModelCompareConfig } from '../llmCompare/types.js';
 import { CRAWLER_TYPE } from '../../types.js';
 
 /** Pattern for a valid JS variable */
@@ -73,11 +75,51 @@ const configGenerateSchema = z
   } satisfies Record<keyof CrawleeOneConfigGenerate, z.ZodType>)
   .strict();
 
+const llmModelConfigSchema = z
+  .object({
+    id: z.string().min(1),
+    provider: z.string().min(1),
+    model: z.string().min(1),
+    apiKey: z.string().optional(), // CLI fills from env at runtime when missing
+    baseUrl: z.string().optional(),
+    headers: z.record(z.string(), z.string()).optional(),
+    label: z.string().optional(),
+    priceInputPer1MToken: z.number().optional(),
+    priceOutputPer1MToken: z.number().optional(),
+  } satisfies Record<keyof LlmModelCompareConfig, z.ZodType>)
+  .strict();
+
+const llmCompareReportUrlSchema = z.union([
+  z.string().min(1),
+  z.record(z.string(), z.unknown()), // RequestOptions-like, no field validation
+]);
+
+const llmCompareReportSchema = z
+  .object({
+    models: z.array(llmModelConfigSchema).min(1),
+    referenceModel: z.string().min(1),
+    urls: z.array(llmCompareReportUrlSchema).min(1),
+    schema: z.unknown(),
+    systemPrompt: z.string().min(1),
+  } satisfies Record<keyof LlmCompareReportDefinition, z.ZodType>)
+  .strict();
+
+const llmCompareReportsSchema = z.record(z.string().regex(varNamePattern), llmCompareReportSchema);
+
 const configSchema = z
   .object({
     version: z.literal(1),
     schema: configSchemaSchema,
     generate: configGenerateSchema.optional(),
+    llm: z
+      .object({
+        compare: z
+          .object({
+            reports: llmCompareReportsSchema.optional(),
+          })
+          .optional(),
+      })
+      .optional(),
   } satisfies Record<keyof CrawleeOneConfig, z.ZodType>)
   .strict();
 

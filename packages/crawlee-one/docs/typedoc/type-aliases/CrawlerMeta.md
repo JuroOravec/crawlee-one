@@ -8,7 +8,7 @@
 
 > **CrawlerMeta**\<`T`, `Ctx`, `TData`\> = `T` *extends* `"http"` ? `Ctx` *extends* `InternalHttpCrawlingContext` ? `object` : `never` : `T` *extends* `"jsdom"` ? `object` : `T` *extends* `"cheerio"` ? `object` : `T` *extends* `"playwright"` ? `object` : `T` *extends* `"adaptive-playwright"` ? `object` : `T` *extends* `"puppeteer"` ? `object` : `T` *extends* `"basic"` ? `Ctx` *extends* `CrawlingContext` ? `object` : `never` : `never`
 
-Defined in: packages/crawlee-one/src/types.ts:58
+Defined in: [packages/crawlee-one/src/types.ts:58](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types.ts#L58)
 
 Type utility that retrieves types related to specific Crawlee crawlers.
 

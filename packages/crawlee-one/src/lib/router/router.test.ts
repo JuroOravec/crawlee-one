@@ -6,6 +6,8 @@ import type { CrawleeOneIO, CrawleeOneRequestQueue } from '../integrations/types
 
 // Minimal mock IO
 const createMockRequestQueue = (): CrawleeOneRequestQueue => ({
+  addRequest: vi.fn(),
+  getRequest: vi.fn().mockResolvedValue(null),
   addRequests: vi.fn(),
   markRequestHandled: vi.fn(),
   fetchNextRequest: vi.fn().mockResolvedValue(null),
@@ -341,7 +343,7 @@ describe('default handler URL matching', () => {
       router: router as any,
       routes,
       getRouterContext: () => ({}),
-      crawleeOneOptions: { strict: true },
+      strict: true,
     });
 
     const mockCtx = {

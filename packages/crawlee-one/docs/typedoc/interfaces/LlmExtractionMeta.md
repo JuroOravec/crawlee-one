@@ -6,7 +6,7 @@
 
 # Interface: LlmExtractionMeta
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:17
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:16](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L16)
 
 Metadata attached to LLM-extracted objects.
 
@@ -16,7 +16,7 @@ Metadata attached to LLM-extracted objects.
 
 > `optional` **completionTokens**: `number`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:23
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:22](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L22)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:23
 
 > **extractedByLlm**: `true`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:18
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:17](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L17)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:18
 
 > **extractionMs**: `number`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:21
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:20](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L20)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:21
 
 > **llmModel**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:20
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:19](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L19)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:20
 
 > **llmProvider**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:19
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:18](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L18)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:19
 
 > `optional` **promptTokens**: `number`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:22
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L21)
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:22
 
 > `optional` **totalTokens**: `number`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:24
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L23)

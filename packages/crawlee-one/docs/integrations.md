@@ -19,7 +19,7 @@ interface CrawleeOneTelemetry {
       allowScreenshot?: boolean;
       reportingDatasetId?: string;
     },
-    ctx: CrawleeOneCtx,
+    ctx: CrawleeOneCtx
   ) => Promise<void> | void;
 }
 ```
@@ -89,16 +89,16 @@ interface CrawleeOneIO {
   triggerDownstreamCrawler: (
     targetActorId: string,
     input?: TInput,
-    options?: { build?: string },
+    options?: { build?: string }
   ) => Promise<void>;
   runInContext: (userFunc: () => MaybePromise<unknown>, options?: ExitOptions) => Promise<void>;
   createDefaultProxyConfiguration: (
-    input?: T | Readonly<T>,
+    input?: T | Readonly<T>
   ) => MaybePromise<ProxyConfiguration | undefined>;
   isTelemetryEnabled: () => MaybePromise<boolean>;
   generateErrorReport: (
     input: CrawleeOneErrorHandlerInput,
-    options: PickRequired<CrawleeOneErrorHandlerOptions, 'io'>,
+    options: PickRequired<CrawleeOneErrorHandlerOptions, 'io'>
   ) => MaybePromise<object>;
   generateEntryMetadata: (ctx: Ctx) => MaybePromise<TMetadata>;
 }
@@ -107,6 +107,7 @@ interface CrawleeOneIO {
 ### Example: Custom HTTP endpoint
 
 Send scraped data to a custom REST endpoint. Everything else remains managed via Crawlee/Apify (request queue, key-value store, etc).
+
 ```ts
 import type { CrawleeOneIO } from 'crawlee-one';
 import { apifyIO } from 'crawlee-one/apify';
@@ -149,4 +150,4 @@ See the [Apify IO source](../src/lib/integrations/apify.ts) for the default impl
 
 - [`CrawleeOneTelemetry` type docs](./typedoc/interfaces/CrawleeOneTelemetry.md)
 - [`CrawleeOneIO` type docs](./typedoc/interfaces/CrawleeOneIO.md)
-- [`CrawleeOneArgs` type docs](./typedoc/interfaces/CrawleeOneArgs.md)
+- [`CrawleeOneOptions` type docs](./typedoc/interfaces/CrawleeOneArgs.md)

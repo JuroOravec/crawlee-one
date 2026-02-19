@@ -6,7 +6,7 @@
 
 # Interface: HttpResponse
 
-Defined in: packages/crawlee-one/src/types.ts:100
+Defined in: [packages/crawlee-one/src/types.ts:100](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types.ts#L100)
 
 When defining sample URLs in `route.sampleUrls` each item may include a response object.
 
@@ -31,7 +31,7 @@ const route: CrawleeOneRoute = {
 
 > **body**: `string` \| `Buffer`\<`ArrayBufferLike`\>
 
-Defined in: packages/crawlee-one/src/types.ts:103
+Defined in: [packages/crawlee-one/src/types.ts:103](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types.ts#L103)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: packages/crawlee-one/src/types.ts:103
 
 > `optional` **headers**: `Record`\<`string`, `string`\>
 
-Defined in: packages/crawlee-one/src/types.ts:102
+Defined in: [packages/crawlee-one/src/types.ts:102](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types.ts#L102)
 
 ***
 
@@ -47,4 +47,4 @@ Defined in: packages/crawlee-one/src/types.ts:102
 
 > **statusCode**: `number`
 
-Defined in: packages/crawlee-one/src/types.ts:101
+Defined in: [packages/crawlee-one/src/types.ts:101](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types.ts#L101)

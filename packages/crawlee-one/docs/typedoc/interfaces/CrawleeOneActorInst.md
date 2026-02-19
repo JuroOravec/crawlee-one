@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneActorInst\<T\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:311](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L311)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:316](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L316)
 
 Context available while creating a Crawlee crawler/actor
 
@@ -22,7 +22,7 @@ Context available while creating a Crawlee crawler/actor
 
 > **config**: [`PickPartial`](../type-aliases/PickPartial.md)\<[`CrawleeOneActorDef`](CrawleeOneActorDef.md)\<`T`\>, `"io"`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:355](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L355)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:360](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L360)
 
 Original config from which this actor context was created
 
@@ -32,7 +32,7 @@ Original config from which this actor context was created
 
 > **crawler**: `T`\[`"context"`\]\[`"crawler"`\]
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:313](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L313)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L318)
 
 The Crawlee crawler instance used by this instance of CrawleeOne
 
@@ -42,7 +42,7 @@ The Crawlee crawler instance used by this instance of CrawleeOne
 
 > **input**: `T`\[`"input"`\] \| `null`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:357](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L357)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:362](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L362)
 
 Read-only inputs passed to the actor
 
@@ -52,7 +52,7 @@ Read-only inputs passed to the actor
 
 > **io**: `T`\[`"io"`\]
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:366](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L366)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:371](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L371)
 
 Instance managing communication with databases - storage & retrieval
 (Dataset, RequestQueue, KeyValueStore).
@@ -65,7 +65,7 @@ This is modelled and similar to Apify's `Actor` static class.
 
 > **log**: `Log`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:370](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L370)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:375](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L375)
 
 Crawlee Log instance.
 
@@ -75,7 +75,7 @@ Crawlee Log instance.
 
 > **metamorph**: [`Metamorph`](../type-aliases/Metamorph.md)
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:321](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L321)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:326](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L326)
 
 Trigger actor metamorph, using actor's inputs as defaults.
 
@@ -85,7 +85,7 @@ Trigger actor metamorph, using actor's inputs as defaults.
 
 > `optional` **proxy**: `ProxyConfiguration`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:350](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L350)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:355](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L355)
 
 ***
 
@@ -93,7 +93,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:350](https://github.com
 
 > **pushRequests**: \<`T`\>(`oneOrManyItems`, `options?`) => `Promise`\<`any`[]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:328](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L328)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:333](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L333)
 
 Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
@@ -126,7 +126,7 @@ Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
 > **router**: `RouterHandler`\<`T`\[`"context"`\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:352](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L352)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:357](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L357)
 
 ***
 
@@ -134,7 +134,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:352](https://github.com
 
 > **routes**: `Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](CrawleeOneRoute.md)\<`T`, [`CrawleeOneActorRouterCtx`](../type-aliases/CrawleeOneActorRouterCtx.md)\<`T`\>\>\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:353](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L353)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:358](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L358)
 
 ***
 
@@ -142,7 +142,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:353](https://github.com
 
 > **runCrawler**: [`RunCrawler`](../type-aliases/RunCrawler.md)\<`T`\[`"context"`\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:319](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L319)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:324](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L324)
 
 This function wraps `crawler.run(requests, runOtions)` with additional
 features:
@@ -154,7 +154,7 @@ features:
 
 > **startUrls**: [`CrawlerUrl`](../type-aliases/CrawlerUrl.md)[]
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:348](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L348)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:353](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L353)
 
 A list of resolved Requests to be scraped.
 
@@ -169,7 +169,7 @@ This list is a combination of 3 Actor inputs:
 
 > **state**: `Record`\<`string`, `unknown`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:359](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L359)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:364](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L364)
 
 Mutable state that is shared across setup and teardown hooks
 
@@ -179,6 +179,6 @@ Mutable state that is shared across setup and teardown hooks
 
 > `optional` **telemetry**: `T`\[`"telemetry"`\]
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:368](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L368)
+Defined in: [packages/crawlee-one/src/lib/actor/types.ts:373](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L373)
 
 Instance managing telemetry like tracking errors.

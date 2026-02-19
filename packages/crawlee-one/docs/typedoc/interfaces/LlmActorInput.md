@@ -54,7 +54,7 @@ Custom headers to include in LLM API requests (e.g. `X-API-Version`, `OpenAI-Org
 
 Defined in: [packages/crawlee-one/src/lib/input.ts:381](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L381)
 
-Override the LLM key-value store ID (default from env CRAWLEE_LLM_KEY_VALUE_STORE_ID or 'llm').
+Override the LLM key-value store ID. When unset, crawlee-one uses run-scoped ID `llm-{runId}`.
 
 ***
 
@@ -95,4 +95,4 @@ Custom / unknown providers are supported via OpenAI-compatible APIs.
 
 Defined in: [packages/crawlee-one/src/lib/input.ts:377](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L377)
 
-Override the LLM request queue ID (default from env CRAWLEE_LLM_REQUEST_QUEUE_ID or 'llm').
+Override the LLM request queue ID. When unset, crawlee-one uses run-scoped ID `llm-{runId}`.

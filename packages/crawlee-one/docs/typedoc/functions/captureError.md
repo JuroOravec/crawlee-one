@@ -8,7 +8,7 @@
 
 > **captureError**\<`TIO`\>(`input`, `options`): `Promise`\<`never`\>
 
-Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:33](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L33)
+Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:25](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L25)
 
 Error handling for CrawleeOne crawlers.
 

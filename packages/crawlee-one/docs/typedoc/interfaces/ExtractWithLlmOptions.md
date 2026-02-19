@@ -6,7 +6,7 @@
 
 # Interface: ExtractWithLlmOptions
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:6
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:6](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L6)
 
 Options for extraction when using a pre-serialized JSON schema (e.g. from userData in LLM crawler).
 
@@ -16,7 +16,7 @@ Options for extraction when using a pre-serialized JSON schema (e.g. from userDa
 
 > **apiKey**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:13
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:13](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L13)
 
 API key for the LLM provider
 
@@ -26,7 +26,7 @@ API key for the LLM provider
 
 > `optional` **baseURL**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:21
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L21)
 
 Optional base URL for OpenAI-compatible APIs (e.g. custom endpoint, Azure OpenAI)
 
@@ -36,7 +36,7 @@ Optional base URL for OpenAI-compatible APIs (e.g. custom endpoint, Azure OpenAI
 
 > `optional` **headers**: `Record`\<`string`, `string`\>
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:23
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L23)
 
 Custom headers to include in LLM API requests
 
@@ -46,7 +46,7 @@ Custom headers to include in LLM API requests
 
 > **html**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:7
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:7](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L7)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:7
 
 > **jsonSchema**: `JSONSchema7`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:9
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:9](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L9)
 
 JSON schema for the expected output structure
 
@@ -64,7 +64,7 @@ JSON schema for the expected output structure
 
 > **model**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:17
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:17](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L17)
 
 Model ID (e.g. `gpt-4o`, `claude-3-5-sonnet`).
 
@@ -74,7 +74,7 @@ Model ID (e.g. `gpt-4o`, `claude-3-5-sonnet`).
 
 > **provider**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:15
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:15](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L15)
 
 Provider identifier (e.g. `openai`, `anthropic`). Unknown providers use the OpenAI adapter.
 
@@ -84,7 +84,7 @@ Provider identifier (e.g. `openai`, `anthropic`). Unknown providers use the Open
 
 > **systemPrompt**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:11
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:11](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L11)
 
 System prompt describing the extraction task
 
@@ -94,6 +94,6 @@ System prompt describing the extraction task
 
 > `optional` **url**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:19
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:19](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L19)
 
 Page URL (for logging)

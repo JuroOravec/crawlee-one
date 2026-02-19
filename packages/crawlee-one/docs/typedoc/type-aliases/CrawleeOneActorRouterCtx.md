@@ -30,7 +30,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:78](https://github.com/
 
 ### extractWithLLM()
 
-> **extractWithLLM**: \<`T`\>(`opts`) => `Promise`\<[`ExtractWithLlmScopedResult`](../interfaces/ExtractWithLlmScopedResult.md)\<`T`\> \| `null`\>
+> **extractWithLLM**: \<`T`\>(`opts`) => `Promise`\<[`LlmExtractionResult`](../interfaces/LlmExtractionResult.md)\<`T`\> \| `null`\>
 
 Defined in: [packages/crawlee-one/src/lib/actor/types.ts:110](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L110)
 
@@ -54,7 +54,7 @@ Returns `null` on first pass (caller should return). Returns the result on secon
 
 #### Returns
 
-`Promise`\<[`ExtractWithLlmScopedResult`](../interfaces/ExtractWithLlmScopedResult.md)\<`T`\> \| `null`\>
+`Promise`\<[`LlmExtractionResult`](../interfaces/LlmExtractionResult.md)\<`T`\> \| `null`\>
 
 ***
 

@@ -6,7 +6,7 @@
 
 # Interface: ExtractWithLlmScopedOptions\<T\>
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:34
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:51](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L51)
 
 Options for the scoped extractWithLLM function.
 
@@ -22,7 +22,7 @@ Options for the scoped extractWithLLM function.
 
 > `optional` **apiKey**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:42
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:59](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L59)
 
 Override actor input
 
@@ -32,7 +32,7 @@ Override actor input
 
 > `optional` **baseURL**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:45
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:62](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L62)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:45
 
 > `optional` **headers**: `Record`\<`string`, `string`\>
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:46
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:63](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L63)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:46
 
 > `optional` **llmKeyValueStoreId**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:48
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:65](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L65)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:48
 
 > `optional` **llmRequestQueueId**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:47
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:64](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L64)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:47
 
 > `optional` **model**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:44
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:61](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L61)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:44
 
 > `optional` **provider**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:43
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:60](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L60)
 
 ***
 
@@ -80,7 +80,7 @@ Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:43
 
 > **schema**: `ZodType`\<`T`\>
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:36
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:53](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L53)
 
 Zod schema for the expected output. Converted to JSON schema for the LLM queue.
 
@@ -90,7 +90,7 @@ Zod schema for the expected output. Converted to JSON schema for the LLM queue.
 
 > **systemPrompt**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:38
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:55](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L55)
 
 System prompt describing the extraction task.
 
@@ -100,6 +100,6 @@ System prompt describing the extraction task.
 
 > `optional` **text**: `string`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:40
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:57](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L57)
 
 Override default text (e.g. ctx.$.html() or $('.my-class').html()).

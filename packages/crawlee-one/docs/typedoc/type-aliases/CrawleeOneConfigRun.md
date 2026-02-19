@@ -8,7 +8,7 @@
 
 > **CrawleeOneConfigRun**\<`TCrawlerType`, `TInput`\> = (`opts?`) => `Promise`\<`void`\>
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:310
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:346](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L346)
 
 The scraper entry point. Must be the default export.
 
@@ -45,7 +45,7 @@ Actor input shape; passed through to run options.
 const run = async (opts?: CrawleeOneConfigRunOptions<'cheerio', ActorInput>) => {
   const { crawlerOptions, input, crawleeOneOptions } = opts ?? {};
   await myCrawler({
-    crawlerConfig: crawlerOptions,
+    crawlerConfigOverrides: crawlerOptions,
     input,
     crawleeOneOptions,
     routes: { ... },

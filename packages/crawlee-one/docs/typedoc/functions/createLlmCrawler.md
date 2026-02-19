@@ -6,13 +6,13 @@
 
 # Function: createLlmCrawler()
 
-> **createLlmCrawler**(`options?`): `Promise`\<`LLMCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\>\>
+> **createLlmCrawler**(`options`): `Promise`\<`LLMCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\>\>
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/llmCrawler.ts:36
+Defined in: [packages/crawlee-one/src/lib/llmExtract/llmCrawler.ts:42](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/llmCrawler.ts#L42)
 
 BasicCrawler that processes LLM extraction jobs from the LLM request queue.
 Each request's userData contains html, jsonSchema, systemPrompt, and LLM config.
-On success, writes the extracted object to the LLM KeyValueStore under llm--{originalRequestId}.
+On success, writes the extracted object to the LLM KeyValueStore under the ID of the original request.
 
 When keepAlive is true, the crawler will not resolve run() when the queue is empty;
 it keeps running until crawler.stop() is called. Used for orchestrator mode where
@@ -20,7 +20,7 @@ the scraper and LLM worker run concurrently.
 
 ## Parameters
 
-### options?
+### options
 
 #### keepAlive?
 
@@ -28,11 +28,11 @@ the scraper and LLM worker run concurrently.
 
 When true, crawler stays alive after queue is empty until stop() is called.
 
-#### keyValueStoreId?
+#### keyValueStoreId
 
 `string`
 
-#### requestQueueId?
+#### requestQueueId
 
 `string`
 

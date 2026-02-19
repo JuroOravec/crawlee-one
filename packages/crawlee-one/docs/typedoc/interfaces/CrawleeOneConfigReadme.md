@@ -6,7 +6,7 @@
 
 # Interface: CrawleeOneConfigReadme\<TRenderer\>
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:95
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:120](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L120)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: packages/crawlee-one/src/lib/config/types.ts:95
 
 > `optional` **actorSpec**: `ActorSpec`
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:105
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:130](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L130)
 
 The `ActorSpec` data passed to the renderer.
 
@@ -30,7 +30,7 @@ The `ActorSpec` data passed to the renderer.
 
 > `optional` **input**: `TRenderer` *extends* [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`I`\> ? `I` : `unknown`
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:118
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:143](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L143)
 
 Renderer-specific data. Shape depends on the renderer.
 
@@ -43,7 +43,7 @@ is passed through this single object.
 
 > `optional` **outFile**: `string`
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:103
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:128](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L128)
 
 Output file path (relative to cwd).
 
@@ -55,7 +55,7 @@ Defaults to `.actor/README.md` if `.actor/` exists, otherwise `./README.md`.
 
 > `optional` **renderer**: `TRenderer`
 
-Defined in: packages/crawlee-one/src/lib/config/types.ts:111
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:136](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L136)
 
 The renderer function that produces the README string.
 

@@ -1,11 +1,31 @@
 import { describe, expect, it } from 'vitest';
-import { pageDatasets, pageDatasetEntries, pageEntryDetail, pageError } from './pages.js';
+import {
+  pageDatasets,
+  pageDatasetEntries,
+  pageEntryDetail,
+  pageError,
+  pageReportDetail,
+  pageReports,
+  pageRequestDetail,
+  pageRequestQueueEntries,
+  pageRequestQueues,
+} from './pages.js';
 
 describe('pageDatasets', () => {
   it('renders empty state when no datasets', () => {
     const html = pageDatasets('', []);
     expect(html).toContain('No datasets found');
     expect(html).not.toContain('<li class="dataset-item">');
+  });
+
+  it('renders nav with Datasets, Requests, and Reports links', () => {
+    const html = pageDatasets('', []);
+    expect(html).toContain('/datasets');
+    expect(html).toContain('/requests');
+    expect(html).toContain('/reports');
+    expect(html).toContain('Datasets');
+    expect(html).toContain('Requests');
+    expect(html).toContain('Reports');
   });
 
   it('renders dataset list with item counts', () => {
@@ -90,6 +110,88 @@ describe('pageEntryDetail', () => {
     expect(html).toContain('test');
     expect(html).toContain('nested');
     expect(html).toContain('/datasets/my-ds');
+  });
+});
+
+describe('pageRequestQueues', () => {
+  it('renders empty state when no queues', () => {
+    const html = pageRequestQueues('', []);
+    expect(html).toContain('No request queues found');
+    expect(html).not.toContain('<li class="dataset-item">');
+  });
+
+  it('renders queue list with request counts', () => {
+    const html = pageRequestQueues('', [
+      { id: 'llm-compare--jobDetail', requestCount: 10 },
+      { id: 'dev-main', requestCount: 1 },
+    ]);
+    expect(html).toContain('llm-compare--jobDetail');
+    expect(html).toContain('10 requests');
+    expect(html).toContain('1 request');
+    expect(html).toContain('/requests/llm-compare--jobDetail');
+  });
+});
+
+describe('pageRequestQueueEntries', () => {
+  it('renders table with flattened requests', () => {
+    const entries = [
+      { id: 'req1', url: 'https://a.com', method: 'GET' },
+      { id: 'req2', url: 'https://b.com', method: 'POST' },
+    ];
+    const html = pageRequestQueueEntries('', 'my-queue', entries, 2, 1, 100);
+    expect(html).toContain('my-queue');
+    expect(html).toContain('2 requests');
+    expect(html).toContain('req1');
+    expect(html).toContain('req2');
+    expect(html).toContain('/requests/my-queue/req1');
+    expect(html).toContain('https://a.com');
+  });
+});
+
+describe('pageRequestDetail', () => {
+  it('renders JSON and back link', () => {
+    const json = { id: 'req1', url: 'https://example.com' };
+    const html = pageRequestDetail('', 'my-queue', 'req1', json);
+    expect(html).toContain('Request req1');
+    expect(html).toContain('https://example.com');
+    expect(html).toContain('← Back to requests');
+    expect(html).toContain('/requests/my-queue');
+  });
+});
+
+describe('pageReports', () => {
+  it('renders empty state when no reports', () => {
+    const html = pageReports('', []);
+    expect(html).toContain('No reports found');
+    expect(html).toContain('llm compare');
+    expect(html).not.toContain('<li class="dataset-item">');
+  });
+
+  it('renders report list with format labels', () => {
+    const html = pageReports('', [
+      { id: 'llm-compare--jobDetail', hasHtml: true, hasJson: false },
+      { id: 'llm-compare--other', hasHtml: true, hasJson: true },
+    ]);
+    expect(html).toContain('llm-compare--jobDetail');
+    expect(html).toContain('llm-compare--other');
+    expect(html).toContain('HTML');
+    expect(html).toContain('HTML, JSON');
+    expect(html).toContain('/reports/llm-compare--jobDetail');
+  });
+});
+
+describe('pageReportDetail', () => {
+  it('embeds report via iframe when hasHtml', () => {
+    const html = pageReportDetail('', 'llm-compare--jobDetail', true);
+    expect(html).toContain('llm-compare--jobDetail');
+    expect(html).toContain('report-iframe');
+    expect(html).toContain('/reports/llm-compare--jobDetail/content');
+  });
+
+  it('shows message when no HTML', () => {
+    const html = pageReportDetail('', 'llm-compare--jobDetail', false);
+    expect(html).toContain('No report.html found');
+    expect(html).not.toContain('<iframe');
   });
 });
 

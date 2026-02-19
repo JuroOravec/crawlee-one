@@ -6,7 +6,7 @@
 
 # Interface: ExtractWithLlmResult\<T\>
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:39
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:39](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L39)
 
 Result of LLM extraction.
 
@@ -22,7 +22,7 @@ Result of LLM extraction.
 
 > **metadata**: [`LlmExtractionMetadata`](LlmExtractionMetadata.md)
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:43
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:43](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L43)
 
 Extraction metadata (timing, token usage)
 
@@ -32,6 +32,6 @@ Extraction metadata (timing, token usage)
 
 > **object**: `T`
 
-Defined in: packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:41
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:41](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L41)
 
 Extracted object validated by the schema

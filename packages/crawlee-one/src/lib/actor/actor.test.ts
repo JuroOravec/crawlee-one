@@ -4,9 +4,9 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { z } from 'zod';
 import { createStringField, createIntegerField } from 'apify-actor-config';
 
-import { createHttpCrawlerOptions, runCrawleeOne } from './actor.js';
+import { createHttpCrawlerOptions, crawleeOne } from './actor.js';
 import { actorClassByType } from '../../constants.js';
-import { CRAWLER_TYPE } from '../../types.js';
+import { CRAWLER_TYPE, CrawlerType } from '../../types.js';
 import type {
   CrawleeOneIO,
   CrawleeOneRequestQueue,
@@ -19,7 +19,9 @@ import type {
 const createMockRequestQueue = (
   overrides?: Partial<CrawleeOneRequestQueue>
 ): CrawleeOneRequestQueue => ({
+  addRequest: vi.fn(),
   addRequests: vi.fn(),
+  getRequest: vi.fn().mockResolvedValue(null),
   markRequestHandled: vi.fn(),
   fetchNextRequest: vi.fn().mockResolvedValue(null),
   reclaimRequest: vi.fn(),
@@ -52,11 +54,14 @@ const createMockIO = (overrides?: {
   const reqQueue = overrides?.reqQueue ?? createMockRequestQueue();
   const dataset = overrides?.dataset ?? createMockDataset();
 
+  const baseInput = overrides?.input ?? {};
+  const mergedInput = { llmQueueDrainCheckIntervalMs: 0, ...baseInput };
+
   return {
     openDataset: vi.fn().mockResolvedValue(dataset),
     openRequestQueue: vi.fn().mockResolvedValue(reqQueue),
     openKeyValueStore: vi.fn().mockResolvedValue(createMockKeyValueStore()),
-    getInput: vi.fn().mockResolvedValue(overrides?.input ?? null),
+    getInput: vi.fn().mockResolvedValue(mergedInput),
     runInContext: vi.fn().mockImplementation(async (fn) => {
       await fn();
     }),
@@ -175,34 +180,34 @@ describe('createHttpCrawlerOptions', () => {
   });
 });
 
-// ---- runCrawleeOne tests ----
+// ---- crawleeOne tests ----
 
-describe('runCrawleeOne', () => {
+describe('crawleeOne', () => {
   // Requires Puppeteer to be installed as a devDependency
-  describe.each(CRAWLER_TYPE)('with %s crawler', (actorType) => {
+  describe.each(CRAWLER_TYPE)('with %s crawler', (type: CrawlerType) => {
     it('creates the correct crawler class and exposes actor properties', async () => {
       let capturedActor: any = null;
       const io = createMockIO();
 
-      await runCrawleeOne({
-        actorType: actorType as any,
-        actorConfig: {
+      await crawleeOne(
+        {
+          type,
           io,
           routes: {
             MAIN: { match: /.*/, handler: vi.fn() },
           },
+          crawlerConfigOverrides: {
+            maxRequestRetries: 0,
+          },
         },
-        crawlerConfigOverrides: {
-          maxRequestRetries: 0,
-        } as any,
-        onReady: async (actor) => {
+        async (actor) => {
           capturedActor = actor;
-        },
-      });
+        }
+      );
 
       expect(capturedActor).not.toBeNull();
       expect(capturedActor.crawler).toBeDefined();
-      expect(capturedActor.crawler).toBeInstanceOf(actorClassByType[actorType]);
+      expect(capturedActor.crawler).toBeInstanceOf(actorClassByType[type]);
 
       // Verify actor has expected properties
       expect(capturedActor.io).toBe(io);
@@ -223,16 +228,16 @@ describe('runCrawleeOne', () => {
       const expectedInput = { startUrls: ['https://example.com'], maxRequestRetries: 5 };
       const io = createMockIO({ input: expectedInput });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedInput = actor.input;
-        },
-      });
+        }
+      );
 
       expect(io.getInput).toHaveBeenCalled();
       expect(capturedInput).toMatchObject(expectedInput);
@@ -240,21 +245,24 @@ describe('runCrawleeOne', () => {
 
     it('uses config.input when provided as object', async () => {
       let capturedInput: any;
-      const configInput = { myField: 'from-config' };
+      const configInput = {
+        myField: 'from-config',
+        llmQueueDrainCheckIntervalMs: 0,
+      };
       const ioInput = { myField: 'from-io' };
       const io = createMockIO({ input: ioInput });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           input: configInput,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedInput = actor.input;
-        },
-      });
+        }
+      );
 
       // When config.input is provided (without mergeInput), io.getInput is not used
       expect(capturedInput).toMatchObject(configInput);
@@ -262,20 +270,23 @@ describe('runCrawleeOne', () => {
 
     it('calls config.input as function when provided', async () => {
       let capturedInput: any;
-      const inputFn = vi.fn().mockReturnValue({ myField: 'from-function' });
+      const inputFn = vi.fn().mockReturnValue({
+        myField: 'from-function',
+        llmQueueDrainCheckIntervalMs: 0,
+      });
       const io = createMockIO();
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           input: inputFn,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedInput = actor.input;
-        },
-      });
+        }
+      );
 
       expect(inputFn).toHaveBeenCalled();
       expect(capturedInput).toMatchObject({ myField: 'from-function' });
@@ -285,15 +296,15 @@ describe('runCrawleeOne', () => {
       const validateInput = vi.fn();
       const io = createMockIO();
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
-          validateInput,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+          hooks: { validateInput },
         },
-        onReady: vi.fn(),
-      });
+        vi.fn()
+      );
 
       expect(validateInput).toHaveBeenCalledTimes(1);
     });
@@ -321,15 +332,15 @@ describe('runCrawleeOne', () => {
         };
 
         // Should not throw
-        await runCrawleeOne({
-          actorType: 'basic',
-          actorConfig: {
+        await crawleeOne(
+          {
+            type: 'basic',
             io,
             inputFields,
             routes: { MAIN: { match: /.*/, handler: vi.fn() } },
           },
-          onReady: vi.fn(),
-        });
+          vi.fn()
+        );
       });
 
       it('throws ZodError when input violates field schemas', async () => {
@@ -354,15 +365,15 @@ describe('runCrawleeOne', () => {
         };
 
         await expect(
-          runCrawleeOne({
-            actorType: 'basic',
-            actorConfig: {
+          crawleeOne(
+            {
+              type: 'basic',
               io,
               inputFields,
               routes: { MAIN: { match: /.*/, handler: vi.fn() } },
             },
-            onReady: vi.fn(),
-          })
+            vi.fn()
+          )
         ).rejects.toThrow(z.ZodError);
       });
 
@@ -372,14 +383,14 @@ describe('runCrawleeOne', () => {
         });
 
         // Should not throw even with arbitrary input
-        await runCrawleeOne({
-          actorType: 'basic',
-          actorConfig: {
+        await crawleeOne(
+          {
+            type: 'basic',
             io,
             routes: { MAIN: { match: /.*/, handler: vi.fn() } },
           },
-          onReady: vi.fn(),
-        });
+          vi.fn()
+        );
       });
 
       it('ignores fields without a schema property', async () => {
@@ -405,15 +416,15 @@ describe('runCrawleeOne', () => {
         };
 
         // Should not throw -- unvalidated field has no schema, so any value is ok
-        await runCrawleeOne({
-          actorType: 'basic',
-          actorConfig: {
+        await crawleeOne(
+          {
+            type: 'basic',
             io,
             inputFields,
             routes: { MAIN: { match: /.*/, handler: vi.fn() } },
           },
-          onReady: vi.fn(),
-        });
+          vi.fn()
+        );
       });
 
       it('runs auto-validation before validateInput hook', async () => {
@@ -438,16 +449,16 @@ describe('runCrawleeOne', () => {
         });
 
         await expect(
-          runCrawleeOne({
-            actorType: 'basic',
-            actorConfig: {
+          crawleeOne(
+            {
+              type: 'basic',
               io,
               inputFields,
-              validateInput,
               routes: { MAIN: { match: /.*/, handler: vi.fn() } },
+              hooks: { validateInput },
             },
-            onReady: vi.fn(),
-          })
+            vi.fn()
+          )
         ).rejects.toThrow(z.ZodError);
 
         // validateInput should NOT have been called since auto-validation failed first
@@ -476,15 +487,15 @@ describe('runCrawleeOne', () => {
         };
 
         // Should not throw since all schemas allow undefined
-        await runCrawleeOne({
-          actorType: 'basic',
-          actorConfig: {
+        await crawleeOne(
+          {
+            type: 'basic',
             io,
             inputFields,
             routes: { MAIN: { match: /.*/, handler: vi.fn() } },
           },
-          onReady: vi.fn(),
-        });
+          vi.fn()
+        );
       });
     });
 
@@ -494,18 +505,18 @@ describe('runCrawleeOne', () => {
       const ioInput = { fieldB: 'from-io', shared: 'io-value' };
       const io = createMockIO({ input: ioInput });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           input: configInput,
           mergeInput: true,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedInput = actor.input;
-        },
-      });
+        }
+      );
 
       // Both io and config inputs should be merged, with config (overrides) winning
       expect(capturedInput).toMatchObject({
@@ -519,17 +530,17 @@ describe('runCrawleeOne', () => {
       let capturedInput: any;
       const io = createMockIO({ input: { fromIO: 'yes' } });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           inputDefaults: { defaultField: 'default-value', fromIO: 'should-be-overridden' },
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedInput = actor.input;
-        },
-      });
+        }
+      );
 
       expect(capturedInput).toMatchObject({
         defaultField: 'default-value',
@@ -545,16 +556,16 @@ describe('runCrawleeOne', () => {
         input: { startUrls: ['https://a.com', 'https://b.com'] },
       });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedStartUrls = actor.startUrls;
-        },
-      });
+        }
+      );
 
       expect(capturedStartUrls).toEqual(['https://a.com', 'https://b.com']);
     });
@@ -566,14 +577,14 @@ describe('runCrawleeOne', () => {
         reqQueue,
       });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: vi.fn(),
-      });
+        vi.fn()
+      );
 
       // pushRequests is called during init with startUrls
       expect(reqQueue.addRequests).toHaveBeenCalled();
@@ -583,16 +594,16 @@ describe('runCrawleeOne', () => {
       let capturedStartUrls: any;
       const io = createMockIO();
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedStartUrls = actor.startUrls;
-        },
-      });
+        }
+      );
 
       expect(capturedStartUrls).toEqual([]);
     });
@@ -607,16 +618,16 @@ describe('runCrawleeOne', () => {
         },
       });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedStartUrls = actor.startUrls;
-        },
-      });
+        }
+      );
 
       expect(capturedStartUrls).toEqual(['https://from-fn.com/a', 'https://from-fn.com/b']);
     });
@@ -630,16 +641,16 @@ describe('runCrawleeOne', () => {
         input: { startUrlsFromFunction: fnString },
       });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedStartUrls = actor.startUrls;
-        },
-      });
+        }
+      );
 
       expect(capturedStartUrls).toEqual(['https://from-str.com/a', 'https://from-str.com/b']);
     });
@@ -655,14 +666,14 @@ describe('runCrawleeOne', () => {
         },
       });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: vi.fn(),
-      });
+        vi.fn()
+      );
 
       expect(receivedCtx).toBeDefined();
       expect(receivedCtx.io).toBe(io);
@@ -681,16 +692,16 @@ describe('runCrawleeOne', () => {
         },
       });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedStartUrls = actor.startUrls;
-        },
-      });
+        }
+      );
 
       expect(capturedStartUrls).toEqual(['https://static.com', 'https://dynamic.com']);
     });
@@ -711,16 +722,16 @@ describe('runCrawleeOne', () => {
       });
       vi.mocked(io.openDataset).mockResolvedValue(mockDataset);
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           capturedStartUrls = actor.startUrls;
-        },
-      });
+        }
+      );
 
       expect(io.openDataset).toHaveBeenCalledWith('test-ds');
       expect(capturedStartUrls).toEqual(['https://dataset-url.com']);
@@ -734,14 +745,14 @@ describe('runCrawleeOne', () => {
       });
 
       await expect(
-        runCrawleeOne({
-          actorType: 'basic',
-          actorConfig: {
+        crawleeOne(
+          {
+            type: 'basic',
             io,
             routes: { MAIN: { match: /.*/, handler: vi.fn() } },
           },
-          onReady: vi.fn(),
-        })
+          vi.fn()
+        )
       ).rejects.toThrow('must return an array');
     });
   });
@@ -756,13 +767,13 @@ describe('runCrawleeOne', () => {
         },
       });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           await actor.metamorph();
 
           expect(io.triggerDownstreamCrawler).toHaveBeenCalledWith(
@@ -770,24 +781,24 @@ describe('runCrawleeOne', () => {
             { key: 'value' },
             { build: 'latest' }
           );
-        },
-      });
+        }
+      );
     });
 
     it('metamorph is no-op without metamorphActorId', async () => {
       const io = createMockIO();
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           await actor.metamorph();
           expect(io.triggerDownstreamCrawler).not.toHaveBeenCalled();
-        },
-      });
+        }
+      );
     });
 
     it('metamorph accepts overrides', async () => {
@@ -798,13 +809,13 @@ describe('runCrawleeOne', () => {
         },
       });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           await actor.metamorph({
             metamorphActorId: 'override-actor',
             metamorphActorInput: { overrideKey: 'yes' },
@@ -815,28 +826,28 @@ describe('runCrawleeOne', () => {
             { overrideKey: 'yes' },
             expect.any(Object)
           );
-        },
-      });
+        }
+      );
     });
 
     it('scoped pushRequests delegates to io request queue', async () => {
       const reqQueue = createMockRequestQueue();
       const io = createMockIO({ reqQueue });
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: async (actor) => {
+        async (actor) => {
           // Reset call count after init pushes startUrls
           vi.mocked(reqQueue.addRequests).mockClear();
 
           await actor.pushRequests([{ url: 'https://example.com', uniqueKey: '1' }] as any);
           expect(reqQueue.addRequests).toHaveBeenCalled();
-        },
-      });
+        }
+      );
     });
   });
 
@@ -846,15 +857,15 @@ describe('runCrawleeOne', () => {
       const io = createMockIO();
       vi.mocked(io.isTelemetryEnabled).mockReturnValue(true);
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           telemetry: { setup: telemetrySetup, onSendErrorToTelemetry: vi.fn() },
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: vi.fn(),
-      });
+        vi.fn()
+      );
 
       expect(telemetrySetup).toHaveBeenCalled();
     });
@@ -863,15 +874,15 @@ describe('runCrawleeOne', () => {
       const telemetrySetup = vi.fn();
       const io = createMockIO();
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           telemetry: { setup: telemetrySetup, onSendErrorToTelemetry: vi.fn() },
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: vi.fn(),
-      });
+        vi.fn()
+      );
 
       expect(telemetrySetup).not.toHaveBeenCalled();
     });
@@ -882,14 +893,14 @@ describe('runCrawleeOne', () => {
       const onReady = vi.fn();
       const io = createMockIO();
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady,
-      });
+        onReady
+      );
 
       expect(onReady).toHaveBeenCalledTimes(1);
       expect(onReady).toHaveBeenCalledWith(
@@ -906,14 +917,14 @@ describe('runCrawleeOne', () => {
     it('wraps the entire initialization in io.runInContext', async () => {
       const io = createMockIO();
 
-      await runCrawleeOne({
-        actorType: 'basic',
-        actorConfig: {
+      await crawleeOne(
+        {
+          type: 'basic',
           io,
           routes: { MAIN: { match: /.*/, handler: vi.fn() } },
         },
-        onReady: vi.fn(),
-      });
+        vi.fn()
+      );
 
       expect(io.runInContext).toHaveBeenCalledTimes(1);
       expect(io.runInContext).toHaveBeenCalledWith(expect.any(Function), {
@@ -925,7 +936,7 @@ describe('runCrawleeOne', () => {
 
 // ---- Integration tests with a real web server ----
 
-describe('runCrawleeOne integration', () => {
+describe('crawleeOne integration', () => {
   let server: http.Server;
   let port: number;
 
@@ -956,9 +967,9 @@ describe('runCrawleeOne integration', () => {
     const handlerSpy = vi.fn();
     const io = createMockIO();
 
-    await runCrawleeOne({
-      actorType: 'cheerio',
-      actorConfig: {
+    await crawleeOne(
+      {
+        type: 'cheerio',
         io,
         routes: {
           MAIN: {
@@ -970,16 +981,15 @@ describe('runCrawleeOne integration', () => {
             },
           },
         },
+        crawlerConfigOverrides: {
+          maxRequestRetries: 0,
+          maxConcurrency: 1,
+        } as any,
       },
-      crawlerConfigOverrides: {
-        maxRequestRetries: 0,
-        maxConcurrency: 1,
-      } as any,
-      onReady: async (actor) => {
-        // Use unique URL to avoid Crawlee request deduplication across tests
+      async (actor) => {
         await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?type=cheerio` }]);
-      },
-    });
+      }
+    );
 
     expect(handlerSpy).toHaveBeenCalledTimes(1);
     expect(handlerSpy).toHaveBeenCalledWith({
@@ -993,15 +1003,14 @@ describe('runCrawleeOne integration', () => {
     const handlerSpy = vi.fn();
     const io = createMockIO();
 
-    await runCrawleeOne({
-      actorType: 'http',
-      actorConfig: {
+    await crawleeOne(
+      {
+        type: 'http',
         io,
         routes: {
           MAIN: {
             match: /127\.0\.0\.1/,
             handler: async (ctx: any) => {
-              // HttpCrawler returns body as Buffer or string
               const bodyStr = typeof ctx.body === 'string' ? ctx.body : ctx.body?.toString();
               handlerSpy({
                 hasBody: !!ctx.body,
@@ -1010,15 +1019,15 @@ describe('runCrawleeOne integration', () => {
             },
           },
         },
+        crawlerConfigOverrides: {
+          maxRequestRetries: 0,
+          maxConcurrency: 1,
+        } as any,
       },
-      crawlerConfigOverrides: {
-        maxRequestRetries: 0,
-        maxConcurrency: 1,
-      } as any,
-      onReady: async (actor) => {
+      async (actor) => {
         await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?type=http` }]);
-      },
-    });
+      }
+    );
 
     expect(handlerSpy).toHaveBeenCalledTimes(1);
     expect(handlerSpy).toHaveBeenCalledWith({
@@ -1031,9 +1040,9 @@ describe('runCrawleeOne integration', () => {
     const handlerSpy = vi.fn();
     const io = createMockIO();
 
-    await runCrawleeOne({
-      actorType: 'jsdom',
-      actorConfig: {
+    await crawleeOne(
+      {
+        type: 'jsdom',
         io,
         routes: {
           MAIN: {
@@ -1046,15 +1055,15 @@ describe('runCrawleeOne integration', () => {
             },
           },
         },
+        crawlerConfigOverrides: {
+          maxRequestRetries: 0,
+          maxConcurrency: 1,
+        } as any,
       },
-      crawlerConfigOverrides: {
-        maxRequestRetries: 0,
-        maxConcurrency: 1,
-      } as any,
-      onReady: async (actor) => {
+      async (actor) => {
         await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?type=jsdom` }]);
-      },
-    });
+      }
+    );
 
     expect(handlerSpy).toHaveBeenCalledTimes(1);
     const result = handlerSpy.mock.calls[0][0];
@@ -1066,9 +1075,9 @@ describe('runCrawleeOne integration', () => {
     const handlerSpy = vi.fn();
     const io = createMockIO();
 
-    await runCrawleeOne({
-      actorType: 'basic',
-      actorConfig: {
+    await crawleeOne(
+      {
+        type: 'basic',
         io,
         routes: {
           MAIN: {
@@ -1081,15 +1090,15 @@ describe('runCrawleeOne integration', () => {
             },
           },
         },
+        crawlerConfigOverrides: {
+          maxRequestRetries: 0,
+          maxConcurrency: 1,
+        } as any,
       },
-      crawlerConfigOverrides: {
-        maxRequestRetries: 0,
-        maxConcurrency: 1,
-      } as any,
-      onReady: async (actor) => {
+      async (actor) => {
         await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?type=basic` }]);
-      },
-    });
+      }
+    );
 
     expect(handlerSpy).toHaveBeenCalledTimes(1);
     expect(handlerSpy).toHaveBeenCalledWith({

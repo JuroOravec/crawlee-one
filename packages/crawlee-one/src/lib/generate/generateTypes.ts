@@ -16,7 +16,7 @@ import type {
   CrawleeOneRouteWrapper,
 } from '../../lib/router/types.js';
 import type { MaybePromise } from '../../utils/types.js';
-import type { CrawleeOneArgs, crawleeOne } from '../../api.js';
+import type { CrawleeOneOptions, crawleeOne } from '../actor/actor.js';
 
 const makeUnion = (items: string[]) => items.map((s) => `"${s}"`).join(` | `);
 const makeEnum = (items: string[]) =>
@@ -94,7 +94,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     CrawleeOneIO: ioType,
     CrawleeOneTelemetry: telemType,
     CrawleeOneCtx: ctxType,
-    CrawleeOneArgs: argsType,
+    CrawleeOneOptions: argsType,
     crawleeOne: crawleeOneFn,
   } = addImports('crawlee-one', [
     'ActorInput',
@@ -108,7 +108,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     'CrawleeOneIO',
     'CrawleeOneTelemetry',
     'CrawleeOneCtx',
-    'CrawleeOneArgs',
+    'CrawleeOneOptions',
     'crawleeOne',
   ]);
   addImports('crawlee', [...new Set(Object.values(crawlingContextNameByType))], { typeOnly: true });
@@ -145,29 +145,24 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
       { typeArgs: ctxTypeArgs }
     );
 
-    // 5. Create CrawleeOne instance
-    // const customCrawler = <TIO, Telem>(args: CrawleeOneArgs<TType, T>) => crawleeOne(args);
-    const crawlerKey = define(
-      `${crawlerName}Crawler`,
-      `(args: Omit<${argsType}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>, 'type'>) => ${crawleeOneFn}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>({ ...args, type: "${crawlerType}"});`,
-      { kind: 'func', typeArgs: ctxTypeArgs }
-    );
-
-    // 6. Get actor router context (`CrawleeOneActorRouterCtx`)
-    // NOTE: We use `ActorInput` for the Actor input, because this type definition
-    //       will be used by developers.
-    const routerCtxKey = define(
-      `${crawlerName}RouterContext`,
-      `${actorRouterCtx}<${ctxKey}<TInput, TIO, Telem>>`,
-      { typeArgs: ctxTypeArgs }
-    );
-
-    // 7. Get actor context (`CrawleeOneActorInst`)
-    // NOTE: We use `ActorInput` for the Actor input, because this type definition
-    //       will be used by developers.
+    // 5. Get actor context (`CrawleeOneActorInst`) - needed for crawler and onReady
     const actorCtxKey = define(
       `${crawlerName}ActorCtx`,
       `${actorCtx}<${ctxKey}<TInput, TIO, Telem>>`,
+      { typeArgs: ctxTypeArgs }
+    );
+
+    // 6. Create CrawleeOne instance
+    const crawlerKey = define(
+      `${crawlerName}Crawler`,
+      `(args: Omit<${argsType}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>, 'type'>, onReady?: (actor: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>) => ${crawleeOneFn}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>({ ...args, type: "${crawlerType}"}, onReady);`,
+      { kind: 'func', typeArgs: ctxTypeArgs }
+    );
+
+    // 7. Get actor router context (`CrawleeOneActorRouterCtx`)
+    const routerCtxKey = define(
+      `${crawlerName}RouterContext`,
+      `${actorRouterCtx}<${ctxKey}<TInput, TIO, Telem>>`,
       { typeArgs: ctxTypeArgs }
     );
 
