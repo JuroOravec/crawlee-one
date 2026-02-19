@@ -48,7 +48,7 @@ export {
   actorInput,
 } from './lib/input.js';
 export { type PushDataOptions, type PrivacyFilter, type PrivacyMask } from './lib/io/pushData.js';
-export { type PushRequestsOptions } from './lib/io/pushRequests.js';
+export { type AddRequestsOptions } from './lib/io/pushRequests.js';
 export {
   type CrawleeOneRouteCtx,
   type CrawleeOneRouteHandler,

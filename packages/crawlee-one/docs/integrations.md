@@ -19,7 +19,7 @@ interface CrawleeOneTelemetry {
       allowScreenshot?: boolean;
       reportingDatasetId?: string;
     },
-    ctx: CrawleeOneCtx
+    ctx: CrawleeOneTypes
   ) => Promise<void> | void;
 }
 ```
@@ -45,9 +45,9 @@ await crawleeOne({
 
 ```ts
 import fs from 'fs';
-import type { CrawleeOneCtx, CrawleeOneTelemetry } from 'crawlee-one';
+import type { CrawleeOneTypes, CrawleeOneTelemetry } from 'crawlee-one';
 
-export const createFsTelemetry = <T extends CrawleeOneTelemetry<CrawleeOneCtx>>() => {
+export const createFsTelemetry = <T extends CrawleeOneTelemetry<CrawleeOneTypes>>() => {
   const timestamp = new Date().getTime();
   let errors = 0;
 

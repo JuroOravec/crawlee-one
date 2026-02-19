@@ -16,7 +16,7 @@ import type { MaybePromise, PickPartial } from '../../utils/types.js';
 import { createErrorHandler } from '../error/errorHandler.js';
 import { type PushDataOptions, itemCacheKey, pushData } from '../io/pushData.js';
 import { getColumnFromDataset } from '../io/dataset.js';
-import { PushRequestsOptions, pushRequests } from '../io/pushRequests.js';
+import { AddRequestsOptions, addRequests } from '../io/pushRequests.js';
 import type { CrawleeOneIO } from '../integrations/types.js';
 import { apifyIO } from '../integrations/apify.js';
 import { devContextStore } from '../dev/devContextStore.js';
@@ -454,7 +454,7 @@ const createCrawleeOne = async <T extends CrawleeOneTypes>(opts: {
     input,
     state,
     log,
-    pushRequests: createScopedPushRequests({ io, log, state, input }),
+    addRequests: createScopedAddRequests({ io, log, state, input }),
   } satisfies Omit<CrawleeOneActorInst<T>, 'crawler' | 'metamorph' | 'startUrls'>);
 
   // Create Crawlee crawler
@@ -479,7 +479,9 @@ const createCrawleeOne = async <T extends CrawleeOneTypes>(opts: {
   ): CrawleeOneActorRouterCtx<T> => ({
     actor,
     metamorph: actor.metamorph,
-    pushRequests: actor.pushRequests,
+    _pushData: ctx.pushData,
+    _addRequests: ctx.addRequests,
+    addRequests: actor.addRequests,
     // Use ctx-bound pushData to avoid "pushData outside context" when handlers run concurrently.
     pushData: createPushDataForContext(ctx, actor),
     extractWithLLM: createExtractWithLlmForContext({
@@ -516,7 +518,7 @@ const createCrawleeOne = async <T extends CrawleeOneTypes>(opts: {
   }
 
   // Now that the actor is ready, enqueue the URLs right away
-  await actor.pushRequests(actor.startUrls as CrawleeRequest[]);
+  await actor.addRequests(actor.startUrls as CrawleeRequest[]);
 
   return actor;
 };
@@ -737,11 +739,11 @@ const createPushDataForContext = <T extends CrawleeOneTypes>(
   };
 };
 
-/** pushRequests wrapper that pre-populates options based on actor input */
-const createScopedPushRequests = <T extends CrawleeOneTypes>(
+/** addRequests wrapper that pre-populates options based on actor input */
+const createScopedAddRequests = <T extends CrawleeOneTypes>(
   actor: Pick<CrawleeOneActorInst<T>, 'input' | 'state' | 'io' | 'log'>
 ) => {
-  const scopedPushRequest: CrawleeOneActorRouterCtx<T>['pushRequests'] = async (
+  const scopedAddRequests: CrawleeOneActorRouterCtx<T>['addRequests'] = async (
     entries,
     options
   ) => {
@@ -759,12 +761,12 @@ const createScopedPushRequests = <T extends CrawleeOneTypes>(
       filter: filterFn ?? undefined,
       requestQueueId,
       ...options,
-    } satisfies PushRequestsOptions<any>;
+    } satisfies AddRequestsOptions<any>;
 
-    return pushRequests<any>(entries, mergedOptions);
+    return addRequests<any>(entries, mergedOptions);
   };
 
-  return scopedPushRequest;
+  return scopedAddRequests;
 };
 
 /** Given the actor input, create common crawler options. */

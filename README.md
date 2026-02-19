@@ -28,11 +28,11 @@ await crawleeOne({
     mainPage: {
       match: /example\.com\/home/i,
       handler: async (ctx) => {
-        const { $, pushData, pushRequests } = ctx;
+        const { $, pushData, addRequests } = ctx;
         await pushData([{ title: $('h1').text() }], {
           privacyMask: { author: true },
         });
-        await pushRequests([{ url: 'https://example.com/page/2' }]);
+        await addRequests([{ url: 'https://example.com/page/2' }]);
       },
     },
     otherPage: {
@@ -118,7 +118,7 @@ await crawleeOne({
           /* ... */
         ];
         await ctx.pushData(data, { privacyMask: { author: true } });
-        await ctx.pushRequests([{ url: 'https://...' }]);
+        await ctx.addRequests([{ url: 'https://...' }]);
       },
     },
   },

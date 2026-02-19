@@ -179,7 +179,7 @@ const mainPromise = mainCrawler({
       handler: async (ctx) => {
         ctx.page.locator('...');
         // Send URLs to the Cheerio crawler via a shared queue
-        await ctx.pushRequests([{ url: '...' }], { requestQueueId: 'sharedQueue' });
+        await ctx.addRequests([{ url: '...' }], { requestQueueId: 'sharedQueue' });
       },
     },
     detailPage: {

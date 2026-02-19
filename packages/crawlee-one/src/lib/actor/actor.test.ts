@@ -217,7 +217,7 @@ describe('crawleeOne', () => {
       expect(capturedActor.log).toBeDefined();
       expect(typeof capturedActor.crawler.run).toBe('function');
       expect(typeof capturedActor.metamorph).toBe('function');
-      expect(typeof capturedActor.pushRequests).toBe('function');
+      expect(typeof capturedActor.addRequests).toBe('function');
       expect(Array.isArray(capturedActor.startUrls)).toBe(true);
     });
   });
@@ -586,7 +586,7 @@ describe('crawleeOne', () => {
         vi.fn()
       );
 
-      // pushRequests is called during init with startUrls
+      // addRequests is called during init with startUrls
       expect(reqQueue.addRequests).toHaveBeenCalled();
     });
 
@@ -830,7 +830,7 @@ describe('crawleeOne', () => {
       );
     });
 
-    it('scoped pushRequests delegates to io request queue', async () => {
+    it('scoped addRequests delegates to io request queue', async () => {
       const reqQueue = createMockRequestQueue();
       const io = createMockIO({ reqQueue });
 
@@ -844,7 +844,7 @@ describe('crawleeOne', () => {
           // Reset call count after init pushes startUrls
           vi.mocked(reqQueue.addRequests).mockClear();
 
-          await actor.pushRequests([{ url: 'https://example.com', uniqueKey: '1' }] as any);
+          await actor.addRequests([{ url: 'https://example.com', uniqueKey: '1' }] as any);
           expect(reqQueue.addRequests).toHaveBeenCalled();
         }
       );

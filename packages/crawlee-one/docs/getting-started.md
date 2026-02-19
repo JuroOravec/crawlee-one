@@ -23,7 +23,7 @@ When you call `crawleeOne()`, the following happens:
 2. It processes URLs from the RequestQueue.
 3. For each request, it finds the first route whose `match` passes, and calls that route's `handler`.
 4. The handler scrapes data and saves it with `pushData`.
-5. The handler may discover more URLs and enqueue them with `pushRequests`.
+5. The handler may discover more URLs and enqueue them with `addRequests`.
 6. When the RequestQueue is empty (and `keepAlive` is not set), the crawler stops.
 
 ```ts
@@ -35,11 +35,11 @@ await crawleeOne({
     mainPage: {
       match: /example\.com\/home/i,
       handler: async (ctx) => {
-        const { $, pushData, pushRequests } = ctx;
+        const { $, pushData, addRequests } = ctx;
         await pushData([{ title: $('h1').text() }], {
           privacyMask: { author: true },
         });
-        await pushRequests([{ url: 'https://example.com/page/2' }]);
+        await addRequests([{ url: 'https://example.com/page/2' }]);
       },
     },
   },
@@ -117,7 +117,7 @@ await crawleeOne({
       // Regex, function, or array of both.
       match: /example\.com\/home/i,
       handler: async (ctx) => {
-        const { $, request, pushData, pushRequests } = ctx;
+        const { $, request, pushData, addRequests } = ctx;
 
         const data = [
           /* scraped items */
@@ -127,9 +127,9 @@ await crawleeOne({
           privacyMask: { author: true },
         });
 
-        // pushRequests applies request filtering and transforms.
+        // addRequests applies request filtering and transforms.
         const reqs = ['https://...'].map((url) => ({ url }));
-        await pushRequests(reqs);
+        await addRequests(reqs);
       },
     },
   },
@@ -183,7 +183,7 @@ For the full TypeScript definitions, see:
 - [`crawleeOne`](./typedoc/functions/crawleeOne.md)
 - [`CrawleeOneOptions`](./typedoc/interfaces/CrawleeOneOptions.md)
 - [`pushData`](./typedoc/functions/pushData.md)
-- [`pushRequests`](./typedoc/functions/pushRequests.md)
+- [`addRequests`](./typedoc/functions/addRequests.md)
 
 ## Route handler context
 
@@ -193,7 +193,7 @@ Each route handler receives a context object from [Crawlee Router](https://crawl
 | -------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | `actor`        | [`CrawleeOneActorInst`](./typedoc/interfaces/CrawleeOneActorInst.md) | The CrawleeOne instance. Access input, state, IO, and more.                  |
 | `pushData`     | function                                                             | Save scraped items with transforms, filtering, privacy, and caching applied. |
-| `pushRequests` | function                                                             | Enqueue URLs with request filtering and transforms applied.                  |
+| `addRequests` | function                                                             | Enqueue URLs with request filtering and transforms applied.                  |
 | `metamorph`    | function                                                             | Trigger a downstream crawler/actor.                                          |
 
 ```ts
@@ -208,7 +208,7 @@ handler: async (ctx) => {
   await ctx.pushData(items, { privacyMask: { name: true } });
 
   // Enqueue more URLs (applies configured request filters)
-  await ctx.pushRequests([{ url: 'https://...' }]);
+  await ctx.addRequests([{ url: 'https://...' }]);
 
   // Access resolved input
   if (ctx.actor.input.myCustomField) {

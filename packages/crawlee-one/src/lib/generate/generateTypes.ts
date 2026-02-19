@@ -93,7 +93,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     CrawleeOneRouteMatcherFn: routeMatcherFn,
     CrawleeOneIO: ioType,
     CrawleeOneTelemetry: telemType,
-    CrawleeOneCtx: ctxType,
+    CrawleeOneTypes: ctxType,
     CrawleeOneOptions: argsType,
     crawleeOne: crawleeOneFn,
   } = addImports('crawlee-one', [
@@ -107,7 +107,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     'CrawleeOneRouteMatcherFn',
     'CrawleeOneIO',
     'CrawleeOneTelemetry',
-    'CrawleeOneCtx',
+    'CrawleeOneTypes',
     'CrawleeOneOptions',
     'crawleeOne',
   ]);
@@ -138,7 +138,7 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     ];
 
     // 4. Create CrawleeOne context
-    // type `CrawlerName`Ctx = <TIO, Telem>CrawleeOneCtx<CheerioCrawlingContext, `CrawlerName`Label, ActorInput, TIO, Telem>
+    // type `CrawlerName`Ctx = <TIO, Telem>CrawleeOneTypes<CheerioCrawlingContext, `CrawlerName`Label, ActorInput, TIO, Telem>
     const ctxKey = define(
       `${crawlerName}Ctx`,
       `${ctxType}<${crawlingContextTypeName}, ${labelKey}, TInput, TIO, Telem>`,

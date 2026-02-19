@@ -20,7 +20,7 @@ import type { z } from 'zod';
 import type { MaybeAsyncFn, MaybePromise, PickPartial } from '../../utils/types.js';
 import type { CrawlerUrl } from '../../types.js';
 import type { PushDataOptions, itemCacheKey } from '../io/pushData.js';
-import type { PushRequestsOptions } from '../io/pushRequests.js';
+import type { AddRequestsOptions } from '../io/pushRequests.js';
 import type { CrawleeOneRoute, CrawleeOneRouteWrapper } from '../router/types.js';
 import type {
   ExtractWithLlmScopedOptions,
@@ -78,6 +78,10 @@ export type CrawleeOneActorRouterCtx<T extends CrawleeOneTypes> = {
   actor: CrawleeOneActorInst<T>;
   /** Trigger actor metamorph, using actor's inputs as defaults. */
   metamorph: Metamorph;
+  /** Crawlee's original pushData. Use when you need raw behavior without transforms/privacy. */
+  _pushData: (data: object | object[], datasetIdOrName?: string) => Promise<void>;
+  /** Crawlee's original addRequests. Use when you need raw behavior without transforms/filters. */
+  _addRequests: (requestsLike: (string | object)[], options?: object) => Promise<void>;
   /**
    * `Actor.pushData` with extra optional features:
    *
@@ -96,9 +100,9 @@ export type CrawleeOneActorRouterCtx<T extends CrawleeOneTypes> = {
    * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
    * - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
    */
-  pushRequests: <T extends Exclude<CrawlerUrl, string>>(
+  addRequests: <T extends Exclude<CrawlerUrl, string>>(
     oneOrManyItems: T | T[],
-    options?: PushRequestsOptions<T>
+    options?: AddRequestsOptions<T>
   ) => Promise<any[]>;
   /**
    * Two-phase LLM extraction:
@@ -296,7 +300,7 @@ export interface CrawleeOneActorDef<T extends CrawleeOneTypes> {
 
   // Crawler setup
   createCrawler: (
-    actorCtx: Omit<CrawleeOneActorInst<T>, 'crawler' | 'metamorph' | 'startUrls' | 'pushRequests'>
+    actorCtx: Omit<CrawleeOneActorInst<T>, 'crawler' | 'metamorph' | 'startUrls' | 'addRequests'>
   ) => MaybePromise<T['context']['crawler']>;
 }
 
@@ -326,9 +330,9 @@ export interface CrawleeOneActorInst<T extends CrawleeOneTypes> {
    * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
    * - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
    */
-  pushRequests: <T extends Exclude<CrawlerUrl, string>>(
+  addRequests: <T extends Exclude<CrawlerUrl, string>>(
     oneOrManyItems: T | T[],
-    options?: PushRequestsOptions<T>
+    options?: AddRequestsOptions<T>
   ) => Promise<any[]>;
   /**
    * `Actor.pushData` with extra optional features:

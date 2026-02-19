@@ -4,7 +4,7 @@ CrawleeOne extends [Crawlee](https://crawlee.dev/) with production-ready capabil
 
 ## Extract data with AI.
 
-When DOM selectors fail (custom layouts, inconsistent markup), use an LLM to extract structured data from HTML. Configure `llmApiKey`, `llmProvider`, and `llmModel`; route handlers call `extractWithLLM` with a Zod schema. Two-phase flow: main scraper defers, `crawlee-one llm extract` processes, re-run to collect.
+When you come across custom layouts or inconsistent markup, use an LLM to extract structured data from HTML. Use `extractWithLLM()` inside your scraper. Configure LLM with the `llmApiKey`, `llmProvider`, and `llmModel` actor inputs.
 
 ```ts
 handler: async (ctx) => {
@@ -35,9 +35,9 @@ await crawleeOne({
     mainPage: {
       match: /example\.com\/home/i,
       handler: async (ctx) => {
-        const { $, pushData, pushRequests } = ctx;
+        const { $, pushData, addRequests } = ctx;
         await pushData([{ title: $('h1').text() }], { privacyMask: { author: true } });
-        await pushRequests([{ url: 'https://example.com/page/2' }]);
+        await addRequests([{ url: 'https://example.com/page/2' }]);
       },
     },
   },
@@ -178,7 +178,7 @@ Or implement the `CrawleeOneTelemetry` interface for any other error tracking se
 
 ## Fully typed out of the box.
 
-Route handlers, context objects, `pushData`, and `pushRequests` are all fully typed based on the crawler `type` you choose. No extra setup needed -- TypeScript knows whether you have `ctx.page` (Playwright) or `ctx.$` (Cheerio).
+Route handlers, context objects, `pushData`, and `addRequests` are all fully typed based on the crawler `type` you choose. No extra setup needed -- TypeScript knows whether you have `ctx.page` (Playwright) or `ctx.$` (Cheerio).
 
 ```ts
 await crawleeOne({
@@ -458,6 +458,8 @@ await amazonCrawler({
 See the [codegen guide](./codegen.md) for details.
 
 ## Testing utilities.
+
+// TODO REVIEW AND ADD ACTUAL EXAMPLES.
 
 Mock the Apify Actor environment for unit and integration tests. Includes helpers for mock datasets, request queues, and key-value stores.
 

@@ -1,4 +1,4 @@
-import { Log, RequestQueueOperationOptions } from 'crawlee';
+import { Log, type RequestQueueOperationOptions } from 'crawlee';
 
 import type { MaybePromise } from '../../utils/types.js';
 import type { CrawlerUrl } from '../../types.js';
@@ -6,9 +6,10 @@ import type { CrawleeOneIO } from '../integrations/types.js';
 import { apifyIO } from '../integrations/apify.js';
 import { requestQueueSizeMonitor } from './requestQueue.js';
 
-export interface PushRequestsOptions<
+/** Options for addRequests. Extends Crawlee's RequestQueueOperationOptions (e.g. forefront). */
+export interface AddRequestsOptions<
   T extends Exclude<CrawlerUrl, string> = Exclude<CrawlerUrl, string>,
-> {
+> extends RequestQueueOperationOptions {
   io?: CrawleeOneIO<any, any>;
   log?: Log;
   /**
@@ -35,9 +36,6 @@ export interface PushRequestsOptions<
   filter?: (req: T) => MaybePromise<unknown>;
   /** ID of the RequestQueue to which the data should be pushed */
   requestQueueId?: string;
-
-  // Pass-through options
-  queueOptions?: RequestQueueOperationOptions;
 }
 
 const shortenToSize = async <T>(
@@ -75,9 +73,9 @@ const shortenToSize = async <T>(
  * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
  * - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
  */
-export const pushRequests = async <T extends Exclude<CrawlerUrl, string>>(
+export const addRequests = async <T extends Exclude<CrawlerUrl, string>>(
   oneOrManyItems: T | T[],
-  options?: PushRequestsOptions<T>
+  options?: AddRequestsOptions<T>
 ) => {
   const {
     io = apifyIO as CrawleeOneIO,
@@ -86,7 +84,7 @@ export const pushRequests = async <T extends Exclude<CrawlerUrl, string>>(
     transform,
     filter,
     requestQueueId,
-    queueOptions,
+    ...queueOptions
   } = options ?? {};
 
   const manyItems = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
