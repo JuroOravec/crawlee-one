@@ -9,18 +9,18 @@ export interface ExtractWithLlmOptions {
   jsonSchema: JSONSchema7;
   /** System prompt describing the extraction task */
   systemPrompt: string;
-  /** API key for the LLM provider */
-  apiKey: string;
-  /** Provider identifier (e.g. `openai`, `anthropic`). Unknown providers use the OpenAI adapter. */
-  provider: string;
   /** Model ID (e.g. `gpt-4o`, `claude-3-5-sonnet`). */
   model: string;
-  /** Page URL (for logging) */
-  url?: string;
+  /** Provider identifier (e.g. `openai`, `anthropic`). Unknown providers use the OpenAI adapter. */
+  provider?: string;
+  /** API key for the LLM provider */
+  apiKey?: string;
   /** Optional base URL for OpenAI-compatible APIs (e.g. custom endpoint, Azure OpenAI) */
   baseURL?: string;
   /** Custom headers to include in LLM API requests */
   headers?: Record<string, string>;
+  /** Page URL (for logging) */
+  url?: string;
 }
 
 /** Metadata for LLM extraction (timing and optional token usage). */
@@ -65,7 +65,7 @@ export async function extractWithLlm<T = unknown>(
   opts: ExtractWithLlmOptions
 ): Promise<ExtractWithLlmResult<T>> {
   const { html, jsonSchema: schemaObj, systemPrompt, apiKey } = opts;
-  const provider = opts.provider.toLowerCase();
+  const provider = opts.provider?.toLowerCase();
   const model = opts.model;
 
   let languageModel: Parameters<typeof generateText>[0]['model'];
@@ -78,10 +78,10 @@ export async function extractWithLlm<T = unknown>(
 
   if (provider === 'openai') {
     const openai = createOpenAI(openaiSettings);
-    languageModel = openai(model as Parameters<ReturnType<typeof createOpenAI>>[0]);
+    languageModel = openai(model);
   } else if (provider === 'anthropic') {
     const anthropic = createAnthropic({ apiKey });
-    languageModel = anthropic(model as Parameters<ReturnType<typeof createAnthropic>>[0]);
+    languageModel = anthropic(model);
   } else {
     // Unknown provider: use OpenAI adapter (works with OpenAI-compatible APIs via baseURL)
     const openai = createOpenAI({

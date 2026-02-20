@@ -1,3 +1,4 @@
+import type { JSONSchema7 } from 'ai';
 import {
   BasicCrawler,
   KeyValueStore,
@@ -12,19 +13,36 @@ import { addRequestOrReclaim } from '../io/utils.js';
 
 /** userData shape for requests in the LLM queue. */
 export interface LlmQueueRequestUserData {
-  html: string;
-  jsonSchema: Record<string, unknown>;
-  systemPrompt: string;
-  apiKey: string;
-  provider: string;
-  model: string;
+  /** Original page URL (for logging) */
   url?: string;
+  /** HTML content to extract from */
+  html: string;
+  /** JSON schema for the expected output structure */
+  jsonSchema: JSONSchema7;
+  /** System prompt describing the extraction task */
+  systemPrompt: string;
+  model: string;
+  provider?: string;
+  apiKey?: string;
   baseURL?: string;
   headers?: Record<string, string>;
-  /** Original request ID also serves as the KVS key */
-  originalRequestId: string;
+  /**
+   * KVS key for this extraction (unique per extraction).
+   *
+   * Constructed as:
+   * - Without text: `ext-{requestId}-{promptHash}-{schemaHash}`
+   * - With text: `ext-{textHash}-{promptHash}-{schemaHash}`
+   *
+   * Hashes are 12-char base64url SHA256; schema is canonicalized for stability.
+   *
+   * When text is unspecified (entire page), we use requestId because the re-fetched
+   * HTML may differ slightly (e.g. timestamps) — requestId is stable across re-attempts.
+   */
+  extractionId: string;
   /** Original request queue ID; used to add request back when LLM extraction completes */
   originalRequestQueueId?: string;
+  /** Original request uniqueKey; used when re-queuing */
+  originalRequestUniqueKey?: string;
 }
 
 // Subclass BasicCrawler so it appears as `LLMCrawler` in the logs
@@ -69,11 +87,11 @@ export async function handleLlmQueueRequest(
 
   if (!isLlmUserData(userData)) {
     throw new Error(
-      `LLM queue request missing required userData (html, jsonSchema, systemPrompt, apiKey, provider, model, originalRequestId). URL: ${request.url}`
+      `LLM queue request missing required userData (html, jsonSchema, systemPrompt, apiKey, provider, model, extractionId). URL: ${request.url}`
     );
   }
 
-  const { html, jsonSchema, systemPrompt, originalRequestId } = userData;
+  const { html, jsonSchema, systemPrompt, extractionId } = userData;
 
   log.info(`Extracting via LLM (${userData.provider}:${userData.model}) for ${request.url}...`);
 
@@ -109,7 +127,7 @@ export async function handleLlmQueueRequest(
         totalTokens: metadata.totalTokens,
       },
     } satisfies LlmExtractionResult<unknown>;
-    log.info(`LLM extraction done for ${request.url}; stored under ${originalRequestId}`);
+    log.info(`LLM extraction done for ${request.url}; stored under ${extractionId}`);
   } catch (extractionErr) {
     // If extraction fails, store the error in the KVS, so in the main crawler
     // it can be picked up by and re-thrown in `extractWithLLM`.
@@ -122,11 +140,11 @@ export async function handleLlmQueueRequest(
       },
     } satisfies LlmExtractionError;
     log.error(
-      `LLM extraction failed for ${request.url}: ${err.message}; stored error under ${originalRequestId}`
+      `LLM extraction failed for ${request.url}: ${err.message}; stored error under ${extractionId}`
     );
   }
 
-  await store.setValue(originalRequestId, value);
+  await store.setValue(extractionId, value);
 
   // Add original request back to its queue so the main crawler can process it again
   // and pick up the result from KVS
@@ -139,9 +157,9 @@ export async function handleLlmQueueRequest(
       const originalQueue = await RequestQueue.open(originalRequestQueueId);
       const newRequest: Source = {
         url: request.url,
-        uniqueKey: request.uniqueKey,
+        uniqueKey: userData.originalRequestUniqueKey ?? request.uniqueKey,
       };
-      await addRequestOrReclaim(originalQueue, newRequest, log);
+      await addRequestOrReclaim(originalQueue, newRequest, log, { forefront: true });
     } catch (err) {
       const msg = `Failed to re-queue original request to ${originalRequestQueueId}: ${err instanceof Error ? err.message : String(err)}`;
       log.error(msg);
@@ -163,6 +181,6 @@ function isLlmUserData(u: unknown): u is LlmQueueRequestUserData {
     typeof d?.apiKey === 'string' &&
     typeof d?.provider === 'string' &&
     typeof d?.model === 'string' &&
-    typeof d?.originalRequestId === 'string'
+    typeof d?.extractionId === 'string'
   );
 }

@@ -8,7 +8,7 @@
 
 > **orchestrate**(`input`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/orchestrate.ts:104](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/orchestrate.ts#L104)
+Defined in: [packages/crawlee-one/src/lib/orchestrate.ts:106](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/orchestrate.ts#L106)
 
 Run multiple crawlers with reactive reconciliation.
 
@@ -96,9 +96,13 @@ Throughput is not limited by the slowest crawler.
 
 Interval in ms between queue-drain checks. Default: 5000. Use 0 in tests.
 
+#### crawlers
+
+[`OrchestratedCrawler`](../type-aliases/OrchestratedCrawler.md)[]
+
 #### io?
 
-[`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)
+[`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>
 
 IO instance for opening queues, datasets, etc. Defaults to Apify's `apifyIO` when omitted.
 
@@ -106,11 +110,7 @@ IO instance for opening queues, datasets, etc. Defaults to Apify's `apifyIO` whe
 
 `Log`
 
-Log instance. Defaults to Crawlee's default log when omitted.
-
-#### crawlers
-
-[`OrchestratedCrawler`](../type-aliases/OrchestratedCrawler.md)[]
+Log instance. Defaults to Apify/Crawlee's default log when omitted.
 
 ## Returns
 

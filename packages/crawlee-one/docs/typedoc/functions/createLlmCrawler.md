@@ -8,7 +8,7 @@
 
 > **createLlmCrawler**(`options`): `Promise`\<`LLMCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\>\>
 
-Defined in: [packages/crawlee-one/src/lib/llmExtract/llmCrawler.ts:42](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/llmCrawler.ts#L42)
+Defined in: [packages/crawlee-one/src/lib/llmExtract/llmCrawler.ts:60](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/llmCrawler.ts#L60)
 
 BasicCrawler that processes LLM extraction jobs from the LLM request queue.
 Each request's userData contains html, jsonSchema, systemPrompt, and LLM config.

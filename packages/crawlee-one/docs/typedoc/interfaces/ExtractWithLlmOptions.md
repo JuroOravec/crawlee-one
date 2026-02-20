@@ -12,11 +12,11 @@ Options for extraction when using a pre-serialized JSON schema (e.g. from userDa
 
 ## Properties
 
-### apiKey
+### apiKey?
 
-> **apiKey**: `string`
+> `optional` **apiKey**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:13](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L13)
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:17](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L17)
 
 API key for the LLM provider
 
@@ -26,7 +26,7 @@ API key for the LLM provider
 
 > `optional` **baseURL**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L21)
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:19](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L19)
 
 Optional base URL for OpenAI-compatible APIs (e.g. custom endpoint, Azure OpenAI)
 
@@ -36,7 +36,7 @@ Optional base URL for OpenAI-compatible APIs (e.g. custom endpoint, Azure OpenAI
 
 > `optional` **headers**: `Record`\<`string`, `string`\>
 
-Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L23)
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L21)
 
 Custom headers to include in LLM API requests
 
@@ -64,15 +64,15 @@ JSON schema for the expected output structure
 
 > **model**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:17](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L17)
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:13](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L13)
 
 Model ID (e.g. `gpt-4o`, `claude-3-5-sonnet`).
 
 ***
 
-### provider
+### provider?
 
-> **provider**: `string`
+> `optional` **provider**: `string`
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:15](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L15)
 
@@ -94,6 +94,6 @@ System prompt describing the extraction task
 
 > `optional` **url**: `string`
 
-Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:19](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L19)
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L23)
 
 Page URL (for logging)

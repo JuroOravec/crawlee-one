@@ -89,7 +89,8 @@ export {
   type LlmExtractionMetadata,
 } from './lib/llmExtract/extractWithLlm.js';
 export {
-  type ExtractWithLlmScopedOptions,
+  type ExtractWithLlmSyncOptions,
+  type ExtractWithLlmAsyncOptions,
   type LlmExtractionResult,
   type LlmExtractionMeta,
 } from './lib/llmExtract/extractWithLlmScoped.js';

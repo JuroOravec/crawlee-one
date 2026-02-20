@@ -8,7 +8,7 @@
 
 > **InputFromFields**\<`F`\> = `{ [K in keyof F]: NonNullable<F[K]["schema"]> extends z.ZodType ? z.infer<NonNullable<F[K]["schema"]>> : unknown }`
 
-Defined in: [packages/crawlee-one/src/lib/context/types.ts:406](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L406)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:413](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L413)
 
 Extract the input type from a record of Field objects with embedded Zod schemas.
 

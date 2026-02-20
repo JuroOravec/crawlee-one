@@ -1,7 +1,9 @@
+import type { JSONSchema7 } from 'ai';
 import {
   CheerioCrawlingContext,
   HttpCrawlingContext,
   PlaywrightCrawlingContext,
+  Source,
   type CrawlingContext,
   type Log,
 } from 'crawlee';
@@ -11,12 +13,37 @@ import type { z } from 'zod';
 import type { CrawleeOneIO } from '../integrations/types.js';
 import type { LlmActorInput, RequestActorInput } from '../input.js';
 import { addRequestOrReclaim } from '../io/utils.js';
+import { extractWithLlm, type ExtractWithLlmOptions } from './extractWithLlm.js';
+import { computeExtractionId } from './utils.js';
+import type { LlmQueueRequestUserData } from './llmCrawler.js';
+
+/**
+ * In-memory cache for results popped from KVS.
+ *
+ * When we read a result from KVS, we pop it (delete the key) to avoid unbounded KVS
+ * growth across many pages. We then store the result here so it remains available for
+ * the current handler run (e.g. multi-extraction) or if the same request is retried
+ * after a failure (e.g. pushData throws, request reclaimed). We do not delete on read
+ * — multiple accesses to the same extractionId must be expected.
+ *
+ * The cache is LRU-bounded (max 500 entries) so process memory stays bounded; worst
+ * case only the current actor process grows, not the shared KVS.
+ */
+const LLM_EXTRACTION_CACHE_MAX = 500;
+const llmExtractionCache = new Map<string, LlmExtractionResult<unknown> | LlmExtractionError>();
+
+function evictFromCacheIfNeeded(): void {
+  if (llmExtractionCache.size > LLM_EXTRACTION_CACHE_MAX) {
+    const firstKey = llmExtractionCache.keys().next().value;
+    if (firstKey != null) llmExtractionCache.delete(firstKey);
+  }
+}
 
 /** Metadata attached to LLM-extracted objects. */
 export interface LlmExtractionMeta {
   extractedByLlm: true;
-  llmProvider: string;
   llmModel: string;
+  llmProvider?: string;
   extractionMs: number;
   promptTokens?: number;
   completionTokens?: number;
@@ -47,33 +74,44 @@ function isLlmExtractionError(value: unknown): value is LlmExtractionError {
   return typeof err === 'object' && err != null && typeof err.message === 'string';
 }
 
-/** Options for the scoped extractWithLLM function. */
-export interface ExtractWithLlmScopedOptions<T> {
-  /** Zod schema for the expected output. Converted to JSON schema for the LLM queue. */
+/** Options for the scoped extractWithLlmSync function. */
+export interface ExtractWithLlmSyncOptions<T>
+  extends
+    Pick<ExtractWithLlmOptions, 'systemPrompt' | 'baseURL' | 'headers'>,
+    Partial<Pick<ExtractWithLlmOptions, 'apiKey' | 'provider' | 'model'>> {
+  /** Zod schema for the expected output. Converted to JSON schema for the LLM. */
   schema: z.ZodType<T>;
-  /** System prompt describing the extraction task. */
-  systemPrompt: string;
   /** Override default text (e.g. ctx.$.html() or $('.my-class').html()). */
   text?: string;
-  /** Override actor input */
-  apiKey?: string;
-  provider?: string;
-  model?: string;
-  baseURL?: string;
-  headers?: Record<string, string>;
+}
+
+/** Options for the async (deferred) extractWithLLM function. */
+export interface ExtractWithLlmAsyncOptions<T> extends ExtractWithLlmSyncOptions<T> {
   llmRequestQueueId?: string;
   llmKeyValueStoreId?: string;
+  /**
+   * Override the extraction ID (KVS key and LLM queue uniqueKey).
+   * When set, skips computed ID. Use as an escape hatch when you need explicit control.
+   */
+  extractionId?: string;
 }
 
 /**
- * Creates a context-bound extractWithLLM function for route handlers.
+ * Creates context-bound extractWithLLM and extractWithLLMSync for route handlers.
  *
- * Implements the two-phase flow:
+ * extractWithLLMSync calls the LLM directly (no queue/KVS). Use when blocking is acceptable.
+ *
+ * extractWithLLM implements the two-phase flow:
  * - first pass pushes a Request to the LLM Crawler's request queue;
  * - second pass (after LLM crawler runs) reads the result from KVS and returns it.
  *
  * The second pass is triggered when the LLM crawler processes the request, after which
  * it adds the original request back to its queue.
+ *
+ * Supports multiple extractions per request: call extractWithLLM multiple times with
+ * different text, systemPrompt, or schema. Each gets its own KVS key (extractionId) and
+ * LLM queue entry. Use this to extract different parts of the page (e.g. header vs body)
+ * for cheaper models that work well on smaller HTML snippets.
  */
 export function createExtractWithLlmForContext(outerOpts: {
   ctx: CrawlingContext & { routeLabel?: string };
@@ -84,17 +122,19 @@ export function createExtractWithLlmForContext(outerOpts: {
   };
   llmRequestQueueId: string;
   llmKeyValueStoreId: string;
-}): <T>(opts: ExtractWithLlmScopedOptions<T>) => Promise<LlmExtractionResult<T> | null> {
+}): {
+  extractWithLLM: <T>(
+    opts: ExtractWithLlmAsyncOptions<T>
+  ) => Promise<LlmExtractionResult<T> | null>;
+  extractWithLLMSync: <T>(opts: ExtractWithLlmSyncOptions<T>) => Promise<LlmExtractionResult<T>>;
+} {
   const { ctx, context, llmRequestQueueId, llmKeyValueStoreId } = outerOpts;
 
-  return async <T>(
-    opts: ExtractWithLlmScopedOptions<T>
+  const extractWithLLM = async <T>(
+    opts: ExtractWithLlmAsyncOptions<T>
   ): Promise<LlmExtractionResult<T> | null> => {
     const { request, log } = ctx;
 
-    // Check if we're in phase 2 - result is already in key-value store.
-    // If yes, `extractWithLLM` was called before to trigger the LLM job
-    // and now we got back the results.
     const llmQueueId = opts.llmRequestQueueId ?? llmRequestQueueId;
     const llmStoreId = opts.llmKeyValueStoreId ?? llmKeyValueStoreId;
     const requestId = request.id ?? request.uniqueKey;
@@ -102,15 +142,44 @@ export function createExtractWithLlmForContext(outerOpts: {
       throw new Error('Request has neither id nor uniqueKey; cannot key LLM result.');
     }
 
+    const prepared = await prepareExtractWithLlmInput(ctx, context, opts);
+    const extractionId =
+      opts.extractionId ??
+      computeExtractionId({
+        requestId,
+        systemPrompt: opts.systemPrompt,
+        jsonSchema: prepared.jsonSchema,
+        // If the text was not provided, and instead we extracted the HTML from the context
+        // then we use the requestId as the content part of the extractionId.
+        text: opts.text != null ? prepared.html : undefined,
+      });
+
+    // Check in-memory cache first (results popped from KVS are stored here).
+    const cached = llmExtractionCache.get(extractionId);
+    if (cached) {
+      if (isLlmExtractionError(cached)) {
+        const { message, name, causeMessage } = cached._extractionError;
+        const err = new Error(message, {
+          cause: causeMessage ? new Error(causeMessage) : undefined,
+        });
+        if (name) err.name = name;
+        throw err;
+      }
+      return cached as LlmExtractionResult<T>;
+    }
+
+    // Check KVS (phase 2 - result written by LLM crawler).
     const store = await context.io.openKeyValueStore(llmStoreId);
     const existing = await store.getValue<LlmExtractionResult<T> | LlmExtractionError | null>(
-      requestId,
+      extractionId,
       null
     );
 
     // Process result if it exists. The result was set on the key-value store by the LLM crawler.
     if (existing) {
-      await store.setValue(requestId, null);
+      await store.setValue(extractionId, null); // Pop from KVS
+      evictFromCacheIfNeeded();
+      llmExtractionCache.set(extractionId, existing); // Store in memory for same handler run
       if (isLlmExtractionError(existing)) {
         // We got back error! Rethrow it, so the error shows up for this crawler.
         const { message, name, causeMessage } = existing._extractionError;
@@ -136,31 +205,21 @@ export function createExtractWithLlmForContext(outerOpts: {
     const originalRequestQueueId =
       (context.input as RequestActorInput | undefined)?.requestQueueId ?? 'default';
 
-    const url = request.loadedUrl || request.url;
-    const text = opts.text ?? (await getDefaultExtractionText(ctx));
-    const jsonSchema = zodToJsonSchema(opts.schema) as Record<string, unknown>;
     const llmRequest = {
       url: request.url,
-      uniqueKey: request.uniqueKey,
+      uniqueKey: extractionId,
       method: request.method ?? 'GET',
       headers: request.headers,
       skipNavigation: true as const,
       userData: {
-        html: text,
-        jsonSchema,
-        systemPrompt: opts.systemPrompt,
-        apiKey: opts.apiKey ?? context.input?.llmApiKey,
-        provider: opts.provider ?? context.input?.llmProvider,
-        model: opts.model ?? context.input?.llmModel,
-        baseURL: opts.baseURL ?? context.input?.llmBaseUrl,
-        headers: opts.headers ?? context.input?.llmHeaders,
-        url,
-        /** Used by LLM crawler to write result to KVS under the ID of the original request */
-        originalRequestId: requestId,
-        /** Used by LLM crawler to add original request back to its queue when done */
+        ...prepared,
+        jsonSchema: prepared.jsonSchema,
+        url: prepared.url,
+        extractionId,
+        originalRequestUniqueKey: request.uniqueKey,
         originalRequestQueueId,
-      },
-    };
+      } satisfies LlmQueueRequestUserData,
+    } satisfies Source;
 
     try {
       const llmQueue = await context.io.openRequestQueue(llmQueueId);
@@ -172,6 +231,71 @@ export function createExtractWithLlmForContext(outerOpts: {
     }
 
     return null;
+  };
+
+  const extractWithLLMSync = async <T>(
+    opts: ExtractWithLlmSyncOptions<T>
+  ): Promise<LlmExtractionResult<T>> => {
+    const prepared = await prepareExtractWithLlmInput(ctx, context, opts);
+    const extractOpts: ExtractWithLlmOptions = {
+      html: prepared.html,
+      jsonSchema: prepared.jsonSchema as JSONSchema7,
+      systemPrompt: prepared.systemPrompt,
+      apiKey: prepared.apiKey,
+      provider: prepared.provider,
+      model: prepared.model,
+      url: prepared.url,
+      baseURL: prepared.baseURL,
+      headers: prepared.headers,
+    };
+    const result = await extractWithLlm<T>(extractOpts);
+    return {
+      object: result.object,
+      _extractionMeta: {
+        extractedByLlm: true,
+        llmProvider: prepared.provider,
+        llmModel: prepared.model,
+        extractionMs: result.metadata.extractionMs,
+        promptTokens: result.metadata.promptTokens,
+        completionTokens: result.metadata.completionTokens,
+        totalTokens: result.metadata.totalTokens,
+      },
+    };
+  };
+
+  return { extractWithLLM, extractWithLLMSync };
+}
+
+/**
+ * Prepare opts for extractWithLlm. Resolves text, jsonSchema, and LLM config from
+ * common options with actor input fallbacks. Shared by extractWithLLM and extractWithLLMSync.
+ */
+async function prepareExtractWithLlmInput<T>(
+  ctx: CrawlingContext & { routeLabel?: string },
+  context: { input: LlmActorInput | null },
+  opts: ExtractWithLlmSyncOptions<T>
+): Promise<ExtractWithLlmOptions> {
+  const text = opts.text ?? (await getDefaultExtractionText(ctx));
+  const request = (ctx as { request?: { loadedUrl?: string; url?: string } }).request;
+  const url = request?.loadedUrl ?? request?.url;
+  const apiKey = opts.apiKey ?? context.input?.llmApiKey;
+  const provider = opts.provider ?? context.input?.llmProvider;
+  const model = opts.model ?? context.input?.llmModel;
+
+  if (!model) {
+    throw new Error('model is required for the LLM API call to work');
+  }
+
+  return {
+    html: text,
+    jsonSchema: zodToJsonSchema(opts.schema) as Record<string, unknown>,
+    systemPrompt: opts.systemPrompt,
+    apiKey,
+    provider,
+    model,
+    url,
+    baseURL: opts.baseURL ?? context.input?.llmBaseUrl,
+    headers: opts.headers ?? context.input?.llmHeaders,
   };
 }
 

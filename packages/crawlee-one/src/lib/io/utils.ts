@@ -1,13 +1,14 @@
-import { RequestQueue, Source, Log } from 'crawlee';
+import { RequestQueue, Source, Log, type RequestQueueOperationOptions } from 'crawlee';
 
 import { CrawleeOneRequestQueue } from '../integrations/types.js';
 
 export const addRequestOrReclaim = async (
   queue: RequestQueue | CrawleeOneRequestQueue,
   request: Source,
-  log: Log
+  log: Log,
+  options?: RequestQueueOperationOptions
 ) => {
-  const addResult = await queue.addRequest(request);
+  const addResult = await queue.addRequest(request, options);
   const queueName = queue.name ?? 'queue';
 
   if (addResult.wasAlreadyHandled || addResult.wasAlreadyPresent) {

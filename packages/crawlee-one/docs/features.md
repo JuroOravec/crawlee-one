@@ -4,7 +4,7 @@ CrawleeOne extends [Crawlee](https://crawlee.dev/) with production-ready capabil
 
 ## Extract data with AI.
 
-When you come across custom layouts or inconsistent markup, use an LLM to extract structured data from HTML. Use `extractWithLLM()` inside your scraper. Configure LLM with the `llmApiKey`, `llmProvider`, and `llmModel` actor inputs.
+When you come across custom layouts or inconsistent markup, use an LLM to extract structured data from HTML. Use `extractWithLLM()` inside your scraper. Configure LLM through Actor inputs like `llmApiKey`, `llmProvider`, or `llmModel`.
 
 ```ts
 handler: async (ctx) => {
@@ -330,8 +330,6 @@ await crawleeOne(
   }
 );
 ```
-
-CrawleeOne wires this pattern automatically when LLM extraction is configured (`llmApiKey`, `llmProvider`, `llmModel`), so you typically use `orchestrate` only for custom multi-crawler setups.
 
 ## Hook system.
 

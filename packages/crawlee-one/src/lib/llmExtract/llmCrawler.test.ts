@@ -47,8 +47,9 @@ describe('handleLlmQueueRequest (LLM crawler handler)', () => {
       apiKey: 'sk-test',
       provider: 'openai',
       model: 'gpt-4o',
-      originalRequestId: 'orig-req-1',
+      extractionId: 'ext-test-1',
       originalRequestQueueId: 'dev-main',
+      originalRequestUniqueKey: 'key-1',
     };
 
     const ctx = {
@@ -76,7 +77,7 @@ describe('handleLlmQueueRequest (LLM crawler handler)', () => {
     );
 
     const store = await KeyValueStore.open(storeId);
-    const stored = await store.getValue('orig-req-1', undefined);
+    const stored = await store.getValue('ext-test-1', undefined);
     expect(stored).toEqual(
       expect.objectContaining({
         object: { title: 'Extracted Job', salary: '80k' },
@@ -103,7 +104,7 @@ describe('handleLlmQueueRequest (LLM crawler handler)', () => {
       apiKey: 'sk-x',
       provider: 'openai',
       model: 'gpt-4o',
-      originalRequestId: 'orig-2',
+      extractionId: 'ext-test-2',
       originalRequestQueueId: 'dev-main',
       baseURL: 'https://custom.openai.com/v1',
       headers: { 'X-Custom': 'value' },
@@ -137,7 +138,7 @@ describe('handleLlmQueueRequest (LLM crawler handler)', () => {
       apiKey: 'sk-x',
       provider: 'openai',
       model: 'gpt-4o',
-      originalRequestId: 'orig-missing-queue',
+      extractionId: 'ext-missing',
       // no originalRequestQueueId
     };
 
@@ -177,7 +178,7 @@ describe('handleLlmQueueRequest (LLM crawler handler)', () => {
       apiKey: 'sk-test',
       provider: 'openai',
       model: 'gpt-4o',
-      originalRequestId: 'orig-req-error',
+      extractionId: 'ext-error-1',
       originalRequestQueueId: 'dev-main',
     };
 
@@ -194,7 +195,7 @@ describe('handleLlmQueueRequest (LLM crawler handler)', () => {
     await handleLlmQueueRequest(ctx, { storeId });
 
     const store = await KeyValueStore.open(storeId);
-    const stored = await store.getValue('orig-req-error', undefined);
+    const stored = await store.getValue('ext-error-1', undefined);
     expect(stored).toEqual({
       _extractionError: {
         message: 'LLM API rate limit exceeded',

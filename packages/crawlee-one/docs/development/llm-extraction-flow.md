@@ -1,6 +1,6 @@
 # LLM Extraction Flow
 
-This document describes the LLM extraction flow in crawlee-one: how route handlers use `extractWithLLM`, how jobs are deferred to an LLM queue, and how the `crawlee-one llm extract` command processes them. It is intended for developers implementing LLM-based extraction in scrapers or extending the crawlee-one LLM infrastructure.
+This document describes the LLM extraction flow in crawlee-one: how route handlers use `extractWithLLM`, how jobs are deferred to an LLM queue, and how the LLM crawler (run concurrently with the main crawler) processes them. It is intended for developers implementing LLM-based extraction in scrapers or extending the crawlee-one LLM infrastructure.
 
 ---
 
@@ -9,10 +9,10 @@ This document describes the LLM extraction flow in crawlee-one: how route handle
 When a route handler encounters a page that requires LLM extraction (e.g. custom-design job pages where DOM selectors fail), it calls the scoped `extractWithLLM` function from the handler context. This function implements a **two-phase flow**:
 
 1. **First pass (defer):** If no result exists yet, push a job to the LLM request queue and return `null`. The original request is marked handled; it is **not** reclaimed (to avoid an infinite loop where the same URL is re-processed before the LLM queue completes).
-2. **LLM processing:** Run `crawlee-one llm extract`. It consumes the LLM queue, calls the LLM, writes results to a key-value store, and **adds the original request back** to the main crawler's queue.
+2. **LLM processing:** The LLM crawler runs **concurrently** with the main crawler. It consumes the LLM queue, calls the LLM, writes results to a key-value store, and **adds the original request back** to the main crawler's queue.
 3. **Second pass (collect):** The main crawler picks up the re-queued URL. `extractWithLLM` finds the result in the store, returns it, and the handler calls `pushData`.
 
-This design keeps the crawl fast (no LLM calls during crawling), avoids infinite retry loops, and allows LLM extraction to run as a standalone, scalable actor.
+This design keeps the crawl fast (no LLM calls during crawling), avoids infinite retry loops, and processes LLM jobs as soon as they arrive.
 
 ---
 
@@ -20,28 +20,31 @@ This design keeps the crawl fast (no LLM calls during crawling), avoids infinite
 
 ### 2.1 Scoped `extractWithLLM`
 
-The scoped `extractWithLLM` is created by `createExtractWithLlmForContext(ctx, actor)` and injected into the handler context when the actor has LLM input configured. It is the primary API for route handlers.
+The scoped `extractWithLLM` and `extractWithLLMSync` are created by `createExtractWithLlmForContext` and injected into the handler context when the actor has LLM input configured.
+
+- **extractWithLLM** — Two-phase deferred flow (queue + KVS). Primary API for production.
+- **extractWithLLMSync** — Calls the LLM directly (no queue/KVS). Use when blocking is acceptable (e.g. few URLs, dev flows).
 
 **Signature:**
 
 ```typescript
-extractWithLLM<T>(opts: ExtractWithLlmScopedOptions<T>): Promise<ExtractWithLlmScopedResult<T> | null>
+extractWithLLM<T>(opts: ExtractWithLlmAsyncOptions<T>): Promise<LlmExtractionResult<T> | null>
 ```
 
 **Options:**
 
-| Option        | Required | Description                                                                 |
-|---------------|----------|-----------------------------------------------------------------------------|
-| `schema`      | Yes      | Zod schema for the expected output. Converted to JSON schema for the queue.  |
-| `systemPrompt`| Yes      | System prompt describing the extraction task.                              |
-| `text`        | No       | Override default text. Default: `ctx.$.html()` (Cheerio) or `ctx.page.content()` (browser) or `ctx.body` (Http). |
-| `apiKey`      | No       | Override actor input.                                                      |
-| `provider`    | No       | Override actor input.                                                      |
-| `model`       | No       | Override actor input.                                                      |
-| `baseURL`     | No       | Override actor input.                                                      |
-| `headers`     | No       | Override actor input.                                                      |
-| `llmRequestQueueId`   | No | Override queue ID.                                                         |
-| `llmKeyValueStoreId`  | No | Override store ID.                                                         |
+| Option               | Required | Description                                                                                                      |
+| -------------------- | -------- | ---------------------------------------------------------------------------------------------------------------- |
+| `schema`             | Yes      | Zod schema for the expected output. Converted to JSON schema for the queue.                                      |
+| `systemPrompt`       | Yes      | System prompt describing the extraction task.                                                                    |
+| `text`               | No       | Override default text. Default: `ctx.$.html()` (Cheerio) or `ctx.page.content()` (browser) or `ctx.body` (Http). |
+| `model`              | Yes*     | Model ID. Required for the LLM API call; can come from actor input.                                             |
+| `apiKey`             | No       | Override actor input. Defaults to `OPENAI_API_KEY` env.                                                          |
+| `provider`           | No       | Override actor input. Defaults to `openai`.                                                                      |
+| `baseURL`            | No       | Override actor input.                                                                                            |
+| `headers`            | No       | Override actor input.                                                                                            |
+| `llmRequestQueueId`  | No       | Override queue ID.                                                                                               |
+| `llmKeyValueStoreId` | No       | Override store ID.                                                                                               |
 
 **Return value:**
 
@@ -52,11 +55,11 @@ extractWithLLM<T>(opts: ExtractWithLlmScopedOptions<T>): Promise<ExtractWithLlmS
 
 `getDefaultExtractionText(ctx)` infers the text to send to the LLM from the crawling context:
 
-| Crawler type | Context shape     | Default text          |
-|--------------|-------------------|------------------------|
-| Cheerio/JSDOM| `$` with `.html()` | `ctx.$.html()`        |
-| Playwright/Puppeteer | `page`  | `ctx.page.content()`  |
-| Http/Basic   | `body`            | `ctx.body` (string)    |
+| Crawler type         | Context shape      | Default text         |
+| -------------------- | ------------------ | -------------------- |
+| Cheerio/JSDOM        | `$` with `.html()` | `ctx.$.html()`       |
+| Playwright/Puppeteer | `page`             | `ctx.page.content()` |
+| Http/Basic           | `body`             | `ctx.body` (string)  |
 
 Pass `text` explicitly when the default is wrong (e.g. `text: $('.content').html()` for a subset of the DOM).
 
@@ -65,16 +68,27 @@ Pass `text` explicitly when the default is wrong (e.g. `text: $('.content').html
 Jobs awaiting LLM processing are pushed to a dedicated `RequestQueue`. Each request has:
 
 - `url` — Original page URL (for logging).
-- `uniqueKey` — Same as the original request (for correlation).
+- `uniqueKey` — Extraction ID (each extraction gets its own queue entry).
 - `skipNavigation: true` — No HTTP fetch; the LLM crawler reads from `userData`.
-- `userData` — `{ html, jsonSchema, systemPrompt, apiKey, provider, model, baseURL?, headers?, url?, originalRequestId, originalRequestQueueId? }`.
+- `userData` — `{ html, jsonSchema, systemPrompt, apiKey, provider, model, baseURL?, headers?, url?, extractionId, originalRequestUniqueKey, originalRequestQueueId? }`.
 
-`originalRequestId` (from `request.id ?? request.uniqueKey`) is used as the key for the result in the key-value store.
-`originalRequestQueueId` (from actor input `requestQueueId`) is used by the LLM crawler to add the original request back to the main queue when extraction completes.
+`extractionId` uniquely identifies each extraction:
+
+- **Without `text`:** `requestId` + system prompt hash + JSON schema hash
+- **With `text`:** text hash + system prompt hash + JSON schema hash
+- **Override:** Pass `extractionId` in opts to use a custom ID (escape hatch).
+
+When `text` is unspecified (parsing the entire page), we use `requestId` rather than a text hash because the re-fetched HTML may differ slightly between passes (e.g. timestamps, ads). The `requestId` is stable across re-attempts, so the result can be retrieved on the second pass even if the HTML changed.
+
+Multiple extractions per request are supported: call `extractWithLLM` several times with different `text`, `systemPrompt`, or `schema` to extract different parts of the page (e.g. header vs body) — useful for cheaper models that perform well on smaller HTML snippets.
+
+`originalRequestUniqueKey` and `originalRequestQueueId` are used by the LLM crawler to re-queue the original request to the main queue when extraction completes. The request is added with `forefront: true` so it is processed soon, minimizing the chance that the cached result (in the in-memory LRU) is evicted before the main crawler picks it up.
 
 ### 2.4 LLM key-value store
 
-Results are stored under keys `llm--{requestId}`. Each value has shape:
+Results are stored in key-value store under `extractionId` (each run has its own KVS).
+
+Each value has shape:
 
 ```typescript
 {
@@ -91,7 +105,7 @@ Results are stored under keys `llm--{requestId}`. Each value has shape:
 }
 ```
 
-When the handler retrieves a result, the key is deleted (pop semantics) so the same request is not processed twice.
+When the handler retrieves a result, it is popped from KVS (deleted) and cached in process memory (LRU-bounded, max 500 entries). Popping avoids unbounded KVS growth across many pages. The cache keeps results available for the current handler run (e.g. multi-extraction) or if the same request is retried after a failure (e.g. pushData throws, request reclaimed). We do not delete cache entries on read — multiple accesses to the same extractionId are expected. Worst case only the current actor process memory grows, not the shared KVS.
 
 ---
 
@@ -104,7 +118,7 @@ When the handler retrieves a result, the key is deleted (pop semantics) so the s
 │                                                                             │
 │  Route handler calls extractWithLLM({ schema, systemPrompt })                │
 │         │                                                                   │
-│         ├─ Check KVS for llm--{requestId}                                    │
+│         ├─ Check KVS for {requestId}                                          │
 │         │                                                                   │
 │         ├─ Not found → Create request with userData (html, schema, config,   │
 │         │              originalRequestQueueId)                              │
@@ -117,15 +131,15 @@ When the handler retrieves a result, the key is deleted (pop semantics) so the s
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ Phase 2: crawlee-one llm extract (standalone run)                            │
+│ Phase 2: LLM crawler (runs concurrently with main crawler)                  │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  BasicCrawler with RequestQueue "llm"                                        │
+│  BasicCrawler with RequestQueue (run-scoped: "llm-{runId}" or "llm-t{ts}")  │
 │         │                                                                   │
 │         └─ For each request:                                                 │
 │              Read userData (html, jsonSchema, systemPrompt, apiKey, ...)     │
 │              Call extractWithLlm(...)                                        │
-│              Write result to KVS under llm--{originalRequestId}               │
+│              Write result to KVS under {extractionId}                         │
 │              Add original request back to originalRequestQueueId             │
 │              markRequestHandled                                              │
 │                                                                             │
@@ -145,27 +159,38 @@ When the handler retrieves a result, the key is deleted (pop semantics) so the s
 
 ## 4. Environment variables and config
 
-| Variable                      | Default | Purpose                          |
-|-------------------------------|---------|----------------------------------|
-| `CRAWLEE_LLM_REQUEST_QUEUE_ID`| `llm`   | Request queue for LLM jobs       |
-| `CRAWLEE_LLM_KEY_VALUE_STORE_ID` | `llm` | Key-value store for results      |
+| Variable                         | Default                  | Purpose                     |
+| -------------------------------- | ------------------------ | --------------------------- |
+| Actor input `llmRequestQueueId`  | run-scoped `llm-{runId}` | Request queue for LLM jobs  |
+| Actor input `llmKeyValueStoreId` | run-scoped `llm-{runId}` | Key-value store for results |
 
 Actor input overrides: `llmRequestQueueId`, `llmKeyValueStoreId` (from `LlmActorInput`).
 
+### Run-scoped IDs (default: `llm`)
+
+When using the default IDs (`llm` for both queue and store), crawlee-one **automatically scopes them per run** by appending a suffix:
+
+- **On Apify:** `llm-{APIFY_ACTOR_RUN_ID}` (e.g. `llm-abc123xyz`)
+- **Locally / elsewhere:** `llm-t{timestamp}` (e.g. `llm-t1708234567890`)
+
+This prevents cross-run queue sharing on Apify: concurrent runs and different actors no longer share one `llm` queue, avoiding runs that never finish because other actors keep adding requests.
+
+When you **explicitly** pass a custom ID (e.g. `llmRequestQueueId: 'shared-queue'`), it is used as-is. Use this for manual phases where a separate LLM actor run must share the same queue as the main scraper run; pass the run-scoped ID from the main run (e.g. `llm-{runId}`) as input to the LLM actor.
+
 ---
 
-## 5. Running `crawlee-one llm extract`
+## 5. Orchestration and `crawlee-one llm extract`
 
-**CLI:**
+**Default flow:** The LLM crawler runs **concurrently** with the main crawler. No separate step is needed — LLM jobs are processed as they arrive, and deferred URLs are re-queued and picked up in the same run.
+
+**Manual phases (`crawlee-one llm extract`):** For advanced setups where the main scraper and LLM worker run as **separate** Apify actor runs:
 
 ```bash
 crawlee-one llm extract
 crawlee-one llm extract --queue llm --store llm
 ```
 
-**As Apify actor:** Use `crawlee-one llm extract` as the main command. Pass `CRAWLEE_LLM_REQUEST_QUEUE_ID` and `CRAWLEE_LLM_KEY_VALUE_STORE_ID` via environment.
-
-**When to run:** After the main scraper has finished and pushed jobs to the LLM queue. The command processes all pending jobs and writes results to the store. Then re-run the main scraper so deferred URLs pick up the results.
+Pass the same queue and store IDs to both runs. The main run uses run-scoped IDs (e.g. `llm-abc123`). Get the run ID from the main run (Apify console, logs, or `APIFY_ACTOR_RUN_ID`), then pass `llmRequestQueueId: 'llm-{runId}'` and `llmKeyValueStoreId: 'llm-{runId}'` to the LLM actor run.
 
 ---
 

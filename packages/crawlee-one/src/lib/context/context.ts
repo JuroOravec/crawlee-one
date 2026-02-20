@@ -483,7 +483,7 @@ const createCrawleeOne = async <T extends CrawleeOneTypes>(opts: {
     addRequests: context.addRequests,
     // Use ctx-bound pushData to avoid "pushData outside context" when handlers run concurrently.
     pushData: createPushDataForContext(ctx, context),
-    extractWithLLM: createExtractWithLlmForContext({
+    ...createExtractWithLlmForContext({
       ctx,
       context,
       llmRequestQueueId,

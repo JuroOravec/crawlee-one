@@ -23,7 +23,8 @@ import type { PushDataOptions, itemCacheKey } from '../io/pushData.js';
 import type { AddRequestsOptions } from '../io/addRequests.js';
 import type { CrawleeOneRoute, CrawleeOneRouteMiddleware } from '../router/types.js';
 import type {
-  ExtractWithLlmScopedOptions,
+  ExtractWithLlmSyncOptions,
+  ExtractWithLlmAsyncOptions,
   LlmExtractionResult,
 } from '../llmExtract/extractWithLlmScoped.js';
 import type { MetamorphActorInput } from '../input.js';
@@ -112,8 +113,14 @@ export type CrawleeOneRouteHandlerCtxExtras<T extends CrawleeOneTypes> = {
    * Returns `null` on first pass (caller should return). Returns the result on second pass.
    */
   extractWithLLM: <T>(
-    opts: ExtractWithLlmScopedOptions<T>
+    opts: ExtractWithLlmAsyncOptions<T>
   ) => Promise<LlmExtractionResult<T> | null>;
+  /**
+   * Call LLM directly (no queue/KVS). Blocks until extraction completes.
+   *
+   * Use when deferral is not needed (e.g. few URLs, dev flows).
+   */
+  extractWithLLMSync: <T>(opts: ExtractWithLlmSyncOptions<T>) => Promise<LlmExtractionResult<T>>;
 };
 
 /** Context passed to user-defined functions passed from input */

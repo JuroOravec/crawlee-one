@@ -6,7 +6,7 @@
 
 # Interface: LlmExtractionResult\<T\>
 
-Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:27](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L27)
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:54](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L54)
 
 Result returned by scoped extractWithLLM when the result is available.
 
@@ -22,7 +22,7 @@ Result returned by scoped extractWithLLM when the result is available.
 
 > `optional` **\_extractionMeta**: [`LlmExtractionMeta`](LlmExtractionMeta.md)
 
-Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:29](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L29)
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:56](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L56)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:29]
 
 > **object**: `T`
 
-Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:28](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L28)
+Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:55](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L55)
