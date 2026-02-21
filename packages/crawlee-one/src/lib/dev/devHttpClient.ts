@@ -22,13 +22,11 @@
  */
 
 import { AsyncLocalStorage } from 'node:async_hooks';
-import fs from 'node:fs/promises';
-import path from 'node:path';
 import { Readable } from 'node:stream';
 import { Request, type RequestQueue } from 'crawlee';
 
 import type { HttpResponse } from '../../types.js';
-import { computeRequestIdFromUniqueKey } from './utils.js';
+import { loadCachedResponse, saveResponseToCache } from './devResponseCache.js';
 
 /**
  * Use `AsyncLocalStorage` to provide data deeply without having to pass it through
@@ -112,7 +110,7 @@ export function createDevHttpClient(opts: DevHttpClientOptions): HttpClientLike 
 
       const response = await underlying.stream(options);
       const serialized = await serializeStreamResponse(response);
-      await saveResponseToCache(responseCacheDir, devQueue, uniqueKey, serialized);
+      await saveResponseToCache(responseCacheDir, uniqueKey, serialized);
       return createFakeStreamResponse(serialized, requestUrl);
     },
 
@@ -136,7 +134,7 @@ export function createDevHttpClient(opts: DevHttpClientOptions): HttpClientLike 
               ? response.body
               : Buffer.from(String(response.body)),
       };
-      await saveResponseToCache(responseCacheDir, devQueue, uniqueKey, serialized);
+      await saveResponseToCache(responseCacheDir, uniqueKey, serialized);
       return response;
     },
   };
@@ -147,28 +145,6 @@ function computeUniqueKeyFromOptions(options: Record<string, unknown>): string {
   const method = (options.method as 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH') ?? 'GET';
   const payload = options.payload as string | Buffer | undefined;
   return Request.computeUniqueKey({ url, method, payload });
-}
-
-function getResponseCachePath(responseCacheDir: string, requestId: string): string {
-  return path.join(responseCacheDir, `${requestId}.response.json`);
-}
-
-async function loadCachedResponse(
-  responseCacheDir: string,
-  devQueue: RequestQueue,
-  uniqueKey: string
-): Promise<HttpResponse | null> {
-  const requestId = computeRequestIdFromUniqueKey(uniqueKey);
-  const filePath = getResponseCachePath(responseCacheDir, requestId);
-  try {
-    const raw = await fs.readFile(filePath, 'utf-8');
-    return JSON.parse(raw) as HttpResponse;
-  } catch {
-    // Fallback: pre-cached sampleUrls with { request, response } store in userData until first run
-    const request = await devQueue.getRequest(requestId);
-    const userDataResponse = request?.userData?.['response'];
-    return (userDataResponse as HttpResponse) ?? null;
-  }
 }
 
 function createFakeStreamResponse(cached: HttpResponse, url?: string): StreamResponseLike {
@@ -208,18 +184,4 @@ function serializeStreamResponse(res: StreamResponseLike): Promise<HttpResponse>
     );
     readable.on('error', reject);
   });
-}
-
-async function saveResponseToCache(
-  responseCacheDir: string,
-  devQueue: RequestQueue,
-  uniqueKey: string,
-  response: HttpResponse
-): Promise<void> {
-  const requestId = computeRequestIdFromUniqueKey(uniqueKey);
-  const req = await devQueue.getRequest(requestId);
-  if (!req) return;
-  const filePath = getResponseCachePath(responseCacheDir, requestId);
-  await fs.mkdir(path.dirname(filePath), { recursive: true });
-  await fs.writeFile(filePath, JSON.stringify(response), 'utf-8');
 }

@@ -61,13 +61,27 @@ console.log(`Preview at ${url}`);
 
 - **`/`** — Redirects to `/datasets`
 - **`/datasets`** — List of datasets with item counts
-- **`/datasets/:id`** — Paginated table of entries (100 per page). Nested objects are flattened with dot notation; array fields are shown as JSON. Supports filtering and column sorting.
+- **`/datasets/:id`** — Paginated table of entries (100 per page). Two tabs: **Table** (default) and **Stats**. The Stats tab shows a waterfall timeline and duration histogram (see below). Nested objects are flattened with dot notation; array fields are shown as JSON. Supports filtering and column sorting.
 - **`/datasets/:id/:entryId`** — Single entry as pretty-printed JSON
 - **`/requests`** — List of request queues with request counts
-- **`/requests/:id`** — Paginated table of requests (100 per page). Same features as dataset entries: sort by column, filter by JS expression.
+- **`/requests/:id`** — Paginated table of requests (100 per page). Two tabs: **Table** (default) and **Stats**. The Stats tab shows a waterfall timeline and duration histogram (see below). Same features as dataset entries: sort by column, filter by JS expression.
 - **`/requests/:id/:requestId`** — Single request as pretty-printed JSON. Only request files (`*.json`) are shown; `*.response.json` files are excluded.
 - **`/reports`** — List of reports in `storage/reports` (e.g. `llm-compare--jobDetail` from `crawlee-one llm compare`)
 - **`/reports/:id`** — Report detail with embedded HTML (report.html displayed in an iframe)
+
+## Stats charts
+
+The **Stats** tab on dataset and request pages shows two charts:
+
+1. **Waterfall timeline** — Each bar is one request or entry; its length is the time from the previous item until this one was handled. Use it to see throttling patterns and outliers.
+
+![Request handling waterfall](./preview-requests-waterfall.png)
+
+2. **Duration histogram** — Distribution of handling times across buckets. Use it to see whether most items are fast and how many are slow.
+
+![Request duration histogram](./preview-requests-histogram.png)
+
+For requests, the charts use `handledAt` (from `userData` or request JSON) and `startedAt` when available. For datasets, they use `metadata.dateHandled` and `metadata.requestStartedAt`.
 
 ## Filter
 

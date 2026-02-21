@@ -126,10 +126,13 @@ export async function runDev(opts: RunDevOptions): Promise<void> {
       }
     } else if (willPatchBrowserCrawler) {
       // For browser-based crawlers (Playwright, Puppeteer), we patch the navigation handler.
-      // We intercept `page.goto()` and `page.waitForNavigation()` to check/save the response.
+      // We intercept navigation to check/save the response to .response.json sidecar files.
       const orig = (context.crawler as any)._navigationHandler?.bind(context.crawler);
       if (orig) {
-        (context.crawler as any)._navigationHandler = wrapNavigationHandler(orig, { devQueue });
+        (context.crawler as any)._navigationHandler = wrapNavigationHandler(orig, {
+          devQueue,
+          responseCacheDir,
+        });
       }
     }
 

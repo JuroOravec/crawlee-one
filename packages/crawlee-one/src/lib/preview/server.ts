@@ -5,6 +5,8 @@ import express from 'express';
 import { flattenForCsv } from '../export/flattenForCsv.js';
 import { createFilterFn, validateFilterScript } from './filter.js';
 import {
+  getAllDatasetTimelineData,
+  getAllRequestTimelineData,
   getEntriesPage,
   getEntriesPageWithSort,
   getRequestsPage,
@@ -52,9 +54,10 @@ function createPreviewServer(storageDir: string): express.Application {
     }
   });
 
-  // Paginated request queue entries (table view)
+  // Paginated request queue entries (table or stats)
   app.get('/requests/:id', async (req, res) => {
     const { id: queueId } = req.params;
+    const tab = (req.query.tab as string) === 'stats' ? 'stats' : 'table';
     const page = Math.max(1, parseInt(req.query.page as string, 10) || 1);
     const sortParam = req.query.sort as string | undefined;
     const filterParam = req.query.filter as string | undefined;
@@ -80,6 +83,11 @@ function createPreviewServer(storageDir: string): express.Application {
       if (requestIds.length === 0) {
         res.status(404).send(pageError(`Request queue "${queueId}" is empty or not found.`));
         return;
+      }
+
+      let statsTimelineData: Awaited<ReturnType<typeof getAllRequestTimelineData>> = [];
+      if (tab === 'stats') {
+        statsTimelineData = await getAllRequestTimelineData(storageDir, queueId);
       }
 
       const offset = (page - 1) * PAGE_SIZE;
@@ -120,7 +128,9 @@ function createPreviewServer(storageDir: string): express.Application {
           PAGE_SIZE,
           sortSpec,
           filterScript,
-          filterError
+          filterError,
+          tab,
+          statsTimelineData
         )
       );
     } catch (err) {
@@ -206,9 +216,10 @@ function createPreviewServer(storageDir: string): express.Application {
     }
   });
 
-  // Paginated dataset entries (table view)
+  // Paginated dataset entries (table or stats)
   app.get('/datasets/:id', async (req, res) => {
     const { id: datasetId } = req.params;
+    const tab = (req.query.tab as string) === 'stats' ? 'stats' : 'table';
     const page = Math.max(1, parseInt(req.query.page as string, 10) || 1);
     const sortParam = req.query.sort as string | undefined;
     const filterParam = req.query.filter as string | undefined;
@@ -234,6 +245,11 @@ function createPreviewServer(storageDir: string): express.Application {
       if (entryIds.length === 0) {
         res.status(404).send(pageError(`Dataset "${datasetId}" is empty or not found.`));
         return;
+      }
+
+      let statsTimelineData: Awaited<ReturnType<typeof getAllDatasetTimelineData>> = [];
+      if (tab === 'stats') {
+        statsTimelineData = await getAllDatasetTimelineData(storageDir, datasetId);
       }
 
       const offset = (page - 1) * PAGE_SIZE;
@@ -274,7 +290,9 @@ function createPreviewServer(storageDir: string): express.Application {
           PAGE_SIZE,
           sortSpec,
           filterScript,
-          filterError
+          filterError,
+          tab,
+          statsTimelineData
         )
       );
     } catch (err) {

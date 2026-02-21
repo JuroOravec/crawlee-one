@@ -4,6 +4,9 @@
  */
 
 import { buildSortParam, type ReportSummary } from './storage.js';
+import type { RequestTimelineEntry } from './storage.js';
+import { renderDurationHistogramChart } from './durationHistogramChart.js';
+import { renderWaterfallChart } from './waterfallChart.js';
 
 function escapeHtml(s: string): string {
   return s
@@ -82,6 +85,10 @@ const layoutStart = (title: string, breadcrumbs: string) => `
     pre { background: #f5f5f5; padding: 1rem; overflow-x: auto; font-size: 0.8rem; }
     .report-embed { margin-top: 1rem; }
     .report-iframe { width: 100%; min-height: calc(100vh - 200px); border: 1px solid #ccc; border-radius: 4px; }
+    .tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 1px solid #ccc; }
+    .tab-link { padding: 0.5rem 1rem; color: #0066cc; text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .tab-link:hover { text-decoration: underline; }
+    .tab-link.active { font-weight: 600; color: #1a1a1a; border-bottom-color: #0066cc; }
   </style>
 </head>
 <body>
@@ -181,12 +188,23 @@ export function pageRequestQueueEntries(
   pageSize: number,
   sortSpec: { path: string; dir: 'asc' | 'desc' }[] = [],
   filterValue = '',
-  filterError: string | null = null
+  filterError: string | null = null,
+  tab: 'table' | 'stats' = 'table',
+  statsTimelineData: RequestTimelineEntry[] = []
 ): string {
   const queueEntryHref = pathTo(basePath, 'requests', encodeURIComponent(queueId));
   const breadcrumbs =
     navLinks(basePath) +
     ` <span>›</span> <a href="${escapeHtml(queueEntryHref)}">${escapeHtml(queueId)}</a>`;
+
+  const currentSortParam = buildSortParam(sortSpec);
+  const tableHref = `${queueEntryHref}${buildQuery(1, currentSortParam, filterValue)}`;
+  const statsHref = `${queueEntryHref}${buildQuery(1, '', '', 'stats')}`;
+  const tabsHtml = `
+<div class="tabs">
+  <a href="${escapeHtml(tableHref)}" class="tab-link${tab === 'table' ? ' active' : ''}">Table</a>
+  <a href="${escapeHtml(statsHref)}" class="tab-link${tab === 'stats' ? ' active' : ''}">Stats</a>
+</div>`;
 
   const headers =
     entries.length > 0
@@ -243,7 +261,6 @@ export function pageRequestQueueEntries(
   thead += '</tr>';
 
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
-  const currentSortParam = buildSortParam(sortSpec);
   let pagination = '<div class="pagination">';
   if (page > 1) {
     const prevQuery = buildQuery(page - 1, currentSortParam, filterValue);
@@ -266,17 +283,23 @@ export function pageRequestQueueEntries(
 </form>` +
     (filterError ? `<p class="filter-error">Filter error: ${escapeHtml(filterError)}</p>` : '');
 
-  return `${layoutStart(`${queueId} — requests`, breadcrumbs)}
-<h1>${escapeHtml(queueId)}</h1>
-<p>${totalCount} request${totalCount === 1 ? '' : 's'}</p>
-${filterForm}
+  const tableContent =
+    tab === 'table'
+      ? `${filterForm}
 <div class="table-scroll">
   <table>
     <thead>${thead}</thead>
     <tbody>${tableRows}</tbody>
   </table>
 </div>
-${pagination}
+${pagination}`
+      : renderWaterfallChart(statsTimelineData) + renderDurationHistogramChart(statsTimelineData);
+
+  return `${layoutStart(`${queueId} — requests`, breadcrumbs)}
+<h1>${escapeHtml(queueId)}</h1>
+<p>${totalCount} request${totalCount === 1 ? '' : 's'}</p>
+${tabsHtml}
+${tableContent}
 ${layoutEnd}`;
 }
 
@@ -320,12 +343,18 @@ export function pageReportDetail(basePath: string, reportId: string, hasHtml: bo
 ${layoutEnd}`;
 }
 
-/** Build query string preserving page, sort, and filter. */
-function buildQuery(page: number, sortParam: string, filterValue: string): string {
+/** Build query string preserving page, sort, filter, and tab. */
+function buildQuery(
+  page: number,
+  sortParam: string,
+  filterValue: string,
+  tab?: 'table' | 'stats'
+): string {
   const params = new URLSearchParams();
   if (page > 1) params.set('page', String(page));
   if (sortParam) params.set('sort', sortParam);
   if (filterValue) params.set('filter', filterValue);
+  if (tab && tab !== 'table') params.set('tab', tab);
   const q = params.toString();
   return q ? `?${q}` : '';
 }
@@ -340,12 +369,23 @@ export function pageDatasetEntries(
   pageSize: number,
   sortSpec: { path: string; dir: 'asc' | 'desc' }[] = [],
   filterValue = '',
-  filterError: string | null = null
+  filterError: string | null = null,
+  tab: 'table' | 'stats' = 'table',
+  statsTimelineData: RequestTimelineEntry[] = []
 ): string {
   const datasetEntryHref = pathTo(basePath, 'datasets', encodeURIComponent(datasetId));
   const breadcrumbs =
     navLinks(basePath) +
     ` <span>›</span> <a href="${escapeHtml(datasetEntryHref)}">${escapeHtml(datasetId)}</a>`;
+
+  const currentSortParam = buildSortParam(sortSpec);
+  const tableHref = `${datasetEntryHref}${buildQuery(1, currentSortParam, filterValue)}`;
+  const statsHref = `${datasetEntryHref}${buildQuery(1, '', '', 'stats')}`;
+  const tabsHtml = `
+<div class="tabs">
+  <a href="${escapeHtml(tableHref)}" class="tab-link${tab === 'table' ? ' active' : ''}">Table</a>
+  <a href="${escapeHtml(statsHref)}" class="tab-link${tab === 'stats' ? ' active' : ''}">Stats</a>
+</div>`;
 
   const headers =
     entries.length > 0
@@ -402,7 +442,6 @@ export function pageDatasetEntries(
   thead += '</tr>';
 
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
-  const currentSortParam = buildSortParam(sortSpec);
   let pagination = '<div class="pagination">';
   if (page > 1) {
     const prevQuery = buildQuery(page - 1, currentSortParam, filterValue);
@@ -425,17 +464,30 @@ export function pageDatasetEntries(
 </form>` +
     (filterError ? `<p class="filter-error">Filter error: ${escapeHtml(filterError)}</p>` : '');
 
-  return `${layoutStart(`${datasetId} — entries`, breadcrumbs)}
-<h1>${escapeHtml(datasetId)}</h1>
-<p>${totalCount} entr${totalCount === 1 ? 'y' : 'ies'}</p>
-${filterForm}
+  const tableContent =
+    tab === 'table'
+      ? `${filterForm}
 <div class="table-scroll">
   <table>
     <thead>${thead}</thead>
     <tbody>${tableRows}</tbody>
   </table>
 </div>
-${pagination}
+${pagination}`
+      : renderWaterfallChart(statsTimelineData, {
+          title: 'Dataset handling time',
+          itemLabel: 'entry',
+        }) +
+        renderDurationHistogramChart(statsTimelineData, {
+          title: 'Entry duration distribution',
+          itemLabel: 'entry',
+        });
+
+  return `${layoutStart(`${datasetId} — entries`, breadcrumbs)}
+<h1>${escapeHtml(datasetId)}</h1>
+<p>${totalCount} entr${totalCount === 1 ? 'y' : 'ies'}</p>
+${tabsHtml}
+${tableContent}
 ${layoutEnd}`;
 }
 

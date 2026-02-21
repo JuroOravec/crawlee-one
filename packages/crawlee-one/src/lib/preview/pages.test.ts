@@ -100,6 +100,51 @@ describe('pageDatasetEntries', () => {
     expect(html).toContain('Previous');
     expect(html).toContain('Next');
   });
+
+  it('renders Table and Stats tabs', () => {
+    const entries = [{ id: '000000001', name: 'Alice' }];
+    const html = pageDatasetEntries('', 'my-ds', entries, 1, 1, 100);
+    expect(html).toContain('tab-link');
+    expect(html).toContain('Table');
+    expect(html).toContain('Stats');
+    expect(html).toContain('tab=stats');
+  });
+
+  it('renders stats charts when tab=stats', () => {
+    const entries = [{ id: '000000001', name: 'Alice' }];
+    const statsTimelineData = [
+      {
+        id: '1',
+        url: 'https://a.com',
+        handledAt: '2026-01-01T00:00:00.000Z',
+        lastHandledAt: '2025-12-31T23:59:59.999Z',
+      },
+      {
+        id: '2',
+        url: 'https://b.com',
+        handledAt: '2026-01-01T00:00:03.000Z',
+        lastHandledAt: '2026-01-01T00:00:00.000Z',
+      },
+    ];
+    const html = pageDatasetEntries(
+      '',
+      'my-ds',
+      entries,
+      3,
+      1,
+      100,
+      [],
+      '',
+      null,
+      'stats',
+      statsTimelineData
+    );
+    expect(html).toContain('Dataset handling time');
+    expect(html).toContain('waterfall-chart');
+    expect(html).toContain('Entry duration distribution');
+    expect(html).toContain('duration-histogram');
+    expect(html).not.toContain('<tbody>');
+  });
 });
 
 describe('pageEntryDetail', () => {
@@ -145,6 +190,51 @@ describe('pageRequestQueueEntries', () => {
     expect(html).toContain('req2');
     expect(html).toContain('/requests/my-queue/req1');
     expect(html).toContain('https://a.com');
+  });
+
+  it('renders Table and Stats tabs', () => {
+    const entries = [{ id: 'req1', url: 'https://a.com' }];
+    const html = pageRequestQueueEntries('', 'my-queue', entries, 1, 1, 100);
+    expect(html).toContain('tab-link');
+    expect(html).toContain('Table');
+    expect(html).toContain('Stats');
+    expect(html).toContain('tab=stats');
+  });
+
+  it('renders stats chart when tab=stats', () => {
+    const entries = [{ id: 'req1', url: 'https://a.com' }];
+    const timestamps = [
+      '2026-01-01T00:00:00.000Z',
+      '2026-01-01T00:00:02.000Z',
+      '2026-01-01T00:00:05.000Z',
+    ];
+    const timelineData = timestamps.map((handledAt, i) => ({
+      id: `req-${i}`,
+      url: `https://example.com/${i}`,
+      handledAt,
+      lastHandledAt:
+        i === 0
+          ? new Date(new Date(handledAt).getTime() - 1).toISOString()
+          : timestamps[i - 1]!,
+    }));
+    const html = pageRequestQueueEntries(
+      '',
+      'my-queue',
+      entries,
+      3,
+      1,
+      100,
+      [],
+      '',
+      null,
+      'stats',
+      timelineData
+    );
+    expect(html).toContain('Request handling timeline');
+    expect(html).toContain('waterfall-chart');
+    expect(html).toContain('Time taken distribution');
+    expect(html).toContain('duration-histogram');
+    expect(html).not.toContain('<tbody>');
   });
 });
 

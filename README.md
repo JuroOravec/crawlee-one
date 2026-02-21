@@ -214,6 +214,8 @@ npm install crawlee-one
 
 ![Preview datasets](./packages/crawlee-one/docs/crawlee-one-preview.png)
 
+![Crawler stats](./packages/crawlee-one/docs/preview-requests-waterfall.png)
+
 ### For end users
 
 Scrapers built with CrawleeOne are configurable by the end users (via Apify platform). Transform, filter, limit, and reshape scraped data and requests -- all through input fields, no code changes needed.

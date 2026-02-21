@@ -4,6 +4,9 @@ import path from 'node:path';
 import os from 'node:os';
 import {
   buildSortParam,
+  getAllDatasetTimelineData,
+  getAllEntryDateHandleds,
+  getAllRequestTimelineData,
   getEntriesPageWithSort,
   getRequestsPageWithSort,
   listDatasets,
@@ -188,6 +191,148 @@ describe('getRequestsPageWithSort', () => {
       expect(totalCount).toBe(3);
       expect((entries[0].data as { url: string }).url).toBe('https://a.com');
       expect((entries[1].data as { url: string }).url).toBe('https://b.com');
+    } finally {
+      await fsp.rm(tmp, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('getAllRequestTimelineData', () => {
+  it('returns id, url, handledAt, lastHandledAt sorted by handledAt', async () => {
+    const tmp = path.join(os.tmpdir(), `crawlee-preview-timeline-${Date.now()}`);
+    const q = path.join(tmp, 'request_queues', 'my-queue');
+    await fsp.mkdir(q, { recursive: true });
+    const req1 = {
+      id: 'req1',
+      json: JSON.stringify({
+        id: 'req1',
+        url: 'https://a.com',
+        handledAt: '2026-01-01T00:00:00.000Z',
+      }),
+    };
+    const req2 = {
+      id: 'req2',
+      json: JSON.stringify({
+        id: 'req2',
+        url: 'https://b.com',
+        handledAt: '2026-01-01T00:00:05.000Z',
+      }),
+    };
+    await fsp.writeFile(path.join(q, 'req1.json'), JSON.stringify(req1));
+    await fsp.writeFile(path.join(q, 'req2.json'), JSON.stringify(req2));
+
+    try {
+      const result = await getAllRequestTimelineData(tmp, 'my-queue');
+      expect(result).toHaveLength(2);
+      expect(result[0]).toMatchObject({ id: 'req1', url: 'https://a.com' });
+      expect(result[1]).toMatchObject({ id: 'req2', url: 'https://b.com' });
+      expect(result[0]!.handledAt).toBe('2026-01-01T00:00:00.000Z');
+      expect(result[0]!.lastHandledAt).toMatch(/2025-12-31T23:59:59/);
+      expect(result[1]!.lastHandledAt).toBe('2026-01-01T00:00:00.000Z');
+    } finally {
+      await fsp.rm(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it('uses startedAt from userData for first request lastHandledAt when present', async () => {
+    const tmp = path.join(os.tmpdir(), `crawlee-preview-startedAt-${Date.now()}`);
+    const q = path.join(tmp, 'request_queues', 'my-queue');
+    await fsp.mkdir(q, { recursive: true });
+    const req1 = {
+      id: 'req1',
+      json: JSON.stringify({
+        id: 'req1',
+        url: 'https://a.com',
+        userData: { startedAt: '2025-12-31T23:59:50.000Z' },
+        handledAt: '2026-01-01T00:00:00.000Z',
+      }),
+    };
+    await fsp.writeFile(path.join(q, 'req1.json'), JSON.stringify(req1));
+
+    try {
+      const result = await getAllRequestTimelineData(tmp, 'my-queue');
+      expect(result).toHaveLength(1);
+      expect(result[0]!.lastHandledAt).toBe('2025-12-31T23:59:50.000Z');
+    } finally {
+      await fsp.rm(tmp, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('getAllEntryDateHandleds', () => {
+  it('extracts metadata.dateHandled from dataset entries', async () => {
+    const tmp = path.join(os.tmpdir(), `crawlee-preview-dateHandled-${Date.now()}`);
+    const ds = path.join(tmp, 'datasets', 'my-ds');
+    await fsp.mkdir(ds, { recursive: true });
+    await fsp.writeFile(
+      path.join(ds, '000000001.json'),
+      JSON.stringify({ name: 'A', metadata: { dateHandled: '2026-01-01T00:00:00.000Z' } })
+    );
+    await fsp.writeFile(
+      path.join(ds, '000000002.json'),
+      JSON.stringify({ name: 'B', metadata: { dateHandled: '2026-01-01T00:00:03.000Z' } })
+    );
+
+    try {
+      const result = await getAllEntryDateHandleds(tmp, 'my-ds');
+      expect(result).toHaveLength(2);
+      expect(result).toContain('2026-01-01T00:00:00.000Z');
+      expect(result).toContain('2026-01-01T00:00:03.000Z');
+    } finally {
+      await fsp.rm(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it('skips entries without metadata.dateHandled', async () => {
+    const tmp = path.join(os.tmpdir(), `crawlee-preview-dateHandled-${Date.now()}`);
+    const ds = path.join(tmp, 'datasets', 'my-ds');
+    await fsp.mkdir(ds, { recursive: true });
+    await fsp.writeFile(path.join(ds, '000000001.json'), JSON.stringify({ name: 'A' }));
+    await fsp.writeFile(
+      path.join(ds, '000000002.json'),
+      JSON.stringify({ name: 'B', metadata: { dateHandled: '2026-01-01T00:00:00.000Z' } })
+    );
+
+    try {
+      const result = await getAllEntryDateHandleds(tmp, 'my-ds');
+      expect(result).toEqual(['2026-01-01T00:00:00.000Z']);
+    } finally {
+      await fsp.rm(tmp, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('getAllDatasetTimelineData', () => {
+  it('returns timeline entries sorted by dateHandled with requestStartedAt for first', async () => {
+    const tmp = path.join(os.tmpdir(), `crawlee-preview-datasetTimeline-${Date.now()}`);
+    const ds = path.join(tmp, 'datasets', 'my-ds');
+    await fsp.mkdir(ds, { recursive: true });
+    await fsp.writeFile(
+      path.join(ds, '000000001.json'),
+      JSON.stringify({
+        name: 'A',
+        metadata: {
+          dateHandled: '2026-01-01T00:00:00.000Z',
+          requestStartedAt: '2025-12-31T23:59:50.000Z',
+          loadedUrl: 'https://a.com',
+        },
+      })
+    );
+    await fsp.writeFile(
+      path.join(ds, '000000002.json'),
+      JSON.stringify({
+        name: 'B',
+        metadata: { dateHandled: '2026-01-01T00:00:05.000Z', loadedUrl: 'https://b.com' },
+      })
+    );
+
+    try {
+      const result = await getAllDatasetTimelineData(tmp, 'my-ds');
+      expect(result).toHaveLength(2);
+      expect(result[0]!.id).toBe('000000001');
+      expect(result[0]!.lastHandledAt).toBe('2025-12-31T23:59:50.000Z');
+      expect(result[1]!.id).toBe('000000002');
+      expect(result[1]!.lastHandledAt).toBe('2026-01-01T00:00:00.000Z');
     } finally {
       await fsp.rm(tmp, { recursive: true, force: true });
     }

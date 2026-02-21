@@ -146,7 +146,13 @@ describe('createExtractWithLlmForContext', () => {
 
       const io = createMockIO();
       const ctx = {
-        request: { id: 'r1', uniqueKey: 'k1', url: 'https://x.com', method: 'GET' as const, headers: {} },
+        request: {
+          id: 'r1',
+          uniqueKey: 'k1',
+          url: 'https://x.com',
+          method: 'GET' as const,
+          headers: {},
+        },
         log: { info: vi.fn(), warning: vi.fn(), error: vi.fn(), debug: vi.fn() },
         $: { html: () => '<html></html>' },
       } as any;
@@ -180,7 +186,13 @@ describe('createExtractWithLlmForContext', () => {
     it('throws when LLM not configured', async () => {
       const io = createMockIO();
       const ctx = {
-        request: { id: 'r1', uniqueKey: 'k1', url: 'https://x.com', method: 'GET' as const, headers: {} },
+        request: {
+          id: 'r1',
+          uniqueKey: 'k1',
+          url: 'https://x.com',
+          method: 'GET' as const,
+          headers: {},
+        },
         log: { info: vi.fn(), warning: vi.fn(), error: vi.fn(), debug: vi.fn() },
         $: { html: () => '<html></html>' },
       } as any;
@@ -192,9 +204,9 @@ describe('createExtractWithLlmForContext', () => {
         llmKeyValueStoreId: 'llm',
       });
 
-      await expect(extractWithLLMSync({ schema: jobSchema, systemPrompt: 'Extract.' })).rejects.toThrow(
-        'LLM not configured'
-      );
+      await expect(
+        extractWithLLMSync({ schema: jobSchema, systemPrompt: 'Extract.' })
+      ).rejects.toThrow('LLM not configured');
       expect(mockExtractWithLlm).not.toHaveBeenCalled();
     });
   });

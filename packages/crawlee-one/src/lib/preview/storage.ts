@@ -378,3 +378,185 @@ export async function getRequestsPageWithSort(
   const entries = allEntries.slice(offset, offset + limit);
   return { entries, totalCount };
 }
+
+/**
+ * Extract handledAt from a request. Crawlee stores it in json (stringified) or top-level.
+ */
+function extractHandledAt(req: object): string | null {
+  const r = req as Record<string, unknown>;
+  if (typeof r.handledAt === 'string') return r.handledAt;
+  const json = r.json;
+  if (typeof json === 'string') {
+    try {
+      const parsed = JSON.parse(json) as Record<string, unknown>;
+      if (typeof parsed.handledAt === 'string') return parsed.handledAt;
+      const ud = parsed.userData as Record<string, unknown> | undefined;
+      if (ud && typeof ud.handledAt === 'string') return ud.handledAt;
+    } catch {
+      // ignore parse errors
+    }
+  }
+  return null;
+}
+
+/**
+ * Extract startedAt from request userData (set by crawlee-one router when processing starts).
+ */
+function extractStartedAt(req: object): string | null {
+  const r = req as Record<string, unknown>;
+  const json = r.json;
+  if (typeof json === 'string') {
+    try {
+      const parsed = JSON.parse(json) as Record<string, unknown>;
+      const ud = parsed.userData as Record<string, unknown> | undefined;
+      if (ud && typeof ud.startedAt === 'string') return ud.startedAt;
+    } catch {
+      // ignore parse errors
+    }
+  }
+  return null;
+}
+
+export interface RequestTimelineEntry {
+  id: string;
+  url: string;
+  handledAt: string;
+  lastHandledAt: string;
+}
+
+function extractUrl(req: object): string {
+  const r = req as Record<string, unknown>;
+  if (typeof r.url === 'string') return r.url;
+  const json = r.json;
+  if (typeof json === 'string') {
+    try {
+      const parsed = JSON.parse(json) as Record<string, unknown>;
+      if (typeof parsed.url === 'string') return parsed.url;
+    } catch {
+      // ignore
+    }
+  }
+  return '';
+}
+
+/**
+ * Load all requests with id, url, handledAt for waterfall timeline.
+ * Sorted by handledAt ascending. lastHandledAt is previous request's handledAt
+ * (or request's startedAt if available for the first request, else handledAt - 1ms).
+ */
+export async function getAllRequestTimelineData(
+  storageDir: string,
+  queueId: string
+): Promise<RequestTimelineEntry[]> {
+  const ids = await listRequestIds(storageDir, queueId);
+  const raw: { id: string; url: string; handledAt: string; startedAt: string | null }[] = [];
+  for (const id of ids) {
+    const req = await readRequest(storageDir, queueId, id);
+    if (req) {
+      const handledAt = extractHandledAt(req);
+      if (handledAt) {
+        raw.push({
+          id,
+          url: extractUrl(req),
+          handledAt,
+          startedAt: extractStartedAt(req),
+        });
+      }
+    }
+  }
+  raw.sort((a, b) => a.handledAt.localeCompare(b.handledAt));
+  const result: RequestTimelineEntry[] = [];
+  for (let i = 0; i < raw.length; i++) {
+    const prev = raw[i - 1];
+    const lastHandledAt = prev
+      ? prev.handledAt
+      : (raw[i]!.startedAt ?? new Date(new Date(raw[i]!.handledAt).getTime() - 1).toISOString());
+    result.push({
+      id: raw[i]!.id,
+      url: raw[i]!.url,
+      handledAt: raw[i]!.handledAt,
+      lastHandledAt,
+    });
+  }
+  return result;
+}
+
+/**
+ * Extract metadata from a dataset entry for timeline stats.
+ */
+function extractEntryMetadata(entry: object): {
+  dateHandled: string | null;
+  requestStartedAt: string | null;
+  url: string;
+} {
+  const meta = get(entry as Record<string, unknown>, 'metadata') as
+    | Record<string, unknown>
+    | undefined;
+  const dateHandled = meta && typeof meta.dateHandled === 'string' ? meta.dateHandled : null;
+  const requestStartedAt =
+    meta && typeof meta.requestStartedAt === 'string' ? meta.requestStartedAt : null;
+  const url =
+    meta && typeof meta.loadedUrl === 'string'
+      ? meta.loadedUrl
+      : meta && typeof meta.originalUrl === 'string'
+        ? meta.originalUrl
+        : '';
+  return { dateHandled, requestStartedAt, url };
+}
+
+/**
+ * Load all metadata.dateHandled timestamps from a dataset. Used for stats chart.
+ */
+export async function getAllEntryDateHandleds(
+  storageDir: string,
+  datasetId: string
+): Promise<string[]> {
+  const ids = await listEntryIds(storageDir, datasetId);
+  const result: string[] = [];
+  for (const id of ids) {
+    const data = await readEntry(storageDir, datasetId, id);
+    if (data) {
+      const t = extractEntryMetadata(data).dateHandled;
+      if (t) result.push(t);
+    }
+  }
+  return result;
+}
+
+/**
+ * Load all dataset entries with timeline data for waterfall/histogram stats.
+ * Sorted by dateHandled ascending. lastHandledAt is previous entry's dateHandled
+ * (or requestStartedAt if available for the first, else dateHandled - 1ms).
+ */
+export async function getAllDatasetTimelineData(
+  storageDir: string,
+  datasetId: string
+): Promise<RequestTimelineEntry[]> {
+  const ids = await listEntryIds(storageDir, datasetId);
+  const raw: { id: string; url: string; handledAt: string; requestStartedAt: string | null }[] = [];
+  for (const id of ids) {
+    const data = await readEntry(storageDir, datasetId, id);
+    if (data) {
+      const { dateHandled, requestStartedAt, url } = extractEntryMetadata(data);
+      if (dateHandled) {
+        raw.push({ id, url, handledAt: dateHandled, requestStartedAt });
+      }
+    }
+  }
+  raw.sort((a, b) => a.handledAt.localeCompare(b.handledAt));
+  const result: RequestTimelineEntry[] = [];
+  for (let i = 0; i < raw.length; i++) {
+    const prev = raw[i - 1];
+    const lastHandledAt = prev
+      ? prev.handledAt
+      : (raw[i]!.requestStartedAt ??
+        new Date(new Date(raw[i]!.handledAt).getTime() - 1).toISOString());
+    result.push({
+      id: raw[i]!.id,
+      url: raw[i]!.url,
+      handledAt: raw[i]!.handledAt,
+      lastHandledAt,
+    });
+  }
+  return result;
+}

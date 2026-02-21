@@ -107,6 +107,9 @@ export const registerHandlers = async <T extends CrawleeOneTypes>(input: {
 
     // Then register the composite handler
     await router.addHandler<T['context']>(key, async (ctx) => {
+      // Record when we started processing (labeled handlers bypass defaultHandler, so startedAt is never set there)
+      setStartedAt(ctx.request);
+
       // Pass routeLabel so dev mode can route pushData to dev-{crawler}-{route} dataset.
       const ctxWithRoute = { ...ctx, routeLabel: key };
       const handlerCtx = { ...ctxWithRoute, ...getRouterContext(ctxWithRoute) };
@@ -209,6 +212,9 @@ const createDefaultHandler = <T extends CrawleeOneTypes>(
     const getUrl = () => (page ? page.url() : req!.loadedUrl || req!.url);
 
     const onRequest = async () => {
+      // Record when we started processing this request (for waterfall stats: first request's bar)
+      setStartedAt(req);
+
       const url = await getUrl();
       const logSuffix = `Batch ${handledRequestsCount + 1} of ${batchSize ?? 1}. URL: ${url}`;
 
@@ -362,4 +368,11 @@ export const setupDefaultHandlers = async <T extends CrawleeOneTypes>({
     const result = await wrappedHandler(handlerCtx);
     return result;
   });
+};
+
+const setStartedAt = (req: CrawlerRequest | null) => {
+  const reqUserData = req?.userData as Record<string, unknown> | undefined;
+  if (reqUserData && !reqUserData.startedAt) {
+    reqUserData.startedAt = new Date().toISOString();
+  }
 };

@@ -5,19 +5,21 @@
  * When the crawler uses HttpClient, we wrap it in the `devHttpClient`.
  * But for browser crawlers (Playwright, Puppeteer), we need to wrap the navigation handler.
  *
- * We intercept `page.goto()` and `page.waitForNavigation()` to check/save the response.
+ * We intercept the crawler's _navigationHandler (which calls page.goto/gotoExtended)
+ * to check/save the response. Responses are stored in sidecar files ({requestId}.response.json)
+ * next to request queue entries, same as HTTP crawlers.
  */
 
-import type { Request, RequestQueue } from 'crawlee';
+import type { RequestQueue } from 'crawlee';
 import type { CrawlingContext } from 'crawlee';
 
 import type { HttpResponse } from '../../types.js';
-import { computeRequestIdFromUniqueKey } from './utils.js';
-
-const DEV_RESPONSE_KEY = 'response';
+import { loadCachedResponse, saveResponseToCache } from './devResponseCache.js';
 
 export interface WrapNavigationHandlerOptions {
   devQueue: RequestQueue;
+  /** Directory for response cache files; same as request queue storage dir */
+  responseCacheDir: string;
 }
 
 /**
@@ -32,19 +34,23 @@ export function wrapNavigationHandler<
   origNavigationHandler: (ctx: Ctx, gotoOptions?: Record<string, unknown>) => Promise<unknown>,
   opts: WrapNavigationHandlerOptions
 ): (ctx: Ctx, gotoOptions?: Record<string, unknown>) => Promise<unknown> {
-  const { devQueue } = opts;
+  const { devQueue, responseCacheDir } = opts;
 
   return async (ctx: Ctx, gotoOptions?: Record<string, unknown>) => {
     const { request, page } = ctx;
     const uniqueKey = request.uniqueKey;
 
-    const cached = await loadCachedResponse(devQueue, uniqueKey);
+    const cached = await loadCachedResponse(responseCacheDir, devQueue, uniqueKey);
 
     if (cached) {
+      console.log(`[crawlee-one] Dev cache hit: ${request.url}`);
       const body = typeof cached.body === 'string' ? cached.body : String(cached.body);
       await page.setContent(body);
       return {
-        status: cached.statusCode,
+        // Must be a function: Crawlee's browser crawler (isRequestBlocked, _responseHandler) calls
+        // response.status(). Playwright/Puppeteer Response uses status() as a method.
+        // HTTP crawlers use statusCode (property) but they don't hit this code path.
+        status: () => cached.statusCode,
         headers: cached.headers ?? {},
         ok: cached.statusCode >= 200 && cached.statusCode < 300,
         url: request.url,
@@ -54,12 +60,16 @@ export function wrapNavigationHandler<
 
     const response = await origNavigationHandler(ctx, gotoOptions);
     const res = response as {
-      status?: number;
+      status?: number | (() => number);
       statusCode?: number;
       headers?: Record<string, string>;
       text?: () => Promise<string>;
     };
-    const statusCode = res.status ?? res.statusCode ?? 200;
+    // Playwright/Puppeteer Response uses status() as a method, not status as property
+    const statusCode =
+      typeof res.status === 'function'
+        ? res.status()
+        : ((res.status as number) ?? res.statusCode ?? 200);
     const headers = res.headers ?? {};
     const body = res.text ? await res.text() : '';
 
@@ -68,40 +78,8 @@ export function wrapNavigationHandler<
       headers,
       body,
     };
-    await saveResponseToRequest(
-      devQueue,
-      request as { uniqueKey: string; userData: Record<string, unknown> },
-      serialized
-    );
+    await saveResponseToCache(responseCacheDir, request.uniqueKey, serialized);
 
     return response;
   };
-}
-
-async function loadCachedResponse(
-  devQueue: RequestQueue,
-  uniqueKey: string
-): Promise<HttpResponse | null> {
-  const requestId = computeRequestIdFromUniqueKey(uniqueKey);
-  const request = await devQueue.getRequest(requestId);
-  if (!request?.userData?.[DEV_RESPONSE_KEY]) return null;
-  return request.userData[DEV_RESPONSE_KEY] as HttpResponse;
-}
-
-async function saveResponseToRequest(
-  devQueue: RequestQueue,
-  request: { uniqueKey: string; userData: Record<string, unknown> },
-  response: HttpResponse
-): Promise<void> {
-  request.userData[DEV_RESPONSE_KEY] = response;
-  const requestId = computeRequestIdFromUniqueKey(request.uniqueKey);
-  const req = await devQueue.getRequest(requestId);
-  if (req) {
-    (req.userData as Record<string, unknown>)[DEV_RESPONSE_KEY] = response;
-    const client = (devQueue as { client?: { updateRequest?: (r: Request) => Promise<unknown> } })
-      .client;
-    if (client?.updateRequest) {
-      await client.updateRequest(req);
-    }
-  }
 }

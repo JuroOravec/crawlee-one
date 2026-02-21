@@ -178,6 +178,37 @@ describe('createHttpCrawlerOptions', () => {
 
     expect(result).toHaveProperty('maxCrawlDepth', 1);
   });
+
+  it('navigationTimeoutSecs from crawlerConfigDefaults is preserved when input lacks it', () => {
+    const result = createHttpCrawlerOptions({
+      input: { startUrls: ['https://example.com'] }, // no navigationTimeoutSecs
+      defaults: { navigationTimeoutSecs: 90, maxConcurrency: 2 } as any,
+    });
+
+    expect(result).toMatchObject({
+      navigationTimeoutSecs: 90,
+      maxConcurrency: 2,
+    });
+  });
+
+  it('navigationTimeoutSecs from input overrides crawlerConfigDefaults', () => {
+    const result = createHttpCrawlerOptions({
+      input: { navigationTimeoutSecs: 120 },
+      defaults: { navigationTimeoutSecs: 90 } as any,
+    });
+
+    expect(result).toHaveProperty('navigationTimeoutSecs', 120);
+  });
+
+  it('navigationTimeoutSecs from overrides wins over defaults and input', () => {
+    const result = createHttpCrawlerOptions({
+      input: { navigationTimeoutSecs: 120 },
+      defaults: { navigationTimeoutSecs: 90 } as any,
+      overrides: { navigationTimeoutSecs: 60 } as any,
+    });
+
+    expect(result).toHaveProperty('navigationTimeoutSecs', 60);
+  });
 });
 
 // ---- crawleeOne tests ----

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { Command } from 'commander';
 
 import { runDev } from '../../lib/dev/runDev.js';
+import { clearDevStorage } from '../../lib/dev/clearDevStorage.js';
 import { getCrawlersToProcess, loadCrawlerModule } from '../../lib/config/loader.js';
 
 export function createDevCommand(): Command {
@@ -15,6 +16,10 @@ export function createDevCommand(): Command {
       '--fetch',
       'Pre-fetch sample URLs into dev queue (no-op handlers). Run without --fetch to process cached HTML with real handlers.'
     )
+    .option(
+      '--clear',
+      'Remove dev-{crawler}-* datasets and dev-{crawler} request queue before running. Use to reset cache and queue state.'
+    )
     .option('--strict', 'Throw when a URL matches no route instead of logging and skipping.')
     .option('-c --config [config-file]', 'path to config file')
     .addHelpText(
@@ -26,6 +31,7 @@ Examples:
   $ crawlee-one dev -c ./crawlee-one.config.ts
   $ crawlee-one dev --fetch              # pre-fetch sample URLs for all crawlers (populate cache only)
   $ crawlee-one dev --fetch profesia     # pre-fetch for profesia only
+  $ crawlee-one dev --clear              # clear dev cache/queue, then run
   $ crawlee-one dev --strict             # throw when URL matches no route
   $ crawlee-one dev --fetch -c path/to/config.ts
 `
@@ -33,11 +39,12 @@ Examples:
     .action(
       async (
         crawlerNames: string[] = [],
-        opts: { fetch?: boolean; strict?: boolean; config?: string }
+        opts: { fetch?: boolean; clear?: boolean; strict?: boolean; config?: string }
       ) => {
         try {
           await runDevCommand(crawlerNames, opts.config, {
             fetchOnly: opts.fetch ?? false,
+            clear: opts.clear ?? false,
             strict: opts.strict ?? false,
           });
         } catch (err) {
@@ -55,6 +62,7 @@ Examples:
  * - `crawlerNames` — Names of crawlers to run. Empty = all from config.
  * - `configFilePath` — Path to config file (default: cosmiconfig resolution).
  * - `options.fetchOnly` — If true, only populate cache; don't run handlers.
+ * - `options.clear` — If true, remove dev datasets and request queue before running.
  * - `options.strict` — If true, throw when a URL matches no route (default: log and skip).
  *
  * **Usage (via CLI):**
@@ -70,10 +78,11 @@ Examples:
 async function runDevCommand(
   crawlerNames: string[],
   configFilePath?: string,
-  options?: { fetchOnly?: boolean; strict?: boolean }
+  options?: { fetchOnly?: boolean; clear?: boolean; strict?: boolean }
 ): Promise<void> {
   const { configDir, crawlers } = await getCrawlersToProcess(crawlerNames, configFilePath);
   const fetchOnly = options?.fetchOnly ?? false;
+  const clear = options?.clear ?? false;
   const strict = options?.strict ?? false;
 
   const prevStorageDir = process.env.APIFY_LOCAL_STORAGE_DIR;
@@ -81,7 +90,20 @@ async function runDevCommand(
     process.env.APIFY_LOCAL_STORAGE_DIR = path.join(configDir, 'storage');
   }
 
+  const storageDir = configDir
+    ? path.join(configDir, 'storage')
+    : process.env.APIFY_LOCAL_STORAGE_DIR
+      ? path.resolve(process.env.APIFY_LOCAL_STORAGE_DIR)
+      : path.join(process.cwd(), 'storage');
+
   try {
+    if (clear && crawlers.length > 0) {
+      clearDevStorage(
+        storageDir,
+        crawlers.map((c) => c.name)
+      );
+    }
+
     for (const { name: crawlerName, def: crawlerDef } of crawlers) {
       const importPath = crawlerDef.devImportPath ?? crawlerDef.importPath;
       if (!importPath) {

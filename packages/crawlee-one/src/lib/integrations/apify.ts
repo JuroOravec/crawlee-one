@@ -28,6 +28,8 @@ export interface ApifyEntryMetadata {
 
   /** ISO datetime string that indicates the time when the request has been processed. */
   dateHandled: string;
+  /** ISO datetime string when processing of this request started (set by crawlee-one router). */
+  requestStartedAt: string | null;
   numberOfRetries: number;
 }
 
@@ -92,6 +94,9 @@ const generateApifyEntryMetadata = <Ctx extends CrawlingContext>(ctx: Ctx) => {
       : null;
   const handledAt = new Date().toISOString();
 
+  const userData = ctx.request.userData as Record<string, unknown> | undefined;
+  const requestStartedAt = typeof userData?.startedAt === 'string' ? userData.startedAt : null;
+
   const metadata = {
     actorId,
     actorRunId,
@@ -103,6 +108,7 @@ const generateApifyEntryMetadata = <Ctx extends CrawlingContext>(ctx: Ctx) => {
     loadedUrl: ctx.request.loadedUrl ?? null,
 
     dateHandled: ctx.request.handledAt || handledAt,
+    requestStartedAt,
     numberOfRetries: ctx.request.retryCount,
   } satisfies ApifyEntryMetadata;
 
