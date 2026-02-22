@@ -23,6 +23,19 @@
     "data-integrity",
     "scraping"
   ],
+  "dependencies": {
+    "ajv": "catalog:",
+    "ibantools": "catalog:",
+    "currency-codes": "catalog:",
+    "i18n-iso-countries": "catalog:",
+    "iso-639-1": "catalog:",
+    "jsvat": "catalog:",
+    "libphonenumber-js": "catalog:",
+    "mcc-mnc-list": "catalog:",
+    "states-us": "catalog:",
+    "statuses": "catalog:",
+    "tlds": "catalog:"
+  },
   "engines": {
     "node": ">=20.0.0"
   },
@@ -40,9 +53,14 @@
   "scripts": {
     "start": "tsx ./src/index.ts",
     "build": "tsup && tsc -p tsconfig.build.json",
+    "dev": "tsup --watch",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run",
-    "coverage": "vitest run --coverage"
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
   }
 }
