@@ -71,6 +71,11 @@ export interface CrawleeOneConfig<
   version: 1;
   /** Schema defining the crawlers in this project. This schema is used for code generation. */
   schema: CrawleeOneConfigSchema<TCrawlers>;
+  /**
+   * ActorSpec (metadata) used by commands and generation. When set, `actorspec` and `readme` gen
+   * sections no longer need to pass `config` / `actorSpec` explicitly.
+   */
+  metadata?: ActorSpec;
   /** Code generation settings. If omitted, all generation is skipped. */
   generate?: CrawleeOneConfigGenerate<TRenderer>;
   /** LLM-related settings */
@@ -106,13 +111,11 @@ export interface CrawleeOneConfigActor {
 
 export interface CrawleeOneConfigActorSpec {
   /**
-   * The `ActorSpec` object to serialize.
-   */
-  config: ActorSpec;
-  /**
    * Output file path (relative to cwd).
    *
    * Defaults to `.actor/actorspec.json` if `.actor/` exists, otherwise `./actorspec.json`.
+   *
+   * ActorSpec content comes from `config.metadata`.
    */
   outFile?: string;
 }
@@ -126,8 +129,6 @@ export interface CrawleeOneConfigReadme<
    * Defaults to `.actor/README.md` if `.actor/` exists, otherwise `./README.md`.
    */
   outFile?: string;
-  /** The `ActorSpec` data passed to the renderer. */
-  actorSpec?: ActorSpec;
   /**
    * The renderer function that produces the README string.
    *
@@ -203,13 +204,13 @@ export function defineCrawler<TActorInput extends Record<string, unknown>>(
  *       }),
  *     },
  *   },
+ *   metadata: actorSpec,
  *   generate: {
  *     types: { outFile: './src/__generated__/crawler.ts' },
  *     actor: { config: actorConfig, outFile: '.actor/actor.json' },
- *     actorspec: { config: actorSpec, outFile: '.actor/actorspec.json' },
+ *     actorspec: { outFile: '.actor/actorspec.json' },
  *     readme: {
  *       outFile: '.actor/README.md',
- *       actorSpec,
  *       renderer: renderApifyReadme,
  *       input: { templates: ... },
  *     },

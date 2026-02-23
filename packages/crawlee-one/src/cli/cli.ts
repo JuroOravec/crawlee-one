@@ -8,6 +8,7 @@ import { createExportCommand } from './commands/export.js';
 import { createValidateCommand } from './commands/validate.js';
 import { createPreviewCommand } from './commands/preview.js';
 import { createLlmCommand } from './commands/llm.js';
+import { createExpectationsCommand } from './commands/expectations.js';
 
 const pkgJson = getPackageJsonInfo(import.meta.url, ['name', 'version']);
 
@@ -21,7 +22,8 @@ program //
   .addCommand(createExportCommand())
   .addCommand(createValidateCommand())
   .addCommand(createPreviewCommand())
-  .addCommand(createLlmCommand());
+  .addCommand(createLlmCommand())
+  .addCommand(createExpectationsCommand());
 
 export const cli = () => {
   program.parse();

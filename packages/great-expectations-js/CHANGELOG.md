@@ -31,3 +31,14 @@ Initial release with 131 of 174 expectations implemented.
 - Utility functions: `getColumnValues`, `getColumnNames`, `buildColumnResult`, `buildTableResult`, `buildRowResult` (also exported for building custom expectations).
 - All expectations support the `mostly` threshold where applicable.
 - Dependencies: `ajv`, `libphonenumber-js`, `i18n-iso-countries`, `currency-codes`.
+
+- **Declarative expectations.** Define expectations in a JSON-serializable config and run them in bulk with `runExpectations(dataset, expectations)`:
+
+  ```ts
+  const results = runExpectations(myDataset, {
+    field: [
+      { expectation: 'expectColumnToExist', params: { column: 'email' } },
+      { expectation: 'expectColumnValuesToNotBeNull', params: { column: 'email' } },
+    ],
+  });
+  ```

@@ -22,9 +22,9 @@ Define an actor spec in TypeScript:
 
 ```ts
 // actorspec.ts
-import type { ScraperActorSpec } from 'actor-spec';
+import type { ActorSpec } from 'actor-spec';
 
-const spec: ScraperActorSpec = {
+const spec: ActorSpec = {
   actorspecVersion: 1,
   actor: {
     title: 'Product Scraper',

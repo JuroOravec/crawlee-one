@@ -1,3 +1,8 @@
+import type { DatasetExpectations } from 'great-expectations-js';
+
+/** Re-export for consumers. Use great-expectations-js directly for full typing and runExpectations(). */
+export type { DatasetExpectations, ExpectationLevel } from 'great-expectations-js';
+
 /**
  * ActorSpec refers an actor in the sense of a bot / serverless cloud program
  * as defined by Apify (https://docs.apify.com/platform/actors).
@@ -71,20 +76,42 @@ export interface ActorSpec {
     /** E.g. the `"entries"` in `"$0.50 per 1000 entries"` */
     periodUnit: string;
   };
+  /**
+   * Datasets that this actor can extract. Optional; when present, describes
+   * scraper-specific dataset metadata. Use defineDataset<TRow>() for column
+   * autocomplete in expectations.
+   */
+  datasets?: ScraperDataset<any>[];
 }
 
 /**
- * ActorSpec that describes an actor / bot that's a scraper,
- * AKA this actor is expected to extract data.
+ * Type-safe dataset config helper. Pass TRow = shape of one row for column autocomplete in expectations.
+ * Returns the config as-is, so it works with extended dataset types (e.g. ApifyScraperDataset).
  *
- * Hence, this actor spec includes additional info about the datasets
- * that can be extracted.
+ * @example
+ * ```ts
+ * interface MyRow { offerId: string; offerUrl: string; supplierUrl: string }
+ *
+ * defineDataset<MyRow>({
+ *   name: 'offers',
+ *   ...
+ *   expectations: {
+ *     field: [
+ *       { expectation: 'expectColumnToExist', params: { column: 'offerId' } },
+ *     ],
+ *   },
+ *   output: { exampleEntry: { offerId: '', offerUrl: '', supplierUrl: '' } },
+ * });
+ * ```
  */
-export interface ScraperActorSpec extends ActorSpec {
-  datasets: ScraperDataset[];
+export function defineDataset<
+  TRow extends object = Record<string, unknown>,
+  T extends ScraperDataset<TRow> = ScraperDataset<TRow>,
+>(config: T): T {
+  return config;
 }
 
-export interface ScraperDataset {
+export interface ScraperDataset<TRow extends object = Record<string, unknown>> {
   /** Dataset name, e.g. `'organisations'` */
   name: string;
   shortDesc: string;
@@ -147,10 +174,17 @@ export interface ScraperDataset {
      */
     personalDataSubjects: string[];
   };
-  output: DatasetOutput;
+  output: DatasetOutput<TRow>;
+  /**
+   * Optional declarative expectations for data integrity validation.
+   * Grouped by level (field, multi-field, row, dataset, other).
+   * Use with great-expectations-js runExpectations().
+   * Column references in expectations are typed against TRow for autocomplete.
+   */
+  expectations?: DatasetExpectations<TRow>;
 }
 
-export interface DatasetOutput<TEntry extends Record<string, any> = Record<string, any>> {
+export interface DatasetOutput<TEntry extends object = Record<string, unknown>> {
   /** Example single extracted entry */
   exampleEntry: TEntry;
   /**

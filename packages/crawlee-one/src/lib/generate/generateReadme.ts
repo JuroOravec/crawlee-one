@@ -10,18 +10,18 @@ import { resolveOutFile } from './utils.js';
  *
  * Calls the configured renderer (or {@link defaultReadmeRenderer}) with the
  * provided actorSpec and input. The renderer returns a string;
- * this function writes it to disk.
+ * this function writes it to disk. ActorSpec comes from config.metadata.
  */
 export const generateReadme = async (config: CrawleeOneConfig): Promise<void> => {
   if (!config.generate?.readme) return;
 
-  const { actorSpec, input, renderer, outFile } = config.generate.readme;
+  const { input, renderer, outFile } = config.generate.readme;
 
   // Cast to ReadmeRenderer<any> so that the unknown input
   // from the runtime config can be passed through without type errors.
   const renderFn: ReadmeRenderer<any> = renderer ?? defaultReadmeRenderer;
   const content = await renderFn({
-    actorSpec,
+    actorSpec: config.metadata,
     input,
   });
 

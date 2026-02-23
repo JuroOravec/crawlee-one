@@ -1,7 +1,6 @@
 import { describe, it, expectTypeOf } from 'vitest';
 import type {
   ActorSpec,
-  ScraperActorSpec,
   ScraperDataset,
   DatasetOutput,
   DatasetFeatures,
@@ -21,9 +20,9 @@ describe('Type exports', () => {
     expectTypeOf<ActorSpec>().toHaveProperty('pricing');
   });
 
-  it('ScraperActorSpec extends ActorSpec with datasets', () => {
-    expectTypeOf<ScraperActorSpec>().toMatchTypeOf<ActorSpec>();
-    expectTypeOf<ScraperActorSpec>().toHaveProperty('datasets');
+  it('ActorSpec has optional datasets', () => {
+    expectTypeOf<ActorSpec>().toHaveProperty('datasets');
+    expectTypeOf<ActorSpec['datasets']>().toEqualTypeOf<ScraperDataset<any>[] | undefined>();
   });
 
   it('ScraperDataset has the expected shape', () => {

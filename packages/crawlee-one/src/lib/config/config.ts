@@ -52,7 +52,6 @@ const configActorSchema = z
 
 const configActorSpecSchema = z
   .object({
-    config: z.record(z.string(), z.any()),
     outFile: z.string().min(1).optional(),
   } satisfies Record<keyof CrawleeOneConfigActorSpec, z.ZodType>)
   .strict();
@@ -60,7 +59,6 @@ const configActorSpecSchema = z
 const configReadmeSchema = z
   .object({
     outFile: z.string().min(1).optional(),
-    actorSpec: z.any().optional(),
     renderer: z.function().optional(),
     input: z.any().optional(),
   } satisfies Record<keyof CrawleeOneConfigReadme, z.ZodType>)
@@ -110,6 +108,7 @@ const configSchema = z
   .object({
     version: z.literal(1),
     schema: configSchemaSchema,
+    metadata: z.any().optional(),
     generate: configGenerateSchema.optional(),
     llm: z
       .object({

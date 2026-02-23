@@ -9,18 +9,18 @@ Internal guide for contributors working on `great-expectations-js`.
 
 ## Commands
 
-| Script              | Description                                          |
-| ------------------- | ---------------------------------------------------- |
-| `pnpm build`        | Bundle with tsup + emit declarations via tsc         |
-| `pnpm dev`          | Watch mode (rebuilds on file changes)                |
-| `pnpm test`         | Run tests once                                       |
-| `pnpm test:watch`   | Run tests in watch mode                              |
-| `pnpm coverage`     | Run tests with v8 coverage report                    |
-| `pnpm lint`         | Lint `src/` with ESLint                              |
-| `pnpm lint:fix`     | Auto-fix lint issues                                 |
-| `pnpm format`       | Format all files with Prettier                       |
-| `pnpm format:check` | Check formatting without writing                     |
-| `pnpm docs:gen`     | Generate API docs with TypeDoc into `docs/typedoc/`  |
+| Script              | Description                                         |
+| ------------------- | --------------------------------------------------- |
+| `pnpm build`        | Bundle with tsup + emit declarations via tsc        |
+| `pnpm dev`          | Watch mode (rebuilds on file changes)               |
+| `pnpm test`         | Run tests once                                      |
+| `pnpm test:watch`   | Run tests in watch mode                             |
+| `pnpm coverage`     | Run tests with v8 coverage report                   |
+| `pnpm lint`         | Lint `src/` with ESLint                             |
+| `pnpm lint:fix`     | Auto-fix lint issues                                |
+| `pnpm format`       | Format all files with Prettier                      |
+| `pnpm format:check` | Check formatting without writing                    |
+| `pnpm docs:gen`     | Generate API docs with TypeDoc into `docs/typedoc/` |
 
 ## Project structure
 

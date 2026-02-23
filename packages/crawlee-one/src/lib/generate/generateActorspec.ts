@@ -8,24 +8,27 @@ import { resolveOutFile } from './utils.js';
  * Generate actorspec.json from the `actorspec` section of the CrawleeOne config.
  *
  * Validates that `actorspecVersion` is present, then serializes to JSON.
+ * ActorSpec comes from config.metadata.
  */
+
 export const generateActorSpec = async (config: CrawleeOneConfig): Promise<void> => {
   if (!config.generate?.actorspec) return;
 
-  const { config: actorSpecConfig, outFile } = config.generate.actorspec;
-  if (!actorSpecConfig || typeof actorSpecConfig !== 'object') {
-    throw new Error('actorspec.config must be a non-null object');
+  const { outFile } = config.generate.actorspec;
+  const actorSpec = config.metadata;
+  if (!actorSpec || typeof actorSpec !== 'object') {
+    throw new Error('ActorSpec required for actorspec generation. Set config.metadata.');
   }
 
-  const spec = actorSpecConfig as Record<string, any>;
+  const spec = actorSpec as Record<string, any>;
   if (!spec.actorspecVersion) {
     throw new Error(
-      'Invalid actorspec config: actorspecVersion is missing. ' +
-        'The actorspec.config object must include an actorspecVersion field.'
+      'Invalid actorspec: actorspecVersion is missing. ' +
+        'The ActorSpec (from config.metadata) must include an actorspecVersion field.'
     );
   }
 
-  const jsonContent = JSON.stringify(actorSpecConfig, null, 2);
+  const jsonContent = JSON.stringify(actorSpec, null, 2);
   const resolvedPath = resolveOutFile(outFile, 'actorspec.json');
 
   await fsp.mkdir(path.dirname(resolvedPath), { recursive: true });

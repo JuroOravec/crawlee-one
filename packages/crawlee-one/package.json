@@ -71,6 +71,7 @@
     "@ai-sdk/anthropic": "catalog:",
     "@ai-sdk/openai": "catalog:",
     "actor-spec": "workspace:*",
+    "great-expectations-js": "workspace:*",
     "ai": "catalog:",
     "commander": "catalog:",
     "cosmiconfig": "catalog:",

@@ -53,6 +53,41 @@ interface ExpectationResult {
 }
 ```
 
+## Declarative expectations
+
+You can define expectations declaratively and run them in bulk:
+
+```ts
+import { runExpectations, type DatasetExpectations } from 'great-expectations-js';
+
+interface MyRow { offerId: string; offerUrl: string; email: string };
+
+const expectations: DatasetExpectations<MyRow> = {
+  dataset: [
+    { expectation: 'expectTableRowCountToBeBetween', params: { min_value: 1, max_value: 100 } },
+  ],
+  field: [
+    { expectation: 'expectColumnToExist', params: { column: 'email' } },
+    { expectation: 'expectColumnValuesToNotBeNull', params: { column: 'email' } },
+    { expectation: 'expectColumnValuesToBeUnique', params: { column: 'email' } },
+  ],
+};
+
+const results = runExpectations(myDataset, expectations);
+```
+
+For column autocomplete, pass your row shape as the generic:
+
+```ts
+interface MyRow { offerId: string; offerUrl: string; supplierUrl: string }
+
+const expectations: DatasetExpectations<MyRow> = {
+  field: [
+    { expectation: 'expectColumnToExist', params: { column: 'offerId' } },  // TS suggests offerId | offerUrl | supplierUrl
+  ],
+};
+```
+
 ## Status
 
 **Version 0.1.0** -- 130 of 174 expectations implemented (54 core + 76 semantic). The tables below track progress.

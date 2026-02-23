@@ -218,3 +218,22 @@ export {
   buildTableResult,
   buildRowResult,
 } from './utils.js';
+
+// Declarative expectations
+export type {
+  ExpectationLevel,
+  ExpectationName,
+  DeclaredExpectation,
+  DatasetExpectations,
+  DatasetLevelDeclaredExpectation,
+  FieldLevelDeclaredExpectation,
+  MultiFieldLevelDeclaredExpectation,
+  RowLevelDeclaredExpectation,
+} from './declarative/declaredExpectations.js';
+export { EXPECTATION_REGISTRY, type RegistryEntry } from './declarative/registry.js';
+export {
+  runExpectations,
+  type DatasetExpectationsInput,
+  type RunExpectationResult,
+  type RunExpectationsOptions,
+} from './declarative/runner.js';

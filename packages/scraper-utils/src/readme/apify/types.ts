@@ -1,21 +1,45 @@
-import type { DatasetPerfStat, ScraperActorSpec, ScraperDataset } from 'actor-spec';
+import type { ActorSpec, DatasetPerfStat, ScraperDataset } from 'actor-spec';
 
 import { ArrVal, enumFromArray } from '../../types.js';
 
 /**
- * Scraper actor spec with additional dataset perf stats info for formatting in tables
+ * Actor spec with Apify-specific dataset fields (perf table info for formatting).
  *
- * See {@link ScraperActorSpec}
+ * Extends {@link ActorSpec} with ApifyScraperDataset.
  */
-export interface ApifyScraperActorSpec extends ScraperActorSpec {
-  datasets: ApifyScraperDataset[];
+export interface ApifyScraperActorSpec extends ActorSpec {
+  datasets: ApifyScraperDataset<any>[];
 }
 
 /** Dataset with additional perf stats info for formatting in tables */
-export interface ApifyScraperDataset extends ScraperDataset {
+export interface ApifyScraperDataset<
+  TRow extends object = Record<string, unknown>,
+> extends ScraperDataset<TRow> {
   perfStats: ApifyDatasetPerfStat[];
   /** Specify which perfTable should render this data */
   perfTable: string;
+}
+
+/**
+ * Type-safe Apify dataset config helper. Pass TRow = shape of one row for column autocomplete in expectations.
+ *
+ * @example
+ * ```ts
+ * interface MyRow { offerId: string; offerUrl: string }
+ * defineApifyDataset<MyRow>({
+ *   name: 'offers',
+ *   ...
+ *   expectations: { field: [{ expectation: 'expectColumnToExist', params: { column: 'offerId' } }] },
+ *   perfTable: 'other',
+ *   perfStats: [],
+ * });
+ * ```
+ */
+export function defineApifyDataset<
+  TRow extends object = Record<string, unknown>,
+  T extends ApifyScraperDataset<TRow> = ApifyScraperDataset<TRow>,
+>(config: T): T {
+  return config;
 }
 
 /** Dataset perf stats with additional info for formatting in tables */

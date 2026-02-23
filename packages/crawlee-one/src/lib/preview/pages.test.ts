@@ -213,9 +213,7 @@ describe('pageRequestQueueEntries', () => {
       url: `https://example.com/${i}`,
       handledAt,
       lastHandledAt:
-        i === 0
-          ? new Date(new Date(handledAt).getTime() - 1).toISOString()
-          : timestamps[i - 1]!,
+        i === 0 ? new Date(new Date(handledAt).getTime() - 1).toISOString() : timestamps[i - 1]!,
     }));
     const html = pageRequestQueueEntries(
       '',

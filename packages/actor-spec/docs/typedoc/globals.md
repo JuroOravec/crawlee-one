@@ -12,7 +12,6 @@
 - [DatasetModes](interfaces/DatasetModes.md)
 - [DatasetOutput](interfaces/DatasetOutput.md)
 - [DatasetPerfStat](interfaces/DatasetPerfStat.md)
-- [ScraperActorSpec](interfaces/ScraperActorSpec.md)
 - [ScraperDataset](interfaces/ScraperDataset.md)
 
 ## Type Aliases

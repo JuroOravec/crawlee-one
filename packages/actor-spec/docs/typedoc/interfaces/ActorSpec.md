@@ -23,11 +23,17 @@ in some platform.
 which websites it works with, what it does (eg what data it extracts if it's a scraper),
 who are the authors, privacy compliance, etc.
 
-## Extended by
-
-- [`ScraperActorSpec`](ScraperActorSpec.md)
-
 ## Properties
+
+### datasets?
+
+> `optional` **datasets**: [`ScraperDataset`](ScraperDataset.md)[]
+
+Defined in: [actorSpec.ts](../src/types/actorSpec.ts)
+
+Datasets that this actor can extract. Optional; when present, describes scraper-specific dataset metadata.
+
+***
 
 ### actor
 
