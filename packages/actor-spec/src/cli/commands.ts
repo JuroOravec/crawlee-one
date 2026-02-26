@@ -1,6 +1,6 @@
 import fs from 'node:fs';
-import path from 'node:path';
 import fsp from 'node:fs/promises';
+import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import type { ActorSpec } from '../types/actorSpec.js';

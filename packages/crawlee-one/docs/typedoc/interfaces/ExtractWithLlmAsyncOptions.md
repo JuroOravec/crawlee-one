@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / ExtractWithLlmAsyncOptions
 
@@ -34,7 +34,7 @@ API key for the LLM provider
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`apiKey`](ExtractWithLlmOptions.md#apikey)
 
-***
+---
 
 ### baseURL?
 
@@ -48,7 +48,7 @@ Optional base URL for OpenAI-compatible APIs (e.g. custom endpoint, Azure OpenAI
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`baseURL`](ExtractWithLlmOptions.md#baseurl)
 
-***
+---
 
 ### extractionId?
 
@@ -59,7 +59,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:96]
 Override the extraction ID (KVS key and LLM queue uniqueKey).
 When set, skips computed ID. Use as an escape hatch when you need explicit control.
 
-***
+---
 
 ### headers?
 
@@ -73,7 +73,7 @@ Custom headers to include in LLM API requests
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`headers`](ExtractWithLlmOptions.md#headers)
 
-***
+---
 
 ### llmKeyValueStoreId?
 
@@ -81,7 +81,7 @@ Custom headers to include in LLM API requests
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:91](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L91)
 
-***
+---
 
 ### llmRequestQueueId?
 
@@ -89,7 +89,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:91]
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:90](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L90)
 
-***
+---
 
 ### model?
 
@@ -103,7 +103,7 @@ Model ID (e.g. `gpt-4o`, `claude-3-5-sonnet`).
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`model`](ExtractWithLlmOptions.md#model)
 
-***
+---
 
 ### provider?
 
@@ -117,7 +117,7 @@ Provider identifier (e.g. `openai`, `anthropic`). Unknown providers use the Open
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`provider`](ExtractWithLlmOptions.md#provider)
 
-***
+---
 
 ### schema
 
@@ -131,7 +131,7 @@ Zod schema for the expected output. Converted to JSON schema for the LLM.
 
 [`ExtractWithLlmSyncOptions`](ExtractWithLlmSyncOptions.md).[`schema`](ExtractWithLlmSyncOptions.md#schema)
 
-***
+---
 
 ### systemPrompt
 
@@ -145,7 +145,7 @@ System prompt describing the extraction task
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`systemPrompt`](ExtractWithLlmOptions.md#systemprompt)
 
-***
+---
 
 ### text?
 

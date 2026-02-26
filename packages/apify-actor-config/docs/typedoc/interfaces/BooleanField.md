@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / BooleanField
 
@@ -37,7 +37,7 @@ Example options with group caption:
 
 ### T
 
-`T` *extends* `boolean` = `boolean`
+`T` _extends_ `boolean` = `boolean`
 
 ### TSchema
 
@@ -57,7 +57,7 @@ Default value that will be used when no value is provided.
 
 `BaseFieldTypedProps.default`
 
-***
+---
 
 ### description
 
@@ -71,7 +71,7 @@ Description of the field that will be displayed as help text in Actor input UI.
 
 `BaseField.description`
 
-***
+---
 
 ### editor?
 
@@ -81,7 +81,7 @@ Defined in: [inputSchema.ts:278](https://github.com/JuroOravec/crawlee-one/blob/
 
 Visual editor used for the input field.
 
-***
+---
 
 ### errorMessage?
 
@@ -98,7 +98,7 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 `BaseFieldTypedProps.errorMessage`
 
-***
+---
 
 ### example?
 
@@ -113,7 +113,7 @@ actor is published in Apify Store.
 
 `BaseFieldTypedProps.example`
 
-***
+---
 
 ### groupCaption?
 
@@ -124,7 +124,7 @@ Defined in: [inputSchema.ts:283](https://github.com/JuroOravec/crawlee-one/blob/
 If you want to group multiple checkboxes together,
 add this option to the first of the group.
 
-***
+---
 
 ### groupDescription?
 
@@ -134,7 +134,7 @@ Defined in: [inputSchema.ts:285](https://github.com/JuroOravec/crawlee-one/blob/
 
 Description displayed as help text displayed of group title.
 
-***
+---
 
 ### nullable?
 
@@ -148,7 +148,7 @@ Specifies whether null is an allowed value.
 
 `BaseField.nullable`
 
-***
+---
 
 ### prefill?
 
@@ -162,7 +162,7 @@ Value that will be prefilled in the actor input interface.
 
 `BaseFieldTypedProps.prefill`
 
-***
+---
 
 ### schema?
 
@@ -179,7 +179,7 @@ automatically stripped when generating `actor.json`.
 
 `BaseFieldTypedProps.schema`
 
-***
+---
 
 ### sectionCaption?
 
@@ -196,7 +196,7 @@ or the next field which has the sectionCaption property set.
 
 `BaseField.sectionCaption`
 
-***
+---
 
 ### sectionDescription?
 
@@ -212,7 +212,7 @@ visible right under the caption when the section is open.
 
 `BaseField.sectionDescription`
 
-***
+---
 
 ### title
 
@@ -226,7 +226,7 @@ Title of the field in UI.
 
 `BaseField.title`
 
-***
+---
 
 ### type
 

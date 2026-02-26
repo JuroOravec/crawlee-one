@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / ApifyErrorReport
 
@@ -16,7 +16,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:6](https://githu
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:7](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L7)
 
-***
+---
 
 ### actorRunId
 
@@ -24,7 +24,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:7](https://githu
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:8](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L8)
 
-***
+---
 
 ### actorRunUrl
 
@@ -32,7 +32,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:8](https://githu
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:9](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L9)
 
-***
+---
 
 ### errorMessage
 
@@ -40,7 +40,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:9](https://githu
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:11](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L11)
 
-***
+---
 
 ### errorName
 
@@ -48,7 +48,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:11](https://gith
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:10](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L10)
 
-***
+---
 
 ### pageHtmlSnapshot
 
@@ -56,7 +56,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:10](https://gith
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:13](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L13)
 
-***
+---
 
 ### pageScreenshot
 
@@ -64,7 +64,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:13](https://gith
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:14](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L14)
 
-***
+---
 
 ### pageUrl
 

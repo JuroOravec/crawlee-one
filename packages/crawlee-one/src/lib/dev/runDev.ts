@@ -10,18 +10,18 @@
 import path from 'node:path';
 
 import {
-  GotScrapingHttpClient,
   type BaseHttpClient,
   type BasicCrawlerOptions,
   type BasicCrawlingContext,
+  GotScrapingHttpClient,
 } from 'crawlee';
 
 import type { CrawleeOneConfigRun, CrawleeOneConfigRunOptions } from '../config/types.js';
 import type { CrawleeOneRoute } from '../router/types.js';
-import { openDevRequestQueue, populateDevRequestQueue } from './devRequestQueue.js';
+import { type DevContext, devContextStore } from './devContextStore.js';
 import { createDevHttpClient, devRequestStore } from './devHttpClient.js';
-import { devContextStore, type DevContext } from './devContextStore.js';
 import { wrapNavigationHandler } from './devNavigationHandler.js';
+import { openDevRequestQueue, populateDevRequestQueue } from './devRequestQueue.js';
 
 const HTTP_CRAWLER_TYPES = ['cheerio', 'http', 'jsdom'] as const;
 const BROWSER_CRAWLER_TYPES = ['playwright', 'adaptive-playwright', 'puppeteer'] as const;
@@ -113,7 +113,12 @@ export async function runDev(opts: RunDevOptions): Promise<void> {
   // the queue from `context.routes`, patch the crawler, and optionally stash
   // handlers for `--fetch` mode.
   const devOnReady: DevContext['devOnReady'] = async (context) => {
-    await populateDevRequestQueue(devQueue, context.routes, { configDir, crawlerName });
+    await populateDevRequestQueue({
+      devQueue,
+      routes: context.routes,
+      configDir,
+      crawlerName,
+    });
 
     // Patch different parts methods on the Crawler instance
     // depending on the crawler type (browser vs http).

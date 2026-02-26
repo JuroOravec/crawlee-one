@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / DefaultReadmeInput
 
@@ -22,7 +22,7 @@ Defined in: [packages/crawlee-one/src/lib/generate/defaultRenderer.ts:20](https:
 
 Additional sections appended at the end.
 
-***
+---
 
 ### inputDescription?
 
@@ -32,7 +32,7 @@ Defined in: [packages/crawlee-one/src/lib/generate/defaultRenderer.ts:14](https:
 
 Section describing input / configuration.
 
-***
+---
 
 ### intro?
 
@@ -42,7 +42,7 @@ Defined in: [packages/crawlee-one/src/lib/generate/defaultRenderer.ts:10](https:
 
 Introductory paragraph shown after the title.
 
-***
+---
 
 ### outputDescription?
 
@@ -52,7 +52,7 @@ Defined in: [packages/crawlee-one/src/lib/generate/defaultRenderer.ts:16](https:
 
 Section describing the output / dataset shape.
 
-***
+---
 
 ### performance?
 
@@ -62,7 +62,7 @@ Defined in: [packages/crawlee-one/src/lib/generate/defaultRenderer.ts:18](https:
 
 Performance / cost notes.
 
-***
+---
 
 ### useCases?
 

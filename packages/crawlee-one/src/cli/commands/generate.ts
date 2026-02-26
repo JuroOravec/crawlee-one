@@ -1,10 +1,10 @@
 import { Command } from 'commander';
 
-import { generateTypes } from '../../lib/generate/generateTypes.js';
+import { loadConfig, validateConfig } from '../../lib/config/config.js';
 import { generateActor } from '../../lib/generate/generateActor.js';
 import { generateActorSpec } from '../../lib/generate/generateActorspec.js';
 import { generateReadme } from '../../lib/generate/generateReadme.js';
-import { loadConfig, validateConfig } from '../../lib/config/config.js';
+import { generateTypes } from '../../lib/generate/generateTypes.js';
 
 export function createGenerateCommand(): Command {
   return new Command('generate')

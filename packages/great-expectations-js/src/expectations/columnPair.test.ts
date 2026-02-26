@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
+
 import {
-  expectColumnPairValuesToBeEqual,
   expectColumnPairValuesAToBeGreaterThanB,
+  expectColumnPairValuesToBeEqual,
   expectColumnPairValuesToBeInSet,
   expectMulticolumnSumToEqual,
 } from './columnPair.js';

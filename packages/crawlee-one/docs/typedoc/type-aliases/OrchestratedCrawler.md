@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / OrchestratedCrawler
 
@@ -22,7 +22,7 @@ Defined in: [packages/crawlee-one/src/lib/orchestrate.ts:18](https://github.com/
 
 Crawler instance with `run()` and `stop()` methods.
 
-***
+---
 
 ### isKeepAlive
 
@@ -34,7 +34,7 @@ Whether the crawler was configured with `keepAlive: true`.
 
 This affects how the crawler is orchestrated. See [orchestrate](../functions/orchestrate.md) for more details.
 
-***
+---
 
 ### queueId
 

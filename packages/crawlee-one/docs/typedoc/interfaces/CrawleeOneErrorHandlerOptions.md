@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneErrorHandlerOptions
 
@@ -14,7 +14,7 @@ User-configurable options passed to the error handler
 
 ### TIO
 
-`TIO` *extends* [`CrawleeOneIO`](CrawleeOneIO.md) = [`CrawleeOneIO`](CrawleeOneIO.md)
+`TIO` _extends_ [`CrawleeOneIO`](CrawleeOneIO.md) = [`CrawleeOneIO`](CrawleeOneIO.md)
 
 ## Properties
 
@@ -24,7 +24,7 @@ User-configurable options passed to the error handler
 
 Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:329](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L329)
 
-***
+---
 
 ### io?
 
@@ -32,7 +32,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:329](https://git
 
 Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:328](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L328)
 
-***
+---
 
 ### onErrorCapture()?
 
@@ -56,7 +56,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:331](https://git
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-***
+---
 
 ### reportingDatasetId?
 

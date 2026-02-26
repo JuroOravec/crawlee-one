@@ -32,15 +32,11 @@ export default defineConfig({
         // - 'puppeteer'
         type: 'playwright',
         // Routes that your scraper defines
-        routes: [
-          'main',
-          'productList',
-          'product',
-        ],
+        routes: ['main', 'productList', 'product'],
         importPath: './dist/index.js',
-        devImportPath: './src/index.ts',  // optional; no build for dev/run
-        input: { startUrls: ['https://example.com'] },   // for crawlee-one run
-        devInput: { startUrls: [] },                     // for crawlee-one dev
+        devImportPath: './src/index.ts', // optional; no build for dev/run
+        input: { startUrls: ['https://example.com'] }, // for crawlee-one run
+        devInput: { startUrls: [] }, // for crawlee-one dev
       }),
     },
   },

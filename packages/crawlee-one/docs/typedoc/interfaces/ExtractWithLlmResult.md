@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / ExtractWithLlmResult
 
@@ -26,7 +26,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:43](https
 
 Extraction metadata (timing, token usage)
 
-***
+---
 
 ### object
 

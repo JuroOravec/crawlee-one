@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmModelCompareReport
 
@@ -26,7 +26,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:57
 
 Per ID: each model's result (null if model failed for that ID)
 
-***
+---
 
 ### models
 
@@ -34,7 +34,7 @@ Per ID: each model's result (null if model failed for that ID)
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:55
 
-***
+---
 
 ### referenceModelId
 
@@ -42,7 +42,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:55
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:54
 
-***
+---
 
 ### totalIds
 

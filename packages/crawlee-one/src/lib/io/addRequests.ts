@@ -1,9 +1,9 @@
 import { Log, type RequestQueueOperationOptions } from 'crawlee';
 
-import type { MaybePromise } from '../../utils/types.js';
 import type { CrawlerUrl } from '../../types.js';
-import type { CrawleeOneIO } from '../integrations/types.js';
+import type { MaybePromise } from '../../utils/types.js';
 import { apifyIO } from '../integrations/apify.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
 import { requestQueueSizeMonitor } from './requestQueue.js';
 
 /** Options for addRequests. Extends Crawlee's RequestQueueOperationOptions (e.g. forefront). */
@@ -38,16 +38,18 @@ export interface AddRequestsOptions<
   requestQueueId?: string;
 }
 
-const shortenToSize = async <T>(
-  entries: T[],
-  maxCount: number,
-  options?: { io?: CrawleeOneIO; requestQueueId?: string; log?: Log }
-) => {
-  const { requestQueueId, log } = options ?? {};
+const shortenToSize = async <T>(opts: {
+  entries: T[];
+  maxCount: number;
+  io?: CrawleeOneIO;
+  requestQueueId?: string;
+  log?: Log;
+}) => {
+  const { entries, maxCount, requestQueueId, log } = opts;
 
   const queueName = requestQueueId ? `"${requestQueueId}"` : 'DEFAULT';
 
-  const sizeMonitor = requestQueueSizeMonitor(maxCount, options);
+  const sizeMonitor = requestQueueSizeMonitor(maxCount, { io: opts.io, requestQueueId, log });
 
   // Ignore incoming entries if the queue is already full
   const isFull = await sizeMonitor.isFull();
@@ -90,7 +92,7 @@ export const addRequests = async <T extends Exclude<CrawlerUrl, string>>(
   const manyItems = Array.isArray(oneOrManyItems) ? oneOrManyItems : [oneOrManyItems];
   const items =
     maxCount != null
-      ? await shortenToSize(manyItems, maxCount, { io, requestQueueId, log })
+      ? await shortenToSize({ entries: manyItems, maxCount, io, requestQueueId, log })
       : manyItems;
 
   log.debug(`Preparing to push ${items.length} requests to queue`); // prettier-ignore

@@ -13,9 +13,9 @@ handler: async (ctx) => {
     schema: jobOfferSchema,
     systemPrompt: 'Extract job details from this HTML. Use null for missing values.',
   });
-  if (result == null) return;  // result not yet ready
+  if (result == null) return; // result not yet ready
   await pushData(result.object);
-}
+};
 ```
 
 See the [LLM extraction guide](./llm-extraction-guide.md).
@@ -284,7 +284,7 @@ await crawleeOne({
 
 Run multiple crawlers side-by-side in a single process until all their queues drain. Use this when crawlers exchange work between each other. Focus on the business logic and let CrawleeOne handle the orchestration.
 
-**Use `orchestrate` inside the `onReady` callback** so it runs when the crawler would normally start. 
+**Use `orchestrate` inside the `onReady` callback** so it runs when the crawler would normally start.
 
 Simply define individual crawlers and pass them to the `orchestrate()` function:
 

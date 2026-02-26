@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / AddRequestsOptions
 
@@ -18,7 +18,7 @@ Options for addRequests. Extends Crawlee's RequestQueueOperationOptions (e.g. fo
 
 ### T
 
-`T` *extends* `Exclude`\<[`CrawlerUrl`](../type-aliases/CrawlerUrl.md), `string`\> = `Exclude`\<[`CrawlerUrl`](../type-aliases/CrawlerUrl.md), `string`\>
+`T` _extends_ `Exclude`\<[`CrawlerUrl`](../type-aliases/CrawlerUrl.md), `string`\> = `Exclude`\<[`CrawlerUrl`](../type-aliases/CrawlerUrl.md), `string`\>
 
 ## Properties
 
@@ -26,7 +26,7 @@ Options for addRequests. Extends Crawlee's RequestQueueOperationOptions (e.g. fo
 
 > `optional` **cache**: `boolean`
 
-Defined in: node\_modules/.pnpm/@crawlee+core@3.16.0/node\_modules/@crawlee/core/storages/request\_provider.d.ts:325
+Defined in: node_modules/.pnpm/@crawlee+core@3.16.0/node_modules/@crawlee/core/storages/request_provider.d.ts:325
 
 **`Internal`**
 
@@ -43,7 +43,7 @@ false
 
 `RequestQueueOperationOptions.cache`
 
-***
+---
 
 ### filter()?
 
@@ -65,19 +65,20 @@ This serves mainly to allow users to filter the requests from actor input UI.
 
 `unknown`
 
-***
+---
 
 ### forefront?
 
 > `optional` **forefront**: `boolean`
 
-Defined in: node\_modules/.pnpm/@crawlee+core@3.16.0/node\_modules/@crawlee/core/storages/request\_provider.d.ts:319
+Defined in: node_modules/.pnpm/@crawlee+core@3.16.0/node_modules/@crawlee/core/storages/request_provider.d.ts:319
 
 If set to `true`:
-  - while adding the request to the queue: the request will be added to the foremost position in the queue.
-  - while reclaiming the request: the request will be placed to the beginning of the queue, so that it's returned
+
+- while adding the request to the queue: the request will be added to the foremost position in the queue.
+- while reclaiming the request: the request will be placed to the beginning of the queue, so that it's returned
   in the next call to RequestQueue.fetchNextRequest.
-By default, it's put to the end of the queue.
+  By default, it's put to the end of the queue.
 
 In case the request is already present in the queue, this option has no effect.
 
@@ -87,14 +88,14 @@ is arbitrary.
 #### Default
 
 ```ts
-false
+false;
 ```
 
 #### Inherited from
 
 `RequestQueueOperationOptions.forefront`
 
-***
+---
 
 ### io?
 
@@ -102,7 +103,7 @@ false
 
 Defined in: [packages/crawlee-one/src/lib/io/addRequests.ts:13](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/addRequests.ts#L13)
 
-***
+---
 
 ### log?
 
@@ -110,7 +111,7 @@ Defined in: [packages/crawlee-one/src/lib/io/addRequests.ts:13](https://github.c
 
 Defined in: [packages/crawlee-one/src/lib/io/addRequests.ts:14](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/addRequests.ts#L14)
 
-***
+---
 
 ### maxCount?
 
@@ -126,7 +127,7 @@ This means that if `maxCount` is set to 50, but the
 associated RequestQueue already handled 40 requests, then only 10 new requests
 will be processed.
 
-***
+---
 
 ### requestQueueId?
 
@@ -136,7 +137,7 @@ Defined in: [packages/crawlee-one/src/lib/io/addRequests.ts:38](https://github.c
 
 ID of the RequestQueue to which the data should be pushed
 
-***
+---
 
 ### transform()?
 

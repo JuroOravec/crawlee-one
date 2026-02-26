@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / SampleUrlItem
 
@@ -21,7 +21,7 @@ const route: CrawleeOneRoute = {
   sampleUrls: [
     'https://example.com',
     { url: 'https://example.com/page/2' },
-    { request: { url: 'https://example.com/page/3' }, response: { statusCode: 200, body: '...' } }
+    { request: { url: 'https://example.com/page/3' }, response: { statusCode: 200, body: '...' } },
   ],
 };
 ```

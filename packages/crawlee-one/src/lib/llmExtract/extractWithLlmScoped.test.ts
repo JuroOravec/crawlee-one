@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
@@ -7,9 +7,9 @@ vi.mock('./extractWithLlm.js', () => ({
   extractWithLlm: (...args: unknown[]) => mockExtractWithLlm(...args),
 }));
 
+import type { CrawleeOneIO } from '../integrations/types.js';
 import { createExtractWithLlmForContext } from './extractWithLlmScoped.js';
 import { computeExtractionId } from './utils.js';
-import type { CrawleeOneIO } from '../integrations/types.js';
 
 const jobSchema = z.object({ title: z.string(), salary: z.string().optional() });
 

@@ -63,15 +63,15 @@ For full implementation details (queue IDs, KVS semantics, re-queue behavior), s
 
 All `llm*` actor inputs are **optional**. Provide them in crawler input (or Apify actor input) to configure the LLM. For the LLM call to succeed, **only `model` must be provided** (via actor input or per-call options); `apiKey` can come from `OPENAI_API_KEY` env.
 
-| Field                | Required | Description                                                                 |
-| -------------------- | -------- | --------------------------------------------------------------------------- |
-| `llmModel`           | Yes*     | Model ID (e.g. `gpt-4o`, `claude-3-5-sonnet-20241022`). Required for call.  |
+| Field                | Required | Description                                                                  |
+| -------------------- | -------- | ---------------------------------------------------------------------------- |
+| `llmModel`           | Yes\*    | Model ID (e.g. `gpt-4o`, `claude-3-5-sonnet-20241022`). Required for call.   |
 | `llmApiKey`          | No       | API key for the LLM provider. Defaults to `OPENAI_API_KEY` env when omitted. |
-| `llmProvider`        | No       | Provider ID: `openai`, `anthropic`, `google`, `deepseek`, `ollama`, etc.    |
-| `llmBaseUrl`         | No       | Override API endpoint (e.g. Azure OpenAI, custom OpenAI-compatible API).    |
-| `llmHeaders`         | No       | Custom headers for the LLM API.                                             |
-| `llmRequestQueueId`  | No       | Override LLM request queue ID. Defaults to run-scoped `llm-{runId}`.        |
-| `llmKeyValueStoreId` | No       | Override LLM key-value store ID. Defaults to run-scoped `llm-{runId}`.      |
+| `llmProvider`        | No       | Provider ID: `openai`, `anthropic`, `google`, `deepseek`, `ollama`, etc.     |
+| `llmBaseUrl`         | No       | Override API endpoint (e.g. Azure OpenAI, custom OpenAI-compatible API).     |
+| `llmHeaders`         | No       | Custom headers for the LLM API.                                              |
+| `llmRequestQueueId`  | No       | Override LLM request queue ID. Defaults to run-scoped `llm-{runId}`.         |
+| `llmKeyValueStoreId` | No       | Override LLM key-value store ID. Defaults to run-scoped `llm-{runId}`.       |
 
 Example:
 
@@ -116,6 +116,7 @@ Standard pages use DOM-based extraction; custom pages fall back to the LLM.
 ### Route
 
 The "custom design" route uses multiple methods to detect custom pages:
+
 - Via DOM - CSS clases (`.maintextearea`)
 - Resources - CSS from `/customdesigns/`
 - Data layer (`"dimensionOfferType":"Custom design"`)
@@ -172,34 +173,33 @@ const zUrlForLlm = z
   })
   .nullable();
 
-export const llmJobOfferSchema = z
-  .object({
-    salaryRange: zStrNotEmptyNullable,
-    salaryRangeLower: zNumIntNonNegNullable,
-    salaryRangeUpper: zNumIntNonNegNullable,
-    salaryCurrency: zStrNotEmptyNullable,
-    salaryPeriod: zStrNotEmptyNullable,
-    listingUrl: zUrlForLlm,
-    employerName: zStrNotEmptyNullable,
-    employerUrl: zUrlForLlm,
-    employerLogoUrl: zStrNotEmptyNullable,
-    offerName: zStrNotEmptyNullable,
-    offerUrl: zUrlForLlm,
-    offerId: zStrNotEmptyNullable,
-    location: zStrNotEmptyNullable,
-    labels: z.array(z.string()).default([]),
-    lastChangeRelativeTime: zStrNotEmptyNullable,
-    lastChangeType: zStrNotEmptyNullable,
-    jobInfoResponsibilities: zStrNotEmptyNullable,
-    jobInfoBenefits: zStrNotEmptyNullable,
-    jobInfoDeadline: z.preprocess(
-      (v) => (v === undefined || v === '' ? null : v),
-      zStrNotEmptyNullable
-    ),
-    jobReqEducation: zStrNotEmptyNullable,
-    jobReqExpertise: zStrNotEmptyNullable,
-    jobReqLanguage: zStrNotEmptyNullable,
-  });
+export const llmJobOfferSchema = z.object({
+  salaryRange: zStrNotEmptyNullable,
+  salaryRangeLower: zNumIntNonNegNullable,
+  salaryRangeUpper: zNumIntNonNegNullable,
+  salaryCurrency: zStrNotEmptyNullable,
+  salaryPeriod: zStrNotEmptyNullable,
+  listingUrl: zUrlForLlm,
+  employerName: zStrNotEmptyNullable,
+  employerUrl: zUrlForLlm,
+  employerLogoUrl: zStrNotEmptyNullable,
+  offerName: zStrNotEmptyNullable,
+  offerUrl: zUrlForLlm,
+  offerId: zStrNotEmptyNullable,
+  location: zStrNotEmptyNullable,
+  labels: z.array(z.string()).default([]),
+  lastChangeRelativeTime: zStrNotEmptyNullable,
+  lastChangeType: zStrNotEmptyNullable,
+  jobInfoResponsibilities: zStrNotEmptyNullable,
+  jobInfoBenefits: zStrNotEmptyNullable,
+  jobInfoDeadline: z.preprocess(
+    (v) => (v === undefined || v === '' ? null : v),
+    zStrNotEmptyNullable
+  ),
+  jobReqEducation: zStrNotEmptyNullable,
+  jobReqExpertise: zStrNotEmptyNullable,
+  jobReqLanguage: zStrNotEmptyNullable,
+});
 ```
 
 ### System prompt
@@ -233,12 +233,12 @@ If a Page URL is provided with the content, resolve any relative URL paths (e.g.
 
 Choose a model based on accuracy, cost, and latency. Common options:
 
-| Provider  | Model                                                  | Notes                                                                  |
-| --------- | ------------------------------------------------------ | ---------------------------------------------------------------------- |
-| OpenAI    | `gpt-5-mini`, `gpt-5.2`, `gpt-5.2-pro`, `gpt-4o-mini`  | [Models](https://developers.openai.com/api/docs/models)                |
-| Anthropic | `claude-3-5-sonnet-20241022`                           | [Models](https://docs.anthropic.com/en/docs/about-claude/models)       |
-| Google    | `gemini-1.5-pro`, `gemini-1.5-flash`                   | [Models](https://cloud.google.com/vertex-ai/generative-ai/docs/models) |
-| DeepSeek  | `deepseek-chat`                                        | [Docs](https://api-docs.deepseek.com/quick_start/pricing)              |
-| Ollama    | `llama3`, `mistral`                                    | [Models](https://ollama.com/models) — for local/dev                    |
+| Provider  | Model                                                 | Notes                                                                  |
+| --------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
+| OpenAI    | `gpt-5-mini`, `gpt-5.2`, `gpt-5.2-pro`, `gpt-4o-mini` | [Models](https://developers.openai.com/api/docs/models)                |
+| Anthropic | `claude-3-5-sonnet-20241022`                          | [Models](https://docs.anthropic.com/en/docs/about-claude/models)       |
+| Google    | `gemini-1.5-pro`, `gemini-1.5-flash`                  | [Models](https://cloud.google.com/vertex-ai/generative-ai/docs/models) |
+| DeepSeek  | `deepseek-chat`                                       | [Docs](https://api-docs.deepseek.com/quick_start/pricing)              |
+| Ollama    | `llama3`, `mistral`                                   | [Models](https://ollama.com/models) — for local/dev                    |
 
 **Recommended for production:** As of 02/2026, **`gpt-5-mini`** offers the best balance of quality (~80% agreement with reference), cost (~$0.015/req), and speed. Use `gpt-5.2-pro` as a reference model for complex schemas; avoid `gpt-4o-mini` for structured extraction — it tends to summarise or misplace content. Run `crawlee-one llm compare` on your URLs and schema to evaluate models; see [LLM compare guide](./llm-compare-guide.md).

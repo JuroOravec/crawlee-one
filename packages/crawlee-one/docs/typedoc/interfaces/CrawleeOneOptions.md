@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneOptions
 
@@ -14,11 +14,11 @@ Options object passed to `crawleeOne`
 
 ### TType
 
-`TType` *extends* [`CrawlerType`](../type-aliases/CrawlerType.md)
+`TType` _extends_ [`CrawlerType`](../type-aliases/CrawlerType.md)
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`\>\[`"context"`\]\>
+`T` _extends_ [`CrawleeOneTypes`](CrawleeOneTypes.md)\<[`CrawlerMeta`](../type-aliases/CrawlerMeta.md)\<`TType`\>\[`"context"`\]\>
 
 ## Properties
 
@@ -30,7 +30,7 @@ Defined in: [packages/crawlee-one/src/lib/context/context.ts:66](https://github.
 
 Default crawler configuration that may be overriden via `input` and `crawlerConfigOverrides`
 
-***
+---
 
 ### crawlerConfigOverrides?
 
@@ -40,7 +40,7 @@ Defined in: [packages/crawlee-one/src/lib/context/context.ts:64](https://github.
 
 Crawler configuration that is applied at the end and overrides `crawlerConfigDefaults` and `input` settings.
 
-***
+---
 
 ### hooks?
 
@@ -70,7 +70,7 @@ Defined in: [packages/crawlee-one/src/lib/context/context.ts:161](https://github
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-***
+---
 
 ### input?
 
@@ -80,7 +80,7 @@ Defined in: [packages/crawlee-one/src/lib/context/context.ts:106](https://github
 
 Input configuration that CANNOT be overriden via `inputDefaults` and `io.getInput()`
 
-***
+---
 
 ### inputDefaults?
 
@@ -90,7 +90,7 @@ Defined in: [packages/crawlee-one/src/lib/context/context.ts:108](https://github
 
 Input configuration that CAN be overriden via `input` and `io.getInput()`
 
-***
+---
 
 ### inputFields?
 
@@ -101,7 +101,7 @@ Defined in: [packages/crawlee-one/src/lib/context/context.ts:113](https://github
 Field objects with embedded Zod schemas for input validation.
 If provided, input is validated against these schemas automatically.
 
-***
+---
 
 ### io?
 
@@ -110,6 +110,7 @@ If provided, input is validated against these schemas automatically.
 Defined in: [packages/crawlee-one/src/lib/context/context.ts:145](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L145)
 
 Provide an instance that is responsible for state management:
+
 - Adding scraped data to datasets
 - Adding and removing requests to/from queues
 - Cache storage
@@ -125,7 +126,7 @@ then it will use Apify's cloud for storage.
 
 See [CrawleeOneIO](CrawleeOneIO.md)
 
-***
+---
 
 ### mergeInput?
 
@@ -164,7 +165,7 @@ Alternatively, you can supply your own function that merges the sources:
 }
 ```
 
-***
+---
 
 ### name?
 
@@ -174,7 +175,7 @@ Defined in: [packages/crawlee-one/src/lib/context/context.ts:61](https://github.
 
 Unique name of the crawler instance. The name may be used in codegen and logging.
 
-***
+---
 
 ### proxy?
 
@@ -186,7 +187,7 @@ Configure the Crawlee proxy.
 
 See ProxyConfiguration
 
-***
+---
 
 ### router?
 
@@ -197,6 +198,7 @@ Defined in: [packages/crawlee-one/src/lib/context/context.ts:157](https://github
 Provide a custom router instance.
 
 By default, router is created as:
+
 ```ts
 import { Router } from 'crawlee';
 Router.create(),
@@ -204,7 +206,7 @@ Router.create(),
 
 See Router
 
-***
+---
 
 ### routes
 
@@ -214,7 +216,7 @@ Defined in: [packages/crawlee-one/src/lib/context/context.ts:159](https://github
 
 Routes that are used to redirect requests to the appropriate handler.
 
-***
+---
 
 ### strict?
 
@@ -228,7 +230,7 @@ If `false`, log an error and skip the URL.
 
 Defaults to `false`.
 
-***
+---
 
 ### telemetry?
 
@@ -240,7 +242,7 @@ Provide a telemetry instance that is used for tracking errors.
 
 See [CrawleeOneTelemetry](CrawleeOneTelemetry.md)
 
-***
+---
 
 ### type
 

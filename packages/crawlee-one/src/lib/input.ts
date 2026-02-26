@@ -1,18 +1,18 @@
 import type { Actor } from 'apify';
-import type { CheerioCrawlerOptions } from 'crawlee';
 import {
+  createArrayField,
   createBooleanField,
   createIntegerField,
   createObjectField,
   createStringField,
-  createArrayField,
-  Field,
+  type Field,
 } from 'apify-actor-config';
+import type { CheerioCrawlerOptions } from 'crawlee';
 import { z } from 'zod';
 
 import type { CrawlerUrl } from '../types.js';
-import { LOG_LEVEL, type LogLevel } from './log.js';
 import type { CrawleeOneHookFn } from './context/types.js';
+import { LOG_LEVEL, type LogLevel } from './log.js';
 
 export type ActorInput = InputActorInput &
   CrawlerConfigActorInput &
@@ -433,11 +433,12 @@ const datasetIdWithFieldRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*#.+$/;
 
 const newLine = (n: number) => '<br/>'.repeat(n);
 
-const createHookFnExample = (
-  args: Record<string, string>,
-  mainCode: string,
-  includeGuides: boolean
-) => {
+const createHookFnExample = (opts: {
+  args: Record<string, string>;
+  mainCode: string;
+  includeGuides: boolean;
+}) => {
+  const { args, mainCode, includeGuides } = opts;
   const formattedArgs = Object.keys(args).length ? Object.keys(args).join(', ') + ', ' : '';
   const formattedArgDesc = Object.entries(args).length
     ? Object.entries(args).map(([arg, desc]) => ` * \`${arg}\` - ${desc}.`)
@@ -583,8 +584,8 @@ export const inputInput = {
     For example, you can store your actor input in a source control, and import it here.${newLine(1)}
     In case of a conflict (if a field is defined both in Actor input and in imported input) the Actor input overwrites the imported fields.${newLine(1)}
     The function must return an object (the config).`,
-    example: createHookFnExample({}, CODE_EXAMPLES.inputExtendFromFunction, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.inputExtendFromFunction, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.inputExtendFromFunction, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.inputExtendFromFunction, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -775,8 +776,8 @@ export const startUrlsInput = {
     type: 'string',
     description: `Import or generate URLs to scrape using a custom function.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.startUrlsFromFunction, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.startUrlsFromFunction, includeGuides: true }),
     nullable: true,
     schema: z.union([z.string().min(1), z.function()]).optional(),
   }), // prettier-ignore
@@ -884,8 +885,8 @@ export const requestInput = {
     description: `Freely transform the request object using a custom function.${newLine(1)}
     If not set, the request will remain as is.`,
     editor: 'javascript',
-    example: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, false),
-    prefill: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, true),
+    example: createHookFnExample({ args: { request: 'Request holding URL to be scraped' }, mainCode: CODE_EXAMPLES.requestTransform, includeGuides: false }),
+    prefill: createHookFnExample({ args: { request: 'Request holding URL to be scraped' }, mainCode: CODE_EXAMPLES.requestTransform, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -894,8 +895,8 @@ export const requestInput = {
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`requestTransform\`.`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestTransformBefore, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestTransformBefore, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -904,8 +905,8 @@ export const requestInput = {
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`requestTransform\`.`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestTransformAfter, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestTransformAfter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -917,8 +918,8 @@ export const requestInput = {
     If not set, all requests will be included.${newLine(1)}
     This is done after \`requestTransform\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestFilter, false),
-    prefill: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestFilter, true),
+    example: createHookFnExample({ args: { request: 'Request holding URL to be scraped' }, mainCode: CODE_EXAMPLES.requestFilter, includeGuides: false }),
+    prefill: createHookFnExample({ args: { request: 'Request holding URL to be scraped' }, mainCode: CODE_EXAMPLES.requestFilter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -927,8 +928,8 @@ export const requestInput = {
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`requestFilter\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.requestFilterBefore, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.requestFilterBefore, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestFilterBefore, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestFilterBefore, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -937,8 +938,8 @@ export const requestInput = {
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`requestFilter\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.requestFilterAfter, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.requestFilterAfter, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestFilterAfter, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestFilterAfter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -1007,8 +1008,8 @@ export const outputInput = {
     If not set, the data will remain as is.${newLine(1)}
     This is done after \`outputPickFields\` and \`outputRenameFields\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, false),
-    prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, true),
+    example: createHookFnExample({ args: { entry: 'Scraped entry' }, mainCode: CODE_EXAMPLES.outputTransform, includeGuides: false }),
+    prefill: createHookFnExample({ args: { entry: 'Scraped entry' }, mainCode: CODE_EXAMPLES.outputTransform, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -1017,8 +1018,8 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`outputTransform\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputTransformBefore, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputTransformBefore, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -1027,8 +1028,8 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`outputTransform\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputTransformAfter, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputTransformAfter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -1040,8 +1041,8 @@ export const outputInput = {
     If not set, all scraped entries will be included.${newLine(1)}
     This is done after \`outputPickFields\`, \`outputRenameFields\`, and \`outputTransform\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, false),
-    prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, true),
+    example: createHookFnExample({ args: { entry: 'Scraped entry' }, mainCode: CODE_EXAMPLES.outputFilter, includeGuides: false }),
+    prefill: createHookFnExample({ args: { entry: 'Scraped entry' }, mainCode: CODE_EXAMPLES.outputFilter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -1050,8 +1051,8 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`outputFilter\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputFilterBefore, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputFilterBefore, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -1060,8 +1061,8 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`outputFilter\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputFilterAfter, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputFilterAfter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore

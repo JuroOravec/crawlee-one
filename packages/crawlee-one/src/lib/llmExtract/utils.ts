@@ -1,5 +1,6 @@
-import type { JSONSchema7 } from 'ai';
 import { createHash } from 'node:crypto';
+
+import type { JSONSchema7 } from 'ai';
 
 /** Stable hash for extraction IDs. First 12 chars of base64url SHA256. */
 export function stableHash(input: string): string {

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmExtractionResult
 
@@ -24,7 +24,7 @@ Result returned by scoped extractWithLLM when the result is available.
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:56](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L56)
 
-***
+---
 
 ### object
 

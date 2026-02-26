@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
-import { stableHash, canonicalJson, computeExtractionId } from './utils.js';
+import { canonicalJson, computeExtractionId, stableHash } from './utils.js';
 
 describe('llmExtract utils', () => {
   describe('stableHash', () => {

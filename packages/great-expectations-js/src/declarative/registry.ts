@@ -3,101 +3,149 @@
  * Used by the runner to dispatch declared expectations.
  */
 
-import type { Dataset, ExpectationResult } from '../types.js';
-import type { ExpectationLevel, ExpectationName } from './declaredExpectations.js';
-
 import {
-  expectTableRowCountToEqual,
-  expectTableRowCountToBeBetween,
-  expectTableColumnCountToEqual,
-  expectTableColumnCountToBeBetween,
-  expectTableColumnsToMatchOrderedList,
-  expectTableColumnsToMatchSet,
-} from '../expectations/table.js';
+  expectColumnMaxToBeBetween,
+  expectColumnMeanToBeBetween,
+  expectColumnMedianToBeBetween,
+  expectColumnMinToBeBetween,
+  expectColumnMostCommonValueToBeInSet,
+  expectColumnProportionOfNonNullValuesToBeBetween,
+  expectColumnProportionOfUniqueValuesToBeBetween,
+  expectColumnStdevToBeBetween,
+  expectColumnSumToBeBetween,
+  expectColumnUniqueValueCountToBeBetween,
+} from '../expectations/columnAggregate.js';
 import {
   expectColumnToExist,
   expectColumnValuesToBeNull,
-  expectColumnValuesToNotBeNull,
   expectColumnValuesToBeUnique,
+  expectColumnValuesToNotBeNull,
   expectCompoundColumnsToBeUnique,
   expectSelectColumnValuesToBeUniqueWithinRecord,
 } from '../expectations/columnExistence.js';
 import {
-  expectColumnValuesToBeInSet,
-  expectColumnValuesToNotBeInSet,
-  expectColumnDistinctValuesToBeInSet,
-  expectColumnDistinctValuesToContainSet,
-  expectColumnDistinctValuesToEqualSet,
-} from '../expectations/columnSet.js';
+  expectColumnValuesToMatchLikePattern,
+  expectColumnValuesToMatchLikePatternList,
+  expectColumnValuesToNotMatchLikePattern,
+  expectColumnValuesToNotMatchLikePatternList,
+} from '../expectations/columnLike.js';
 import {
-  expectColumnValuesToBeBetween,
-  expectColumnValuesToBeIncreasing,
-  expectColumnValuesToBeDecreasing,
-  expectColumnValueLengthsToBeBetween,
-  expectColumnValueLengthsToEqual,
-  expectColumnValuesToBeOfType,
-  expectColumnValuesToBeInTypeList,
-} from '../expectations/columnRange.js';
-import {
-  expectColumnValuesToMatchRegex,
-  expectColumnValuesToNotMatchRegex,
-  expectColumnValuesToMatchRegexList,
-  expectColumnValuesToNotMatchRegexList,
-  expectColumnValuesToBeJsonParseable,
-  expectColumnValuesToBeDateutilParseable,
-  expectColumnValuesToMatchStrftimeFormat,
-} from '../expectations/columnRegex.js';
-import {
-  expectColumnMaxToBeBetween,
-  expectColumnMinToBeBetween,
-  expectColumnMeanToBeBetween,
-  expectColumnMedianToBeBetween,
-  expectColumnSumToBeBetween,
-  expectColumnStdevToBeBetween,
-  expectColumnUniqueValueCountToBeBetween,
-  expectColumnMostCommonValueToBeInSet,
-  expectColumnProportionOfNonNullValuesToBeBetween,
-  expectColumnProportionOfUniqueValuesToBeBetween,
-} from '../expectations/columnAggregate.js';
-import {
-  expectColumnPairValuesToBeEqual,
   expectColumnPairValuesAToBeGreaterThanB,
+  expectColumnPairValuesToBeEqual,
   expectColumnPairValuesToBeInSet,
   expectMulticolumnSumToEqual,
 } from '../expectations/columnPair.js';
 import {
-  expectColumnValuesToMatchLikePattern,
-  expectColumnValuesToNotMatchLikePattern,
-  expectColumnValuesToMatchLikePatternList,
-  expectColumnValuesToNotMatchLikePatternList,
-} from '../expectations/columnLike.js';
+  expectColumnValueLengthsToBeBetween,
+  expectColumnValueLengthsToEqual,
+  expectColumnValuesToBeBetween,
+  expectColumnValuesToBeDecreasing,
+  expectColumnValuesToBeIncreasing,
+  expectColumnValuesToBeInTypeList,
+  expectColumnValuesToBeOfType,
+} from '../expectations/columnRange.js';
+import {
+  expectColumnValuesToBeDateutilParseable,
+  expectColumnValuesToBeJsonParseable,
+  expectColumnValuesToMatchRegex,
+  expectColumnValuesToMatchRegexList,
+  expectColumnValuesToMatchStrftimeFormat,
+  expectColumnValuesToNotMatchRegex,
+  expectColumnValuesToNotMatchRegexList,
+} from '../expectations/columnRegex.js';
+import { expectColumnValuesToMatchJsonSchema } from '../expectations/columnSchema.js';
+import {
+  expectColumnDistinctValuesToBeInSet,
+  expectColumnDistinctValuesToContainSet,
+  expectColumnDistinctValuesToEqualSet,
+  expectColumnValuesToBeInSet,
+  expectColumnValuesToNotBeInSet,
+} from '../expectations/columnSet.js';
 import {
   expectColumnQuantileValuesToBeBetween,
   expectColumnValueZScoresToBeLessThan,
 } from '../expectations/columnStats.js';
-import { expectColumnValuesToMatchJsonSchema } from '../expectations/columnSchema.js';
 import {
-  expectColumnValuesToBeValidUuid,
-  expectColumnValuesToContainValidEmail,
   expectColumnValuesToBeAscii,
   expectColumnValuesToBeSlug,
-  expectColumnValuesToBeValidHexColor,
-  expectColumnValuesToBeValidMd5,
-  expectColumnValuesToBeValidSha1,
   expectColumnValuesToBeValidBase64,
+  expectColumnValuesToBeValidDate,
   expectColumnValuesToBeValidHashtag,
-  expectColumnValuesToBeValidUrls,
-  expectColumnValuesToBeValidIpv4,
-  expectColumnValuesToBeValidIpv6,
-  expectColumnValuesToBeValidMac,
+  expectColumnValuesToBeValidHexColor,
   expectColumnValuesToBeValidHttpMethod,
   expectColumnValuesToBeValidHttpMethods,
   expectColumnValuesToBeValidHttpStatusCode,
+  expectColumnValuesToBeValidIpv4,
+  expectColumnValuesToBeValidIpv6,
+  expectColumnValuesToBeValidMac,
+  expectColumnValuesToBeValidMd5,
+  expectColumnValuesToBeValidSha1,
   expectColumnValuesToBeValidTcpPort,
   expectColumnValuesToBeValidUdpPort,
-  expectColumnValuesToBeValidDate,
+  expectColumnValuesToBeValidUrls,
+  expectColumnValuesToBeValidUuid,
   expectColumnValuesToBeWeekday,
+  expectColumnValuesToContainValidEmail,
 } from '../expectations/semantic.js';
+import {
+  expectColumnValuesToBeGtinBaseUnit,
+  expectColumnValuesToBeGtinVariableMeasureTradeItem,
+  expectColumnValuesToBeValidBarcode,
+  expectColumnValuesToBeValidEan,
+  expectColumnValuesToBeValidImei,
+  expectColumnValuesToBeValidIsan,
+  expectColumnValuesToBeValidIsbn10,
+  expectColumnValuesToBeValidIsbn13,
+  expectColumnValuesToBeValidIsin,
+  expectColumnValuesToBeValidIsmn,
+  expectColumnValuesToBeValidMeid,
+} from '../expectations/semanticChecksum.js';
+import {
+  expectColumnValuesToBeIsoLanguages,
+  expectColumnValuesToBeValidCountry,
+  expectColumnValuesToBeValidCurrencyCode,
+  expectColumnValuesToBeValidHttpStatusName,
+  expectColumnValuesToBeValidIanaTimezone,
+  expectColumnValuesToBeValidIsoCountry,
+  expectColumnValuesToBeValidMbti,
+  expectColumnValuesToBeValidMime,
+  expectColumnValuesToBeValidTld,
+  expectColumnValuesToBeValidUsState,
+  expectColumnValuesToBeValidUsStateAbbreviation,
+  expectColumnValuesToBeValidUsStateOrTerritory,
+  expectColumnValuesToBeValidUsStateOrTerritoryAbbreviation,
+} from '../expectations/semanticData.js';
+import {
+  expectColumnValuesToBeValidBic,
+  expectColumnValuesToBeValidFormattedVat,
+  expectColumnValuesToBeValidIban,
+} from '../expectations/semanticFinance.js';
+import {
+  expectColumnValuesToBeSecurePasswords,
+  expectColumnValuesToBeValidArxivId,
+  expectColumnValuesToBeValidBase32,
+  expectColumnValuesToBeValidDoi,
+  expectColumnValuesToBeValidImdbId,
+  expectColumnValuesToBeValidOpenLibraryId,
+  expectColumnValuesToBeValidOrcid,
+  expectColumnValuesToBeValidPrice,
+  expectColumnValuesToBeValidPubmedId,
+  expectColumnValuesToBeValidRomanNumeral,
+  expectColumnValuesToBeValidSsn,
+  expectColumnValuesToBeValidTemperature,
+  expectColumnValuesToBeVectors,
+  expectColumnValuesToBeXmlParseable,
+} from '../expectations/semanticFormat.js';
+import {
+  expectColumnValuesToBeFibonacciNumber,
+  expectColumnValuesToBePrimeNumber,
+  expectColumnValuesToBeValidLeapYear,
+  expectColumnValuesToBeValidPowerfulNumber,
+  expectColumnValuesToBeValidPronicNumber,
+  expectColumnValuesToBeValidSemiprime,
+  expectColumnValuesToBeValidSphenicNumber,
+  expectColumnValuesToBeValidSquareFreeNumber,
+} from '../expectations/semanticMath.js';
 import {
   expectColumnValuesIpAddressInNetwork,
   expectColumnValuesToBePrivateIpV4,
@@ -105,69 +153,20 @@ import {
   expectColumnValuesToBePrivateIpV6,
 } from '../expectations/semanticNetwork.js';
 import {
-  expectColumnValuesToBeValidIsbn10,
-  expectColumnValuesToBeValidIsbn13,
-  expectColumnValuesToBeValidEan,
-  expectColumnValuesToBeValidImei,
-  expectColumnValuesToBeValidIsin,
-  expectColumnValuesToBeValidMeid,
-  expectColumnValuesToBeValidIsmn,
-  expectColumnValuesToBeValidIsan,
-  expectColumnValuesToBeValidBarcode,
-  expectColumnValuesToBeGtinBaseUnit,
-  expectColumnValuesToBeGtinVariableMeasureTradeItem,
-} from '../expectations/semanticChecksum.js';
-import {
-  expectColumnValuesToBeValidSsn,
-  expectColumnValuesToBeValidImdbId,
-  expectColumnValuesToBeValidDoi,
-  expectColumnValuesToBeValidOrcid,
-  expectColumnValuesToBeValidArxivId,
-  expectColumnValuesToBeValidPubmedId,
-  expectColumnValuesToBeValidRomanNumeral,
-  expectColumnValuesToBeValidBase32,
-  expectColumnValuesToBeXmlParseable,
-  expectColumnValuesToBeValidTemperature,
-  expectColumnValuesToBeValidPrice,
-  expectColumnValuesToBeValidOpenLibraryId,
-  expectColumnValuesToBeSecurePasswords,
-  expectColumnValuesToBeVectors,
-} from '../expectations/semanticFormat.js';
-import {
-  expectColumnValuesToBePrimeNumber,
-  expectColumnValuesToBeFibonacciNumber,
-  expectColumnValuesToBeValidLeapYear,
-  expectColumnValuesToBeValidPronicNumber,
-  expectColumnValuesToBeValidPowerfulNumber,
-  expectColumnValuesToBeValidSemiprime,
-  expectColumnValuesToBeValidSphenicNumber,
-  expectColumnValuesToBeValidSquareFreeNumber,
-} from '../expectations/semanticMath.js';
-import {
-  expectColumnValuesToBeValidIsoCountry,
-  expectColumnValuesToBeValidCurrencyCode,
-  expectColumnValuesToBeValidIanaTimezone,
-  expectColumnValuesToBeIsoLanguages,
-  expectColumnValuesToBeValidHttpStatusName,
-  expectColumnValuesToBeValidMime,
-  expectColumnValuesToBeValidMbti,
-  expectColumnValuesToBeValidTld,
-  expectColumnValuesToBeValidUsState,
-  expectColumnValuesToBeValidUsStateAbbreviation,
-  expectColumnValuesToBeValidUsStateOrTerritory,
-  expectColumnValuesToBeValidUsStateOrTerritoryAbbreviation,
-  expectColumnValuesToBeValidCountry,
-} from '../expectations/semanticData.js';
-import {
-  expectColumnValuesToBeValidIban,
-  expectColumnValuesToBeValidBic,
-  expectColumnValuesToBeValidFormattedVat,
-} from '../expectations/semanticFinance.js';
-import {
   expectColumnValuesToBeValidImsi,
   expectColumnValuesToBeValidImsiCountryCode,
   expectColumnValuesToBeValidPhonenumber,
 } from '../expectations/semanticTelecom.js';
+import {
+  expectTableColumnCountToBeBetween,
+  expectTableColumnCountToEqual,
+  expectTableColumnsToMatchOrderedList,
+  expectTableColumnsToMatchSet,
+  expectTableRowCountToBeBetween,
+  expectTableRowCountToEqual,
+} from '../expectations/table.js';
+import type { Dataset, ExpectationResult } from '../types.js';
+import type { ExpectationLevel, ExpectationName } from './declaredExpectations.js';
 
 type Invoker = (dataset: Dataset, params: Record<string, unknown>) => ExpectationResult;
 

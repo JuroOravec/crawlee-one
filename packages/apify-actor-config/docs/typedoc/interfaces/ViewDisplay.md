@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ViewDisplay
 
@@ -14,7 +14,7 @@ See https://docs.apify.com/platform/actors/development/output-schema#viewdisplay
 
 ### TFields
 
-`TFields` *extends* `string` = `string`
+`TFields` _extends_ `string` = `string`
 
 ## Properties
 
@@ -26,7 +26,7 @@ Defined in: [outputSchema.ts:123](https://github.com/JuroOravec/crawlee-one/blob
 
 Only component "table" is available.
 
-***
+---
 
 ### properties?
 

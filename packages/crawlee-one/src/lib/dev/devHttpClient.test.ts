@@ -1,7 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Request, RequestQueue } from 'crawlee';
+
+import { Request, type RequestQueue } from 'crawlee';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { createDevHttpClient, devRequestStore } from './devHttpClient.js';
 import { computeRequestIdFromUniqueKey } from './utils.js';
 

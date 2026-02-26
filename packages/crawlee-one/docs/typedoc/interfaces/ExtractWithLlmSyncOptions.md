@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / ExtractWithLlmSyncOptions
 
@@ -38,7 +38,7 @@ API key for the LLM provider
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`apiKey`](ExtractWithLlmOptions.md#apikey)
 
-***
+---
 
 ### baseURL?
 
@@ -52,7 +52,7 @@ Optional base URL for OpenAI-compatible APIs (e.g. custom endpoint, Azure OpenAI
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`baseURL`](ExtractWithLlmOptions.md#baseurl)
 
-***
+---
 
 ### headers?
 
@@ -66,7 +66,7 @@ Custom headers to include in LLM API requests
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`headers`](ExtractWithLlmOptions.md#headers)
 
-***
+---
 
 ### model?
 
@@ -80,7 +80,7 @@ Model ID (e.g. `gpt-4o`, `claude-3-5-sonnet`).
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`model`](ExtractWithLlmOptions.md#model)
 
-***
+---
 
 ### provider?
 
@@ -94,7 +94,7 @@ Provider identifier (e.g. `openai`, `anthropic`). Unknown providers use the Open
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`provider`](ExtractWithLlmOptions.md#provider)
 
-***
+---
 
 ### schema
 
@@ -104,7 +104,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:83]
 
 Zod schema for the expected output. Converted to JSON schema for the LLM.
 
-***
+---
 
 ### systemPrompt
 
@@ -118,7 +118,7 @@ System prompt describing the extraction task
 
 [`ExtractWithLlmOptions`](ExtractWithLlmOptions.md).[`systemPrompt`](ExtractWithLlmOptions.md#systemprompt)
 
-***
+---
 
 ### text?
 

@@ -21,14 +21,20 @@ export function getResponseCachePath(responseCacheDir: string, requestId: string
   return path.join(responseCacheDir, `${requestId}.response.json`);
 }
 
+/** Options for loadCachedResponse */
+export interface LoadCachedResponseOpts {
+  responseCacheDir: string;
+  devQueue: RequestQueue;
+  uniqueKey: string;
+}
+
 /**
  * Load a cached response: try sidecar file first, fall back to userData.
  */
 export async function loadCachedResponse(
-  responseCacheDir: string,
-  devQueue: RequestQueue,
-  uniqueKey: string
+  opts: LoadCachedResponseOpts
 ): Promise<HttpResponse | null> {
+  const { responseCacheDir, devQueue, uniqueKey } = opts;
   const requestId = computeRequestIdFromUniqueKey(uniqueKey);
   const filePath = getResponseCachePath(responseCacheDir, requestId);
   try {
@@ -41,24 +47,29 @@ export async function loadCachedResponse(
   }
 }
 
+/** Options for saveResponseToCache */
+export interface SaveResponseToCacheOpts {
+  responseCacheDir: string;
+  uniqueKey: string;
+  response: HttpResponse;
+}
+
 /**
  * Write response to sidecar file. Caller is responsible for ensuring the
  * request exists in the queue and for any userData/updateRequest handling.
  */
-export async function saveResponseToCache(
-  responseCacheDir: string,
-  uniqueKey: string,
-  response: HttpResponse
-): Promise<void> {
+export async function saveResponseToCache(opts: SaveResponseToCacheOpts): Promise<void> {
+  const { responseCacheDir, uniqueKey, response } = opts;
   const requestId = computeRequestIdFromUniqueKey(uniqueKey);
-  await writeResponseToCache(responseCacheDir, requestId, response);
+  await writeResponseToCache({ responseCacheDir, requestId, response });
 }
 
-async function writeResponseToCache(
-  responseCacheDir: string,
-  requestId: string,
-  response: HttpResponse
-): Promise<void> {
+async function writeResponseToCache(opts: {
+  responseCacheDir: string;
+  requestId: string;
+  response: HttpResponse;
+}): Promise<void> {
+  const { responseCacheDir, requestId, response } = opts;
   const filePath = getResponseCachePath(responseCacheDir, requestId);
   await fs.mkdir(path.dirname(filePath), { recursive: true });
   await fs.writeFile(filePath, JSON.stringify(response), 'utf-8');

@@ -40,6 +40,14 @@ export interface PrepareDevRequestQueueOptions {
   crawlerName?: string;
 }
 
+/** Options for populateDevRequestQueue */
+export interface PopulateDevRequestQueueOpts<T extends CrawleeOneRoute<any>> {
+  devQueue: RequestQueue;
+  routes: Record<string, T>;
+  configDir?: string;
+  crawlerName?: string;
+}
+
 export interface PrepareDevRequestQueueResult {
   devQueue: RequestQueue;
 }
@@ -62,12 +70,11 @@ export function openDevRequestQueue(crawlerName: string): Promise<RequestQueue> 
  * Used in dev mode when context.routes is available (e.g. from devOnReady).
  */
 export async function populateDevRequestQueue<T extends CrawleeOneRoute<any>>(
-  devQueue: RequestQueue,
-  routes: Record<string, T>,
-  options?: PrepareDevRequestQueueOptions
+  opts: PopulateDevRequestQueueOpts<T>
 ): Promise<void> {
-  const queueName = options?.crawlerName
-    ? `dev-${options.crawlerName}`
+  const { devQueue, routes, configDir, crawlerName } = opts;
+  const queueName = crawlerName
+    ? `dev-${crawlerName}`
     : ((devQueue as { id?: string }).id ?? 'dev-default');
   const items = await resolveSampleUrls(routes);
 
@@ -85,7 +92,7 @@ export async function populateDevRequestQueue<T extends CrawleeOneRoute<any>>(
     }
   }
 
-  await reclaimHandledSampleRequestsFromStorage(devQueue, queueName, options?.configDir);
+  await reclaimHandledSampleRequestsFromStorage({ devQueue, queueName, configDir });
 }
 
 /**
@@ -184,18 +191,22 @@ function requestForReclaim(request: Request): Request {
   return copy as unknown as Request;
 }
 
+/** Options for reclaimHandledSampleRequestsFromStorage */
+interface ReclaimHandledSampleRequestsFromStorageOpts {
+  devQueue: RequestQueue;
+  queueName: string;
+  configDir?: string;
+}
+
 /**
  * Reclaim handled sample requests by scanning the queue storage.
  * Used when addRequest does not return requestId for already-present requests
  * (e.g. on second dev run after requests were marked handled).
- *
- * @param configDir - Directory containing crawlee-one.config (storage base when running from monorepo root)
  */
 async function reclaimHandledSampleRequestsFromStorage(
-  devQueue: RequestQueue,
-  queueName: string,
-  configDir?: string
+  opts: ReclaimHandledSampleRequestsFromStorageOpts
 ): Promise<void> {
+  const { devQueue, queueName, configDir } = opts;
   const baseDir = configDir ?? process.cwd();
   const storageDir = process.env.APIFY_LOCAL_STORAGE_DIR
     ? path.resolve(process.env.APIFY_LOCAL_STORAGE_DIR)

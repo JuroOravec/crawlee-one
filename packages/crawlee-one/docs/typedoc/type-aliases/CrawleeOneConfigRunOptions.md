@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfigRunOptions
 
@@ -16,13 +16,13 @@ Options passed to the scraper's run function by `crawlee-one run` and `crawlee-o
 
 ### TCrawlerType
 
-`TCrawlerType` *extends* [`CrawlerType`](CrawlerType.md) = [`CrawlerType`](CrawlerType.md)
+`TCrawlerType` _extends_ [`CrawlerType`](CrawlerType.md) = [`CrawlerType`](CrawlerType.md)
 
 Crawler type (e.g. 'cheerio', 'playwright'); derives `crawlerOptions`.
 
 ### TInput
 
-`TInput` *extends* `Record`\<`string`, `unknown`\> = `Record`\<`string`, `unknown`\>
+`TInput` _extends_ `Record`\<`string`, `unknown`\> = `Record`\<`string`, `unknown`\>
 
 Actor input shape; types the `input` field.
 
@@ -34,7 +34,7 @@ Actor input shape; types the `input` field.
 
 Defined in: [packages/crawlee-one/src/lib/config/types.ts:320](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L320)
 
-***
+---
 
 ### crawlerOptions?
 
@@ -42,7 +42,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:320](https://github.co
 
 Defined in: [packages/crawlee-one/src/lib/config/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L318)
 
-***
+---
 
 ### input?
 

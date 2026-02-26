@@ -1,8 +1,8 @@
 import {
   exportDataset,
-  resolveExportOutputPath,
   type ExportOptions as _ExportOptions,
   type ExportResult,
+  resolveExportOutputPath,
 } from './exportDataset.js';
 import { openDatasetForExport } from './exportIo.js';
 

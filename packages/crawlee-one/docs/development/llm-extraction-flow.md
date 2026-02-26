@@ -38,7 +38,7 @@ extractWithLLM<T>(opts: ExtractWithLlmAsyncOptions<T>): Promise<LlmExtractionRes
 | `schema`             | Yes      | Zod schema for the expected output. Converted to JSON schema for the queue.                                      |
 | `systemPrompt`       | Yes      | System prompt describing the extraction task.                                                                    |
 | `text`               | No       | Override default text. Default: `ctx.$.html()` (Cheerio) or `ctx.page.content()` (browser) or `ctx.body` (Http). |
-| `model`              | Yes*     | Model ID. Required for the LLM API call; can come from actor input.                                             |
+| `model`              | Yes\*    | Model ID. Required for the LLM API call; can come from actor input.                                              |
 | `apiKey`             | No       | Override actor input. Defaults to `OPENAI_API_KEY` env.                                                          |
 | `provider`           | No       | Override actor input. Defaults to `openai`.                                                                      |
 | `baseURL`            | No       | Override actor input.                                                                                            |

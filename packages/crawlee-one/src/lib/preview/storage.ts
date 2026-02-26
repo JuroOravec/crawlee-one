@@ -1,7 +1,7 @@
+import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import get from 'lodash-es/get.js';
-import fsp from 'node:fs/promises';
 
 export type SortDir = 'asc' | 'desc';
 

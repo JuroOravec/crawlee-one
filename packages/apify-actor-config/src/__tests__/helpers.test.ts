@@ -1,23 +1,24 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
+  ARRAY_EDITOR_TYPE,
+  BOOLEAN_EDITOR_TYPE,
   createActorConfig,
   createActorInputSchema,
   createActorOutputSchema,
-  createStringField,
+  createArrayField,
   createBooleanField,
   createIntegerField,
   createNumberField,
   createObjectField,
-  createArrayField,
+  createStringField,
+  DATE_TYPE,
   FIELD_TYPE,
-  STRING_EDITOR_TYPE,
-  BOOLEAN_EDITOR_TYPE,
   INTEGER_EDITOR_TYPE,
   NUMBER_EDITOR_TYPE,
   OBJECT_EDITOR_TYPE,
-  ARRAY_EDITOR_TYPE,
+  STRING_EDITOR_TYPE,
   VIEW_DISPLAY_PROPERTY_TYPE,
-  DATE_TYPE,
 } from '../index.js';
 
 describe('Type constants', () => {

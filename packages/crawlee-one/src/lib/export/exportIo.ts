@@ -1,4 +1,5 @@
 import { Dataset } from 'crawlee';
+
 import type { CrawleeOneDataset } from '../integrations/types.js';
 
 // NOTE: Uses Crawlee `Dataset` directly for local storage

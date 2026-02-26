@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / IntegerField
 
@@ -14,12 +14,12 @@ Example:
 
 ```json
 {
-"title": "Memory",
-"type": "integer",
-"description": "Select memory in megabytes",
-"default": 64,
-"maximum": 1024,
-"unit": "MB"
+  "title": "Memory",
+  "type": "integer",
+  "description": "Select memory in megabytes",
+  "default": 64,
+  "maximum": 1024,
+  "unit": "MB"
 }
 ```
 
@@ -31,11 +31,11 @@ Example:
 
 ### T
 
-`T` *extends* `number` = `number`
+`T` _extends_ `number` = `number`
 
 ### TUnit
 
-`TUnit` *extends* `string` = `string`
+`TUnit` _extends_ `string` = `string`
 
 ### TSchema
 
@@ -55,7 +55,7 @@ Default value that will be used when no value is provided.
 
 `BaseFieldTypedProps.default`
 
-***
+---
 
 ### description
 
@@ -69,7 +69,7 @@ Description of the field that will be displayed as help text in Actor input UI.
 
 `BaseField.description`
 
-***
+---
 
 ### editor?
 
@@ -79,7 +79,7 @@ Defined in: [inputSchema.ts:312](https://github.com/JuroOravec/crawlee-one/blob/
 
 Visual editor used for the input field.
 
-***
+---
 
 ### errorMessage?
 
@@ -96,7 +96,7 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 `BaseFieldTypedProps.errorMessage`
 
-***
+---
 
 ### example?
 
@@ -111,7 +111,7 @@ actor is published in Apify Store.
 
 `BaseFieldTypedProps.example`
 
-***
+---
 
 ### maximum?
 
@@ -121,7 +121,7 @@ Defined in: [inputSchema.ts:314](https://github.com/JuroOravec/crawlee-one/blob/
 
 Maximum allowed value.
 
-***
+---
 
 ### minimum?
 
@@ -131,7 +131,7 @@ Defined in: [inputSchema.ts:316](https://github.com/JuroOravec/crawlee-one/blob/
 
 Minimum allowed value.
 
-***
+---
 
 ### nullable?
 
@@ -145,7 +145,7 @@ Specifies whether null is an allowed value.
 
 `BaseField.nullable`
 
-***
+---
 
 ### prefill?
 
@@ -159,7 +159,7 @@ Value that will be prefilled in the actor input interface.
 
 `BaseFieldTypedProps.prefill`
 
-***
+---
 
 ### schema?
 
@@ -176,7 +176,7 @@ automatically stripped when generating `actor.json`.
 
 `BaseFieldTypedProps.schema`
 
-***
+---
 
 ### sectionCaption?
 
@@ -193,7 +193,7 @@ or the next field which has the sectionCaption property set.
 
 `BaseField.sectionCaption`
 
-***
+---
 
 ### sectionDescription?
 
@@ -209,7 +209,7 @@ visible right under the caption when the section is open.
 
 `BaseField.sectionDescription`
 
-***
+---
 
 ### title
 
@@ -223,7 +223,7 @@ Title of the field in UI.
 
 `BaseField.title`
 
-***
+---
 
 ### type
 
@@ -237,7 +237,7 @@ Allowed type for the input value. Cannot be mixed.
 
 `BaseField.type`
 
-***
+---
 
 ### unit?
 

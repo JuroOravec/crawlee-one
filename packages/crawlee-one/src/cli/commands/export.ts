@@ -2,9 +2,9 @@ import path from 'node:path';
 
 import { Command } from 'commander';
 
-import { runExport } from '../../lib/export/runExport.js';
-import { parseSize } from '../../lib/export/parseSize.js';
 import { parseFieldList } from '../../lib/export/fieldFilter.js';
+import { parseSize } from '../../lib/export/parseSize.js';
+import { runExport } from '../../lib/export/runExport.js';
 
 export function createExportCommand(): Command {
   return new Command('export')

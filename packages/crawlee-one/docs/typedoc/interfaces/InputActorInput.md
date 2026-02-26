@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / InputActorInput
 
@@ -27,7 +27,7 @@ the Actor input overwrites the imported fields.
 
 The URL must point to a JSON file containing a single object (the config).
 
-***
+---
 
 ### inputExtendUrl?
 

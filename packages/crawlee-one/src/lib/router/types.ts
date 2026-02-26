@@ -1,4 +1,4 @@
-import type { RouterHandler as CrawlerRouter, Awaitable } from 'crawlee';
+import type { Awaitable, RouterHandler as CrawlerRouter } from 'crawlee';
 
 import type { SampleUrlItem } from '../../types.js';
 import type { MaybeArray, MaybePromise } from '../../utils/types.js';

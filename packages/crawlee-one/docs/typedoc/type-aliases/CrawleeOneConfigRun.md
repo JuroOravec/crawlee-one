@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfigRun
 
@@ -19,13 +19,13 @@ they are not exported (dev mode resolves them from actor.routes).
 
 ### TCrawlerType
 
-`TCrawlerType` *extends* [`CrawlerType`](CrawlerType.md) = [`CrawlerType`](CrawlerType.md)
+`TCrawlerType` _extends_ [`CrawlerType`](CrawlerType.md) = [`CrawlerType`](CrawlerType.md)
 
 Crawler type; passed through to run options.
 
 ### TInput
 
-`TInput` *extends* `Record`\<`string`, `unknown`\> = `Record`\<`string`, `unknown`\>
+`TInput` _extends_ `Record`\<`string`, `unknown`\> = `Record`\<`string`, `unknown`\>
 
 Actor input shape; passed through to run options.
 

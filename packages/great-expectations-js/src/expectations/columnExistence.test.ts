@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
+
 import {
   expectColumnToExist,
   expectColumnValuesToBeNull,
-  expectColumnValuesToNotBeNull,
   expectColumnValuesToBeUnique,
+  expectColumnValuesToNotBeNull,
   expectCompoundColumnsToBeUnique,
   expectMulticolumnValuesToBeUnique,
   expectSelectColumnValuesToBeUniqueWithinRecord,

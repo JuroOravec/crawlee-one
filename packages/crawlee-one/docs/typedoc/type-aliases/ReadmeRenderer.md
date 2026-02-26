@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / ReadmeRenderer
 
@@ -24,8 +24,8 @@ handles writing the output.
 `TInput` = `unknown`
 
 Shape of renderer-specific data (opaque to crawlee-one).
-  Everything the renderer needs beyond `actorSpec` -- templates, helper
-  functions, etc. -- is passed through this single object.
+Everything the renderer needs beyond `actorSpec` -- templates, helper
+functions, etc. -- is passed through this single object.
 
 ## Parameters
 

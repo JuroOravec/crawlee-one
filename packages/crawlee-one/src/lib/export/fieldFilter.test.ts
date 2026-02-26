@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { pickFields, omitFields, applyFieldFilter, parseFieldList } from './fieldFilter.js';
+import { applyFieldFilter, omitFields, parseFieldList, pickFields } from './fieldFilter.js';
 
 describe('pickFields', () => {
   it('picks top-level fields', () => {
@@ -34,22 +34,22 @@ describe('omitFields', () => {
 describe('applyFieldFilter', () => {
   it('applies pick then omit', () => {
     const obj = { name: 'a', description: 'b', id: 1, nested: { prop: 'x', attempts: 2 } };
-    const result = applyFieldFilter(
+    const result = applyFieldFilter({
       obj,
-      ['name', 'description', 'id', 'nested.prop'],
-      ['attempts', 'nested.prop']
-    );
+      pickPaths: ['name', 'description', 'id', 'nested.prop'],
+      omitPaths: ['attempts', 'nested.prop'],
+    });
     expect(result).toEqual({ name: 'a', description: 'b', id: 1, nested: {} });
   });
 
   it('pick only', () => {
     const obj = { a: 1, b: 2, c: 3 };
-    expect(applyFieldFilter(obj, ['a', 'c'], undefined)).toEqual({ a: 1, c: 3 });
+    expect(applyFieldFilter({ obj, pickPaths: ['a', 'c'] })).toEqual({ a: 1, c: 3 });
   });
 
   it('omit only', () => {
     const obj = { a: 1, b: 2, c: 3 };
-    expect(applyFieldFilter(obj, undefined, ['b'])).toEqual({ a: 1, c: 3 });
+    expect(applyFieldFilter({ obj, omitPaths: ['b'] })).toEqual({ a: 1, c: 3 });
   });
 });
 

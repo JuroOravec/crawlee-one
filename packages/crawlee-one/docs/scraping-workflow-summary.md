@@ -22,7 +22,6 @@ flowchart TB
 3. A single `Run` may start, in parallel, several scraper `Instances`.
 
 4. Each `Instance` takes a `Request` from `RequestQueue`, and loads the URL. Based on the URL loaded:
-
    - The data is scraped from the page and sent to the `Dataset`.
    - New URLs are found, turned into `Requests`, and sent to `RequestQueue`.
 

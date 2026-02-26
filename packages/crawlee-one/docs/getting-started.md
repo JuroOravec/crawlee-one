@@ -189,12 +189,12 @@ For the full TypeScript definitions, see:
 
 Each route handler receives a context object from [Crawlee Router](https://crawlee.dev/api/core/class/Router), extended with CrawleeOne-specific properties:
 
-| Property       | Type                                                                 | Description                                                                  |
-| -------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `one`          | [`CrawleeOneContext`](./typedoc/interfaces/CrawleeOneContext.md)     | The CrawleeOne context. Access input, state, IO, crawler, and more.          |
-| `pushData`     | function                                                             | Save scraped items with transforms, filtering, privacy, and caching applied. |
-| `addRequests` | function                                                             | Enqueue URLs with request filtering and transforms applied.                  |
-| `metamorph`    | function                                                             | Trigger a downstream crawler/actor.                                          |
+| Property      | Type                                                             | Description                                                                  |
+| ------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `one`         | [`CrawleeOneContext`](./typedoc/interfaces/CrawleeOneContext.md) | The CrawleeOne context. Access input, state, IO, crawler, and more.          |
+| `pushData`    | function                                                         | Save scraped items with transforms, filtering, privacy, and caching applied. |
+| `addRequests` | function                                                         | Enqueue URLs with request filtering and transforms applied.                  |
+| `metamorph`   | function                                                         | Trigger a downstream crawler/actor.                                          |
 
 ```ts
 handler: async (ctx) => {

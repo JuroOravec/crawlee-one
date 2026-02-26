@@ -1,6 +1,6 @@
 [**actor-spec**](README.md)
 
-***
+---
 
 # actor-spec
 

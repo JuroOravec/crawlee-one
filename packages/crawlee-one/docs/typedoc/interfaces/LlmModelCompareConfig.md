@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmModelCompareConfig
 
@@ -20,7 +20,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:10
 
 API key for the provider
 
-***
+---
 
 ### baseUrl?
 
@@ -30,7 +30,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:12
 
 Base URL for OpenAI-compatible APIs
 
-***
+---
 
 ### headers?
 
@@ -40,7 +40,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:14
 
 Custom headers
 
-***
+---
 
 ### id
 
@@ -50,7 +50,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:4
 
 Unique identifier (e.g. 'gpt-4o', 'claude-3-5-sonnet')
 
-***
+---
 
 ### label?
 
@@ -60,7 +60,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:16
 
 Human-readable label (e.g. 'GPT-4o (OpenAI)')
 
-***
+---
 
 ### model
 
@@ -70,7 +70,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:8
 
 Model ID (e.g. 'gpt-4o', 'claude-3-5-sonnet')
 
-***
+---
 
 ### priceInputPer1MToken?
 
@@ -80,7 +80,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:18
 
 Price per 1M input tokens (USD), for cost estimate in reports
 
-***
+---
 
 ### priceOutputPer1MToken?
 
@@ -90,7 +90,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:20
 
 Price per 1M output tokens (USD), for cost estimate in reports
 
-***
+---
 
 ### provider
 

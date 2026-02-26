@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmModelCompareCrawlerOptions
 
@@ -16,7 +16,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:28
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:31
 
-***
+---
 
 ### reportName
 
@@ -24,7 +24,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:31
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:29
 
-***
+---
 
 ### schema
 
@@ -32,7 +32,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:29
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:32
 
-***
+---
 
 ### systemPrompt
 
@@ -40,7 +40,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:32
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:33
 
-***
+---
 
 ### urls
 

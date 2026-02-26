@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneRouteMatcherFn
 
@@ -20,7 +20,7 @@ function of the same CrawleeOneRoute.
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ## Parameters
 

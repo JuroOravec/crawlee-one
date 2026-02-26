@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / PreviewServerOptions
 
@@ -16,7 +16,7 @@ Defined in: [packages/crawlee-one/src/lib/preview/server.ts:307](https://github.
 
 Defined in: [packages/crawlee-one/src/lib/preview/server.ts:309](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/preview/server.ts#L309)
 
-***
+---
 
 ### storageDir?
 

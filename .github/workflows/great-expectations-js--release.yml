@@ -19,7 +19,7 @@
 #
 # Read more on https://docs.npmjs.com/trusted-publishers
 
-name: "great-expectations-js: Release"
+name: 'great-expectations-js: Release'
 
 on:
   release:

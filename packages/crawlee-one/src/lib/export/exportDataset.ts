@@ -1,11 +1,11 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import type { CrawleeOneIO } from '../integrations/types.js';
 import { apifyIO } from '../integrations/apify.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
+import { rowToCsv } from './csvStringify.js';
 import { applyFieldFilter } from './fieldFilter.js';
 import { flattenForCsv } from './flattenForCsv.js';
-import { rowToCsv } from './csvStringify.js';
 
 const FETCH_BATCH_SIZE = 500;
 
@@ -105,7 +105,7 @@ export async function exportDataset(options: ExportOptions): Promise<ExportResul
       const item = items[i] as object;
       const isLastItemInBatch = i === items.length - 1;
 
-      const filtered = applyFieldFilter(item, pickPaths, omitPaths);
+      const filtered = applyFieldFilter({ obj: item, pickPaths, omitPaths });
 
       if (format === 'json') {
         batch.push(filtered);
@@ -138,7 +138,7 @@ export async function exportDataset(options: ExportOptions): Promise<ExportResul
           const willBeOnlyFile = writeNow && isEndOfDataset && !firstFileWritten;
           const partId = willBeOnlyFile ? null : partIndex;
 
-          const filePath = formatPartPath(dir, baseNoExt, ext, partId);
+          const filePath = formatPartPath({ dir, baseNoExt, ext, partIndex: partId });
           const content =
             format === 'json'
               ? JSON.stringify(batch, null, 0)
@@ -164,7 +164,7 @@ export async function exportDataset(options: ExportOptions): Promise<ExportResul
   if (batch.length > 0) {
     const willBeOnlyFile = !firstFileWritten;
     const partId = willBeOnlyFile ? null : partIndex;
-    const filePath = formatPartPath(dir, baseNoExt, ext, partId);
+    const filePath = formatPartPath({ dir, baseNoExt, ext, partIndex: partId });
     const content =
       format === 'json'
         ? JSON.stringify(batch, null, 0)
@@ -224,12 +224,13 @@ function resolveOutputPath(
   return { dir, baseNoExt, ext };
 }
 
-function formatPartPath(
-  dir: string,
-  baseNoExt: string,
-  ext: string,
-  partIndex: number | null
-): string {
+function formatPartPath(opts: {
+  dir: string;
+  baseNoExt: string;
+  ext: string;
+  partIndex: number | null;
+}): string {
+  const { dir, baseNoExt, ext, partIndex } = opts;
   const filename = partIndex !== null ? `${baseNoExt}-${partIndex}${ext}` : `${baseNoExt}${ext}`;
   return path.join(dir, filename);
 }

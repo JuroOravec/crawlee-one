@@ -93,15 +93,19 @@ export async function getCrawlersToProcess(
   };
 }
 
+/** Options for getCrawlerContext */
+export interface GetCrawlerContextOpts {
+  crawlerName: string;
+  configFilePath?: string;
+  commandName?: string;
+}
+
 /**
  * Load config, validate crawler exists, and return context for loading the module.
  * Throws if config is missing, crawler not found, or importPath/devImportPath is missing.
  */
-export async function getCrawlerContext(
-  crawlerName: string,
-  configFilePath?: string,
-  commandName = 'run'
-): Promise<LoadCrawlerContext> {
+export async function getCrawlerContext(opts: GetCrawlerContextOpts): Promise<LoadCrawlerContext> {
+  const { crawlerName, configFilePath, commandName = 'run' } = opts;
   const { config, configDir, crawlers } = await getCrawlersToProcess([crawlerName], configFilePath);
   const { name, def } = crawlers[0]!;
 

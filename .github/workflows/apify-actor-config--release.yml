@@ -19,7 +19,7 @@
 #
 # Read more on https://docs.npmjs.com/trusted-publishers
 
-name: "apify-actor-config: Release"
+name: 'apify-actor-config: Release'
 
 on:
   release:

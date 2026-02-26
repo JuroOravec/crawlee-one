@@ -2,9 +2,9 @@ import path from 'node:path';
 
 import { Command } from 'commander';
 
-import { runDev } from '../../lib/dev/runDev.js';
-import { clearDevStorage } from '../../lib/dev/clearDevStorage.js';
 import { getCrawlersToProcess, loadCrawlerModule } from '../../lib/config/loader.js';
+import { clearDevStorage } from '../../lib/dev/clearDevStorage.js';
+import { runDev } from '../../lib/dev/runDev.js';
 
 export function createDevCommand(): Command {
   return new Command('dev')
@@ -42,7 +42,9 @@ Examples:
         opts: { fetch?: boolean; clear?: boolean; strict?: boolean; config?: string }
       ) => {
         try {
-          await runDevCommand(crawlerNames, opts.config, {
+          await runDevCommand({
+            crawlerNames,
+            configFilePath: opts.config,
             fetchOnly: opts.fetch ?? false,
             clear: opts.clear ?? false,
             strict: opts.strict ?? false,
@@ -55,15 +57,24 @@ Examples:
     );
 }
 
+/** Options for runDevCommand */
+interface RunDevCommandOpts {
+  crawlerNames: string[];
+  configFilePath?: string;
+  fetchOnly?: boolean;
+  clear?: boolean;
+  strict?: boolean;
+}
+
 /**
  * Run crawlers with a dev RequestQueue that caches responses.
  *
- * **Params:**
+ * **Opts:**
  * - `crawlerNames` — Names of crawlers to run. Empty = all from config.
  * - `configFilePath` — Path to config file (default: cosmiconfig resolution).
- * - `options.fetchOnly` — If true, only populate cache; don't run handlers.
- * - `options.clear` — If true, remove dev datasets and request queue before running.
- * - `options.strict` — If true, throw when a URL matches no route (default: log and skip).
+ * - `fetchOnly` — If true, only populate cache; don't run handlers.
+ * - `clear` — If true, remove dev datasets and request queue before running.
+ * - `strict` — If true, throw when a URL matches no route (default: log and skip).
  *
  * **Usage (via CLI):**
  * ```sh
@@ -75,15 +86,9 @@ Examples:
  * npx crawlee-one dev -c ./crawlee-one.config.ts
  * ```
  */
-async function runDevCommand(
-  crawlerNames: string[],
-  configFilePath?: string,
-  options?: { fetchOnly?: boolean; clear?: boolean; strict?: boolean }
-): Promise<void> {
+async function runDevCommand(opts: RunDevCommandOpts): Promise<void> {
+  const { crawlerNames, configFilePath, fetchOnly = false, clear = false, strict = false } = opts;
   const { configDir, crawlers } = await getCrawlersToProcess(crawlerNames, configFilePath);
-  const fetchOnly = options?.fetchOnly ?? false;
-  const clear = options?.clear ?? false;
-  const strict = options?.strict ?? false;
 
   const prevStorageDir = process.env.APIFY_LOCAL_STORAGE_DIR;
   if (configDir && !process.env.APIFY_LOCAL_STORAGE_DIR) {

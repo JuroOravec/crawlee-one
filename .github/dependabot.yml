@@ -1,61 +1,61 @@
 version: 2
 updates:
   # GitHub Actions dependencies
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
 
   # Root dev dependencies
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
     groups:
       # Group all root dev dependencies into a single PR
       # These are low risk updates that don't require manual review
       root-devdeps:
         patterns:
-          - "*"
+          - '*'
 
   ############################################################
   # Workspace packages
   ############################################################
 
   # Crawlee-one package dependencies
-  - package-ecosystem: "npm"
-    directory: "/packages/crawlee-one"
+  - package-ecosystem: 'npm'
+    directory: '/packages/crawlee-one'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
   # Apify-actor-config package dependencies
-  - package-ecosystem: "npm"
-    directory: "/packages/apify-actor-config"
+  - package-ecosystem: 'npm'
+    directory: '/packages/apify-actor-config'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
   # Portadom package dependencies
-  - package-ecosystem: "npm"
-    directory: "/packages/portadom"
+  - package-ecosystem: 'npm'
+    directory: '/packages/portadom'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
   # Actor-spec package dependencies
-  - package-ecosystem: "npm"
-    directory: "/packages/actor-spec"
+  - package-ecosystem: 'npm'
+    directory: '/packages/actor-spec'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
   # Scraper-utils package dependencies
-  - package-ecosystem: "npm"
-    directory: "/packages/scraper-utils"
+  - package-ecosystem: 'npm'
+    directory: '/packages/scraper-utils'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
   # Great-expectations-js package dependencies
-  - package-ecosystem: "npm"
-    directory: "/packages/great-expectations-js"
+  - package-ecosystem: 'npm'
+    directory: '/packages/great-expectations-js'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10

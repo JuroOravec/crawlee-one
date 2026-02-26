@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneRouteHandler
 
@@ -18,4 +18,4 @@ The handler context is enriched with CrawleeOne's `actor`, `pushData`, `addReque
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)

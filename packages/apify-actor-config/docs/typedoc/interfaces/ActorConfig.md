@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ActorConfig
 
@@ -14,15 +14,15 @@ See https://docs.apify.com/platform/actors/development/actor-definition/actor-js
 
 ### TInputSchema
 
-`TInputSchema` *extends* [`ActorInputSchema`](ActorInputSchema.md) = [`ActorInputSchema`](ActorInputSchema.md)
+`TInputSchema` _extends_ [`ActorInputSchema`](ActorInputSchema.md) = [`ActorInputSchema`](ActorInputSchema.md)
 
 ### TOutputSchema
 
-`TOutputSchema` *extends* [`ActorOutputSchema`](ActorOutputSchema.md) = [`ActorOutputSchema`](ActorOutputSchema.md)
+`TOutputSchema` _extends_ [`ActorOutputSchema`](ActorOutputSchema.md) = [`ActorOutputSchema`](ActorOutputSchema.md)
 
 ### TEnvVars
 
-`TEnvVars` *extends* `Record`\<`string`, `string`\> = `Record`\<`string`, `string`\>
+`TEnvVars` _extends_ `Record`\<`string`, `string`\> = `Record`\<`string`, `string`\>
 
 ## Properties
 
@@ -35,7 +35,7 @@ Defined in: [config.ts:14](https://github.com/JuroOravec/crawlee-one/blob/main/p
 The version of the specification against which your schema is written.
 Currently, only version 1 is out.
 
-***
+---
 
 ### buildTag?
 
@@ -45,7 +45,7 @@ Defined in: [config.ts:26](https://github.com/JuroOravec/crawlee-one/blob/main/p
 
 The tag name applied for the successful build of the Actor. Defaults to `latest`
 
-***
+---
 
 ### changelog?
 
@@ -57,7 +57,7 @@ The path to the CHANGELOG file displayed in the Information tab of the Actor
 in Apify Console next to Readme. If not provided, the CHANGELOG at
 `.actor/CHANGELOG.md` or `CHANGELOG.md` is used, in this order of preference.
 
-***
+---
 
 ### defaultMemoryMbytes?
 
@@ -71,14 +71,14 @@ is started. Can be an integer or a dynamic memory expression string.
 #### Examples
 
 ```ts
-1024
+1024;
 ```
 
 ```ts
-"get(input, 'startUrls.length', 1) * 1024"
+"get(input, 'startUrls.length', 1) * 1024";
 ```
 
-***
+---
 
 ### dockerContextDir?
 
@@ -90,7 +90,7 @@ Specifies the path to the directory used as the Docker context when building
 the Actor. The path is relative to the location of the actor.json file. Useful
 for having a monorepo with multiple Actors.
 
-***
+---
 
 ### dockerfile?
 
@@ -105,7 +105,7 @@ in this order of preference.
 
 Example: `'./Dockerfile'`
 
-***
+---
 
 ### environmentVariables?
 
@@ -125,7 +125,7 @@ Actor at Apify platform.
    * }
 ```
 
-***
+---
 
 ### input?
 
@@ -140,7 +140,7 @@ in this order of preference.
 
 Example: `'./input_schema.json'`
 
-***
+---
 
 ### maxMemoryMbytes?
 
@@ -152,7 +152,7 @@ Specifies the maximum amount of memory in megabytes that an Actor requires to ru
 It can be used to control the costs of run, especially when developing pay per result
 actors. Requires an integer value.
 
-***
+---
 
 ### meta?
 
@@ -164,7 +164,7 @@ Metadata object containing additional information about the Actor.
 Currently supports `templateId` field to identify the template from which
 the Actor was created.
 
-***
+---
 
 ### minMemoryMbytes?
 
@@ -176,7 +176,7 @@ Specifies the minimum amount of memory in megabytes that an Actor requires to ru
 Requires an integer value. If both minMemoryMbytes and maxMemoryMbytes are set, then
 minMemoryMbytes must be the same or lower than maxMemoryMbytes.
 
-***
+---
 
 ### name
 
@@ -186,7 +186,7 @@ Defined in: [config.ts:16](https://github.com/JuroOravec/crawlee-one/blob/main/p
 
 Name of the Actor.
 
-***
+---
 
 ### readme?
 
@@ -200,7 +200,7 @@ README at .actor/README.md or README.md will be used, in this order of preferenc
 
 Example: `'./ACTOR.md'`
 
-***
+---
 
 ### storages?
 
@@ -220,7 +220,7 @@ https://docs.apify.com/platform/actors/development/actor-definition/dataset-sche
 
 Example: `'./dataset_schema.json'`
 
-***
+---
 
 ### title?
 
@@ -232,7 +232,7 @@ The display title of the Actor. This is the human-readable title shown
 in the Apify Console and Store. If not specified, the `name` property
 is used as the title.
 
-***
+---
 
 ### usesStandbyMode?
 
@@ -244,7 +244,7 @@ Boolean specifying whether the Actor will have Standby mode enabled.
 
 See https://docs.apify.com/platform/actors/development/programming-interface/standby
 
-***
+---
 
 ### version
 
@@ -254,7 +254,7 @@ Defined in: [config.ts:24](https://github.com/JuroOravec/crawlee-one/blob/main/p
 
 Actor version in the form [Number].[Number], i.e. for example `0.0`, `0.1`, `2.3`, ...
 
-***
+---
 
 ### webServerMcpPath?
 
@@ -267,7 +267,7 @@ server functionality. When set, the Actor is recognized as an MCP server.
 For example, setting `"/mcp"` designates the `/mcp` endpoint as the MCP interface.
 This path becomes part of the Actor's stable URL when Standby mode is enabled.
 
-***
+---
 
 ### webServerSchema?
 

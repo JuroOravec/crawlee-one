@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneHookCtx
 
@@ -24,7 +24,7 @@ By default this is the Apify Actor class, see https://docs.apify.com/sdk/js/refe
 
 ### itemCacheKey
 
-> **itemCacheKey**: *typeof* `itemCacheKey`
+> **itemCacheKey**: _typeof_ `itemCacheKey`
 
 A function you can use to get cacheID for current `entry`.
 It takes the entry itself, and a list of properties to be used for hashing.
@@ -33,7 +33,7 @@ By default, you should pass `input.cachePrimaryKeys` to it.
 
 ### sendRequest
 
-> **sendRequest**: *typeof* `gotScraping`
+> **sendRequest**: _typeof_ `gotScraping`
 
 Fetch remote data. Uses 'got-scraping', same as Apify's `sendRequest`.
 
@@ -43,4 +43,4 @@ See https://crawlee.dev/docs/guides/got-scraping
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)

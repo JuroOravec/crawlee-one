@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfig
 
@@ -12,11 +12,11 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:66](https://github.com
 
 ### TCrawlers
 
-`TCrawlers` *extends* [`CrawlersRecord`](../type-aliases/CrawlersRecord.md) = [`CrawlersRecord`](../type-aliases/CrawlersRecord.md)
+`TCrawlers` _extends_ [`CrawlersRecord`](../type-aliases/CrawlersRecord.md) = [`CrawlersRecord`](../type-aliases/CrawlersRecord.md)
 
 ### TRenderer
 
-`TRenderer` *extends* [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\> = [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\>
+`TRenderer` _extends_ [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\> = [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\>
 
 ## Properties
 
@@ -28,7 +28,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:75](https://github.com
 
 Code generation settings. If omitted, all generation is skipped.
 
-***
+---
 
 ### llm?
 
@@ -50,7 +50,7 @@ Reports that compare different models against each other
 
 Run with `crawlee-one llm compare`
 
-***
+---
 
 ### schema
 
@@ -60,7 +60,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:73](https://github.com
 
 Schema defining the crawlers in this project. This schema is used for code generation.
 
-***
+---
 
 ### version
 

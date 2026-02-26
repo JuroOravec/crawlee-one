@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneContext
 
@@ -24,7 +24,7 @@ crawleeOne(config, async (context) => {
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](CrawleeOneTypes.md)
 
 ## Properties
 
@@ -43,7 +43,7 @@ Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
 ##### T
 
-`T` *extends* `Source`
+`T` _extends_ `Source`
 
 #### Parameters
 
@@ -59,7 +59,7 @@ Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
 `Promise`\<`any`[]\>
 
-***
+---
 
 ### config
 
@@ -69,7 +69,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:378](https://github.c
 
 Original config from which this CrawleeOne context was created
 
-***
+---
 
 ### crawler
 
@@ -82,7 +82,7 @@ features (metamorph, transform/filter hooks, output cache).
 
 Call `context.crawler.run(requests?, options?)` to start crawling.
 
-***
+---
 
 ### input
 
@@ -92,7 +92,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:380](https://github.c
 
 Read-only inputs passed to the CrawleeOne instance
 
-***
+---
 
 ### io
 
@@ -105,7 +105,7 @@ Instance managing communication with databases - storage & retrieval
 
 Modelled and similar to Apify's `Actor` static class.
 
-***
+---
 
 ### log
 
@@ -115,7 +115,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:393](https://github.c
 
 Crawlee Log instance.
 
-***
+---
 
 ### metamorph
 
@@ -125,7 +125,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:344](https://github.c
 
 Trigger actor metamorph, using actor's inputs as defaults.
 
-***
+---
 
 ### proxy?
 
@@ -133,7 +133,7 @@ Trigger actor metamorph, using actor's inputs as defaults.
 
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:373](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L373)
 
-***
+---
 
 ### router
 
@@ -141,7 +141,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:373](https://github.c
 
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:375](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L375)
 
-***
+---
 
 ### routes
 
@@ -149,7 +149,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:375](https://github.c
 
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:376](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L376)
 
-***
+---
 
 ### startUrls
 
@@ -160,11 +160,12 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:371](https://github.c
 A list of resolved Requests to be scraped.
 
 This list is a combination of 3 Actor inputs:
+
 - `startUrls` - Static list of URLs to scrape.
 - `startUrlsFromDataset` - From a specific field from a Dataset (e.g. "dataset123#fieldName" - Dataset: "dataset123", field: "fieldName").
 - `startUrlsFromFunction` - A function that is evaulated to generate the Requests.
 
-***
+---
 
 ### state
 
@@ -174,7 +175,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:382](https://github.c
 
 Mutable state that is shared across setup and teardown hooks
 
-***
+---
 
 ### telemetry?
 

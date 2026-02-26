@@ -1,15 +1,15 @@
 import type { JSONSchema7 } from 'ai';
 import {
   BasicCrawler,
+  type BasicCrawlingContext,
   KeyValueStore,
   RequestQueue,
-  Source,
-  type BasicCrawlingContext,
+  type Source,
 } from 'crawlee';
 
+import { addRequestOrReclaim } from '../io/utils.js';
 import { extractWithLlm } from './extractWithLlm.js';
 import type { LlmExtractionError, LlmExtractionResult } from './extractWithLlmScoped.js';
-import { addRequestOrReclaim } from '../io/utils.js';
 
 /** userData shape for requests in the LLM queue. */
 export interface LlmQueueRequestUserData {
@@ -159,7 +159,12 @@ export async function handleLlmQueueRequest(
         url: request.url,
         uniqueKey: userData.originalRequestUniqueKey ?? request.uniqueKey,
       };
-      await addRequestOrReclaim(originalQueue, newRequest, log, { forefront: true });
+      await addRequestOrReclaim({
+        queue: originalQueue,
+        request: newRequest,
+        log,
+        options: { forefront: true },
+      });
     } catch (err) {
       const msg = `Failed to re-queue original request to ${originalRequestQueueId}: ${err instanceof Error ? err.message : String(err)}`;
       log.error(msg);

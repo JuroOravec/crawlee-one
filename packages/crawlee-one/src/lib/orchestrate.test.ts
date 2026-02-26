@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
-import { orchestrate, type OrchestratedCrawler } from './orchestrate.js';
+import { describe, expect, it, vi } from 'vitest';
+
 import type { CrawleeOneRequestQueue } from './integrations/types.js';
+import { orchestrate, type OrchestratedCrawler } from './orchestrate.js';
 
 const createMockQueue = (overrides?: Partial<CrawleeOneRequestQueue>): CrawleeOneRequestQueue => ({
   addRequest: vi.fn(),

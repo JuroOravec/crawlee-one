@@ -1,87 +1,89 @@
+/* eslint-disable simple-import-sort/exports */
+
 // Main API
 export {
   crawleeOne,
-  createHttpCrawlerOptions,
   type CrawleeOneOptions,
+  createHttpCrawlerOptions,
 } from './lib/context/context.js';
 
 // Low-level API + types + helpers
-export type { CrawlerUrl, CrawlerType, CrawlerMeta, HttpResponse, SampleUrlItem } from './types.js';
+export type { CrawlerMeta, CrawlerType, CrawlerUrl, HttpResponse, SampleUrlItem } from './types.js';
 export type {
+  ArrVal,
+  MaybeArray,
+  MaybeAsyncFn,
+  MaybePromise,
   PickPartial,
   PickRequired,
-  MaybeArray,
-  ArrVal,
-  MaybePromise,
-  MaybeAsyncFn,
 } from './utils/types.js';
 export {
-  type InputFromFields,
   type CrawleeOneContext,
-  type CrawleeOneInternalOptionsWithInput,
-  type CrawleeOneInternalOptions,
-  type CrawleeOneHookFn,
   type CrawleeOneHookCtx,
+  type CrawleeOneHookFn,
+  type CrawleeOneInternalOptions,
+  type CrawleeOneInternalOptionsWithInput,
   type CrawleeOneRouteHandlerCtxExtras,
   type CrawleeOneTypes,
+  type InputFromFields,
   type Metamorph,
 } from './lib/context/types.js';
 export {
   type ActorInput,
-  type CrawlerConfigActorInput,
-  type InputActorInput,
-  type PerfActorInput,
-  type StartUrlsActorInput,
-  type LoggingActorInput,
-  type ProxyActorInput,
-  type RequestActorInput,
-  type OutputActorInput,
-  type LlmActorInput,
-  type MetamorphActorInput,
-  type PrivacyActorInput,
-  inputInput,
-  crawlerInput,
-  perfInput,
-  startUrlsInput,
-  loggingInput,
-  proxyInput,
-  privacyInput,
-  requestInput,
-  outputInput,
-  metamorphInput,
   actorInput,
+  type CrawlerConfigActorInput,
+  crawlerInput,
+  type InputActorInput,
+  inputInput,
+  type LlmActorInput,
+  type LoggingActorInput,
+  loggingInput,
+  type MetamorphActorInput,
+  metamorphInput,
+  type OutputActorInput,
+  outputInput,
+  type PerfActorInput,
+  perfInput,
+  type PrivacyActorInput,
+  privacyInput,
+  type ProxyActorInput,
+  proxyInput,
+  type RequestActorInput,
+  requestInput,
+  type StartUrlsActorInput,
+  startUrlsInput,
 } from './lib/input.js';
-export { type PushDataOptions, type PrivacyFilter, type PrivacyMask } from './lib/io/pushData.js';
+export { type PrivacyFilter, type PrivacyMask, type PushDataOptions } from './lib/io/pushData.js';
 export { type AddRequestsOptions } from './lib/io/addRequests.js';
 export {
-  type CrawleeOneRouteHandlerCtx,
-  type CrawleeOneRouteHandler,
-  type CrawleeOneRouteMiddleware,
   type CrawleeOneRoute,
+  type CrawleeOneRouteHandler,
+  type CrawleeOneRouteHandlerCtx,
   type CrawleeOneRouteMatcher,
   type CrawleeOneRouteMatcherFn,
+  type CrawleeOneRouteMiddleware,
 } from './lib/router/types.js';
 export {
-  type ReadmeRenderer,
-  type CrawlersRecord,
-  type CrawleeOneConfigGenerate,
   type CrawleeOneConfig,
-  type CrawleeOneConfigTypes,
   type CrawleeOneConfigActor,
   type CrawleeOneConfigActorSpec,
+  type CrawleeOneConfigGenerate,
   type CrawleeOneConfigReadme,
+  type CrawleeOneConfigRun,
+  type CrawleeOneConfigRunMetaOptions,
+  type CrawleeOneConfigRunOptions,
   type CrawleeOneConfigSchema,
   type CrawleeOneConfigSchemaCrawler,
-  type CrawleeOneConfigRunOptions,
-  type CrawleeOneConfigRunMetaOptions,
-  type CrawleeOneConfigRun,
-  type LlmCompareReportDefinition,
-  defineCrawler,
+  type CrawleeOneConfigTypes,
+  type CrawlersRecord,
   defineConfig,
+  defineCrawler,
+  type LlmCompareReportDefinition,
+  type ReadmeRenderer,
 } from './lib/config/types.js';
-export { startPreviewServer, type PreviewServerOptions } from './lib/preview/server.js';
-export { runExport, type ExportOptions, type ExportResult } from './lib/export/runExport.js';
-export { defaultReadmeRenderer, type DefaultReadmeInput } from './lib/generate/defaultRenderer.js';
+export { type PreviewServerOptions, startPreviewServer } from './lib/preview/server.js';
+export { type ExportOptions, type ExportResult, runExport } from './lib/export/runExport.js';
+export { type DefaultReadmeInput, defaultReadmeRenderer } from './lib/generate/defaultRenderer.js';
 export {
   extractWithLlm,
   type ExtractWithLlmOptions,
@@ -89,58 +91,57 @@ export {
   type LlmExtractionMetadata,
 } from './lib/llmExtract/extractWithLlm.js';
 export {
-  type ExtractWithLlmSyncOptions,
   type ExtractWithLlmAsyncOptions,
-  type LlmExtractionResult,
+  type ExtractWithLlmSyncOptions,
   type LlmExtractionMeta,
+  type LlmExtractionResult,
 } from './lib/llmExtract/extractWithLlmScoped.js';
 export { createLlmCrawler } from './lib/llmExtract/llmCrawler.js';
-export { logLevelHandlerWrapper, type LogLevel, logLevelToCrawlee } from './lib/log.js';
+export { type LogLevel, logLevelHandlerWrapper, logLevelToCrawlee } from './lib/log.js';
 export {
   type ApifyCrawleeOneIO,
-  apifyIO,
-  type ApifyErrorReport,
   type ApifyEntryMetadata,
+  type ApifyErrorReport,
+  apifyIO,
 } from './lib/integrations/apify.js';
 export {
-  type CrawleeOneIO,
   type CrawleeOneDataset,
-  type CrawleeOneRequestQueue,
+  type CrawleeOneErrorHandlerInput,
+  type CrawleeOneErrorHandlerOptions,
+  type CrawleeOneIO,
   type CrawleeOneKeyValueStore,
+  type CrawleeOneRequestQueue,
   type ExtractErrorHandlerOptionsReport,
   type ExtractIOReport,
-  type CrawleeOneErrorHandlerOptions,
-  type CrawleeOneErrorHandlerInput,
 } from './lib/integrations/types.js';
-export { type CrawleeOneTelemetry } from './lib/telemetry/types.js';
-export { createSentryTelemetry } from './lib/telemetry/sentry.js';
-export { writeReportHtml, type WriteReportHtmlOptions } from './lib/llmCompare/reportHtml.js';
 export {
   createLlmModelCompareCrawler,
   type LlmModelCompareCrawlerOptions,
   type LlmModelCompareDatasetItem,
 } from './lib/llmCompare/compareCrawler.js';
 export {
+  type LlmModelCompareConfig,
   type LlmModelCompareReport,
   type LlmModelCompareReportEntry,
-  type LlmModelCompareConfig,
 } from './lib/llmCompare/types.js';
 export {
-  runLlmModelComparison,
   type LlmModelComparisonOptions,
+  runLlmModelComparison,
 } from './lib/llmCompare/comparison.js';
 export {
   orchestrate,
   type OrchestratedCrawler,
   type OrchestratedCrawlerInstance,
 } from './lib/orchestrate.js';
+export { createSentryTelemetry } from './lib/telemetry/sentry.js';
+export { type CrawleeOneTelemetry } from './lib/telemetry/types.js';
 // TODO - Review errorHandler exports - Not really used anywhere, but the API around error handling
 //        is not finalized yet, so exporting it for now. Might be removed in the future.
 export {
-  createErrorHandler,
-  captureErrorRouteHandler,
-  captureErrorWrapper,
+  type CaptureError,
   captureError,
   type CaptureErrorInput,
-  type CaptureError,
+  captureErrorRouteHandler,
+  captureErrorWrapper,
+  createErrorHandler,
 } from './lib/error/errorHandler.js';

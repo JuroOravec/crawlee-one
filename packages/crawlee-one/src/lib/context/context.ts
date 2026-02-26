@@ -1,54 +1,54 @@
 import {
-  RouterHandler,
-  BasicCrawlerOptions,
-  Router,
+  type BasicCrawlerOptions,
   Log,
   LogLevel,
-  Request as CrawleeRequest,
+  type Request as CrawleeRequest,
+  Router,
+  type RouterHandler,
 } from 'crawlee';
-import { omitBy, pick, defaults } from 'lodash-es';
 import { gotScraping } from 'got-scraping';
+import { defaults, omitBy, pick } from 'lodash-es';
 import { z } from 'zod';
 
-import type { CrawlerMeta, CrawlerType } from '../../types.js';
 import { actorClassByType } from '../../constants.js';
+import type { CrawlerMeta, CrawlerType } from '../../types.js';
 import type { MaybePromise, PickPartial } from '../../utils/types.js';
-import { createErrorHandler } from '../error/errorHandler.js';
-import { type PushDataOptions, itemCacheKey, pushData } from '../io/pushData.js';
-import { getColumnFromDataset } from '../io/dataset.js';
-import { AddRequestsOptions, addRequests } from '../io/addRequests.js';
-import type { CrawleeOneIO } from '../integrations/types.js';
-import { apifyIO } from '../integrations/apify.js';
 import { devContextStore } from '../dev/devContextStore.js';
-import { registerHandlers, setupDefaultHandlers } from '../router/router.js';
+import { createErrorHandler } from '../error/errorHandler.js';
 import {
-  CrawlerConfigActorInput,
-  OutputActorInput,
-  MetamorphActorInput,
-  PrivacyActorInput,
+  type CrawlerConfigActorInput,
   crawlerInput,
-  StartUrlsActorInput,
-  InputActorInput,
-  RequestActorInput,
-  LoggingActorInput,
-  LlmActorInput,
+  type InputActorInput,
+  type LlmActorInput,
+  type LoggingActorInput,
+  type MetamorphActorInput,
+  type OutputActorInput,
+  type PrivacyActorInput,
+  type RequestActorInput,
+  type StartUrlsActorInput,
 } from '../input.js';
+import { apifyIO } from '../integrations/apify.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
+import { addRequests, type AddRequestsOptions } from '../io/addRequests.js';
+import { getColumnFromDataset } from '../io/dataset.js';
+import { itemCacheKey, pushData, type PushDataOptions } from '../io/pushData.js';
 import { createExtractWithLlmForContext } from '../llmExtract/extractWithLlmScoped.js';
-import { getLlmIds } from '../llmExtract/utils.js';
 import { orchestrateWithLlm } from '../llmExtract/orchestrate.js';
+import { getLlmIds } from '../llmExtract/utils.js';
 import { logLevelHandlerWrapper, logLevelToCrawlee } from '../log.js';
+import { registerHandlers, setupDefaultHandlers } from '../router/router.js';
+import type { CrawleeOneRoute, CrawleeOneRouteHandler } from '../router/types.js';
 import type {
   CrawleeOneContext,
-  CrawleeOneInternalOptions,
   CrawleeOneHookCtx,
+  CrawleeOneHookFn,
+  CrawleeOneInternalOptions,
+  CrawleeOneInternalOptionsWithInput,
   CrawleeOneRouteHandlerCtxExtras,
+  CrawleeOneTypes,
   Metamorph,
   RunCrawler,
-  CrawleeOneTypes,
-  CrawleeOneHookFn,
-  CrawleeOneInternalOptionsWithInput,
 } from './types.js';
-import type { CrawleeOneRouteHandler, CrawleeOneRoute } from '../router/types.js';
 
 /** Options object passed to `crawleeOne` */
 export interface CrawleeOneOptions<
@@ -560,20 +560,27 @@ const createActorInput = async <T extends CrawleeOneTypes>(
 
   // Next, we allow to enrich the input we already have by downloading remote inputs
   // or generating it from a user-defined function.
-  const input = Object.freeze(await resolveInput<T['input'] | null>(mergedInput, config.io, state));
+  const input = Object.freeze(
+    await resolveInput<T['input'] | null>({ input: mergedInput, io: config.io, state })
+  );
 
   return input;
 };
 
-const resolveInput = async <T extends Record<string, any> | null>(
-  input: object | null,
-  io: CrawleeOneIO,
-  state: Record<string, unknown>
-) => {
+const resolveInput = async <T extends Record<string, any> | null>(opts: {
+  input: object | null;
+  io: CrawleeOneIO;
+  state: Record<string, unknown>;
+}) => {
+  const { input, io, state } = opts;
   const { inputExtendUrl, inputExtendFromFunction } = (input ?? {}) as InputActorInput;
 
   const inputFromUrl = inputExtendUrl ? await gotScraping.get(inputExtendUrl).json<object>() : null;
-  const inputFn = genHookFn({ state, input, io }, inputExtendFromFunction, 'inputExtendFromFunction'); // prettier-ignore
+  const inputFn = genHookFn({
+    ctx: { state, input, io },
+    fnOrStr: inputExtendFromFunction,
+    funcName: 'inputExtendFromFunction',
+  });
   const inputFromFunc = (await inputFn?.()) ?? null;
   const extendedInput = { ...inputFromUrl, ...inputFromFunc, ...input };
 
@@ -617,17 +624,21 @@ const createScopedCrawlerRun = <T extends CrawleeOneTypes>(
       await store.clear();
     }
 
-    await genHookFn(ctx, outputTransformBefore, 'outputTransformBefore')?.(); // prettier-ignore
-    await genHookFn(ctx, outputFilterBefore, 'outputFilterBefore')?.(); // prettier-ignore
-    await genHookFn(ctx, requestTransformBefore, 'requestTransformBefore')?.(); // prettier-ignore
-    await genHookFn(ctx, requestFilterBefore, 'requestFilterBefore')?.(); // prettier-ignore
+    await genHookFn({ ctx, fnOrStr: outputTransformBefore, funcName: 'outputTransformBefore' })?.();
+    await genHookFn({ ctx, fnOrStr: outputFilterBefore, funcName: 'outputFilterBefore' })?.();
+    await genHookFn({
+      ctx,
+      fnOrStr: requestTransformBefore,
+      funcName: 'requestTransformBefore',
+    })?.();
+    await genHookFn({ ctx, fnOrStr: requestFilterBefore, funcName: 'requestFilterBefore' })?.();
 
     const runRes = await originalRun(requests, options);
 
-    await genHookFn(ctx, outputTransformAfter, 'outputTransformAfter')?.(); // prettier-ignore
-    await genHookFn(ctx, outputFilterAfter, 'outputFilterAfter')?.(); // prettier-ignore
-    await genHookFn(ctx, requestTransformAfter, 'requestTransformAfter')?.(); // prettier-ignore
-    await genHookFn(ctx, requestFilterAfter, 'requestFilterAfter')?.(); // prettier-ignore
+    await genHookFn({ ctx, fnOrStr: outputTransformAfter, funcName: 'outputTransformAfter' })?.();
+    await genHookFn({ ctx, fnOrStr: outputFilterAfter, funcName: 'outputFilterAfter' })?.();
+    await genHookFn({ ctx, fnOrStr: requestTransformAfter, funcName: 'requestTransformAfter' })?.();
+    await genHookFn({ ctx, fnOrStr: requestFilterAfter, funcName: 'requestFilterAfter' })?.();
 
     // Trigger metamorph if it was set from the input
     await metamorph();
@@ -679,8 +690,8 @@ const buildPushDataOptions = <T extends CrawleeOneTypes>(
     outputCacheActionOnResult,
   } = (ctx.input ?? {}) as OutputActorInput & PrivacyActorInput & RequestActorInput;
 
-  const transformFn = genHookFn(ctx, outputTransform, 'outputTransform');
-  const filterFn = genHookFn(ctx, outputFilter, 'outputFilter');
+  const transformFn = genHookFn({ ctx, fnOrStr: outputTransform, funcName: 'outputTransform' });
+  const filterFn = genHookFn({ ctx, fnOrStr: outputFilter, funcName: 'outputFilter' });
 
   return {
     io: ctx.io,
@@ -748,8 +759,8 @@ const createScopedAddRequests = <T extends CrawleeOneTypes>(
     const { requestQueueId, requestMaxEntries, requestTransform, requestFilter } = (ctx.input ??
       {}) as RequestActorInput;
 
-    const transformFn = genHookFn(ctx, requestTransform, 'requestTransform');
-    const filterFn = genHookFn(ctx, requestFilter, 'requestFilter');
+    const transformFn = genHookFn({ ctx, fnOrStr: requestTransform, funcName: 'requestTransform' });
+    const filterFn = genHookFn({ ctx, fnOrStr: requestFilter, funcName: 'requestFilter' });
 
     const mergedOptions = {
       io: ctx.io,
@@ -813,14 +824,22 @@ const getStartUrlsFromInput = async <T extends CrawleeOneTypes>(
   if (startUrlsFromDataset) {
     ctx.log.debug(`Loading start URLs from Dataset ${startUrlsFromDataset}`);
     const [datasetId, field] = startUrlsFromDataset.split('#');
-    const urlsFromDataset = await getColumnFromDataset<any>(datasetId, field, { io: ctx.io });
+    const urlsFromDataset = await getColumnFromDataset<any>({
+      datasetId,
+      field,
+      io: ctx.io,
+    });
     urlsAgg.push(...urlsFromDataset);
   }
 
   if (startUrlsFromFunction) {
     ctx.log.debug(`Loading start URLs from function`);
     const urlsFromFn =
-      (await genHookFn(ctx, startUrlsFromFunction, 'startUrlsFromFunction')?.()) ?? [];
+      (await genHookFn({
+        ctx,
+        fnOrStr: startUrlsFromFunction,
+        funcName: 'startUrlsFromFunction',
+      })?.()) ?? [];
     if (!Array.isArray(urlsFromFn)) {
       throw Error(
         `Hook "startUrlsFromFunction" must return an array of URLs or Requests, got ${urlsFromFn}`
@@ -845,11 +864,12 @@ const genHookFn = <
   TArgs extends any[] = [],
   TReturn = unknown,
   T extends CrawleeOneTypes = CrawleeOneTypes,
->(
-  ctx: Pick<CrawleeOneContext<T>, 'input' | 'state' | 'io'>,
-  fnOrStr: string | CrawleeOneHookFn<TArgs, TReturn, T> | undefined | null,
-  funcName: string
-) => {
+>(opts: {
+  ctx: Pick<CrawleeOneContext<T>, 'input' | 'state' | 'io'>;
+  fnOrStr: string | CrawleeOneHookFn<TArgs, TReturn, T> | undefined | null;
+  funcName: string;
+}) => {
+  const { ctx, fnOrStr, funcName } = opts;
   if (!fnOrStr) return null;
 
   const hookCtx = {

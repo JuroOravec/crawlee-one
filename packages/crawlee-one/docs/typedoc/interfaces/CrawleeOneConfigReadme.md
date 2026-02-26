@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfigReadme
 
@@ -12,7 +12,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:120](https://github.co
 
 ### TRenderer
 
-`TRenderer` *extends* [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\> = [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`unknown`\>
+`TRenderer` _extends_ [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\> = [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`unknown`\>
 
 ## Properties
 
@@ -24,11 +24,11 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:130](https://github.co
 
 The `ActorSpec` data passed to the renderer.
 
-***
+---
 
 ### input?
 
-> `optional` **input**: `TRenderer` *extends* [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`I`\> ? `I` : `unknown`
+> `optional` **input**: `TRenderer` _extends_ [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`I`\> ? `I` : `unknown`
 
 Defined in: [packages/crawlee-one/src/lib/config/types.ts:143](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L143)
 
@@ -37,7 +37,7 @@ Renderer-specific data. Shape depends on the renderer.
 Everything the renderer needs (templates, helper functions, etc.)
 is passed through this single object.
 
-***
+---
 
 ### outFile?
 
@@ -49,7 +49,7 @@ Output file path (relative to cwd).
 
 Defaults to `.actor/README.md` if `.actor/` exists, otherwise `./README.md`.
 
-***
+---
 
 ### renderer?
 

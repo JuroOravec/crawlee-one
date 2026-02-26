@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmCompareReportDefinition
 
@@ -20,7 +20,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:55](https://github.com
 
 Model configs to compare
 
-***
+---
 
 ### referenceModel
 
@@ -30,7 +30,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:57](https://github.com
 
 ID of the model whose output is the reference for comparison
 
-***
+---
 
 ### schema
 
@@ -40,7 +40,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:61](https://github.com
 
 JSON schema or Zod schema for extraction output
 
-***
+---
 
 ### systemPrompt
 
@@ -50,7 +50,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:63](https://github.com
 
 System prompt for LLM extraction
 
-***
+---
 
 ### urls
 

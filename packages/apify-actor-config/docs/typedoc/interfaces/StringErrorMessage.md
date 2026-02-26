@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / StringErrorMessage
 
@@ -21,7 +21,7 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 Defined in: [inputSchema.ts:561](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L561)
 
-***
+---
 
 ### maxLength?
 
@@ -29,7 +29,7 @@ Defined in: [inputSchema.ts:561](https://github.com/JuroOravec/crawlee-one/blob/
 
 Defined in: [inputSchema.ts:560](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L560)
 
-***
+---
 
 ### minLength?
 
@@ -37,7 +37,7 @@ Defined in: [inputSchema.ts:560](https://github.com/JuroOravec/crawlee-one/blob/
 
 Defined in: [inputSchema.ts:559](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L559)
 
-***
+---
 
 ### pattern?
 
@@ -45,7 +45,7 @@ Defined in: [inputSchema.ts:559](https://github.com/JuroOravec/crawlee-one/blob/
 
 Defined in: [inputSchema.ts:558](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L558)
 
-***
+---
 
 ### type?
 

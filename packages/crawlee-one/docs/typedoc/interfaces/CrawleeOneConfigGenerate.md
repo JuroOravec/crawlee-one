@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfigGenerate
 
@@ -16,7 +16,7 @@ All fields are optional. Omitted sections are skipped.
 
 ### TRenderer
 
-`TRenderer` *extends* [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\> = [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\>
+`TRenderer` _extends_ [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\> = [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\>
 
 ## Properties
 
@@ -28,7 +28,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:45](https://github.com
 
 Actor config generation (produces `actor.json`). If omitted, generation is skipped.
 
-***
+---
 
 ### actorspec?
 
@@ -38,7 +38,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:47](https://github.com
 
 Actor spec generation (produces `actorspec.json`). If omitted, generation is skipped.
 
-***
+---
 
 ### readme?
 
@@ -48,7 +48,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:49](https://github.com
 
 README generation. If omitted, generation is skipped.
 
-***
+---
 
 ### types?
 

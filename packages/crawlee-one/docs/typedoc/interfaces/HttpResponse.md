@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / HttpResponse
 
@@ -19,8 +19,8 @@ const route: CrawleeOneRoute = {
   sampleUrls: [
     {
       request: { url: 'https://example.com' },
-      response: { statusCode: 200, body: '...' }
-    }
+      response: { statusCode: 200, body: '...' },
+    },
   ],
 };
 ```
@@ -33,7 +33,7 @@ const route: CrawleeOneRoute = {
 
 Defined in: [packages/crawlee-one/src/types.ts:103](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types.ts#L103)
 
-***
+---
 
 ### headers?
 
@@ -41,7 +41,7 @@ Defined in: [packages/crawlee-one/src/types.ts:103](https://github.com/JuroOrave
 
 Defined in: [packages/crawlee-one/src/types.ts:102](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types.ts#L102)
 
-***
+---
 
 ### statusCode
 

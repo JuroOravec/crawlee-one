@@ -19,7 +19,7 @@
 #
 # Read more on https://docs.npmjs.com/trusted-publishers
 
-name: "crawlee-one: Release"
+name: 'crawlee-one: Release'
 
 on:
   release:

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfigSchemaCrawler
 
@@ -32,7 +32,7 @@ When omitted, dev/run use `importPath` (built output) — build required.
 The module **must** have a default export: the run function matching
 `CrawleeOneConfigRun`.
 
-***
+---
 
 ### devInput?
 
@@ -42,7 +42,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:290](https://github.co
 
 Input overrides for `crawlee-one dev` commands.
 
-***
+---
 
 ### importPath?
 
@@ -56,7 +56,7 @@ Typically points to built output (e.g. `./dist/index.js`).
 The module **must** have a default export: the run function matching
 `CrawleeOneConfigRun`.
 
-***
+---
 
 ### input?
 
@@ -66,7 +66,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:294](https://github.co
 
 Input overrides for `crawlee-one run` command.
 
-***
+---
 
 ### routes
 
@@ -74,7 +74,7 @@ Input overrides for `crawlee-one run` command.
 
 Defined in: [packages/crawlee-one/src/lib/config/types.ts:268](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L268)
 
-***
+---
 
 ### type
 

@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / createActorInputSchema
 
@@ -14,7 +14,7 @@ Defined in: [inputSchema.ts:612](https://github.com/JuroOravec/crawlee-one/blob/
 
 ### T
 
-`T` *extends* [`ActorInputSchema`](../interfaces/ActorInputSchema.md)\<`Record`\<`string`, [`Field`](../type-aliases/Field.md)\>\>
+`T` _extends_ [`ActorInputSchema`](../interfaces/ActorInputSchema.md)\<`Record`\<`string`, [`Field`](../type-aliases/Field.md)\>\>
 
 ## Parameters
 

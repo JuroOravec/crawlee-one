@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneRouteMiddleware
 
@@ -16,7 +16,7 @@ Wrapper that modifies behavior of CrawleeOneRouteHandler
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ## Parameters
 

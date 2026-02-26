@@ -1,7 +1,9 @@
-import { describe, expect, it } from 'vitest';
 import * as fsp from 'node:fs/promises';
-import path from 'node:path';
 import os from 'node:os';
+import path from 'node:path';
+
+import { describe, expect, it } from 'vitest';
+
 import {
   buildSortParam,
   getAllDatasetTimelineData,

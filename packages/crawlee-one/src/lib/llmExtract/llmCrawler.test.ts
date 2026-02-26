@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync } from 'node:fs';
-import path from 'node:path';
 import { tmpdir } from 'node:os';
+import path from 'node:path';
+
 import { KeyValueStore, RequestQueue } from 'crawlee';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockExtractWithLlm = vi.fn();
 
@@ -10,8 +11,8 @@ vi.mock('./extractWithLlm.js', () => ({
   extractWithLlm: (...args: unknown[]) => mockExtractWithLlm(...args),
 }));
 
-import { handleLlmQueueRequest } from './llmCrawler.js';
 import type { LlmQueueRequestUserData } from './llmCrawler.js';
+import { handleLlmQueueRequest } from './llmCrawler.js';
 
 describe('handleLlmQueueRequest (LLM crawler handler)', () => {
   let storageDir: string;

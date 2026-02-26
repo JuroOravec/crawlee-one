@@ -1,13 +1,14 @@
 import path from 'node:path';
+
 import { Command } from 'commander';
 
 import { loadConfig } from '../../lib/config/config.js';
-import { apifyIO } from '../../lib/integrations/apify.js';
-import { createLlmCrawler } from '../../lib/llmExtract/llmCrawler.js';
-import { runLlmModelComparison } from '../../lib/llmCompare/comparison.js';
 import type { LlmCompareReportDefinition } from '../../lib/config/types.js';
-import type { CrawlerUrl } from '../../types.js';
+import { apifyIO } from '../../lib/integrations/apify.js';
+import { runLlmModelComparison } from '../../lib/llmCompare/comparison.js';
+import { createLlmCrawler } from '../../lib/llmExtract/llmCrawler.js';
 import { getStorageDir } from '../../lib/preview/storage.js';
+import type { CrawlerUrl } from '../../types.js';
 
 export function createLlmCommand(): Command {
   const llm = new Command('llm') //
@@ -38,7 +39,12 @@ Example:
     .action(
       async (opts: { report?: string; config?: string; format?: string; reportOnly?: boolean }) => {
         try {
-          await runLlmCompareCommand(opts.report, opts.config, opts.format, opts.reportOnly);
+          await runLlmCompareCommand({
+            reportName: opts.report,
+            configPath: opts.config,
+            format: opts.format,
+            reportOnly: opts.reportOnly,
+          });
         } catch (err) {
           console.error(err instanceof Error ? err.message : err);
           process.exit(1);
@@ -89,12 +95,16 @@ Examples:
   return llm.addCommand(compare).addCommand(extract);
 }
 
-async function runLlmCompareCommand(
-  reportName?: string,
-  configPath?: string,
-  formatOpt?: string,
-  reportOnly?: boolean
-): Promise<void> {
+/** Options for runLlmCompareCommand */
+interface RunLlmCompareCommandOpts {
+  reportName?: string;
+  configPath?: string;
+  format?: string;
+  reportOnly?: boolean;
+}
+
+async function runLlmCompareCommand(opts: RunLlmCompareCommandOpts): Promise<void> {
+  const { reportName, configPath, format: formatOpt, reportOnly } = opts;
   const format = (formatOpt?.toLowerCase() ?? 'html') as 'html' | 'json';
   if (formatOpt && format !== 'html' && format !== 'json') {
     throw new Error(`Invalid --format "${formatOpt}". Use "html" or "json".`);

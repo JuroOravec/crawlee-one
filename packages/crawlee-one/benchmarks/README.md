@@ -46,18 +46,18 @@ The results include metadata like test name, desc, perf_vs_memory, unit.
 import { measurePerf, measureMemory } from './helpers.js';
 
 describe('crawler throughput', () => {
-  measurePerf(
-    'jsdom crawl + parse',
-    'JSDOM crawl + parse',
-    async () => {
+  measurePerf({
+    name: 'jsdom crawl + parse',
+    prettyName: 'JSDOM crawl + parse',
+    fn: async () => {
       await crawlOnce('jsdom', (ctx) => {
         // Exercise the JSDOM API
         ctx.window?.document?.title;
         ctx.window?.document?.querySelector('h1')?.textContent;
       });
     },
-    { iterations: 5, time: 0 }
-  );
+    options: { iterations: 5, time: 0 },
+  });
 });
 ```
 

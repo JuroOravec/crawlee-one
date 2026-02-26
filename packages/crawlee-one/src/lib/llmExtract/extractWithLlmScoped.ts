@@ -1,21 +1,21 @@
 import type { JSONSchema7 } from 'ai';
 import {
-  CheerioCrawlingContext,
-  HttpCrawlingContext,
-  PlaywrightCrawlingContext,
-  Source,
+  type CheerioCrawlingContext,
   type CrawlingContext,
+  type HttpCrawlingContext,
   type Log,
+  type PlaywrightCrawlingContext,
+  type Source,
 } from 'crawlee';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 import type { z } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 
-import type { CrawleeOneIO } from '../integrations/types.js';
 import type { LlmActorInput, RequestActorInput } from '../input.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
 import { addRequestOrReclaim } from '../io/utils.js';
 import { extractWithLlm, type ExtractWithLlmOptions } from './extractWithLlm.js';
-import { computeExtractionId } from './utils.js';
 import type { LlmQueueRequestUserData } from './llmCrawler.js';
+import { computeExtractionId } from './utils.js';
 
 /**
  * In-memory cache for results popped from KVS.
@@ -223,7 +223,11 @@ export function createExtractWithLlmForContext(outerOpts: {
 
     try {
       const llmQueue = await context.io.openRequestQueue(llmQueueId);
-      await addRequestOrReclaim(llmQueue, llmRequest, context.log);
+      await addRequestOrReclaim({
+        queue: llmQueue,
+        request: llmRequest,
+        log: context.log,
+      });
     } catch (err) {
       const msg = `Failed to re-queue original request to LLM queue ${llmQueueId}: ${err instanceof Error ? err.message : String(err)}`;
       log.error(msg);

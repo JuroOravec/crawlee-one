@@ -66,16 +66,16 @@ const result = await runExport({
 console.log(`Exported ${result.totalEntries} entries to ${result.filesWritten.length} file(s)`);
 ```
 
-| Option        | Description                                      | Default                          |
-| ------------- | ------------------------------------------------- | -------------------------------- |
-| `datasetId`   | Dataset ID to export                              | required                         |
-| `format`      | `'json'` or `'csv'`                               | required                         |
-| `output`      | Output file path                                  | `storage/exports/{datasetId}.{format}` |
-| `fields`      | Fields to include (string array, dot notation)     | all                              |
-| `fieldsOmit`  | Fields to exclude (string array)                   | none                             |
-| `maxSizeBytes`| Max size per file in bytes                        | none                             |
-| `maxEntries`  | Max entries per file                               | none                             |
-| `io`          | Custom IO for opening the dataset                  | Crawlee local/cloud storage      |
+| Option         | Description                                    | Default                                |
+| -------------- | ---------------------------------------------- | -------------------------------------- |
+| `datasetId`    | Dataset ID to export                           | required                               |
+| `format`       | `'json'` or `'csv'`                            | required                               |
+| `output`       | Output file path                               | `storage/exports/{datasetId}.{format}` |
+| `fields`       | Fields to include (string array, dot notation) | all                                    |
+| `fieldsOmit`   | Fields to exclude (string array)               | none                                   |
+| `maxSizeBytes` | Max size per file in bytes                     | none                                   |
+| `maxEntries`   | Max entries per file                           | none                                   |
+| `io`           | Custom IO for opening the dataset              | Crawlee local/cloud storage            |
 
 ## Output
 

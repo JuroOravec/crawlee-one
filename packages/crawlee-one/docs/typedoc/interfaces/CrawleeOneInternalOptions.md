@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneInternalOptions
 
@@ -14,7 +14,7 @@ All that's necessary to define a single CrawleeOne actor/crawler.
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](CrawleeOneTypes.md)
 
 ## Properties
 
@@ -34,7 +34,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:309](https://github.c
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`\[`"context"`\]\[`"crawler"`\]\>
 
-***
+---
 
 ### input?
 
@@ -49,7 +49,7 @@ which by default corresponds to Apify's `Actor.getInput()`.
 
 If `input` is defined, then `io.getInput()` is ignored.
 
-***
+---
 
 ### inputDefaults?
 
@@ -59,7 +59,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:174](https://github.c
 
 Default input that may be overriden by `input` and `io.getInput()`.
 
-***
+---
 
 ### inputFields?
 
@@ -72,7 +72,7 @@ Field objects describing the actor input schema.
 If provided, crawlee-one auto-validates input against
 embedded Zod schemas before calling `validateInput`.
 
-***
+---
 
 ### io
 
@@ -82,7 +82,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:161](https://github.c
 
 Client for communicating with cloud/local storage.
 
-***
+---
 
 ### mergeInput?
 
@@ -121,7 +121,7 @@ Alternatively, you can supply your own function that merges the sources:
 }
 ```
 
-***
+---
 
 ### proxy?
 
@@ -129,7 +129,7 @@ Alternatively, you can supply your own function that merges the sources:
 
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:292](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L292)
 
-***
+---
 
 ### routeHandlerWrappers?
 
@@ -144,6 +144,7 @@ Wrappers are applied from right to left. That means that wrappers `[A, B, C]`
 will be applied like so `A( B( C( handler ) ) )`.
 
 Default `routeHandlerWrappers`:
+
 ```js
 {
   ...
@@ -153,7 +154,7 @@ Default `routeHandlerWrappers`:
 }
 ```
 
-***
+---
 
 ### router
 
@@ -174,7 +175,7 @@ import { createCheerioRouter } from 'crawlee';
 })
 ```
 
-***
+---
 
 ### routes
 
@@ -213,7 +214,7 @@ the request is passed to the `action` function for processing.
 })
 ```
 
-***
+---
 
 ### strict?
 
@@ -227,7 +228,7 @@ If `false`, log an error and skip the URL.
 
 Defaults to `false`.
 
-***
+---
 
 ### telemetry?
 
@@ -237,7 +238,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:298](https://github.c
 
 Client for telemetry like tracking errors.
 
-***
+---
 
 ### validateInput()?
 

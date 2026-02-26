@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmActorInput
 
@@ -24,7 +24,7 @@ When set, scrapers can use AI to extract data from pages where DOM-based extract
 
 Overrides environment variables like `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`.
 
-***
+---
 
 ### llmBaseUrl?
 
@@ -36,7 +36,7 @@ Base URL for the LLM API (e.g. custom OpenAI-compatible endpoint, Azure OpenAI).
 
 When set, overrides the default provider endpoint. Requires a valid URL.
 
-***
+---
 
 ### llmHeaders?
 
@@ -46,7 +46,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:373](https://github.com/JuroO
 
 Custom headers to include in LLM API requests (e.g. `X-API-Version`, `OpenAI-Organization`).
 
-***
+---
 
 ### llmKeyValueStoreId?
 
@@ -56,7 +56,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:381](https://github.com/JuroO
 
 Override the LLM key-value store ID. When unset, crawlee-one uses run-scoped ID `llm-{runId}`.
 
-***
+---
 
 ### llmModel?
 
@@ -67,13 +67,14 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:363](https://github.com/JuroO
 Model ID for the LLM (e.g. `gpt-4o`, `claude-3-5-sonnet-20241022`).
 
 To see available models per provider, see:
+
 - OpenAI - https://developers.openai.com/api/docs/models
 - Anthropic - https://docs.anthropic.com/en/docs/about-claude/models
 - Google - https://cloud.google.com/vertex-ai/generative-ai/docs/models
 - DeepSeek - https://api-docs.deepseek.com/quick_start/pricing
 - Ollama - https://ollama.com/models
 
-***
+---
 
 ### llmProvider?
 
@@ -87,7 +88,7 @@ Combined with `llmModel` as `{provider}:{model}` when calling the LLM.
 
 Custom / unknown providers are supported via OpenAI-compatible APIs.
 
-***
+---
 
 ### llmQueueDrainCheckIntervalMs?
 
@@ -107,7 +108,7 @@ Default: 5000.
 
 Set to 0 in tests to avoid timeouts.
 
-***
+---
 
 ### llmRequestQueueId?
 

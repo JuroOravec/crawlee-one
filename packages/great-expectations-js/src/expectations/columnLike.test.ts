@@ -1,10 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
-  likeToRegex,
   expectColumnValuesToMatchLikePattern,
-  expectColumnValuesToNotMatchLikePattern,
   expectColumnValuesToMatchLikePatternList,
+  expectColumnValuesToNotMatchLikePattern,
   expectColumnValuesToNotMatchLikePatternList,
+  likeToRegex,
 } from './columnLike.js';
 
 describe('likeToRegex', () => {

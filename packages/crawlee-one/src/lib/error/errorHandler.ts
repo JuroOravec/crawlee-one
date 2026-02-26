@@ -2,15 +2,15 @@ import type { ErrorHandler } from 'crawlee';
 import type { Page } from 'playwright';
 
 import type { MaybePromise, PickRequired } from '../../utils/types.js';
-import type { CrawleeOneRouteHandler, CrawleeOneRouteHandlerCtx } from '../router/types.js';
+import type { CrawleeOneTypes } from '../context/types.js';
+import { apifyIO } from '../integrations/apify.js';
 import type {
   CrawleeOneErrorHandlerInput,
   CrawleeOneErrorHandlerOptions,
   CrawleeOneIO,
   ExtractIOReport,
 } from '../integrations/types.js';
-import type { CrawleeOneTypes } from '../context/types.js';
-import { apifyIO } from '../integrations/apify.js';
+import type { CrawleeOneRouteHandler, CrawleeOneRouteHandlerCtx } from '../router/types.js';
 
 export type CaptureErrorInput = PickRequired<Partial<CrawleeOneErrorHandlerInput>, 'error'>;
 export type CaptureError = (input: CaptureErrorInput) => MaybePromise<void>;

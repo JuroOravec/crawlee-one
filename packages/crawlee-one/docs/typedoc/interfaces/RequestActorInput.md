@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / RequestActorInput
 
@@ -29,7 +29,7 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => boolean`
 
-***
+---
 
 ### requestFilterAfter?
 
@@ -44,7 +44,7 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-***
+---
 
 ### requestFilterBefore?
 
@@ -59,7 +59,7 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-***
+---
 
 ### requestMaxEntries?
 
@@ -75,7 +75,7 @@ This means that if `requestMaxEntries` is set to 50, but the
 associated RequestQueue already handled 40 requests, then only 10 new requests
 will be handled.
 
-***
+---
 
 ### requestQueueId?
 
@@ -85,7 +85,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:223](https://github.com/JuroO
 
 ID of the RequestQueue to which the requests should be pushed
 
-***
+---
 
 ### requestTransform?
 
@@ -102,7 +102,7 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => { ... }`
 
-***
+---
 
 ### requestTransformAfter?
 
@@ -117,7 +117,7 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => { ... }`
 
-***
+---
 
 ### requestTransformBefore?
 

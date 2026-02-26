@@ -1,6 +1,6 @@
 [**actor-spec**](../README.md)
 
-***
+---
 
 [actor-spec](../globals.md) / ScraperDataset
 
@@ -18,7 +18,7 @@ Defined in: [actorSpec.ts:115](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Describes how well the scraper handles failures when scraping the given dataset.
 
-***
+---
 
 ### features
 
@@ -28,7 +28,7 @@ Defined in: [actorSpec.ts:113](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Describes what features the dataset has.
 
-***
+---
 
 ### filterCompleteness
 
@@ -36,7 +36,7 @@ Describes what features the dataset has.
 
 Defined in: [actorSpec.ts:109](https://github.com/JuroOravec/crawlee-one/blob/main/packages/actor-spec/src/types/actorSpec.ts#L109)
 
-***
+---
 
 ### filters
 
@@ -50,11 +50,12 @@ The names are indicative only, and do not need to match up with the actual filte
 or their IDs in the code.
 
 E.g.
+
 ```ts
-['geographic region (kraj)', 'starting letter']
+['geographic region (kraj)', 'starting letter'];
 ```
 
-***
+---
 
 ### isDefault
 
@@ -64,7 +65,7 @@ Defined in: [actorSpec.ts:96](https://github.com/JuroOravec/crawlee-one/blob/mai
 
 Whether the dataset is extracted when the actor is run with default settings
 
-***
+---
 
 ### modes
 
@@ -74,7 +75,7 @@ Defined in: [actorSpec.ts:111](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Scraper modes that impact the pricing, performance, or what kind of data is returned.
 
-***
+---
 
 ### name
 
@@ -84,7 +85,7 @@ Defined in: [actorSpec.ts:89](https://github.com/JuroOravec/crawlee-one/blob/mai
 
 Dataset name, e.g. `'organisations'`
 
-***
+---
 
 ### output
 
@@ -92,7 +93,7 @@ Dataset name, e.g. `'organisations'`
 
 Defined in: [actorSpec.ts:150](https://github.com/JuroOravec/crawlee-one/blob/main/packages/actor-spec/src/types/actorSpec.ts#L150)
 
-***
+---
 
 ### perfStats
 
@@ -103,6 +104,7 @@ Defined in: [actorSpec.ts:129](https://github.com/JuroOravec/crawlee-one/blob/ma
 List of performance / cost datapoints that's rendered as a table.
 
 E.g.
+
 ```
 [
 { rowId: 'fast', colId: '100items', count: 100, costUsd: 0.014, timeSec: 120 },
@@ -112,7 +114,7 @@ E.g.
 ],
 ```
 
-***
+---
 
 ### privacy
 
@@ -144,7 +146,7 @@ List of groups of people whose personal data is in the dataset.
 
 E.g. `['employees', 'researchers']`
 
-***
+---
 
 ### shortDesc
 
@@ -152,7 +154,7 @@ E.g. `['employees', 'researchers']`
 
 Defined in: [actorSpec.ts:90](https://github.com/JuroOravec/crawlee-one/blob/main/packages/actor-spec/src/types/actorSpec.ts#L90)
 
-***
+---
 
 ### size
 
@@ -162,7 +164,7 @@ Defined in: [actorSpec.ts:94](https://github.com/JuroOravec/crawlee-one/blob/mai
 
 Total size of the dataset
 
-***
+---
 
 ### url
 

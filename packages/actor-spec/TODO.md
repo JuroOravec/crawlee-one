@@ -72,6 +72,6 @@
         - D.{g, y}
           In such case, to join A with B, it would not work naively. But it would work if I merged A with C, then with D, and then with B.
 
-        This looks like a path-finding/network-connectivity problem*, hence I assume that the possibility of two datasets joining would not be known until we build / traverse the network of dataset properties.
+        This looks like a path-finding/network-connectivity problem\*, hence I assume that the possibility of two datasets joining would not be known until we build / traverse the network of dataset properties.
 
         \* or something that SQL databases solved decades ago

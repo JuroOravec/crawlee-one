@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / createNumberField
 
@@ -14,11 +14,11 @@ Defined in: [inputSchema.ts:618](https://github.com/JuroOravec/crawlee-one/blob/
 
 ### T
 
-`T` *extends* `number` = `number`
+`T` _extends_ `number` = `number`
 
 ### U
 
-`U` *extends* `string` = `string`
+`U` _extends_ `string` = `string`
 
 ### TSchema
 

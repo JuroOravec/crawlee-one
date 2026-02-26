@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / createBooleanField
 
@@ -14,7 +14,7 @@ Defined in: [inputSchema.ts:616](https://github.com/JuroOravec/crawlee-one/blob/
 
 ### T
 
-`T` *extends* `boolean` = `boolean`
+`T` _extends_ `boolean` = `boolean`
 
 ### TSchema
 

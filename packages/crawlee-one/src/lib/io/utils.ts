@@ -1,13 +1,22 @@
-import { RequestQueue, Source, Log, type RequestQueueOperationOptions } from 'crawlee';
+import {
+  type Log,
+  type RequestQueue,
+  type RequestQueueOperationOptions,
+  type Source,
+} from 'crawlee';
 
-import { CrawleeOneRequestQueue } from '../integrations/types.js';
+import { type CrawleeOneRequestQueue } from '../integrations/types.js';
 
-export const addRequestOrReclaim = async (
-  queue: RequestQueue | CrawleeOneRequestQueue,
-  request: Source,
-  log: Log,
-  options?: RequestQueueOperationOptions
-) => {
+/** Options for addRequestOrReclaim */
+export interface AddRequestOrReclaimOpts {
+  queue: RequestQueue | CrawleeOneRequestQueue;
+  request: Source;
+  log: Log;
+  options?: RequestQueueOperationOptions;
+}
+
+export const addRequestOrReclaim = async (opts: AddRequestOrReclaimOpts) => {
+  const { queue, request, log, options } = opts;
   const addResult = await queue.addRequest(request, options);
   const queueName = queue.name ?? 'queue';
 

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneTypes
 
@@ -17,23 +17,23 @@ have to pass through many times, but only one that describes them all.
 
 ### Ctx
 
-`Ctx` *extends* `CrawlingContext`\<`BasicCrawler` \| `HttpCrawler`\<`InternalHttpCrawlingContext`\> \| `JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler`\> = `CrawlingContext`\<`BasicCrawler` \| `HttpCrawler`\<`InternalHttpCrawlingContext`\> \| `JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler`\>
+`Ctx` _extends_ `CrawlingContext`\<`BasicCrawler` \| `HttpCrawler`\<`InternalHttpCrawlingContext`\> \| `JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler`\> = `CrawlingContext`\<`BasicCrawler` \| `HttpCrawler`\<`InternalHttpCrawlingContext`\> \| `JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler`\>
 
 ### Labels
 
-`Labels` *extends* `string` = `string`
+`Labels` _extends_ `string` = `string`
 
 ### Input
 
-`Input` *extends* `Record`\<`string`, `any`\> = `Record`\<`string`, `any`\>
+`Input` _extends_ `Record`\<`string`, `any`\> = `Record`\<`string`, `any`\>
 
 ### TIO
 
-`TIO` *extends* [`CrawleeOneIO`](CrawleeOneIO.md) = [`CrawleeOneIO`](CrawleeOneIO.md)
+`TIO` _extends_ [`CrawleeOneIO`](CrawleeOneIO.md) = [`CrawleeOneIO`](CrawleeOneIO.md)
 
 ### Telem
 
-`Telem` *extends* [`CrawleeOneTelemetry`](CrawleeOneTelemetry.md)\<`any`, `any`\> = [`CrawleeOneTelemetry`](CrawleeOneTelemetry.md)\<`any`, `any`\>
+`Telem` _extends_ [`CrawleeOneTelemetry`](CrawleeOneTelemetry.md)\<`any`, `any`\> = [`CrawleeOneTelemetry`](CrawleeOneTelemetry.md)\<`any`, `any`\>
 
 ## Properties
 
@@ -43,7 +43,7 @@ have to pass through many times, but only one that describes them all.
 
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:70](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L70)
 
-***
+---
 
 ### input
 
@@ -51,7 +51,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:70](https://github.co
 
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:72](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L72)
 
-***
+---
 
 ### io
 
@@ -59,7 +59,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:72](https://github.co
 
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:73](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L73)
 
-***
+---
 
 ### labels
 
@@ -67,7 +67,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:73](https://github.co
 
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:71](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L71)
 
-***
+---
 
 ### telemetry
 

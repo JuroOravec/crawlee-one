@@ -92,8 +92,8 @@ obj.name === 'Alice';
 obj.count > 100;
 obj.metadata?.actorRunUrl?.includes('profesia');
 obj.tags?.includes('remote');
-obj.url?.includes('example.com');  // for requests
-obj.method === 'POST';             // for requests
+obj.url?.includes('example.com'); // for requests
+obj.method === 'POST'; // for requests
 ```
 
 **Security:** The script runs on the server. Use only for local preview; never publish this page.

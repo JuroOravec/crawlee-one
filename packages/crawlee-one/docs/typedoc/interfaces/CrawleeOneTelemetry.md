@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneTelemetry
 
@@ -9,6 +9,7 @@
 Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:15](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/telemetry/types.ts#L15)
 
 Interface for sending error reports to a telemetry service:
+
 - Error reports
 
 This interface is based on Sentry, but defined separately to allow
@@ -18,11 +19,11 @@ drop-in replacement with other telemetry services.
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](CrawleeOneTypes.md)
 
 ### THandlerOptions
 
-`THandlerOptions` *extends* [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)\<`any`\> = [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)
+`THandlerOptions` _extends_ [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)\<`any`\> = [`CrawleeOneErrorHandlerOptions`](CrawleeOneErrorHandlerOptions.md)
 
 ## Properties
 
@@ -54,7 +55,7 @@ Defined in: [packages/crawlee-one/src/lib/telemetry/types.ts:20](https://github.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-***
+---
 
 ### setup()
 

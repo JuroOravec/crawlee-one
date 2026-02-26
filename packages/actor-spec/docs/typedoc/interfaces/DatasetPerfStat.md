@@ -1,6 +1,6 @@
 [**actor-spec**](../README.md)
 
-***
+---
 
 [actor-spec](../globals.md) / DatasetPerfStat
 
@@ -14,6 +14,7 @@ This data helps us to compare this scraper against others,
 or to know how much a run will cost / take time.
 
 E.g.
+
 ```
 perfStats = [
 { rowId: 'fast', colId: '100items', count: 100, costUsd: 0.014, timeSec: 120 },
@@ -31,7 +32,7 @@ perfStats = [
 
 Defined in: [actorSpec.ts:273](https://github.com/JuroOravec/crawlee-one/blob/main/packages/actor-spec/src/types/actorSpec.ts#L273)
 
-***
+---
 
 ### costUsd
 
@@ -39,7 +40,7 @@ Defined in: [actorSpec.ts:273](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Defined in: [actorSpec.ts:274](https://github.com/JuroOravec/crawlee-one/blob/main/packages/actor-spec/src/types/actorSpec.ts#L274)
 
-***
+---
 
 ### count
 
@@ -47,7 +48,7 @@ Defined in: [actorSpec.ts:274](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Defined in: [actorSpec.ts:277](https://github.com/JuroOravec/crawlee-one/blob/main/packages/actor-spec/src/types/actorSpec.ts#L277)
 
-***
+---
 
 ### mode
 
@@ -55,7 +56,7 @@ Defined in: [actorSpec.ts:277](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Defined in: [actorSpec.ts:276](https://github.com/JuroOravec/crawlee-one/blob/main/packages/actor-spec/src/types/actorSpec.ts#L276)
 
-***
+---
 
 ### rowId
 
@@ -63,7 +64,7 @@ Defined in: [actorSpec.ts:276](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Defined in: [actorSpec.ts:272](https://github.com/JuroOravec/crawlee-one/blob/main/packages/actor-spec/src/types/actorSpec.ts#L272)
 
-***
+---
 
 ### timeSec
 

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / MetamorphActorInput
 
@@ -22,7 +22,7 @@ Tag or number of the target actor build to metamorph into (e.g. `beta` or `1.2.3
 
 See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph
 
-***
+---
 
 ### metamorphActorId?
 
@@ -36,7 +36,7 @@ then set the ID of the target actor.
 
 See https://docs.apify.com/sdk/python/docs/concepts/interacting-with-other-actors#actormetamorph
 
-***
+---
 
 ### metamorphActorInput?
 

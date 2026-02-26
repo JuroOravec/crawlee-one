@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / ExportOptions
 
@@ -29,7 +29,7 @@ Dataset ID to export.
 
 `Omit.datasetId`
 
-***
+---
 
 ### fields?
 
@@ -43,7 +43,7 @@ Fields to include (dot notation, e.g. nested.prop).
 
 `Omit.fields`
 
-***
+---
 
 ### fieldsOmit?
 
@@ -57,7 +57,7 @@ Fields to exclude.
 
 `Omit.fieldsOmit`
 
-***
+---
 
 ### format
 
@@ -71,7 +71,7 @@ Output format.
 
 `Omit.format`
 
-***
+---
 
 ### io?
 
@@ -85,7 +85,7 @@ IO for opening the dataset. Defaults to Crawlee local/cloud storage.
 
 `Omit.io`
 
-***
+---
 
 ### maxEntries?
 
@@ -99,7 +99,7 @@ Max entries per file (splits into multiple files when exceeded).
 
 `Omit.maxEntries`
 
-***
+---
 
 ### maxSizeBytes?
 
@@ -113,7 +113,7 @@ Max size per file in bytes (splits into multiple files when exceeded).
 
 `Omit.maxSizeBytes`
 
-***
+---
 
 ### output?
 

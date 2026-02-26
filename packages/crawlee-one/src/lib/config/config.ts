@@ -2,7 +2,9 @@ import { cosmiconfig } from 'cosmiconfig';
 import { createJiti } from 'jiti';
 import { z } from 'zod';
 
+import { CRAWLER_TYPE } from '../../types.js';
 import { getPackageJsonInfo } from '../../utils/package.js';
+import type { LlmModelCompareConfig } from '../llmCompare/types.js';
 import type {
   CrawleeOneConfig,
   CrawleeOneConfigActor,
@@ -14,8 +16,6 @@ import type {
   CrawleeOneConfigTypes,
   LlmCompareReportDefinition,
 } from './types.js';
-import type { LlmModelCompareConfig } from '../llmCompare/types.js';
-import { CRAWLER_TYPE } from '../../types.js';
 
 /** Pattern for a valid JS variable */
 const varNamePattern = /^[a-z_][a-z0-9_]*$/i;

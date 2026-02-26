@@ -1,6 +1,6 @@
 [**actor-spec**](../README.md)
 
-***
+---
 
 [actor-spec](../globals.md) / DatasetOutput
 
@@ -12,7 +12,7 @@ Defined in: [actorSpec.ts:153](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 ### TEntry
 
-`TEntry` *extends* `Record`\<`string`, `any`\> = `Record`\<`string`, `any`\>
+`TEntry` _extends_ `Record`\<`string`, `any`\> = `Record`\<`string`, `any`\>
 
 ## Properties
 
@@ -24,7 +24,7 @@ Defined in: [actorSpec.ts:155](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Example single extracted entry
 
-***
+---
 
 ### exampleEntryComments?
 
@@ -38,8 +38,8 @@ These comments may be rendered as such:
 
 ```json
 {
-"exampleEntryField1": 22,
-// This is a comment from exampleEntryComments.exampleEntryField2
-"exampleEntryField2": "Value from exampleEntry.exampleEntryField2"
+  "exampleEntryField1": 22,
+  // This is a comment from exampleEntryComments.exampleEntryField2
+  "exampleEntryField2": "Value from exampleEntry.exampleEntryField2"
 }
 ```

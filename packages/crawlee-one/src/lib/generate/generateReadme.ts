@@ -1,8 +1,8 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import { defaultReadmeRenderer } from './defaultRenderer.js';
 import type { CrawleeOneConfig, ReadmeRenderer } from '../config/types.js';
+import { defaultReadmeRenderer } from './defaultRenderer.js';
 import { resolveOutFile } from './utils.js';
 
 /**

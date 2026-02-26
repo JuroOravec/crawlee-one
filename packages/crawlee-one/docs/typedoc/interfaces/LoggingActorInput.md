@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LoggingActorInput
 
@@ -22,7 +22,7 @@ Dataset ID to which errors should be captured.
 
 Default: `'REPORTING'`.
 
-***
+---
 
 ### errorTelemetry?
 
@@ -35,7 +35,7 @@ Whether to report actor errors to telemetry such as <a href="https://sentry.io/"
 This info is used by the author of this actor to identify broken integrations,
 and track down and fix issues.
 
-***
+---
 
 ### logLevel?
 

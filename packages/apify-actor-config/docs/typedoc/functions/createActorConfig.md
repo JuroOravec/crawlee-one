@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / createActorConfig
 
@@ -14,7 +14,7 @@ Defined in: [config.ts:136](https://github.com/JuroOravec/crawlee-one/blob/main/
 
 ### T
 
-`T` *extends* [`ActorConfig`](../interfaces/ActorConfig.md)\<[`ActorInputSchema`](../interfaces/ActorInputSchema.md)\<`Record`\<`string`, [`Field`](../type-aliases/Field.md)\>\>, [`ActorOutputSchema`](../interfaces/ActorOutputSchema.md)\<`object`, `Record`\<`string`, [`DatasetView`](../interfaces/DatasetView.md)\<[`ViewTransformation`](../interfaces/ViewTransformation.md)\<`string`\>, [`ViewDisplay`](../interfaces/ViewDisplay.md)\<`string`\>\>\>\>, `Record`\<`string`, `string`\>\>
+`T` _extends_ [`ActorConfig`](../interfaces/ActorConfig.md)\<[`ActorInputSchema`](../interfaces/ActorInputSchema.md)\<`Record`\<`string`, [`Field`](../type-aliases/Field.md)\>\>, [`ActorOutputSchema`](../interfaces/ActorOutputSchema.md)\<`object`, `Record`\<`string`, [`DatasetView`](../interfaces/DatasetView.md)\<[`ViewTransformation`](../interfaces/ViewTransformation.md)\<`string`\>, [`ViewDisplay`](../interfaces/ViewDisplay.md)\<`string`\>\>\>\>, `Record`\<`string`, `string`\>\>
 
 ## Parameters
 

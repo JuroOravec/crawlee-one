@@ -1,6 +1,6 @@
 [**actor-spec**](../README.md)
 
-***
+---
 
 [actor-spec](../globals.md) / ActorSpec
 
@@ -15,13 +15,14 @@ However, this description of an actor is for my (Juro's) own needs of managing
 possibly many actors across possibly many platforms written in possibly many repos.
 
 Hence, some differences are:
+
 - ActorSpec description is platform agnostic (e.g. Apify is a platform) - there might be
-other actors on other platforms.
+  other actors on other platforms.
 - ActorSpec is not an actor itself, but rather a reference to an actor living
-in some platform.
+  in some platform.
 - Aim of this reference is to keep track of things like featureset, performance / price,
-which websites it works with, what it does (eg what data it extracts if it's a scraper),
-who are the authors, privacy compliance, etc.
+  which websites it works with, what it does (eg what data it extracts if it's a scraper),
+  who are the authors, privacy compliance, etc.
 
 ## Properties
 
@@ -33,7 +34,7 @@ Defined in: [actorSpec.ts](../src/types/actorSpec.ts)
 
 Datasets that this actor can extract. Optional; when present, describes scraper-specific dataset metadata.
 
-***
+---
 
 ### actor
 
@@ -61,7 +62,7 @@ Image that shows overview of the extracted data
 
 > **title**: `string`
 
-***
+---
 
 ### actorspecVersion
 
@@ -71,7 +72,7 @@ Defined in: [actorSpec.ts:19](https://github.com/JuroOravec/crawlee-one/blob/mai
 
 Currently only version 1 exists
 
-***
+---
 
 ### authors
 
@@ -93,7 +94,7 @@ Authors that wrote this actor
 
 > **name**: `string`
 
-***
+---
 
 ### platform
 
@@ -143,7 +144,7 @@ Various social links
 
 URL to the platform's homepage
 
-***
+---
 
 ### pricing
 
@@ -183,7 +184,7 @@ E.g. none (free), monthly fee, one-off fee, or per X results
 
 E.g. the `8` in `"$8 per month"`
 
-***
+---
 
 ### websites
 

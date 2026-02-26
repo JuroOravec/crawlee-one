@@ -1,6 +1,6 @@
 **actor-spec**
 
-***
+---
 
 # actor-spec
 
@@ -108,10 +108,10 @@ The config file must have a default export -- either an `ActorSpec` object or an
 
 ## Documentation
 
-| Document                                  | Description                         |
-| ----------------------------------------- | ----------------------------------- |
+| Document                          | Description                         |
+| --------------------------------- | ----------------------------------- |
 | [API reference](_media/README.md) | Auto-generated TypeScript API docs. |
-| [Changelog](_media/CHANGELOG.md)               | Release history.                    |
+| [Changelog](_media/CHANGELOG.md)  | Release history.                    |
 
 ## License
 

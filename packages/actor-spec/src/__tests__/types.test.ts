@@ -1,13 +1,14 @@
-import { describe, it, expectTypeOf } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
+
 import type {
   ActorSpec,
-  ScraperDataset,
-  DatasetOutput,
-  DatasetFeatures,
-  DatasetModes,
-  DatasetPerfStat,
   DatasetFaultTolerance,
+  DatasetFeatures,
   DatasetFilterCompleteness,
+  DatasetModes,
+  DatasetOutput,
+  DatasetPerfStat,
+  ScraperDataset,
 } from '../index.js';
 
 describe('Type exports', () => {

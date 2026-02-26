@@ -23,6 +23,7 @@
 
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { Readable } from 'node:stream';
+
 import { Request, type RequestQueue } from 'crawlee';
 
 import type { HttpResponse } from '../../types.js';
@@ -102,7 +103,11 @@ export function createDevHttpClient(opts: DevHttpClientOptions): HttpClientLike 
       const uniqueKey = request?.uniqueKey ?? computeUniqueKeyFromOptions(options);
       const requestUrl = String(options.url ?? '');
 
-      const cached = await loadCachedResponse(responseCacheDir, devQueue, uniqueKey);
+      const cached = await loadCachedResponse({
+        responseCacheDir,
+        devQueue,
+        uniqueKey,
+      });
       if (cached) {
         console.log(`[crawlee-one] Dev cache hit: ${requestUrl}`);
         return createFakeStreamResponse(cached, requestUrl);
@@ -110,14 +115,18 @@ export function createDevHttpClient(opts: DevHttpClientOptions): HttpClientLike 
 
       const response = await underlying.stream(options);
       const serialized = await serializeStreamResponse(response);
-      await saveResponseToCache(responseCacheDir, uniqueKey, serialized);
+      await saveResponseToCache({ responseCacheDir, uniqueKey, response: serialized });
       return createFakeStreamResponse(serialized, requestUrl);
     },
 
     sendRequest: async (options: Record<string, unknown>) => {
       const uniqueKey = computeUniqueKeyFromOptions(options);
 
-      const cached = await loadCachedResponse(responseCacheDir, devQueue, uniqueKey);
+      const cached = await loadCachedResponse({
+        responseCacheDir,
+        devQueue,
+        uniqueKey,
+      });
       if (cached) {
         console.log(`[crawlee-one] Dev cache hit: ${String(options.url ?? '')}`);
         return createFakeFullResponse(cached);
@@ -134,7 +143,7 @@ export function createDevHttpClient(opts: DevHttpClientOptions): HttpClientLike 
               ? response.body
               : Buffer.from(String(response.body)),
       };
-      await saveResponseToCache(responseCacheDir, uniqueKey, serialized);
+      await saveResponseToCache({ responseCacheDir, uniqueKey, response: serialized });
       return response;
     },
   };

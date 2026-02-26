@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneHookFn
 
@@ -14,7 +14,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:152](https://github.c
 
 ### TArgs
 
-`TArgs` *extends* `any`[] = \[\]
+`TArgs` _extends_ `any`[] = \[\]
 
 ### TReturn
 
@@ -22,7 +22,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:152](https://github.c
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md) = [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md) = [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ## Parameters
 

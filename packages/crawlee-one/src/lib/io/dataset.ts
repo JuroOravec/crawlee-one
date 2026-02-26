@@ -1,8 +1,16 @@
 import type { DatasetDataOptions } from 'apify';
 
-import { ValueMonitorOptions, createSizeMonitor } from '../../utils/valueMonitor.js';
-import type { CrawleeOneIO } from '../integrations/types.js';
+import { createSizeMonitor, type ValueMonitorOptions } from '../../utils/valueMonitor.js';
 import { apifyIO } from '../integrations/apify.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
+
+/** Options for getColumnFromDataset */
+export interface GetColumnFromDatasetOpts {
+  datasetId: string;
+  field: string;
+  io?: CrawleeOneIO;
+  dataOptions?: Pick<DatasetDataOptions, 'offset' | 'limit' | 'desc'>;
+}
 
 /**
  * Given a Dataset ID and a name of a field, get the columnar data.
@@ -16,20 +24,13 @@ import { apifyIO } from '../integrations/apify.js';
  * //   { id: 1, field: 'abc' },
  * //   { id: 2, field: 'def' }
  * // ]
- * const results = await getColumnFromDataset('datasetId123', 'field');
+ * const results = await getColumnFromDataset({ datasetId: 'datasetId123', field: 'field' });
  * console.log(results)
  * // ['abc', 'def']
  * ```
  */
-export const getColumnFromDataset = async <T>(
-  datasetId: string,
-  field: string,
-  options?: {
-    io?: CrawleeOneIO;
-    dataOptions?: Pick<DatasetDataOptions, 'offset' | 'limit' | 'desc'>;
-  }
-) => {
-  const { io = apifyIO, dataOptions } = options ?? {};
+export const getColumnFromDataset = async <T>(opts: GetColumnFromDatasetOpts) => {
+  const { datasetId, field, io = apifyIO, dataOptions } = opts;
 
   const dataset = await io.openDataset(datasetId);
   const items = await dataset.getItems({

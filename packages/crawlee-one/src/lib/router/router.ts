@@ -1,21 +1,21 @@
-import {
-  type RouterHandler as CrawlerRouter,
-  type Request as CrawlerRequest,
-  type Log,
-} from 'crawlee';
 import type { CommonPage } from '@crawlee/browser-pool';
+import {
+  type Log,
+  type Request as CrawlerRequest,
+  type RouterHandler as CrawlerRouter,
+} from 'crawlee';
 import type { Page } from 'playwright';
 
 import { serialAsyncFind, wait } from '../../utils/async.js';
 import type { MaybePromise } from '../../utils/types.js';
+import type { CrawleeOneRouteHandlerCtxExtras, CrawleeOneTypes } from '../context/types.js';
 import type { PerfActorInput, RequestActorInput } from '../input.js';
 import type {
-  CrawleeOneRouteMiddleware,
+  CrawleeOneRoute,
   CrawleeOneRouteHandlerCtx,
   CrawleeOneRouteMatcherFn,
-  CrawleeOneRoute,
+  CrawleeOneRouteMiddleware,
 } from './types.js';
-import type { CrawleeOneRouteHandlerCtxExtras, CrawleeOneTypes } from '../context/types.js';
 
 // Read about router on https://docs.apify.com/academy/expert-scraping-with-apify/solutions/using-storage-creating-tasks
 

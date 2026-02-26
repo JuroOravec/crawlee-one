@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / NumericErrorMessage
 
@@ -18,7 +18,7 @@ See [StringErrorMessage](StringErrorMessage.md)
 
 Defined in: [inputSchema.ts:568](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L568)
 
-***
+---
 
 ### minimum?
 
@@ -26,7 +26,7 @@ Defined in: [inputSchema.ts:568](https://github.com/JuroOravec/crawlee-one/blob/
 
 Defined in: [inputSchema.ts:567](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L567)
 
-***
+---
 
 ### type?
 

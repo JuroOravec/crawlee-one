@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmModelCompareDatasetItem
 
@@ -18,7 +18,7 @@ Dataset item shape for LLM compare runs
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:24
 
-***
+---
 
 ### data
 
@@ -28,7 +28,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:17
 
 Extracted object on success, null on failure
 
-***
+---
 
 ### error
 
@@ -38,7 +38,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:19
 
 Error message on failure, null on success
 
-***
+---
 
 ### extractionMs?
 
@@ -46,7 +46,7 @@ Error message on failure, null on success
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:22
 
-***
+---
 
 ### modelId
 
@@ -54,7 +54,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:22
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:20
 
-***
+---
 
 ### promptTokens?
 
@@ -62,7 +62,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:20
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:23
 
-***
+---
 
 ### totalTokens?
 
@@ -70,7 +70,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:23
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/compareCrawler.ts:25
 
-***
+---
 
 ### url
 

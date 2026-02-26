@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneRouteMatcher
 
@@ -17,6 +17,7 @@ If the Matcher returns truthy value, the request is passed to the `action`
 function of the same CrawleeOneRoute.
 
 The Matcher can be:
+
 - Regular expression
 - Function
 - Array of <RegExp | Function>
@@ -25,4 +26,4 @@ The Matcher can be:
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)

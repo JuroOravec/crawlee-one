@@ -18,14 +18,20 @@ _2026-02-22_
 - **`defineDataset<TRow>()` helper.** Type-safe dataset config with column autocomplete in expectation params. Pass `TRow` = shape of one row so `column`, `columnA`, `columnB` are inferred from your interface.
 
   ```ts
-  interface MyRow { offerId: string; offerUrl: string }
+  interface MyRow {
+    offerId: string;
+    offerUrl: string;
+  }
 
   defineDataset<MyRow>({
     name: 'offers',
     expectations: {
       field: [
         { expectation: 'expectColumnToExist', params: { column: 'offerId' } },
-        { expectation: 'expectColumnValuesToBeValidUrls', params: { column: 'offerUrl', mostly: 0.95 } },
+        {
+          expectation: 'expectColumnValuesToBeValidUrls',
+          params: { column: 'offerUrl', mostly: 0.95 },
+        },
       ],
     },
     // ...

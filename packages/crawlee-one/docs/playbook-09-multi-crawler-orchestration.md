@@ -59,6 +59,7 @@ flowchart LR
 ```
 
 How it works:
+
 - Both crawlers run concurrently.
 - When the main crawler "finishes" (its queue is empty), the LLM queue might still have work, so we wait.
 - The LLM might push requests to the main crawler's queue.
@@ -80,7 +81,6 @@ For each crawler, include:
 
 - `queueId` - Request queue that holds the requests for this crawler.
 - `isKeepAlive` - Whether the crawler was configured to be kept alive.
-
 
 ### Step 2: Call `orchestrate()` inside `onReady` callback
 

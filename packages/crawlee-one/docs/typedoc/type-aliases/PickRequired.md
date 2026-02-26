@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / PickRequired
 
@@ -16,8 +16,8 @@ Pick properties that should be required
 
 ### T
 
-`T` *extends* `object`
+`T` _extends_ `object`
 
 ### Keys
 
-`Keys` *extends* keyof `T`
+`Keys` _extends_ keyof `T`

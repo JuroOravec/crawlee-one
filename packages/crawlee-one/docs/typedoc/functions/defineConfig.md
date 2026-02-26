@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / defineConfig
 
@@ -19,13 +19,13 @@ for each crawler to type `input`/`devInput` per crawler.
 
 ### TCrawlers
 
-`TCrawlers` *extends* [`CrawlersRecord`](../type-aliases/CrawlersRecord.md)
+`TCrawlers` _extends_ [`CrawlersRecord`](../type-aliases/CrawlersRecord.md)
 
 Inferred from `schema.crawlers`. Use `defineCrawler` for each entry.
 
 ### TRenderer
 
-`TRenderer` *extends* [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\>
+`TRenderer` _extends_ [`ReadmeRenderer`](../type-aliases/ReadmeRenderer.md)\<`any`\>
 
 Inferred from `readme.renderer`.
 

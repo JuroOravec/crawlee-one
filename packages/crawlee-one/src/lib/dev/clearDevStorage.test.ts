@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import fs from 'node:fs';
-import path from 'node:path';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import path from 'node:path';
+
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { clearDevStorage } from './clearDevStorage.js';
 

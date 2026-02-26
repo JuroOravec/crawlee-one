@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmExtractionMeta
 
@@ -18,7 +18,7 @@ Metadata attached to LLM-extracted objects.
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:49](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L49)
 
-***
+---
 
 ### extractedByLlm
 
@@ -26,7 +26,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:49]
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:44](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L44)
 
-***
+---
 
 ### extractionMs
 
@@ -34,7 +34,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:44]
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:47](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L47)
 
-***
+---
 
 ### llmModel
 
@@ -42,7 +42,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:47]
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:45](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L45)
 
-***
+---
 
 ### llmProvider?
 
@@ -50,7 +50,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:45]
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:46](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L46)
 
-***
+---
 
 ### promptTokens?
 
@@ -58,7 +58,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:46]
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts:48](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlmScoped.ts#L48)
 
-***
+---
 
 ### totalTokens?
 

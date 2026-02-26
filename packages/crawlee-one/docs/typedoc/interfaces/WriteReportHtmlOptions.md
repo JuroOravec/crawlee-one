@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / WriteReportHtmlOptions
 
@@ -16,7 +16,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:20
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:22
 
-***
+---
 
 ### outputPath
 
@@ -26,7 +26,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:26
 
 Path to write the HTML file to
 
-***
+---
 
 ### referenceModelId?
 
@@ -36,7 +36,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/reportHtml.ts:24
 
 Reference model ID (defaults to `report.referenceModelId`)
 
-***
+---
 
 ### report
 

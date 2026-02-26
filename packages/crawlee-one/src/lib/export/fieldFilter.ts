@@ -47,15 +47,19 @@ export function omitFields<T extends object>(obj: T, paths: string[]): Partial<T
   return result as Partial<T>;
 }
 
+/** Options for applyFieldFilter */
+export interface ApplyFieldFilterOpts<T extends object = object> {
+  obj: T;
+  pickPaths?: string[];
+  omitPaths?: string[];
+}
+
 /**
  * Apply field selection: first pick (if paths given), then omit.
  * Both use dot notation (e.g. "nested.prop").
  */
-export function applyFieldFilter<T extends object>(
-  obj: T,
-  pickPaths: string[] | undefined,
-  omitPaths: string[] | undefined
-): Partial<T> {
+export function applyFieldFilter<T extends object>(opts: ApplyFieldFilterOpts<T>): Partial<T> {
+  const { obj, pickPaths, omitPaths } = opts;
   let result: Partial<T> = obj as Partial<T>;
   if (pickPaths?.length) {
     result = pickFields(obj, pickPaths);

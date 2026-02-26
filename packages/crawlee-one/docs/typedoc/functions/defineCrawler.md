@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / defineCrawler
 
@@ -16,7 +16,7 @@ Type-safe crawler config helper.
 
 ### TActorInput
 
-`TActorInput` *extends* `Record`\<`string`, `unknown`\>
+`TActorInput` _extends_ `Record`\<`string`, `unknown`\>
 
 Actor input shape. Use `Partial<ActorInput>` for config overrides.
 

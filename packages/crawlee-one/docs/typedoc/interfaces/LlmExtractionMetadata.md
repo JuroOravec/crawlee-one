@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmExtractionMetadata
 
@@ -20,7 +20,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:33](https
 
 Output (completion) tokens
 
-***
+---
 
 ### extractionMs
 
@@ -30,7 +30,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:29](https
 
 Elapsed time in milliseconds for the LLM API call
 
-***
+---
 
 ### promptTokens?
 
@@ -40,7 +40,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:31](https
 
 Input (prompt) tokens
 
-***
+---
 
 ### totalTokens?
 

@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / StringField
 
@@ -16,11 +16,11 @@ Example of code input:
 
 ```json
 {
-"title": "Page function",
-"type": "string",
-"description": "Function executed for each request",
-"editor": "javascript",
-"prefill": "async () => { return $('title').text(); }",
+  "title": "Page function",
+  "type": "string",
+  "description": "Function executed for each request",
+  "editor": "javascript",
+  "prefill": "async () => { return $('title').text(); }"
 }
 ```
 
@@ -28,13 +28,13 @@ Example of country selection using a select input:
 
 ```json
 {
-"title": "Country",
-"type": "string",
-"description": "Select your country",
-"editor": "select",
-"default": "us",
-"enum": ["us", "de", "fr"],
-"enumTitles": ["USA", "Germany", "France"]
+  "title": "Country",
+  "type": "string",
+  "description": "Select your country",
+  "editor": "select",
+  "default": "us",
+  "enum": ["us", "de", "fr"],
+  "enumTitles": ["USA", "Germany", "France"]
 }
 ```
 
@@ -42,11 +42,11 @@ Example of country selection using a select input:
 
 ### TEnum
 
-`TEnum` *extends* `string` = `string`
+`TEnum` _extends_ `string` = `string`
 
 ### TEnumTitles
 
-`TEnumTitles` *extends* `string` = `string`
+`TEnumTitles` _extends_ `string` = `string`
 
 ### TSchema
 

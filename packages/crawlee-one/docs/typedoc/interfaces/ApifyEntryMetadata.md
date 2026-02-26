@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / ApifyEntryMetadata
 
@@ -16,7 +16,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:17](https://gith
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:18](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L18)
 
-***
+---
 
 ### actorRunId
 
@@ -24,7 +24,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:18](https://gith
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:19](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L19)
 
-***
+---
 
 ### actorRunUrl
 
@@ -32,7 +32,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:19](https://gith
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:20](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L20)
 
-***
+---
 
 ### contextId
 
@@ -40,7 +40,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:20](https://gith
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L21)
 
-***
+---
 
 ### dateHandled
 
@@ -50,7 +50,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:30](https://gith
 
 ISO datetime string that indicates the time when the request has been processed.
 
-***
+---
 
 ### loadedUrl
 
@@ -60,7 +60,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:27](https://gith
 
 The URL given to the crawler after possible redirects
 
-***
+---
 
 ### numberOfRetries
 
@@ -68,7 +68,7 @@ The URL given to the crawler after possible redirects
 
 Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:31](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/apify.ts#L31)
 
-***
+---
 
 ### originalUrl
 
@@ -78,7 +78,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/apify.ts:25](https://gith
 
 The URL given to the crawler
 
-***
+---
 
 ### requestId
 

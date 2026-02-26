@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / OutputActorInput
 
@@ -20,7 +20,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:332](https://github.com/JuroO
 
 Define whether we want to add, remove, or overwrite cached entries with results from the actor run
 
-***
+---
 
 ### outputCachePrimaryKeys?
 
@@ -30,7 +30,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:330](https://github.com/JuroO
 
 Define fields that will be used for cache key
 
-***
+---
 
 ### outputCacheStoreId?
 
@@ -40,7 +40,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:328](https://github.com/JuroO
 
 ID or name of the key-value store used as cache
 
-***
+---
 
 ### outputDatasetId?
 
@@ -50,7 +50,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:325](https://github.com/JuroO
 
 ID or name of the dataset to which the data should be pushed
 
-***
+---
 
 ### outputFilter?
 
@@ -69,7 +69,7 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => boolean`
 
-***
+---
 
 ### outputFilterAfter?
 
@@ -84,7 +84,7 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-***
+---
 
 ### outputFilterBefore?
 
@@ -99,7 +99,7 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => boolean`
 
-***
+---
 
 ### outputMaxEntries?
 
@@ -115,7 +115,7 @@ This means that if `outputMaxEntries` is set to 50, but the
 associated Dataset already has 40 items in it, then only 10 new entries
 will be saved.
 
-***
+---
 
 ### outputPickFields?
 
@@ -133,7 +133,7 @@ This is done after `outputRenameFields`.
 Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
 resolved using Lodash.get().
 
-***
+---
 
 ### outputRenameFields?
 
@@ -148,7 +148,7 @@ This is done before `outputRenameFields`.
 Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
 resolved using Lodash.get().
 
-***
+---
 
 ### outputTransform?
 
@@ -167,7 +167,7 @@ and a shared state in the second argument.
 
 `async (entry, { io, input, state, itemCacheKey }) => { ... }`
 
-***
+---
 
 ### outputTransformAfter?
 
@@ -182,7 +182,7 @@ and a shared state in the first argument.
 
 `async ({ io, input, state, itemCacheKey }) => { ... }`
 
-***
+---
 
 ### outputTransformBefore?
 

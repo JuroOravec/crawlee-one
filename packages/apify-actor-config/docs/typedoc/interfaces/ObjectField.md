@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ObjectField
 
@@ -14,11 +14,11 @@ Example of proxy configuration:
 
 ```json
 {
-"title": "Proxy configuration",
-"type": "object",
-"description": "Select proxies to be used by your crawler.",
-"prefill": { "useApifyProxy": true },
-"editor": "proxy"
+  "title": "Proxy configuration",
+  "type": "object",
+  "description": "Select proxies to be used by your crawler.",
+  "prefill": { "useApifyProxy": true },
+  "editor": "proxy"
 }
 ```
 
@@ -26,14 +26,14 @@ Example of a blackbox object:
 
 ```json
 {
-"title": "User object",
-"type": "object",
-"description": "Enter object representing user",
-"prefill": {
-"name": "John Doe",
-"email": "janedoe@gmail.com"
-},
-"editor": "json"
+  "title": "User object",
+  "type": "object",
+  "description": "Enter object representing user",
+  "prefill": {
+    "name": "John Doe",
+    "email": "janedoe@gmail.com"
+  },
+  "editor": "json"
 }
 ```
 
@@ -45,7 +45,7 @@ Example of a blackbox object:
 
 ### T
 
-`T` *extends* `object` = `object`
+`T` _extends_ `object` = `object`
 
 ### TSchema
 
@@ -63,7 +63,7 @@ Controls if sub-properties not listed in `properties` are allowed.
 Defaults to `true`. Set to `false` to make requests with extra
 properties fail.
 
-***
+---
 
 ### default?
 
@@ -77,7 +77,7 @@ Default value that will be used when no value is provided.
 
 `BaseFieldTypedProps.default`
 
-***
+---
 
 ### description
 
@@ -91,7 +91,7 @@ Description of the field that will be displayed as help text in Actor input UI.
 
 `BaseField.description`
 
-***
+---
 
 ### editor
 
@@ -101,7 +101,7 @@ Defined in: [inputSchema.ts:392](https://github.com/JuroOravec/crawlee-one/blob/
 
 Visual editor used for the input field.
 
-***
+---
 
 ### errorMessage?
 
@@ -118,7 +118,7 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 `BaseFieldTypedProps.errorMessage`
 
-***
+---
 
 ### example?
 
@@ -133,7 +133,7 @@ actor is published in Apify Store.
 
 `BaseFieldTypedProps.example`
 
-***
+---
 
 ### isSecret?
 
@@ -144,7 +144,7 @@ Defined in: [inputSchema.ts:405](https://github.com/JuroOravec/crawlee-one/blob/
 Specifies whether the input field will be stored encrypted.
 Only available with `json` and `hidden` editors.
 
-***
+---
 
 ### maxProperties?
 
@@ -154,7 +154,7 @@ Defined in: [inputSchema.ts:398](https://github.com/JuroOravec/crawlee-one/blob/
 
 Maximum number of properties the object can have.
 
-***
+---
 
 ### minProperties?
 
@@ -164,7 +164,7 @@ Defined in: [inputSchema.ts:400](https://github.com/JuroOravec/crawlee-one/blob/
 
 Minimum number of properties the object can have.
 
-***
+---
 
 ### nullable?
 
@@ -178,7 +178,7 @@ Specifies whether null is an allowed value.
 
 `BaseField.nullable`
 
-***
+---
 
 ### patternKey?
 
@@ -188,7 +188,7 @@ Defined in: [inputSchema.ts:394](https://github.com/JuroOravec/crawlee-one/blob/
 
 Regular expression that will be used to validate the keys of the object.
 
-***
+---
 
 ### patternValue?
 
@@ -198,7 +198,7 @@ Defined in: [inputSchema.ts:396](https://github.com/JuroOravec/crawlee-one/blob/
 
 Regular expression that will be used to validate the values of object.
 
-***
+---
 
 ### prefill?
 
@@ -212,7 +212,7 @@ Value that will be prefilled in the actor input interface.
 
 `BaseFieldTypedProps.prefill`
 
-***
+---
 
 ### properties?
 
@@ -227,7 +227,7 @@ define the same fields as root-level input fields, except for
 
 See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#object-fields-validation
 
-***
+---
 
 ### required?
 
@@ -240,7 +240,7 @@ Note: This applies only if the object field itself is present.
 If the object field is optional and not included in the input,
 its required subfields are not validated.
 
-***
+---
 
 ### schema?
 
@@ -257,7 +257,7 @@ automatically stripped when generating `actor.json`.
 
 `BaseFieldTypedProps.schema`
 
-***
+---
 
 ### sectionCaption?
 
@@ -274,7 +274,7 @@ or the next field which has the sectionCaption property set.
 
 `BaseField.sectionCaption`
 
-***
+---
 
 ### sectionDescription?
 
@@ -290,7 +290,7 @@ visible right under the caption when the section is open.
 
 `BaseField.sectionDescription`
 
-***
+---
 
 ### title
 
@@ -304,7 +304,7 @@ Title of the field in UI.
 
 `BaseField.title`
 
-***
+---
 
 ### type
 

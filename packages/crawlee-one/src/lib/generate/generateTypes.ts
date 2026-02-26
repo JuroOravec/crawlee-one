@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import fsp from 'fs/promises';
 import path from 'node:path';
 
+import fsp from 'fs/promises';
+
 import { crawlingContextNameByType } from '../../constants.js';
-import type { CrawleeOneConfig, CrawleeOneConfigSchema } from '../config/types.js';
-import { loadConfig, validateConfig } from '../config/config.js';
 // NOTE: We intentionally import these to know when their names change
 import type { ActorInput } from '../../lib/input.js';
-import type { CrawleeOneContext } from '../context/types.js';
 import type {
   CrawleeOneRoute,
   CrawleeOneRouteHandler,
@@ -16,30 +14,39 @@ import type {
   CrawleeOneRouteMiddleware,
 } from '../../lib/router/types.js';
 import type { MaybePromise } from '../../utils/types.js';
-import type { CrawleeOneOptions, crawleeOne } from '../context/context.js';
+import { loadConfig, validateConfig } from '../config/config.js';
+import type { CrawleeOneConfig, CrawleeOneConfigSchema } from '../config/types.js';
+import type { crawleeOne, CrawleeOneOptions } from '../context/context.js';
+import type { CrawleeOneContext } from '../context/types.js';
 
 const makeUnion = (items: string[]) => items.map((s) => `"${s}"`).join(` | `);
 const makeEnum = (items: string[]) =>
   '{\n' + items.map((s) => `  '${s}' = '${s}'`).join(`,\n`) + '\n}';
 
+type FormatterOpts = { name: string; value: string; typeArgs?: string[] };
+
 const formatters = {
-  type: (name: string, value: string, typeArgs?: string[]) => {
+  type: (opts: FormatterOpts) => {
+    const { name, value, typeArgs } = opts;
     const typeArgsStr = typeArgs?.length ? `<${typeArgs.join(', ')}>` : '';
     return `export type ${name}${typeArgsStr} = ${value};`;
   },
-  typeFunc: (name: string, value: string, typeArgs?: string[]) => {
+  typeFunc: (opts: FormatterOpts) => {
+    const { name, value, typeArgs } = opts;
     const typeArgsStr = typeArgs?.length ? `<${typeArgs.join(', ')}>` : '';
     return `export type ${name} = ${typeArgsStr}${value};`;
   },
-  func: (name: string, value: string, typeArgs?: string[]) => {
+  func: (opts: FormatterOpts) => {
+    const { name, value, typeArgs } = opts;
     const typeArgsStr = typeArgs?.length ? `<${typeArgs.join(', ')}>` : '';
     return `export const ${name} = ${typeArgsStr}${value};`;
   },
   // enum `CrawlerName`LabelEnum { "detailPage" = "detailPage", "otherLabel" = "otherLabel", ... };
-  enum: (name: string, value: string, typeArgs?: string[]) => {
+  enum: (opts: FormatterOpts) => {
+    const { name, value } = opts;
     return `export enum ${name} ${value}`;
   },
-} satisfies Record<string, (name: string, value: string, args?: string[]) => string>;
+} satisfies Record<string, (opts: FormatterOpts) => string>;
 
 const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
   /** Remember which types we've already generated */
@@ -48,13 +55,13 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
   /** Remember what values need to be imported and from where */
   const imports: Record<string, Set<{ name: string; typeOnly?: boolean }>> = {};
 
-  const addImports = <T extends string>(
-    pkg: string,
-    newEntries: T[],
-    options?: { typeOnly?: boolean }
-  ) => {
-    const { typeOnly } = options ?? {};
-    const entries = (imports[pkg] = imports[pkg] || new Set());
+  const addImports = <T extends string>(opts: {
+    pkg: string;
+    newEntries: T[];
+    typeOnly?: boolean;
+  }) => {
+    const { pkg, newEntries, typeOnly } = opts;
+    const entries = (imports[pkg] = imports[pkg] ?? new Set());
     newEntries.forEach((name) => entries.add({ name, typeOnly }));
     // Return the entries as variables, so we can define them in a single
     // place but still reference them in code.
@@ -64,17 +71,17 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     }, {} as any);
   };
 
-  const define = (
-    key: string,
-    value: string | (() => string),
-    options?: { typeArgs?: string[]; kind?: keyof typeof formatters }
-  ) => {
-    const kind = options?.kind ?? 'type';
-    const typeArgs = options?.typeArgs ?? [];
+  const define = (opts: {
+    key: string;
+    value: string | (() => string);
+    typeArgs?: string[];
+    kind?: keyof typeof formatters;
+  }) => {
+    const { key, value, typeArgs = [], kind = 'type' } = opts;
     if (!definitions[key]) {
       const resolvedVal = typeof value === 'function' ? value() : value;
       const formatter = formatters[kind];
-      const valFormatted = formatter(key, resolvedVal, typeArgs);
+      const valFormatted = formatter({ name: key, value: resolvedVal, typeArgs });
       definitions[key] = valFormatted;
     }
     // Return the key as variable, so we can reference it
@@ -95,24 +102,31 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
     CrawleeOneTypes: ctxType,
     CrawleeOneOptions: argsType,
     crawleeOne: crawleeOneFn,
-  } = addImports('crawlee-one', [
-    'ActorInput',
-    'CrawleeOneContext',
-    'CrawleeOneRoute',
-    'CrawleeOneRouteHandler',
-    'CrawleeOneRouteMiddleware',
-    'CrawleeOneRouteMatcher',
-    'CrawleeOneRouteMatcherFn',
-    'CrawleeOneIO',
-    'CrawleeOneTelemetry',
-    'CrawleeOneTypes',
-    'CrawleeOneOptions',
-    'crawleeOne',
-  ]);
-  addImports('crawlee', [...new Set(Object.values(crawlingContextNameByType))], { typeOnly: true });
+  } = addImports({
+    pkg: 'crawlee-one',
+    newEntries: [
+      'ActorInput',
+      'CrawleeOneContext',
+      'CrawleeOneRoute',
+      'CrawleeOneRouteHandler',
+      'CrawleeOneRouteMiddleware',
+      'CrawleeOneRouteMatcher',
+      'CrawleeOneRouteMatcherFn',
+      'CrawleeOneIO',
+      'CrawleeOneTelemetry',
+      'CrawleeOneTypes',
+      'CrawleeOneOptions',
+      'crawleeOne',
+    ],
+  });
+  addImports({
+    pkg: 'crawlee',
+    newEntries: [...new Set(Object.values(crawlingContextNameByType))],
+    typeOnly: true,
+  });
 
   // 2. Define utils
-  const maybeP = define('MaybePromise', 'T | Promise<T>', { typeArgs: ['T'] });
+  const maybeP = define({ key: 'MaybePromise', value: 'T | Promise<T>', typeArgs: ['T'] });
 
   Object.entries(schema.crawlers).forEach(([crawlerName, crawler]) => {
     const crawlerType = crawler.type;
@@ -122,10 +136,15 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
 
     // 3. Generate type for route labels
     // type `CrawlerName`Label = "detailPage" | "otherLabel" | ...;
-    const labelKey = define(`${crawlerName}Label`, () => makeUnion(crawler.routes));
+    const labelKey = define({
+      key: `${crawlerName}Label`,
+      value: () => makeUnion(crawler.routes),
+    });
 
     // enum `CrawlerName`LabelEnum { "detailPage" = "detailPage", "otherLabel" = "otherLabel", ... };
-    const labelEnumKey = define(`${crawlerName}LabelEnum`, () => makeEnum(crawler.routes), {
+    const labelEnumKey = define({
+      key: `${crawlerName}LabelEnum`,
+      value: () => makeEnum(crawler.routes),
       kind: 'enum',
     });
 
@@ -137,75 +156,85 @@ const parseTypesFromSchema = (schema: CrawleeOneConfigSchema) => {
 
     // 4. Create CrawleeOne context
     // type `CrawlerName`Ctx = <TIO, Telem>CrawleeOneTypes<CheerioCrawlingContext, `CrawlerName`Label, ActorInput, TIO, Telem>
-    const ctxKey = define(
-      `${crawlerName}Ctx`,
-      `${ctxType}<${crawlingContextTypeName}, ${labelKey}, TInput, TIO, Telem>`,
-      { typeArgs: ctxTypeArgs }
-    );
+    const ctxKey = define({
+      key: `${crawlerName}Ctx`,
+      value: `${ctxType}<${crawlingContextTypeName}, ${labelKey}, TInput, TIO, Telem>`,
+      typeArgs: ctxTypeArgs,
+    });
 
     // 5. Get CrawleeOne context - needed for crawler and onReady
-    const actorCtxKey = define(
-      `${crawlerName}ActorCtx`,
-      `${actorCtx}<${ctxKey}<TInput, TIO, Telem>>`,
-      { typeArgs: ctxTypeArgs }
-    );
+    const actorCtxKey = define({
+      key: `${crawlerName}ActorCtx`,
+      value: `${actorCtx}<${ctxKey}<TInput, TIO, Telem>>`,
+      typeArgs: ctxTypeArgs,
+    });
 
     // 6. Create CrawleeOne instance
-    const crawlerKey = define(
-      `${crawlerName}Crawler`,
-      `(args: Omit<${argsType}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>, 'type'>, onReady?: (context: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>) => ${crawleeOneFn}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>({ ...args, type: "${crawlerType}"}, onReady);`,
-      { kind: 'func', typeArgs: ctxTypeArgs }
-    );
+    const crawlerKey = define({
+      key: `${crawlerName}Crawler`,
+      value: `(args: Omit<${argsType}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>, 'type'>, onReady?: (context: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>) => ${crawleeOneFn}<"${crawlerType}", ${ctxKey}<TInput, TIO, Telem>>({ ...args, type: "${crawlerType}"}, onReady);`,
+      kind: 'func',
+      typeArgs: ctxTypeArgs,
+    });
 
     // 7. Create Route types (single-param: CrawleeOneRoute<T>, etc.)
-    const routeKey = define(`${crawlerName}Route`, `${routeType}<${ctxKey}<TInput, TIO, Telem>>`, {
+    const routeKey = define({
+      key: `${crawlerName}Route`,
+      value: `${routeType}<${ctxKey}<TInput, TIO, Telem>>`,
       typeArgs: ctxTypeArgs,
     });
 
     const routeHandlerValue = `${routeHandler}<${ctxKey}<TInput, TIO, Telem>>`;
-    const routeHandlerKey = define(`${crawlerName}RouteHandler`, routeHandlerValue, {
+    const routeHandlerKey = define({
+      key: `${crawlerName}RouteHandler`,
+      value: routeHandlerValue,
       typeArgs: ctxTypeArgs,
     });
 
     // E.g. `type `crawlerName`RouteWrapper = CrawleeOneRouteMiddleware<`CrawlerName`Ctx>`
-    const routeWrapperKey = define(
-      `${crawlerName}RouteWrapper`,
-      `${routeWrapper}<${ctxKey}<TInput, TIO, Telem>>`,
-      { typeArgs: ctxTypeArgs }
-    );
+    const routeWrapperKey = define({
+      key: `${crawlerName}RouteWrapper`,
+      value: `${routeWrapper}<${ctxKey}<TInput, TIO, Telem>>`,
+      typeArgs: ctxTypeArgs,
+    });
 
     // E.g. `type `crawlerName`Matcher = CrawleeOneRouteMatcher<`CrawlerName`Ctx>`
-    const routeMatcherKey = define(
-      `${crawlerName}RouteMatcher`,
-      `${routeMatcher}<${ctxKey}<TInput, TIO, Telem>>`,
-      { typeArgs: ctxTypeArgs }
-    );
+    const routeMatcherKey = define({
+      key: `${crawlerName}RouteMatcher`,
+      value: `${routeMatcher}<${ctxKey}<TInput, TIO, Telem>>`,
+      typeArgs: ctxTypeArgs,
+    });
 
     // E.g. `type `crawlerName`MatcherFn = CrawleeOneRouteMatcherFn<`CrawlerName`Ctx>`
-    const routeMatcherFnKey = define(
-      `${crawlerName}RouteMatcherFn`,
-      `${routeMatcherFn}<${ctxKey}<TInput, TIO, Telem>>`,
-      { typeArgs: ctxTypeArgs }
-    );
+    const routeMatcherFnKey = define({
+      key: `${crawlerName}RouteMatcherFn`,
+      value: `${routeMatcherFn}<${ctxKey}<TInput, TIO, Telem>>`,
+      typeArgs: ctxTypeArgs,
+    });
 
     // 9. Create Crawler hooks
 
     // NOTE: Type for before/after handler is the same as for handlers
     // E.g. `type `CrawlerName`OnBeforeHandler = CrawleeOneRouteHandler<CheerioCrawlingContext, ProfesiaRouterContext>`
     // E.g. `type `CrawlerName`OnAfterHandler = CrawleeOneRouteHandler<CheerioCrawlingContext, ProfesiaRouterContext>`
-    const onBeforeHandlerKey = define(`${crawlerName}OnBeforeHandler`, routeHandlerValue, {
+    const onBeforeHandlerKey = define({
+      key: `${crawlerName}OnBeforeHandler`,
+      value: routeHandlerValue,
       typeArgs: ctxTypeArgs,
     });
-    const onAfterHandlerKey = define(`${crawlerName}OnAfterHandler`, routeHandlerValue, {
+    const onAfterHandlerKey = define({
+      key: `${crawlerName}OnAfterHandler`,
+      value: routeHandlerValue,
       typeArgs: ctxTypeArgs,
     });
 
     // type `CrawlerName`OnReady = <TIO, Telem>(context: CrawleeOneContext<`CrawlerName`Ctx>) => MaybePromise<void>;
-    const onReadyKey = define(
-      `${crawlerName}OnReady`,
-      `(context: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>;`,
-      { kind: 'typeFunc', typeArgs: ctxTypeArgs }
-    );
+    const onReadyKey = define({
+      key: `${crawlerName}OnReady`,
+      value: `(context: ${actorCtxKey}<TInput, TIO, Telem>) => ${maybeP}<void>;`,
+      kind: 'typeFunc',
+      typeArgs: ctxTypeArgs,
+    });
   });
 
   const finalImports = Object.entries(imports).reduce<Record<string, string>>(

@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
+
 import {
-  expectColumnValuesToBeBetween,
-  expectColumnValuesToBeIncreasing,
-  expectColumnValuesToBeDecreasing,
   expectColumnValueLengthsToBeBetween,
   expectColumnValueLengthsToEqual,
-  expectColumnValuesToBeOfType,
+  expectColumnValuesToBeBetween,
+  expectColumnValuesToBeDecreasing,
+  expectColumnValuesToBeIncreasing,
   expectColumnValuesToBeInTypeList,
+  expectColumnValuesToBeOfType,
 } from './columnRange.js';
 
 const numData = [{ v: 1 }, { v: 5 }, { v: 10 }, { v: 15 }];

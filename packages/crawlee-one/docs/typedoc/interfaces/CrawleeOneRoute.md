@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneRoute
 
@@ -21,7 +21,7 @@ a request will process that request.
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](CrawleeOneTypes.md)
 
 ## Properties
 
@@ -41,7 +41,7 @@ Defined in: [packages/crawlee-one/src/lib/router/types.ts:42](https://github.com
 
 `Awaitable`\<`void`\>
 
-***
+---
 
 ### match
 
@@ -49,7 +49,7 @@ Defined in: [packages/crawlee-one/src/lib/router/types.ts:42](https://github.com
 
 Defined in: [packages/crawlee-one/src/lib/router/types.ts:41](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L41)
 
-***
+---
 
 ### sampleUrls?
 

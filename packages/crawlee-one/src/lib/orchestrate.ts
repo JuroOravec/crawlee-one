@@ -1,8 +1,8 @@
 import { Log } from 'crawlee';
 
 import type { MaybePromise } from '../utils/types.js';
-import type { CrawleeOneIO } from './integrations/types.js';
 import { apifyIO } from './integrations/apify.js';
+import type { CrawleeOneIO } from './integrations/types.js';
 
 const DEFAULT_QUEUE_DRAIN_CHECK_INTERVAL_MS = 5_000;
 

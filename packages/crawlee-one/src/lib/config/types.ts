@@ -1,7 +1,7 @@
 import type { ActorSpec } from 'actor-spec';
 
-import type { LlmModelCompareConfig } from '../llmCompare/types.js';
 import type { CrawlerMeta, CrawlerType, CrawlerUrl } from '../../types.js';
+import type { LlmModelCompareConfig } from '../llmCompare/types.js';
 
 // ---------------------------------------------------------------------------
 // README renderer

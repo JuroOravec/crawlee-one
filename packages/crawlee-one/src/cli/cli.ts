@@ -1,14 +1,14 @@
 import { program } from 'commander';
 
 import { getPackageJsonInfo } from '../utils/package.js';
-import { createGenerateCommand } from './commands/generate.js';
 import { createDevCommand } from './commands/dev.js';
-import { createRunCommand } from './commands/run.js';
-import { createExportCommand } from './commands/export.js';
-import { createValidateCommand } from './commands/validate.js';
-import { createPreviewCommand } from './commands/preview.js';
-import { createLlmCommand } from './commands/llm.js';
 import { createExpectationsCommand } from './commands/expectations.js';
+import { createExportCommand } from './commands/export.js';
+import { createGenerateCommand } from './commands/generate.js';
+import { createLlmCommand } from './commands/llm.js';
+import { createPreviewCommand } from './commands/preview.js';
+import { createRunCommand } from './commands/run.js';
+import { createValidateCommand } from './commands/validate.js';
 
 const pkgJson = getPackageJsonInfo(import.meta.url, ['name', 'version']);
 

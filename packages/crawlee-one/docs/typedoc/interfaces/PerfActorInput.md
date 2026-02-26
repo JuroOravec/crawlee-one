@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / PerfActorInput
 
@@ -24,7 +24,7 @@ See official docs: https://docs.apify.com/platform/actors/development/performanc
 
 Example: If set to 20, then up to 20 requests will be handled in a single "go".
 
-***
+---
 
 ### batchWaitSecs?
 

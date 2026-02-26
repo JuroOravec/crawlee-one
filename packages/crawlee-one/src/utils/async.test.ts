@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { serialAsyncMap, serialAsyncFind, wait } from './async.js';
+import { serialAsyncFind, serialAsyncMap, wait } from './async.js';
 
 describe('serialAsyncMap', () => {
   it('maps items sequentially', async () => {

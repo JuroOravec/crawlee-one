@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / OrchestratedCrawlerInstance
 
@@ -24,7 +24,7 @@ Defined in: [packages/crawlee-one/src/lib/orchestrate.ts:11](https://github.com/
 
 [`MaybePromise`](MaybePromise.md)\<`any`\>
 
-***
+---
 
 ### stop()
 

@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ArrayErrorMessage
 
@@ -18,7 +18,7 @@ See [StringErrorMessage](StringErrorMessage.md)
 
 Defined in: [inputSchema.ts:580](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L580)
 
-***
+---
 
 ### minItems?
 
@@ -26,7 +26,7 @@ Defined in: [inputSchema.ts:580](https://github.com/JuroOravec/crawlee-one/blob/
 
 Defined in: [inputSchema.ts:579](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L579)
 
-***
+---
 
 ### patternKey?
 
@@ -34,7 +34,7 @@ Defined in: [inputSchema.ts:579](https://github.com/JuroOravec/crawlee-one/blob/
 
 Defined in: [inputSchema.ts:582](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L582)
 
-***
+---
 
 ### patternValue?
 
@@ -42,7 +42,7 @@ Defined in: [inputSchema.ts:582](https://github.com/JuroOravec/crawlee-one/blob/
 
 Defined in: [inputSchema.ts:583](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L583)
 
-***
+---
 
 ### type?
 
@@ -50,7 +50,7 @@ Defined in: [inputSchema.ts:583](https://github.com/JuroOravec/crawlee-one/blob/
 
 Defined in: [inputSchema.ts:578](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L578)
 
-***
+---
 
 ### uniqueItems?
 

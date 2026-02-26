@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / orchestrate
 
@@ -19,6 +19,7 @@ This function resolves when all queues are empty.
 ## Details
 
 Crawlers can be of 2 types:
+
 - `keepAlive: true` - crawlers that run continuously until explicitly stopped.
 - `keepAlive: false` - crawlers that run until their queue is empty, then exit.
 
@@ -55,18 +56,18 @@ Throughput is not limited by the slowest crawler.
      c. Start those that are NOT running but have non-empty queues
 
 3. **Reconciliation states**:
-   - Running + queue has work     → leave it running
-   - Not running + queue empty    → nothing to do
+   - Running + queue has work → leave it running
+   - Not running + queue empty → nothing to do
    - Not running + queue has work → start that crawler
-   - Running + queue empty        → let it finish (do not stop it)
+   - Running + queue empty → let it finish (do not stop it)
 
 4. **Keep-alive check**: Only when a reconciliation finds that ALL
    non-keep-alive queues are empty AND no non-keep-alive crawlers are running
    do we check keep-alive queues.
-   - If those are also empty           → done.
+   - If those are also empty → done.
    - If keep-alive queues have pending → wait interval and redo the full check
-                                         (no crawlers to start since they are already running,
-                                          so we just poll until they drain).
+     (no crawlers to start since they are already running,
+     so we just poll until they drain).
 
 ## Edge cases
 

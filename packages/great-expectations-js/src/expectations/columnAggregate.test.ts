@@ -1,15 +1,16 @@
 import { describe, expect, it } from 'vitest';
+
 import {
   expectColumnMaxToBeBetween,
-  expectColumnMinToBeBetween,
   expectColumnMeanToBeBetween,
   expectColumnMedianToBeBetween,
-  expectColumnSumToBeBetween,
-  expectColumnStdevToBeBetween,
-  expectColumnUniqueValueCountToBeBetween,
+  expectColumnMinToBeBetween,
   expectColumnMostCommonValueToBeInSet,
   expectColumnProportionOfNonNullValuesToBeBetween,
   expectColumnProportionOfUniqueValuesToBeBetween,
+  expectColumnStdevToBeBetween,
+  expectColumnSumToBeBetween,
+  expectColumnUniqueValueCountToBeBetween,
 } from './columnAggregate.js';
 
 const data = [{ v: 1 }, { v: 2 }, { v: 3 }, { v: 4 }, { v: 5 }];

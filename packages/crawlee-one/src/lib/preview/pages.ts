@@ -3,9 +3,9 @@
  * Uses template literals; no external templating.
  */
 
-import { buildSortParam, type ReportSummary } from './storage.js';
-import type { RequestTimelineEntry } from './storage.js';
 import { renderDurationHistogramChart } from './durationHistogramChart.js';
+import type { RequestTimelineEntry } from './storage.js';
+import { buildSortParam, type ReportSummary } from './storage.js';
 import { renderWaterfallChart } from './waterfallChart.js';
 
 function escapeHtml(s: string): string {
@@ -47,7 +47,7 @@ const layoutStart = (title: string, breadcrumbs: string) => `
     nav span { color: #666; }
     h1 { font-size: 1.25rem; margin: 0 0 1rem; }
     table { border-collapse: collapse; width: 100%; font-size: 0.875rem; }
-    th, td { border: 1px solid #ccc; padding: 0.4rem 0.6rem; text-align: left; }
+    th, td { border: 1px solid #ccc; padding: 0.3rem 0.6rem; text-align: left; }
     th { background: #f5f5f5; font-weight: 600; }
     tr:hover { background: #fafafa; }
     a { color: #0066cc; text-decoration: none; }

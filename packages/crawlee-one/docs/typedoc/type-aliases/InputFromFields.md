@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / InputFromFields
 
@@ -16,7 +16,7 @@ Extract the input type from a record of Field objects with embedded Zod schemas.
 
 ### F
 
-`F` *extends* `Record`\<`string`, `Field`\>
+`F` _extends_ `Record`\<`string`, `Field`\>
 
 ## Example
 

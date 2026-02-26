@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfigActorSpec
 
@@ -18,7 +18,7 @@ Defined in: [packages/crawlee-one/src/lib/config/types.ts:111](https://github.co
 
 The `ActorSpec` object to serialize.
 
-***
+---
 
 ### outFile?
 

@@ -13,12 +13,13 @@
  *   BENCHMARK_MACHINE  - machine identifier (default: "local")
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import os from 'node:os';
 import { execSync } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 import { benchConfig } from './config.js';
-import type { SidecarData, SidecarEntry, MemorySample } from './helpers.js';
+import type { MemorySample, SidecarData, SidecarEntry } from './helpers.js';
 
 // ---------------------------------------------------------------------------
 // Config schema

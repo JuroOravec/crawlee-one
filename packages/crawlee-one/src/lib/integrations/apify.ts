@@ -1,5 +1,5 @@
-import { Actor, ApifyEnv } from 'apify';
-import { CrawlingContext, Request as CrawleeRequest, playwrightUtils } from 'crawlee';
+import { Actor, type ApifyEnv } from 'apify';
+import { type CrawlingContext, playwrightUtils, type Request as CrawleeRequest } from 'crawlee';
 
 import type { CrawleeOneDataset, CrawleeOneIO } from './types.js';
 

@@ -1,9 +1,9 @@
 import type { MaybePromise } from '../../utils/types.js';
+import type { CrawleeOneContext, CrawleeOneTypes } from '../context/types.js';
 import type {
   CrawleeOneErrorHandlerOptions,
   ExtractErrorHandlerOptionsReport,
 } from '../integrations/types.js';
-import type { CrawleeOneContext, CrawleeOneTypes } from '../context/types.js';
 
 /**
  * Interface for sending error reports to a telemetry service:

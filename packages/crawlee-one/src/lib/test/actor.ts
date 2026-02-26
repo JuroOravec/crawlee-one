@@ -1,12 +1,12 @@
-import type { vi } from 'vitest';
 import { Actor } from 'apify';
-import { Dictionary, KeyValueStore, RequestQueue } from 'crawlee';
+import { type Dictionary, KeyValueStore, RequestQueue } from 'crawlee';
+import type { vi } from 'vitest';
 
 import type { MaybeArray, MaybePromise } from '../../utils/types.js';
 import {
-  OnBatchAddRequests,
   createMockStorageClient,
   createMockStorageDataset,
+  type OnBatchAddRequests,
 } from './mockApifyClient.js';
 
 export const setupMockApifyActor = async <

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / ExtractWithLlmOptions
 
@@ -20,7 +20,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:17](https
 
 API key for the LLM provider
 
-***
+---
 
 ### baseURL?
 
@@ -30,7 +30,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:19](https
 
 Optional base URL for OpenAI-compatible APIs (e.g. custom endpoint, Azure OpenAI)
 
-***
+---
 
 ### headers?
 
@@ -40,7 +40,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:21](https
 
 Custom headers to include in LLM API requests
 
-***
+---
 
 ### html
 
@@ -48,7 +48,7 @@ Custom headers to include in LLM API requests
 
 Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:7](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts#L7)
 
-***
+---
 
 ### jsonSchema
 
@@ -58,7 +58,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:9](https:
 
 JSON schema for the expected output structure
 
-***
+---
 
 ### model
 
@@ -68,7 +68,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:13](https
 
 Model ID (e.g. `gpt-4o`, `claude-3-5-sonnet`).
 
-***
+---
 
 ### provider?
 
@@ -78,7 +78,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:15](https
 
 Provider identifier (e.g. `openai`, `anthropic`). Unknown providers use the OpenAI adapter.
 
-***
+---
 
 ### systemPrompt
 
@@ -88,7 +88,7 @@ Defined in: [packages/crawlee-one/src/lib/llmExtract/extractWithLlm.ts:11](https
 
 System prompt describing the extraction task
 
-***
+---
 
 ### url?
 

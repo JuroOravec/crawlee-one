@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneErrorHandlerInput
 
@@ -18,7 +18,7 @@ Input passed to the error handler
 
 Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:318](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L318)
 
-***
+---
 
 ### log
 
@@ -26,7 +26,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:318](https://git
 
 Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:323](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L323)
 
-***
+---
 
 ### page
 
@@ -36,7 +36,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:320](https://git
 
 Page instance if we used PlaywrightCrawler
 
-***
+---
 
 ### url
 

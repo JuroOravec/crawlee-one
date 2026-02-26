@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneRequestQueue
 
@@ -39,7 +39,7 @@ Adds a single request to the queue. Returns operation info including wasAlreadyH
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<\{ `requestId`: `string`; `wasAlreadyHandled`: `boolean`; `wasAlreadyPresent`: `boolean`; \}\>
 
-***
+---
 
 ### addRequests()
 
@@ -75,7 +75,7 @@ By default, it's put to the end of the queue.
 
 `unknown`
 
-***
+---
 
 ### clear()
 
@@ -89,7 +89,7 @@ Removes all entries from the queue.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-***
+---
 
 ### drop()
 
@@ -103,7 +103,7 @@ Removes the queue from the storage.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-***
+---
 
 ### fetchNextRequest()
 
@@ -130,7 +130,7 @@ were finished, use [CrawleeOneRequestQueue.isFinished](#isfinished) instead.
 
 — Returns the request object or null if there are no more pending requests.
 
-***
+---
 
 ### getRequest()
 
@@ -150,7 +150,7 @@ Gets a request by ID. Used with reclaimRequest when addRequest returns wasAlread
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`Request`\<`Dictionary`\> \| `null`\>
 
-***
+---
 
 ### handledCount()
 
@@ -164,7 +164,7 @@ Returns the number of handled requests.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`number` \| `null`\>
 
-***
+---
 
 ### isFinished()
 
@@ -179,7 +179,7 @@ of distributed storage used by the queue, the function might occasionally return
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-***
+---
 
 ### markRequestHandled()
 
@@ -201,7 +201,7 @@ processing. Handled requests will never again be returned by the fetchNextReques
 
 `unknown`
 
-***
+---
 
 ### name?
 
@@ -209,7 +209,7 @@ processing. Handled requests will never again be returned by the fetchNextReques
 
 Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:233](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L233)
 
-***
+---
 
 ### reclaimRequest()
 

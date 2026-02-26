@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfigSchema
 
@@ -14,7 +14,7 @@ Schema defining the crawlers in a project. This schema is used for code generati
 
 ### TCrawlers
 
-`TCrawlers` *extends* [`CrawlersRecord`](../type-aliases/CrawlersRecord.md) = [`CrawlersRecord`](../type-aliases/CrawlersRecord.md)
+`TCrawlers` _extends_ [`CrawlersRecord`](../type-aliases/CrawlersRecord.md) = [`CrawlersRecord`](../type-aliases/CrawlersRecord.md)
 
 ## Properties
 

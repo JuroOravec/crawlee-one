@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / createObjectField
 
@@ -14,7 +14,7 @@ Defined in: [inputSchema.ts:619](https://github.com/JuroOravec/crawlee-one/blob/
 
 ### T
 
-`T` *extends* `object` = `object`
+`T` _extends_ `object` = `object`
 
 ### TSchema
 

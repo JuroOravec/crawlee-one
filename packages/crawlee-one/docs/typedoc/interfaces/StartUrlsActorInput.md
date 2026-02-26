@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / StartUrlsActorInput
 
@@ -20,7 +20,7 @@ Defined in: [packages/crawlee-one/src/lib/input.ts:96](https://github.com/JuroOr
 
 URLs to start with, defined manually as a list of strings or crawler requests
 
-***
+---
 
 ### startUrlsFromDataset?
 
@@ -32,7 +32,7 @@ Import starting URLs from an existing Dataset.
 
 String is in the format `datasetID#field` (e.g. `datasetid123#url`).
 
-***
+---
 
 ### startUrlsFromFunction?
 
@@ -52,5 +52,5 @@ async ({ io, input, state, itemCacheKey }) => {
   const data = await dataset.getData();
   const urls = data.items.map((item) => `https://example.com/u/${item.userId}/list/${item.listId}`);
   return urls;
-}
+};
 ```

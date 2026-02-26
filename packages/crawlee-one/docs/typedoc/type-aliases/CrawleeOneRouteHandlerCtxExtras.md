@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneRouteHandlerCtxExtras
 
@@ -16,7 +16,7 @@ Context passed from CrawleeOne to route handlers
 
 ### T
 
-`T` *extends* [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ## Properties
 
@@ -42,7 +42,7 @@ Crawlee's original addRequests. Use when you need raw behavior without transform
 
 `Promise`\<`void`\>
 
-***
+---
 
 ### \_pushData()
 
@@ -66,7 +66,7 @@ Crawlee's original pushData. Use when you need raw behavior without transforms/p
 
 `Promise`\<`void`\>
 
-***
+---
 
 ### addRequests()
 
@@ -83,7 +83,7 @@ Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
 ##### T
 
-`T` *extends* `Exclude`\<[`CrawlerUrl`](CrawlerUrl.md), `string`\>
+`T` _extends_ `Exclude`\<[`CrawlerUrl`](CrawlerUrl.md), `string`\>
 
 #### Parameters
 
@@ -99,7 +99,7 @@ Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 
 `Promise`\<`any`[]\>
 
-***
+---
 
 ### extractWithLLM()
 
@@ -108,6 +108,7 @@ Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:115](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L115)
 
 Two-phase LLM extraction:
+
 - First pass defers to LLM queue and reclaims;
 - Second pass returns the extracted object from KVS.
 
@@ -129,7 +130,7 @@ Returns `null` on first pass (caller should return). Returns the result on secon
 
 `Promise`\<[`LlmExtractionResult`](../interfaces/LlmExtractionResult.md)\<`T`\> \| `null`\>
 
-***
+---
 
 ### extractWithLLMSync()
 
@@ -157,7 +158,7 @@ Use when deferral is not needed (e.g. few URLs, dev flows).
 
 `Promise`\<[`LlmExtractionResult`](../interfaces/LlmExtractionResult.md)\<`T`\>\>
 
-***
+---
 
 ### metamorph
 
@@ -167,7 +168,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:81](https://github.co
 
 Trigger actor metamorph, using actor's inputs as defaults.
 
-***
+---
 
 ### one
 
@@ -175,7 +176,7 @@ Trigger actor metamorph, using actor's inputs as defaults.
 
 Defined in: [packages/crawlee-one/src/lib/context/types.ts:79](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L79)
 
-***
+---
 
 ### pushData()
 
@@ -194,7 +195,7 @@ Defined in: [packages/crawlee-one/src/lib/context/types.ts:94](https://github.co
 
 ##### T
 
-`T` *extends* `Record`\<`any`, `any`\> = `Record`\<`any`, `any`\>
+`T` _extends_ `Record`\<`any`, `any`\> = `Record`\<`any`, `any`\>
 
 #### Parameters
 

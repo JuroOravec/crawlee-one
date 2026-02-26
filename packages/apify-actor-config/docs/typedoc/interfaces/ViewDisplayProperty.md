@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ViewDisplayProperty
 
@@ -21,7 +21,7 @@ Defined in: [outputSchema.ts:144](https://github.com/JuroOravec/crawlee-one/blob
 Describes how output data values are formatted
 in order to be rendered in the output tab UI.
 
-***
+---
 
 ### label?
 

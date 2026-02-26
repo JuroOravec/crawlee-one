@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
 import { LogLevel as CrawleeLogLevel } from 'crawlee';
+import { describe, expect, it, vi } from 'vitest';
 
-import { LOG_LEVEL, logLevelToCrawlee, logLevelHandlerWrapper } from './log.js';
+import { LOG_LEVEL, logLevelHandlerWrapper, logLevelToCrawlee } from './log.js';
 
 describe('LOG_LEVEL', () => {
   it('contains all expected levels', () => {

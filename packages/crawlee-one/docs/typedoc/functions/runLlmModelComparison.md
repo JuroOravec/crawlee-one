@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / runLlmModelComparison
 
@@ -23,7 +23,7 @@ Uses queue/dataset `llm-compare--{reportName}`.
 
 ### TData
 
-`TData` *extends* `Dictionary` = `Dictionary`
+`TData` _extends_ `Dictionary` = `Dictionary`
 
 ## Parameters
 

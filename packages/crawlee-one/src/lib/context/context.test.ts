@@ -1,18 +1,19 @@
 import http from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
-import { z } from 'zod';
-import { createStringField, createIntegerField } from 'apify-actor-config';
 
-import { createHttpCrawlerOptions, crawleeOne } from './context.js';
+import { createIntegerField, createStringField } from 'apify-actor-config';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { z } from 'zod';
+
 import { actorClassByType } from '../../constants.js';
-import { CRAWLER_TYPE, CrawlerType } from '../../types.js';
+import { CRAWLER_TYPE, type CrawlerType } from '../../types.js';
 import type {
-  CrawleeOneIO,
-  CrawleeOneRequestQueue,
   CrawleeOneDataset,
+  CrawleeOneIO,
   CrawleeOneKeyValueStore,
+  CrawleeOneRequestQueue,
 } from '../integrations/types.js';
+import { crawleeOne, createHttpCrawlerOptions } from './context.js';
 
 // ---- Mock helpers ----
 

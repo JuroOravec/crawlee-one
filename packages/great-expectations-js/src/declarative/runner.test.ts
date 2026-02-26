@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { runExpectations } from './runner.js';
 import type { DatasetExpectations } from './declaredExpectations.js';
+import { runExpectations } from './runner.js';
 
 interface MyRow {
   offerId: string;

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / LlmModelCompareReportEntry
 
@@ -20,7 +20,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:34
 
 Per-field agreement rate (e.g. { title: 0.95, description: 0.72 })
 
-***
+---
 
 ### agreementRate
 
@@ -30,7 +30,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:32
 
 Fraction of field comparisons that match (0–1)
 
-***
+---
 
 ### completionTokensAvg?
 
@@ -40,7 +40,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:46
 
 Average completion tokens per request
 
-***
+---
 
 ### errorCount
 
@@ -50,7 +50,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:30
 
 Number of extractions that errored (LLM call failed)
 
-***
+---
 
 ### extractionSecAvg?
 
@@ -58,9 +58,9 @@ Number of extractions that errored (LLM call failed)
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:42
 
-Average LLM extraction time per request in seconds (from _extractionMeta.extractionMs)
+Average LLM extraction time per request in seconds (from \_extractionMeta.extractionMs)
 
-***
+---
 
 ### id
 
@@ -68,7 +68,7 @@ Average LLM extraction time per request in seconds (from _extractionMeta.extract
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:25
 
-***
+---
 
 ### label?
 
@@ -76,7 +76,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:25
 
 Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:26
 
-***
+---
 
 ### matchedIds
 
@@ -86,7 +86,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:36
 
 IDs where both reference and this model have a result, and all fields match field-by-field
 
-***
+---
 
 ### mismatchedIds
 
@@ -96,7 +96,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:38
 
 IDs where both reference and this model have a result, but at least one field differs
 
-***
+---
 
 ### missingIds
 
@@ -106,7 +106,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:40
 
 IDs the reference has but this model has no result for (comparison gap)
 
-***
+---
 
 ### promptTokensAvg?
 
@@ -116,7 +116,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:44
 
 Average prompt tokens per request
 
-***
+---
 
 ### succeededCount
 
@@ -126,7 +126,7 @@ Defined in: packages/crawlee-one/src/lib/llmCompare/types.ts:28
 
 Number of extractions that succeeded (data returned)
 
-***
+---
 
 ### totalTokensAvg?
 

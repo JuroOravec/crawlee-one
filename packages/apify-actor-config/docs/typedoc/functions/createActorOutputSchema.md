@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / createActorOutputSchema
 
@@ -14,7 +14,7 @@ Defined in: [outputSchema.ts:147](https://github.com/JuroOravec/crawlee-one/blob
 
 ### T
 
-`T` *extends* [`ActorOutputSchema`](../interfaces/ActorOutputSchema.md)\<`object`, `Record`\<`string`, [`DatasetView`](../interfaces/DatasetView.md)\<[`ViewTransformation`](../interfaces/ViewTransformation.md)\<`string`\>, [`ViewDisplay`](../interfaces/ViewDisplay.md)\<`string`\>\>\>\>
+`T` _extends_ [`ActorOutputSchema`](../interfaces/ActorOutputSchema.md)\<`object`, `Record`\<`string`, [`DatasetView`](../interfaces/DatasetView.md)\<[`ViewTransformation`](../interfaces/ViewTransformation.md)\<`string`\>, [`ViewDisplay`](../interfaces/ViewDisplay.md)\<`string`\>\>\>\>
 
 ## Parameters
 
