@@ -1,18 +1,17 @@
+import type { DatasetPerfStat } from 'actor-spec';
+import type { ReadmeRenderer } from 'crawlee-one';
 import { Eta } from 'eta';
 import { capitalize, cloneDeep, defaults, round, uniqBy } from 'lodash-es';
 
 import { millify } from '../../millify.js';
-import type { DatasetPerfStat } from 'actor-spec';
-import type { ReadmeRenderer } from 'crawlee-one';
-
 import {
-  ApifyReadmeTemplates,
-  ApifyScraperActorSpec,
+  type ApifyReadmeTemplates,
+  type ApifyScraperActorSpec,
   README_HOOK,
   README_HOOK_ENUM,
-  ReadmeFeature,
-  ReadmeFeatureType,
-  RenderContext,
+  type ReadmeFeature,
+  type ReadmeFeatureType,
+  type RenderContext,
 } from './types.js';
 
 export interface ApifyReadmeTemplatesOverrides extends Omit<ApifyReadmeTemplates, 'features'> {

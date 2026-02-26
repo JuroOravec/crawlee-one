@@ -1,7 +1,7 @@
 // General utilities
-export * from './types.js';
 export * from './async.js';
 export * from './format.js';
+export * from './types.js';
 export * from './url.js';
 
 // Dataset utilities

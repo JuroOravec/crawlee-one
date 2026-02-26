@@ -1,11 +1,11 @@
-import type { AnyNode } from 'domhandler';
 import type { Cheerio } from 'cheerio';
+import type { AnyNode } from 'domhandler';
 import type { ElementHandle, JSHandle, Locator, Page } from 'playwright';
 
-import { strAsNumber, strOrNull } from '../utils/format.js';
-import { formatUrl } from '../utils/url.js';
-import type { MaybeArray, MaybePromise } from '../utils/types.js';
 import { logAndRethrow } from '../utils/error.js';
+import { strAsNumber, strOrNull } from '../utils/format.js';
+import type { MaybeArray, MaybePromise } from '../utils/types.js';
+import { formatUrl } from '../utils/url.js';
 import { mergeHandles, splitCheerioSelection, splitPlaywrightSelection } from './domUtils.js';
 import { createPortadomArrayPromise, createPortadomPromise, type Portadom } from './types.js';
 

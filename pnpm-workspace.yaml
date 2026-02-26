@@ -2,7 +2,6 @@ packages:
   - packages/*
   - scrapers/*
 
-
 # Actual versions installed for production, development and testing.
 # Referenced as "catalog:" in package.json files.
 #

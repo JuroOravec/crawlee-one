@@ -1,6 +1,6 @@
 import type { ActorSpec, DatasetPerfStat, ScraperDataset } from 'actor-spec';
 
-import { ArrVal, enumFromArray } from '../../types.js';
+import { type ArrVal, enumFromArray } from '../../types.js';
 
 /**
  * Actor spec with Apify-specific dataset fields (perf table info for formatting).

@@ -1,8 +1,8 @@
 // @ts-check
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
@@ -14,6 +14,7 @@ export default tseslint.config(
   eslintPluginPrettier,
   {
     rules: {
+      'max-params': ['error', 4],
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',

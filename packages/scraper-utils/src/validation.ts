@@ -1,6 +1,6 @@
+import type { ApifyEntryMetadata } from 'crawlee-one';
 import { z } from 'zod';
 
-import type { ApifyEntryMetadata } from 'crawlee-one';
 import { normalizeWhitespaceDeep } from './format.js';
 
 // ---------------------------------------------------------------------------

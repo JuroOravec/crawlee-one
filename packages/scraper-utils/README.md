@@ -12,13 +12,13 @@ Because scrapers are deployed as Docker images without access to the monorepo, w
 
 ## What's included
 
-| Module           | Exports                                                                                           | Purpose                                                          |
-| ---------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `types`          | `MaybePromise`, `MaybeArray`, `ArrVal`, `enumFromArray`                                           | Common type utilities                                            |
-| `async`          | `wait`, `retryAsync`, `serialAsyncMap`, `serialAsyncFilter`, `serialAsyncFind`, `deferredPromise` | Serial async iteration, retries, delays                          |
-| `format`         | `strOrNull`, `strAsNumber`                                                                        | String parsing and coercion                                      |
-| `url`            | `validateUrl`, `resolveUrlPath`, `sortUrl`, `equalUrls`                                           | URL manipulation and comparison                                  |
-| `readme/apify/*` | `renderApifyReadme`, `defaultFeatureTexts`, Apify README types                                    | Generate Apify actor README from a template and actorspec        |
+| Module           | Exports                                                                                           | Purpose                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `types`          | `MaybePromise`, `MaybeArray`, `ArrVal`, `enumFromArray`                                           | Common type utilities                                     |
+| `async`          | `wait`, `retryAsync`, `serialAsyncMap`, `serialAsyncFilter`, `serialAsyncFind`, `deferredPromise` | Serial async iteration, retries, delays                   |
+| `format`         | `strOrNull`, `strAsNumber`                                                                        | String parsing and coercion                               |
+| `url`            | `validateUrl`, `resolveUrlPath`, `sortUrl`, `equalUrls`                                           | URL manipulation and comparison                           |
+| `readme/apify/*` | `renderApifyReadme`, `defaultFeatureTexts`, Apify README types                                    | Generate Apify actor README from a template and actorspec |
 
 ## Usage
 

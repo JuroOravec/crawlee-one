@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ApifyScraperActorSpec, ApifyReadmeTemplatesOverrides } from '../index.js';
+
+import type { ApifyReadmeTemplatesOverrides, ApifyScraperActorSpec } from '../index.js';
 import { renderApifyReadme } from '../index.js';
 
 /**

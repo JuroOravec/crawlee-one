@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { validateUrl, resolveUrlPath, sortUrl, equalUrls } from '../url.js';
+
+import { equalUrls, resolveUrlPath, sortUrl, validateUrl } from '../url.js';
 
 describe('validateUrl', () => {
   it('does not throw for a valid URL', () => {

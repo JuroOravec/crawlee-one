@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { strOrNull, strAsNumber, normalizeWhitespace, normalizeWhitespaceDeep } from '../format.js';
+
+import { normalizeWhitespace, normalizeWhitespaceDeep, strAsNumber, strOrNull } from '../format.js';
 
 describe('strOrNull', () => {
   it('returns the string when non-empty', () => {
