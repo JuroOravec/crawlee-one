@@ -60,7 +60,11 @@ You can define expectations declaratively and run them in bulk:
 ```ts
 import { runExpectations, type DatasetExpectations } from 'great-expectations-js';
 
-interface MyRow { offerId: string; offerUrl: string; email: string };
+interface MyRow {
+  offerId: string;
+  offerUrl: string;
+  email: string;
+}
 
 const expectations: DatasetExpectations<MyRow> = {
   dataset: [
@@ -79,11 +83,15 @@ const results = runExpectations(myDataset, expectations);
 For column autocomplete, pass your row shape as the generic:
 
 ```ts
-interface MyRow { offerId: string; offerUrl: string; supplierUrl: string }
+interface MyRow {
+  offerId: string;
+  offerUrl: string;
+  supplierUrl: string;
+}
 
 const expectations: DatasetExpectations<MyRow> = {
   field: [
-    { expectation: 'expectColumnToExist', params: { column: 'offerId' } },  // TS suggests offerId | offerUrl | supplierUrl
+    { expectation: 'expectColumnToExist', params: { column: 'offerId' } }, // TS suggests offerId | offerUrl | supplierUrl
   ],
 };
 ```

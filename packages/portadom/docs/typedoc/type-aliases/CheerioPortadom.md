@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / CheerioPortadom
 
@@ -16,4 +16,4 @@ Implementation of Portadom in Cheerio
 
 ### El
 
-`El` *extends* `Cheerio`\<`AnyNode`\> = `Cheerio`\<`AnyNode`\>
+`El` _extends_ `Cheerio`\<`AnyNode`\> = `Cheerio`\<`AnyNode`\>

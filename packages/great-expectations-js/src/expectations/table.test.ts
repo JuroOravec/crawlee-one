@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
+
 import {
-  expectTableRowCountToEqual,
-  expectTableRowCountToBeBetween,
-  expectTableColumnCountToEqual,
   expectTableColumnCountToBeBetween,
+  expectTableColumnCountToEqual,
   expectTableColumnsToMatchOrderedList,
   expectTableColumnsToMatchSet,
+  expectTableRowCountToBeBetween,
+  expectTableRowCountToEqual,
   expectTableRowCountToEqualOtherTable,
 } from './table.js';
 

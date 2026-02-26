@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
-  expectTableRowCountToEqual,
-  expectColumnValuesToNotBeNull,
   expectColumnValuesToBeValidUuid,
+  expectColumnValuesToNotBeNull,
+  expectTableRowCountToEqual,
 } from './index.js';
 
 describe('great-expectations-js', () => {

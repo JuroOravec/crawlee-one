@@ -1,5 +1,5 @@
 import type { Dataset, ExpectationResult, MostlyOptions } from '../types.js';
-import { MAX_UNEXPECTED_SAMPLE, buildColumnResult, getColumnValues } from '../utils.js';
+import { buildColumnResult, getColumnValues, MAX_UNEXPECTED_SAMPLE } from '../utils.js';
 
 export function expectColumnValuesToBeInSet(
   dataset: Dataset,

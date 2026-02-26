@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / Portadom
 
@@ -11,8 +11,9 @@ Defined in: [dom/types.ts:23](https://github.com/JuroOravec/crawlee-one/blob/mai
 Common interface for working with DOM despite different environments.
 
 Consider these environments:
-1) Browser (via Playwright & Chromium) - uses Browser API to work with DOM
-2) Cheerio - uses own API to work with DOM
+
+1. Browser (via Playwright & Chromium) - uses Browser API to work with DOM
+2. Cheerio - uses own API to work with DOM
 
 This common interfaces makes the scraping code more portable between the two.
 
@@ -52,7 +53,7 @@ Get element's attribute
 
 `MaybePromise`\<`string` \| `null`\>
 
-***
+---
 
 ### attrs()
 
@@ -66,7 +67,7 @@ Get element's attributes
 
 ##### T
 
-`T` *extends* `string`
+`T` _extends_ `string`
 
 #### Parameters
 
@@ -84,7 +85,7 @@ Get element's attributes
 
 `MaybePromise`\<`Record`\<`T`, `string` \| `null`\>\>
 
-***
+---
 
 ### children()
 
@@ -104,7 +105,7 @@ Get element's children
 
 [`PortadomArrayPromise`](PortadomArrayPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### closest()
 
@@ -130,7 +131,7 @@ Get a single ancestor (or itself) matching the selector
 
 [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### findMany()
 
@@ -156,7 +157,7 @@ Get all descendants matching the selector
 
 [`PortadomArrayPromise`](PortadomArrayPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### findOne()
 
@@ -182,7 +183,7 @@ Get a single descendant matching the selector
 
 [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### getCommonAncestor()
 
@@ -209,7 +210,7 @@ or `null` if none such found.
 
 [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### getCommonAncestorFromSelector()
 
@@ -237,7 +238,7 @@ or `null` if none such found.
 
 [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### href()
 
@@ -257,7 +258,7 @@ Get element's href
 
 `MaybePromise`\<`string` \| `null`\>
 
-***
+---
 
 ### map()
 
@@ -283,7 +284,7 @@ Freely modify the underlying DOM node
 
 `MaybePromise`\<`TVal`\>
 
-***
+---
 
 ### node
 
@@ -291,7 +292,7 @@ Freely modify the underlying DOM node
 
 Defined in: [dom/types.ts:24](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L24)
 
-***
+---
 
 ### nodeName()
 
@@ -305,7 +306,7 @@ Get element's nodeName
 
 `MaybePromise`\<`string` \| `null`\>
 
-***
+---
 
 ### parent()
 
@@ -325,7 +326,7 @@ Get element's parent
 
 [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### prop()
 
@@ -359,7 +360,7 @@ Single or nested prop path
 
 `MaybePromise`\<`R`\>
 
-***
+---
 
 ### props()
 
@@ -393,7 +394,7 @@ List of single or nested prop paths
 
 `MaybePromise`\<`R`\>
 
-***
+---
 
 ### remove()
 
@@ -407,7 +408,7 @@ Remove the element
 
 `MaybePromise`\<`void`\>
 
-***
+---
 
 ### root()
 
@@ -427,7 +428,7 @@ Get root element
 
 [`PortadomPromise`](PortadomPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### src()
 
@@ -447,7 +448,7 @@ Get element's src
 
 `MaybePromise`\<`string` \| `null`\>
 
-***
+---
 
 ### text()
 
@@ -469,7 +470,7 @@ Get element's text (trimmed)
 
 `MaybePromise`\<`string` \| `null`\>
 
-***
+---
 
 ### textAsLower()
 
@@ -491,7 +492,7 @@ Get element's text as lowercase (trimmed)
 
 `MaybePromise`\<`string` \| `null`\>
 
-***
+---
 
 ### textAsNumber()
 
@@ -511,7 +512,7 @@ Get element's text and convert it to number
 
 `MaybePromise`\<`number` \| `null`\>
 
-***
+---
 
 ### textAsUpper()
 
@@ -533,7 +534,7 @@ Get element's text as uppercase (trimmed)
 
 `MaybePromise`\<`string` \| `null`\>
 
-***
+---
 
 ### url()
 

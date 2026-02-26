@@ -1,10 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
-  expectColumnValuesToBePrimeNumber,
   expectColumnValuesToBeFibonacciNumber,
+  expectColumnValuesToBePrimeNumber,
   expectColumnValuesToBeValidLeapYear,
-  expectColumnValuesToBeValidPronicNumber,
   expectColumnValuesToBeValidPowerfulNumber,
+  expectColumnValuesToBeValidPronicNumber,
   expectColumnValuesToBeValidSemiprime,
   expectColumnValuesToBeValidSphenicNumber,
   expectColumnValuesToBeValidSquareFreeNumber,

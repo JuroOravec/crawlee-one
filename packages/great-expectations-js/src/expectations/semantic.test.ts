@@ -1,25 +1,26 @@
 import { describe, expect, it } from 'vitest';
+
 import {
-  expectColumnValuesToBeValidUuid,
-  expectColumnValuesToContainValidEmail,
   expectColumnValuesToBeAscii,
   expectColumnValuesToBeSlug,
-  expectColumnValuesToBeValidHexColor,
-  expectColumnValuesToBeValidMd5,
-  expectColumnValuesToBeValidSha1,
   expectColumnValuesToBeValidBase64,
+  expectColumnValuesToBeValidDate,
   expectColumnValuesToBeValidHashtag,
-  expectColumnValuesToBeValidUrls,
-  expectColumnValuesToBeValidIpv4,
-  expectColumnValuesToBeValidIpv6,
-  expectColumnValuesToBeValidMac,
+  expectColumnValuesToBeValidHexColor,
   expectColumnValuesToBeValidHttpMethod,
   expectColumnValuesToBeValidHttpMethods,
   expectColumnValuesToBeValidHttpStatusCode,
+  expectColumnValuesToBeValidIpv4,
+  expectColumnValuesToBeValidIpv6,
+  expectColumnValuesToBeValidMac,
+  expectColumnValuesToBeValidMd5,
+  expectColumnValuesToBeValidSha1,
   expectColumnValuesToBeValidTcpPort,
   expectColumnValuesToBeValidUdpPort,
-  expectColumnValuesToBeValidDate,
+  expectColumnValuesToBeValidUrls,
+  expectColumnValuesToBeValidUuid,
   expectColumnValuesToBeWeekday,
+  expectColumnValuesToContainValidEmail,
 } from './semantic.js';
 
 function col(values: unknown[]) {

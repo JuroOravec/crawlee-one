@@ -1,5 +1,5 @@
-import countries from 'i18n-iso-countries';
 import currencyCodes from 'currency-codes';
+import countries from 'i18n-iso-countries';
 import ISO6391 from 'iso-639-1';
 import { states as statesUs } from 'states-us';
 import statuses from 'statuses';

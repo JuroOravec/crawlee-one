@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
+
 import {
-  expectColumnValuesToMatchRegex,
-  expectColumnValuesToNotMatchRegex,
-  expectColumnValuesToMatchRegexList,
-  expectColumnValuesToNotMatchRegexList,
-  expectColumnValuesToBeJsonParseable,
   expectColumnValuesToBeDateutilParseable,
+  expectColumnValuesToBeJsonParseable,
+  expectColumnValuesToMatchRegex,
+  expectColumnValuesToMatchRegexList,
   expectColumnValuesToMatchStrftimeFormat,
+  expectColumnValuesToNotMatchRegex,
+  expectColumnValuesToNotMatchRegexList,
 } from './columnRegex.js';
 
 describe('expectColumnValuesToMatchRegex', () => {

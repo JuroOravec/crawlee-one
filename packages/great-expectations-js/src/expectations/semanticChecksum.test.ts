@@ -1,16 +1,17 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
-  expectColumnValuesToBeValidIsbn10,
-  expectColumnValuesToBeValidIsbn13,
-  expectColumnValuesToBeValidEan,
-  expectColumnValuesToBeValidImei,
-  expectColumnValuesToBeValidIsin,
-  expectColumnValuesToBeValidMeid,
-  expectColumnValuesToBeValidIsmn,
-  expectColumnValuesToBeValidIsan,
-  expectColumnValuesToBeValidBarcode,
   expectColumnValuesToBeGtinBaseUnit,
   expectColumnValuesToBeGtinVariableMeasureTradeItem,
+  expectColumnValuesToBeValidBarcode,
+  expectColumnValuesToBeValidEan,
+  expectColumnValuesToBeValidImei,
+  expectColumnValuesToBeValidIsan,
+  expectColumnValuesToBeValidIsbn10,
+  expectColumnValuesToBeValidIsbn13,
+  expectColumnValuesToBeValidIsin,
+  expectColumnValuesToBeValidIsmn,
+  expectColumnValuesToBeValidMeid,
 } from './semanticChecksum.js';
 
 describe('expectColumnValuesToBeValidIsbn10', () => {

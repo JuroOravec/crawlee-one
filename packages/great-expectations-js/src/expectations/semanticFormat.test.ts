@@ -1,19 +1,20 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
-  expectColumnValuesToBeValidSsn,
-  expectColumnValuesToBeValidImdbId,
-  expectColumnValuesToBeValidDoi,
-  expectColumnValuesToBeValidOrcid,
+  expectColumnValuesToBeSecurePasswords,
   expectColumnValuesToBeValidArxivId,
+  expectColumnValuesToBeValidBase32,
+  expectColumnValuesToBeValidDoi,
+  expectColumnValuesToBeValidImdbId,
+  expectColumnValuesToBeValidOpenLibraryId,
+  expectColumnValuesToBeValidOrcid,
+  expectColumnValuesToBeValidPrice,
   expectColumnValuesToBeValidPubmedId,
   expectColumnValuesToBeValidRomanNumeral,
-  expectColumnValuesToBeValidBase32,
-  expectColumnValuesToBeXmlParseable,
+  expectColumnValuesToBeValidSsn,
   expectColumnValuesToBeValidTemperature,
-  expectColumnValuesToBeValidPrice,
-  expectColumnValuesToBeValidOpenLibraryId,
-  expectColumnValuesToBeSecurePasswords,
   expectColumnValuesToBeVectors,
+  expectColumnValuesToBeXmlParseable,
 } from './semanticFormat.js';
 
 describe('expectColumnValuesToBeValidSsn', () => {

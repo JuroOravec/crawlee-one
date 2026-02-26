@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
+
 import {
-  expectColumnValuesToBeInSet,
-  expectColumnValuesToNotBeInSet,
   expectColumnDistinctValuesToBeInSet,
   expectColumnDistinctValuesToContainSet,
   expectColumnDistinctValuesToEqualSet,
+  expectColumnValuesToBeInSet,
+  expectColumnValuesToNotBeInSet,
 } from './columnSet.js';
 
 const data = [{ color: 'red' }, { color: 'green' }, { color: 'blue' }, { color: 'red' }];

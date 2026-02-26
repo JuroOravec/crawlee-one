@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module';
+
 import type { AnySchema, ValidateFunction } from 'ajv';
 
 import type { Dataset, ExpectationResult, MostlyOptions } from '../types.js';

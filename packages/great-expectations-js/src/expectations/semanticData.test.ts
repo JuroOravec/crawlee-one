@@ -1,18 +1,19 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
-  expectColumnValuesToBeValidIsoCountry,
-  expectColumnValuesToBeValidCurrencyCode,
-  expectColumnValuesToBeValidIanaTimezone,
   expectColumnValuesToBeIsoLanguages,
+  expectColumnValuesToBeValidCountry,
+  expectColumnValuesToBeValidCurrencyCode,
   expectColumnValuesToBeValidHttpStatusName,
-  expectColumnValuesToBeValidMime,
+  expectColumnValuesToBeValidIanaTimezone,
+  expectColumnValuesToBeValidIsoCountry,
   expectColumnValuesToBeValidMbti,
+  expectColumnValuesToBeValidMime,
   expectColumnValuesToBeValidTld,
   expectColumnValuesToBeValidUsState,
   expectColumnValuesToBeValidUsStateAbbreviation,
   expectColumnValuesToBeValidUsStateOrTerritory,
   expectColumnValuesToBeValidUsStateOrTerritoryAbbreviation,
-  expectColumnValuesToBeValidCountry,
 } from './semanticData.js';
 
 describe('expectColumnValuesToBeValidIsoCountry', () => {

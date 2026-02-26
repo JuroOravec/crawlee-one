@@ -1,9 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
+  expectColumnValuesIpAddressInNetwork,
   expectColumnValuesToBePrivateIpV4,
   expectColumnValuesToBePrivateIpv4Class,
   expectColumnValuesToBePrivateIpV6,
-  expectColumnValuesIpAddressInNetwork,
 } from './semanticNetwork.js';
 
 describe('expectColumnValuesToBePrivateIpV4', () => {
