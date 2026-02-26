@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CaptureError
 
@@ -8,7 +8,7 @@
 
 > **CaptureError** = (`input`) => [`MaybePromise`](MaybePromise.md)\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:24](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L24)
+Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:16](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L16)
 
 ## Parameters
 

@@ -1,12 +1,12 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / BooleanField
 
-# Interface: BooleanField\<T\>
+# Interface: BooleanField\<T, TSchema\>
 
-Defined in: [inputSchema.ts:326](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L326)
+Defined in: [inputSchema.ts:274](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L274)
 
 See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#boolean-type
 
@@ -31,13 +31,17 @@ Example options with group caption:
 
 ## Extends
 
-- `BaseField`.`BaseFieldTypedProps`\<`T`, `"boolean"`\>
+- `BaseField`.`BaseFieldTypedProps`\<`T`, `"boolean"`, `TSchema`\>
 
 ## Type Parameters
 
 ### T
 
-`T` *extends* `boolean` = `boolean`
+`T` _extends_ `boolean` = `boolean`
+
+### TSchema
+
+`TSchema` = `any`
 
 ## Properties
 
@@ -45,7 +49,7 @@ Example options with group caption:
 
 > `optional` **default**: `T`
 
-Defined in: [inputSchema.ts:164](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L164)
+Defined in: [inputSchema.ts:95](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L95)
 
 Default value that will be used when no value is provided.
 
@@ -53,7 +57,7 @@ Default value that will be used when no value is provided.
 
 `BaseFieldTypedProps.default`
 
-***
+---
 
 ### description
 
@@ -67,23 +71,23 @@ Description of the field that will be displayed as help text in Actor input UI.
 
 `BaseField.description`
 
-***
+---
 
 ### editor?
 
 > `optional` **editor**: `"hidden"` \| `"checkbox"`
 
-Defined in: [inputSchema.ts:330](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L330)
+Defined in: [inputSchema.ts:278](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L278)
 
 Visual editor used for the input field.
 
-***
+---
 
 ### errorMessage?
 
 > `optional` **errorMessage**: [`BooleanErrorMessage`](BooleanErrorMessage.md)
 
-Defined in: [inputSchema.ts:180](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L180)
+Defined in: [inputSchema.ts:111](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L111)
 
 Custom error messages for validation keywords.
 The allowed keys depend on the field's `type`.
@@ -94,13 +98,13 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 `BaseFieldTypedProps.errorMessage`
 
-***
+---
 
 ### example?
 
 > `optional` **example**: `T`
 
-Defined in: [inputSchema.ts:173](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L173)
+Defined in: [inputSchema.ts:104](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L104)
 
 Sample value of this field for the actor to be displayed when
 actor is published in Apify Store.
@@ -109,28 +113,28 @@ actor is published in Apify Store.
 
 `BaseFieldTypedProps.example`
 
-***
+---
 
 ### groupCaption?
 
 > `optional` **groupCaption**: `string`
 
-Defined in: [inputSchema.ts:335](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L335)
+Defined in: [inputSchema.ts:283](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L283)
 
 If you want to group multiple checkboxes together,
 add this option to the first of the group.
 
-***
+---
 
 ### groupDescription?
 
 > `optional` **groupDescription**: `string`
 
-Defined in: [inputSchema.ts:337](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L337)
+Defined in: [inputSchema.ts:285](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L285)
 
 Description displayed as help text displayed of group title.
 
-***
+---
 
 ### nullable?
 
@@ -144,13 +148,13 @@ Specifies whether null is an allowed value.
 
 `BaseField.nullable`
 
-***
+---
 
 ### prefill?
 
 > `optional` **prefill**: `T`
 
-Defined in: [inputSchema.ts:168](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L168)
+Defined in: [inputSchema.ts:99](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L99)
 
 Value that will be prefilled in the actor input interface.
 
@@ -158,13 +162,13 @@ Value that will be prefilled in the actor input interface.
 
 `BaseFieldTypedProps.prefill`
 
-***
+---
 
 ### schema?
 
-> `optional` **schema**: `any`
+> `optional` **schema**: `TSchema`
 
-Defined in: [inputSchema.ts:96](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L96)
+Defined in: [inputSchema.ts:118](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L118)
 
 Optional validation schema for this field (e.g. a Zod schema).
 
@@ -173,9 +177,9 @@ automatically stripped when generating `actor.json`.
 
 #### Inherited from
 
-`BaseField.schema`
+`BaseFieldTypedProps.schema`
 
-***
+---
 
 ### sectionCaption?
 
@@ -192,7 +196,7 @@ or the next field which has the sectionCaption property set.
 
 `BaseField.sectionCaption`
 
-***
+---
 
 ### sectionDescription?
 
@@ -208,7 +212,7 @@ visible right under the caption when the section is open.
 
 `BaseField.sectionDescription`
 
-***
+---
 
 ### title
 
@@ -222,13 +226,13 @@ Title of the field in UI.
 
 `BaseField.title`
 
-***
+---
 
 ### type
 
 > **type**: `"boolean"`
 
-Defined in: [inputSchema.ts:328](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L328)
+Defined in: [inputSchema.ts:276](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L276)
 
 Allowed type for the input value. Cannot be mixed.
 

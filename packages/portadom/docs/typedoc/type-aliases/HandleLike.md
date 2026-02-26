@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / HandleLike
 

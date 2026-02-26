@@ -1,6 +1,6 @@
 {
   "name": "actor-spec",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "type": "module",
   "private": false,
   "description": "Publish your Apify Actors on other platforms. Define once, run anywhere.",
@@ -50,6 +50,7 @@
     "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
   },
   "dependencies": {
-    "commander": "catalog:"
+    "commander": "catalog:",
+    "great-expectations-js": "workspace:*"
   }
 }

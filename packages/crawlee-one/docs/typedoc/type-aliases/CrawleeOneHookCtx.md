@@ -1,14 +1,14 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneHookCtx
 
 # Type Alias: CrawleeOneHookCtx\<T\>
 
-> **CrawleeOneHookCtx**\<`T`\> = `Pick`\<[`CrawleeOneActorInst`](../interfaces/CrawleeOneActorInst.md)\<`T`\>, `"input"` \| `"state"`\> & `object`
+> **CrawleeOneHookCtx**\<`T`\> = `Pick`\<[`CrawleeOneContext`](../interfaces/CrawleeOneContext.md)\<`T`\>, `"input"` \| `"state"`\> & `object`
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:106](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L106)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:127](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L127)
 
 Context passed to user-defined functions passed from input
 
@@ -24,7 +24,7 @@ By default this is the Apify Actor class, see https://docs.apify.com/sdk/js/refe
 
 ### itemCacheKey
 
-> **itemCacheKey**: *typeof* [`itemCacheKey`](../functions/itemCacheKey.md)
+> **itemCacheKey**: _typeof_ `itemCacheKey`
 
 A function you can use to get cacheID for current `entry`.
 It takes the entry itself, and a list of properties to be used for hashing.
@@ -33,7 +33,7 @@ By default, you should pass `input.cachePrimaryKeys` to it.
 
 ### sendRequest
 
-> **sendRequest**: *typeof* `gotScraping`
+> **sendRequest**: _typeof_ `gotScraping`
 
 Fetch remote data. Uses 'got-scraping', same as Apify's `sendRequest`.
 
@@ -43,4 +43,4 @@ See https://crawlee.dev/docs/guides/got-scraping
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)

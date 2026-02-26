@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/node';
 
+import type { CrawleeOneTypes } from '../context/types.js';
 import type { CrawleeOneTelemetry } from './types.js';
-import type { CrawleeOneCtx } from '../actor/types.js';
 
 /**
  * Sentry configuration common to all crawlers.
@@ -21,7 +21,7 @@ const setupSentry = async (sentryOptions?: Sentry.NodeOptions) => {
   Sentry.init(sentryOptions);
 };
 
-export const createSentryTelemetry = <T extends CrawleeOneTelemetry<CrawleeOneCtx>>(
+export const createSentryTelemetry = <T extends CrawleeOneTelemetry<CrawleeOneTypes>>(
   sentryOptions?: Sentry.NodeOptions
 ) => {
   return {

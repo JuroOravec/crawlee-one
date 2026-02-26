@@ -19,7 +19,7 @@
 #
 # Read more on https://docs.npmjs.com/trusted-publishers
 
-name: "portadom: Release"
+name: 'portadom: Release'
 
 on:
   release:

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { createValueMonitor, createSizeMonitor } from './valueMonitor.js';
+import { createSizeMonitor, createValueMonitor } from './valueMonitor.js';
 
 describe('createValueMonitor', () => {
   it('fetches value on first access', async () => {

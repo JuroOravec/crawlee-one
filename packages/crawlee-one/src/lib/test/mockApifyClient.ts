@@ -183,11 +183,50 @@ export const createMockRequestQueueClient = ({
     ): Promise<RequestQueueClientListHeadResult> => {
       const [options] = args;
       log?.(`Called MockRequestQueueClient.listHead with ${JSON.stringify(args)}`);
+      const limit = options?.limit ?? 100;
+      const items = requestQueue.slice(0, limit).map((r) => ({
+        id: r.id,
+        uniqueKey: r.uniqueKey,
+        retryCount: r.retryCount ?? 0,
+        url: r.url ?? '',
+        method: r.method ?? 'GET',
+      }));
       return Promise.resolve({
-        items: [],
+        items,
         queueModifiedAt: new Date('2023-04-17'),
         hadMultipleClients: false,
-        limit: options?.limit ?? 100,
+        limit,
+      });
+    },
+
+    /** Required by Crawlee 3.16+ RequestQueue v2. Replaces listHead for fetching queue head. */
+    listAndLockHead: (options?: { limit?: number; lockSecs?: number }) => {
+      log?.(`Called MockRequestQueueClient.listAndLockHead with ${JSON.stringify(options)}`);
+      const limit = options?.limit ?? 100;
+      const items = requestQueue.slice(0, limit).map((r) => ({ id: r.id, uniqueKey: r.uniqueKey }));
+      return Promise.resolve({
+        items,
+        queueModifiedAt: new Date('2023-04-17'),
+        hadMultipleClients: false,
+        limit,
+        lockSecs: options?.lockSecs ?? 60,
+        queueHasLockedRequests: false,
+      } as any);
+    },
+
+    deleteRequestLock: (
+      ...args: [requestId: string, options?: { forefront?: boolean }]
+    ): Promise<void> => {
+      log?.(`Called MockRequestQueueClient.deleteRequestLock with ${JSON.stringify(args)}`);
+      return Promise.resolve();
+    },
+
+    prolongRequestLock: (
+      ...args: [id: string, options?: { lockSecs?: number }]
+    ): Promise<{ lockExpiresAt: Date }> => {
+      log?.(`Called MockRequestQueueClient.prolongRequestLock with ${JSON.stringify(args)}`);
+      return Promise.resolve({
+        lockExpiresAt: new Date(Date.now() + (args[1]?.lockSecs ?? 60) * 1000),
       });
     },
   } as any;
@@ -233,6 +272,7 @@ export const createMockStorageClient = ({
   log?: (args: any) => void;
   onBatchAddRequests?: OnBatchAddRequests;
 } = {}): StorageClient => {
+  const sharedRequestQueueClient = createMockRequestQueueClient({ log, onBatchAddRequests });
   return {
     datasets: (...args: any[]): DatasetCollectionClient => {
       log?.(`Called MockStorageClient.datasets with ${JSON.stringify(args)}`);
@@ -240,7 +280,7 @@ export const createMockStorageClient = ({
     },
     requestQueue: (...args: any[]) => {
       log?.(`Called MockStorageClient.requestQueue with ${JSON.stringify(args)}`);
-      return createMockRequestQueueClient({ log, onBatchAddRequests });
+      return sharedRequestQueueClient;
     },
     keyValueStore: (...args: any[]) => {
       log?.(`Called MockStorageClient.keyValueStore with ${JSON.stringify(args)}`);

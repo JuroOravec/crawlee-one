@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / PushDataOptions
 
@@ -12,7 +12,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:63](https://github.com/
 
 ### T
 
-`T` *extends* `object`
+`T` _extends_ `object`
 
 ## Properties
 
@@ -24,7 +24,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:138](https://github.com
 
 Define whether we want to add, remove, or overwrite cached entries with results from the actor run
 
-***
+---
 
 ### cachePrimaryKeys?
 
@@ -34,7 +34,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:136](https://github.com
 
 Define fields that uniquely identify entries for caching
 
-***
+---
 
 ### cacheStoreId?
 
@@ -44,7 +44,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:134](https://github.com
 
 ID or name of the key-value store used as cache
 
-***
+---
 
 ### datasetId?
 
@@ -54,7 +54,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:130](https://github.com
 
 ID or name of the dataset to which the data should be pushed
 
-***
+---
 
 ### filter()?
 
@@ -76,7 +76,7 @@ This serves mainly to allow users to filter the entries from actor input UI.
 
 `unknown`
 
-***
+---
 
 ### includeMetadata?
 
@@ -88,7 +88,7 @@ Whether items should be enriched with request and run metadata.
 
 If truthy, the metadata is set under the `metadata` property.
 
-***
+---
 
 ### io?
 
@@ -96,7 +96,7 @@ If truthy, the metadata is set under the `metadata` property.
 
 Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:64](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushData.ts#L64)
 
-***
+---
 
 ### log?
 
@@ -104,7 +104,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:64](https://github.com/
 
 Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:65](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/io/pushData.ts#L65)
 
-***
+---
 
 ### maxCount?
 
@@ -120,7 +120,7 @@ This means that if `maxCount` is set to 50, but the
 associated Dataset already has 40 items in it, then only 10 new entries
 will be saved.
 
-***
+---
 
 ### pickKeys?
 
@@ -138,7 +138,7 @@ This is done before `remapKeys`.
 Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
 resolved using Lodash.get().
 
-***
+---
 
 ### privacyMask
 
@@ -150,7 +150,7 @@ Determine which properties are considered personal data.
 
 See [PrivacyMask](../type-aliases/PrivacyMask.md).
 
-***
+---
 
 ### remapKeys?
 
@@ -165,7 +165,7 @@ This serves mainly to allow users to remap the keys from actor input UI.
 Keys can be nested, e.g. `"someProp.value[0]"`. Nested path is
 resolved using Lodash.get().
 
-***
+---
 
 ### requestQueueId?
 
@@ -175,7 +175,7 @@ Defined in: [packages/crawlee-one/src/lib/io/pushData.ts:132](https://github.com
 
 ID of the RequestQueue that stores remaining requests
 
-***
+---
 
 ### showPrivate?
 
@@ -189,7 +189,7 @@ If falsy or not set, these properties are redacted to hide the actual informatio
 
 Which properties are personal data is determined by `privacyMask`.
 
-***
+---
 
 ### transform()?
 

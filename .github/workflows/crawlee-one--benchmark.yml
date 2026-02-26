@@ -4,7 +4,7 @@
 # All configurable values come from benchmarks/config.ts, exported as
 # ${{ env.BENCH_* }} variables by the "Export benchmark config" step.
 
-name: "crawlee-one: Benchmark"
+name: 'crawlee-one: Benchmark'
 
 # TODO FIX - See https://github.com/JuroOravec/crawlee-one/issues/10
 #            and https://github.com/JuroOravec/crawlee-one/actions/runs/21840338653/job/63022631159
@@ -14,21 +14,21 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/**"  # Workflows
-      - "packages/**"           # Packages
-      - "package.json"          # Project files
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
-      - "tsconfig.base.json"
+      - '.github/workflows/**' # Workflows
+      - 'packages/**' # Packages
+      - 'package.json' # Project files
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'tsconfig.base.json'
   pull_request:
     branches: [main]
     paths:
-      - ".github/workflows/**"  # Workflows
-      - "packages/**"           # Packages
-      - "package.json"          # Project files
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
-      - "tsconfig.base.json"
+      - '.github/workflows/**' # Workflows
+      - 'packages/**' # Packages
+      - 'package.json' # Project files
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'tsconfig.base.json'
 
 permissions:
   contents: write
@@ -84,7 +84,7 @@ jobs:
         uses: benchmark-action/github-action-benchmark@v1
         with:
           # Internal settings, do not change
-          tool: "customSmallerIsBetter"
+          tool: 'customSmallerIsBetter'
           auto-push: true
           output-file-path: ${{ env.BENCH_DASHBOARD_OUTPUT }}
           gh-pages-branch: ${{ env.BENCH_GH_PAGES_BRANCH }}
@@ -97,7 +97,7 @@ jobs:
         with:
           # Internal settings, do not change
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          tool: "customSmallerIsBetter"
+          tool: 'customSmallerIsBetter'
           auto-push: false
           comment-on-alert: true
           output-file-path: ${{ env.BENCH_DASHBOARD_OUTPUT }}

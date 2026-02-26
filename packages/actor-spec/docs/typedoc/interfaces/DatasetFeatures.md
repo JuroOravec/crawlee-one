@@ -1,6 +1,6 @@
 [**actor-spec**](../README.md)
 
-***
+---
 
 [actor-spec](../globals.md) / DatasetFeatures
 
@@ -22,7 +22,7 @@ Defined in: [actorSpec.ts:225](https://github.com/JuroOravec/crawlee-one/blob/ma
 Whether the scraper detects and notifies on changes to its own
 schema changes, or when the scraped website / API changes.
 
-***
+---
 
 ### configurable
 
@@ -33,7 +33,7 @@ Defined in: [actorSpec.ts:195](https://github.com/JuroOravec/crawlee-one/blob/ma
 Whether the way the scraper works can be configured -
 e.g. retry strategy, rate limiting, etc.
 
-***
+---
 
 ### downstreamAutomation
 
@@ -45,7 +45,7 @@ Whether the scraper supports some way to configure
 automation / integration that's triggered after the
 scraper has finished.
 
-***
+---
 
 ### errorMonitoring
 
@@ -55,7 +55,7 @@ Defined in: [actorSpec.ts:220](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Whether the scraper captures and reports errors.
 
-***
+---
 
 ### integratedCache
 
@@ -68,7 +68,7 @@ across different scraper runs.
 
 Such cache allows for use cases like scraping only NEW entries.
 
-***
+---
 
 ### integratedETL
 
@@ -79,7 +79,7 @@ Defined in: [actorSpec.ts:211](https://github.com/JuroOravec/crawlee-one/blob/ma
 Whether the scraper offers a way to filter and modify the scraped
 data out of the box, without needing other tools.
 
-***
+---
 
 ### limitResultsCount
 
@@ -90,7 +90,7 @@ Defined in: [actorSpec.ts:181](https://github.com/JuroOravec/crawlee-one/blob/ma
 Whether the scraper can be configured to extract only a certain
 number of results.
 
-***
+---
 
 ### privacyCompliance
 
@@ -102,7 +102,7 @@ Whether the scraper complies with data / privacy
 regulations, e.g. that personal data is omitted or
 redacted by default.
 
-***
+---
 
 ### proxySupport
 
@@ -112,7 +112,7 @@ Defined in: [actorSpec.ts:190](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Whether the scraper allows to configure proxy.
 
-***
+---
 
 ### regularlyTested
 
@@ -123,7 +123,7 @@ Defined in: [actorSpec.ts:200](https://github.com/JuroOravec/crawlee-one/blob/ma
 Whether the scraper is tested on regular basis,
 e.g. once per day or week.
 
-***
+---
 
 ### usesBrowser
 

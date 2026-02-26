@@ -2,6 +2,26 @@
 
 CrawleeOne extends [Crawlee](https://crawlee.dev/) with production-ready capabilities that you would otherwise build yourself. Here is the full catalog.
 
+## Extract data with AI.
+
+When you come across custom layouts or inconsistent markup, use an LLM to extract structured data from HTML. Use `extractWithLLM()` inside your scraper. Configure LLM through Actor inputs like `llmApiKey`, `llmProvider`, or `llmModel`.
+
+```ts
+handler: async (ctx) => {
+  const { pushData, extractWithLLM } = ctx;
+  const result = await extractWithLLM({
+    schema: jobOfferSchema,
+    systemPrompt: 'Extract job details from this HTML. Use null for missing values.',
+  });
+  if (result == null) return; // result not yet ready
+  await pushData(result.object);
+};
+```
+
+See the [LLM extraction guide](./llm-extraction-guide.md).
+
+**LLM model comparison** — Compare multiple models (gpt-4o, gpt-5-mini, claude, etc.) on the same URLs to find the best accuracy, cost, and speed. See the [LLM compare guide](./llm-compare-guide.md).
+
 ## One function. Full crawler.
 
 Replace 100+ lines of Actor + Router + input boilerplate with a single `crawleeOne()` call. CrawleeOne handles initialization, input resolution, routing, error handling, and teardown.
@@ -15,9 +35,9 @@ await crawleeOne({
     mainPage: {
       match: /example\.com\/home/i,
       handler: async (ctx) => {
-        const { $, pushData, pushRequests } = ctx;
+        const { $, pushData, addRequests } = ctx;
         await pushData([{ title: $('h1').text() }], { privacyMask: { author: true } });
-        await pushRequests([{ url: 'https://example.com/page/2' }]);
+        await addRequests([{ url: 'https://example.com/page/2' }]);
       },
     },
   },
@@ -158,7 +178,7 @@ Or implement the `CrawleeOneTelemetry` interface for any other error tracking se
 
 ## Fully typed out of the box.
 
-Route handlers, context objects, `pushData`, and `pushRequests` are all fully typed based on the crawler `type` you choose. No extra setup needed -- TypeScript knows whether you have `ctx.page` (Playwright) or `ctx.$` (Cheerio).
+Route handlers, context objects, `pushData`, and `addRequests` are all fully typed based on the crawler `type` you choose. No extra setup needed -- TypeScript knows whether you have `ctx.page` (Playwright) or `ctx.$` (Cheerio).
 
 ```ts
 await crawleeOne({
@@ -260,9 +280,60 @@ await crawleeOne({
 });
 ```
 
+## Multi-crawler orchestration.
+
+Run multiple crawlers side-by-side in a single process until all their queues drain. Use this when crawlers exchange work between each other. Focus on the business logic and let CrawleeOne handle the orchestration.
+
+**Use `orchestrate` inside the `onReady` callback** so it runs when the crawler would normally start.
+
+Simply define individual crawlers and pass them to the `orchestrate()` function:
+
+```ts
+import { crawleeOne, orchestrate, createLlmCrawler, type OrchestratedCrawler } from 'crawlee-one';
+
+await crawleeOne(
+  {
+    type: 'cheerio',
+    routes: { ... },
+  },
+  async (context) => {
+    // Define cralwers to run side by side
+    const llmCrawler = await createLlmCrawler({
+      requestQueueId: context.input?.llmRequestQueueId ?? 'llm',
+      keyValueStoreId: context.input?.llmKeyValueStoreId ?? 'llm',
+      keepAlive: true,
+    });
+
+    // Main crawler - pass startUrls on first run
+    let urlsToPass = context.startUrls;
+    const mainRun = async () => {
+      await context.crawler.run(context.startUrls);
+      urlsToPass = [];
+    };
+
+    const crawlers: OrchestratedCrawler[] = [
+      {
+        // Runs until all requests are processed, then stops by itself.
+        crawler: { run: mainRun, stop: () => {} },
+        queueId: context.input?.requestQueueId,
+        isKeepAlive: false,
+      },
+      {
+        // Never stops, even when there are no requests in the queue.
+        crawler: llmCrawler,
+        queueId: 'llm',
+        isKeepAlive: true,
+      },
+    ];
+
+    await orchestrate({ crawlers, checkIntervalMs: 5000 });
+  }
+);
+```
+
 ## Hook system.
 
-Extend the crawler lifecycle with hooks: `onBeforeHandler`, `onAfterHandler`, `onReady`, `validateInput`. Use them for logging, custom initialization, or anything else.
+Extend the crawler lifecycle with hooks: `onBeforeHandler`, `onAfterHandler`, `validateInput`. Pass `onReady` as the second argument to `crawleeOne()` for custom initialization.
 
 ```ts
 await crawleeOne({
@@ -315,10 +386,10 @@ Everything is generated from `crawlee-one.config.ts`. Each section is optional.
 
 ```ts
 // crawlee-one.config.ts
-import { defineConfig } from 'crawlee-one';
+import { defineConfig, defineCrawler } from 'crawlee-one';
+import type { ActorInput } from './src/config.js';
 
-import actorSpec from './src/readme.js';
-import actorSpec from './src/actorspec.js';
+import actorSpec from './src/metadata.js';
 import actorConfig from './src/config.js';
 import { readmeInput, readmeRenderer } from './src/readme.js';
 
@@ -326,31 +397,33 @@ export default defineConfig({
   version: 1,
   schema: {
     crawlers: {
-      amazon: {
+      amazon: defineCrawler<Partial<ActorInput>>({
         type: 'playwright',
         routes: ['main', 'productList', 'product'],
-      },
+      }),
     },
   },
-  // Generates TS shims
-  types: {
-    outFile: './src/__generated__/crawler.ts',
-  },
-  // Generates Apify's `actor.json`
-  actor: {
-    config: actorConfig,
-    outFile: '.actor/actor.json',
-  },
-  // Generates crawler metadata `actorspec.json`
-  actorspec: {
-    config: actorSpec,
-    outFile: '.actor/actorspec.json',
-  },
-  // Generates README for the scraper's Apify page
-  readme: {
-    actorSpec,
-    renderer: renderer,
-    input: readmeRenderer,
+  generate: {
+    // Generates TS shims
+    types: {
+      outFile: './src/__generated__/crawler.ts',
+    },
+    // Generates Apify's `actor.json`
+    actor: {
+      config: actorConfig,
+      outFile: '.actor/actor.json',
+    },
+    // Generates crawler metadata `actorspec.json`
+    actorspec: {
+      config: actorSpec,
+      outFile: '.actor/actorspec.json',
+    },
+    // Generates README for the scraper's Apify page
+    readme: {
+      actorSpec,
+      renderer: renderer,
+      input: readmeRenderer,
+    },
   },
 });
 ```
@@ -384,17 +457,10 @@ See the [codegen guide](./codegen.md) for details.
 
 ## Testing utilities.
 
+// TODO REVIEW AND ADD ACTUAL EXAMPLES.
+
 Mock the Apify Actor environment for unit and integration tests. Includes helpers for mock datasets, request queues, and key-value stores.
 
 ```ts
 import { setupMockApifyActor, runCrawlerTest } from 'crawlee-one';
-```
-
-## Actor migrations.
-
-Version-based migration system, conceptually similar to database migrations, for updating deployed actors via the Apify API.
-
-```sh
-npx crawlee-one migrate --config ./migrations
-npx crawlee-one unmigrate --config ./migrations
 ```

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / captureErrorWrapper
 
@@ -8,7 +8,7 @@
 
 > **captureErrorWrapper**\<`TIO`\>(`fn`, `options`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:77](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L77)
+Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:69](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L69)
 
 Error handling for Crawlers as a function wrapper
 
@@ -18,7 +18,7 @@ By default, error reports are saved to Apify Dataset.
 
 ### TIO
 
-`TIO` *extends* [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\> = [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>
+`TIO` _extends_ [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\> = [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>
 
 ## Parameters
 

@@ -10,7 +10,7 @@ Track errors to any service by implementing the `CrawleeOneTelemetry` interface 
 
 ```ts
 interface CrawleeOneTelemetry {
-  setup: (actor: CrawleeOneActorInst) => Promise<void> | void;
+  setup: (context: CrawleeOneContext) => Promise<void> | void;
   onSendErrorToTelemetry: (
     error: Error,
     report: object,
@@ -19,7 +19,7 @@ interface CrawleeOneTelemetry {
       allowScreenshot?: boolean;
       reportingDatasetId?: string;
     },
-    ctx: CrawleeOneCtx,
+    ctx: CrawleeOneTypes
   ) => Promise<void> | void;
 }
 ```
@@ -45,9 +45,9 @@ await crawleeOne({
 
 ```ts
 import fs from 'fs';
-import type { CrawleeOneCtx, CrawleeOneTelemetry } from 'crawlee-one';
+import type { CrawleeOneTypes, CrawleeOneTelemetry } from 'crawlee-one';
 
-export const createFsTelemetry = <T extends CrawleeOneTelemetry<CrawleeOneCtx>>() => {
+export const createFsTelemetry = <T extends CrawleeOneTelemetry<CrawleeOneTypes>>() => {
   const timestamp = new Date().getTime();
   let errors = 0;
 
@@ -89,16 +89,16 @@ interface CrawleeOneIO {
   triggerDownstreamCrawler: (
     targetActorId: string,
     input?: TInput,
-    options?: { build?: string },
+    options?: { build?: string }
   ) => Promise<void>;
   runInContext: (userFunc: () => MaybePromise<unknown>, options?: ExitOptions) => Promise<void>;
   createDefaultProxyConfiguration: (
-    input?: T | Readonly<T>,
+    input?: T | Readonly<T>
   ) => MaybePromise<ProxyConfiguration | undefined>;
   isTelemetryEnabled: () => MaybePromise<boolean>;
   generateErrorReport: (
     input: CrawleeOneErrorHandlerInput,
-    options: PickRequired<CrawleeOneErrorHandlerOptions, 'io'>,
+    options: PickRequired<CrawleeOneErrorHandlerOptions, 'io'>
   ) => MaybePromise<object>;
   generateEntryMetadata: (ctx: Ctx) => MaybePromise<TMetadata>;
 }
@@ -107,6 +107,7 @@ interface CrawleeOneIO {
 ### Example: Custom HTTP endpoint
 
 Send scraped data to a custom REST endpoint. Everything else remains managed via Crawlee/Apify (request queue, key-value store, etc).
+
 ```ts
 import type { CrawleeOneIO } from 'crawlee-one';
 import { apifyIO } from 'crawlee-one/apify';
@@ -149,4 +150,4 @@ See the [Apify IO source](../src/lib/integrations/apify.ts) for the default impl
 
 - [`CrawleeOneTelemetry` type docs](./typedoc/interfaces/CrawleeOneTelemetry.md)
 - [`CrawleeOneIO` type docs](./typedoc/interfaces/CrawleeOneIO.md)
-- [`CrawleeOneArgs` type docs](./typedoc/interfaces/CrawleeOneArgs.md)
+- [`CrawleeOneOptions` type docs](./typedoc/interfaces/CrawleeOneArgs.md)

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / PickRequired
 
@@ -8,7 +8,7 @@
 
 > **PickRequired**\<`T`, `Keys`\> = `Omit`\<`T`, `Keys`\> & `Required`\<`Pick`\<`T`, `Keys`\>\>
 
-Defined in: [packages/crawlee-one/src/utils/types.ts:21](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/utils/types.ts#L21)
+Defined in: [packages/crawlee-one/src/utils/types.ts:15](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/utils/types.ts#L15)
 
 Pick properties that should be required
 
@@ -16,8 +16,8 @@ Pick properties that should be required
 
 ### T
 
-`T` *extends* `object`
+`T` _extends_ `object`
 
 ### Keys
 
-`Keys` *extends* keyof `T`
+`Keys` _extends_ keyof `T`

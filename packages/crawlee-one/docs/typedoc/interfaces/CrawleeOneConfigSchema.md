@@ -1,32 +1,48 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfigSchema
 
-# Interface: CrawleeOneConfigSchema
+# Interface: CrawleeOneConfigSchema\<TCrawlers\>
 
-Defined in: [packages/crawlee-one/src/types/config.ts:176](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L176)
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:232](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L232)
 
 Schema defining the crawlers in a project. This schema is used for code generation.
+
+## Type Parameters
+
+### TCrawlers
+
+`TCrawlers` _extends_ [`CrawlersRecord`](../type-aliases/CrawlersRecord.md) = [`CrawlersRecord`](../type-aliases/CrawlersRecord.md)
 
 ## Properties
 
 ### crawlers
 
-> **crawlers**: `Record`\<`string`, [`CrawleeOneConfigSchemaCrawler`](CrawleeOneConfigSchemaCrawler.md)\>
+> **crawlers**: `TCrawlers`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:190](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L190)
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:256](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L256)
 
 Object holding crawler configurations. Each crawler is identified by its key.
+
+Use `defineCrawler<Partial<ActorInput>>({...})` for each entry to type input/devInput.
 
 E.g.
 
 ```js
-{
-  myCrawler: {
-    type: 'cheerio',
-    routes: [...],
-  }
+crawlers: {
+  profesia: defineCrawler<Partial<ActorInput>>({
+   type: 'cheerio',
+   routes: [...],
+   input: { startUrls: [...] }, // typed as Partial<ActorInput>
+   devInput: { startUrls: [] }, // typed as Partial<ActorInput>
+  }),
+  another: defineCrawler<Partial<AnotherActorInput>>({
+   type: 'playwright',
+   routes: [...],
+   input: { startUrls: [...] }, // typed as Partial<AnotherActorInput>
+   devInput: { startUrls: [] }, // typed as Partial<AnotherActorInput>
+  }),
 }
 ```

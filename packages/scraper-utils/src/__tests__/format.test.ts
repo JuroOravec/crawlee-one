@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { strOrNull, strAsNumber } from '../format.js';
+
+import { normalizeWhitespace, normalizeWhitespaceDeep, strAsNumber, strOrNull } from '../format.js';
 
 describe('strOrNull', () => {
   it('returns the string when non-empty', () => {
@@ -72,5 +73,46 @@ describe('strAsNumber', () => {
 
   it('defaults to float mode', () => {
     expect(strAsNumber('3.99')).toBe(3.99);
+  });
+});
+
+describe('normalizeWhitespace', () => {
+  it('replaces NBSP (U+00A0) with ASCII space', () => {
+    expect(normalizeWhitespace('2000\u00A0Metric Ton/Year')).toBe('2000 Metric Ton/Year');
+  });
+
+  it('collapses multiple spaces', () => {
+    expect(normalizeWhitespace('a  b   c')).toBe('a b c');
+  });
+
+  it('trims leading and trailing whitespace', () => {
+    expect(normalizeWhitespace('  hello  ')).toBe('hello');
+  });
+
+  it('handles mixed Unicode and ASCII whitespace', () => {
+    expect(normalizeWhitespace('a\u00A0 b\u2003 c')).toBe('a b c');
+  });
+
+  it('returns empty string for whitespace-only input', () => {
+    expect(normalizeWhitespace('  \u00A0  ')).toBe('');
+  });
+});
+
+describe('normalizeWhitespaceDeep', () => {
+  it('normalizes string values in objects', () => {
+    expect(normalizeWhitespaceDeep({ a: 'x\u00A0y', b: 1 })).toEqual({ a: 'x y', b: 1 });
+  });
+
+  it('normalizes nested objects and arrays', () => {
+    expect(normalizeWhitespaceDeep({ items: [{ name: 'A\u00A0B' }], count: 2 })).toEqual({
+      items: [{ name: 'A B' }],
+      count: 2,
+    });
+  });
+
+  it('returns primitives unchanged', () => {
+    expect(normalizeWhitespaceDeep('x\u00A0y')).toBe('x y');
+    expect(normalizeWhitespaceDeep(42)).toBe(42);
+    expect(normalizeWhitespaceDeep(null)).toBeNull();
   });
 });

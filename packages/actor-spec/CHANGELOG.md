@@ -1,5 +1,43 @@
 # Release notes
 
+## v0.6.0
+
+_2026-02-22_
+
+#### 🚨 Breaking Changes
+
+- **Removed `ScraperActorSpec`.** Use the unified `ActorSpec` interface instead.
+- **`dataset` is now optional on `ActorSpec`.** Scrapers without a dataset export no longer need to specify this field.
+
+#### Features
+
+- **Declarative expectations on datasets.** Optional `expectations?: DatasetExpectations<TRow>` on `ScraperDataset` lets you define JSON-serializable data integrity checks grouped by level (field, multi-field, row, dataset, other).
+
+   Use with [great-expectations-js](https://github.com/JuroOravec/crawlee-one/tree/main/packages/great-expectations-js) `runExpectations()`.
+
+- **`defineDataset<TRow>()` helper.** Type-safe dataset config with column autocomplete in expectation params. Pass `TRow` = shape of one row so `column`, `columnA`, `columnB` are inferred from your interface.
+
+  ```ts
+  interface MyRow {
+    offerId: string;
+    offerUrl: string;
+  }
+
+  defineDataset<MyRow>({
+    name: 'offers',
+    expectations: {
+      field: [
+        { expectation: 'expectColumnToExist', params: { column: 'offerId' } },
+        {
+          expectation: 'expectColumnValuesToBeValidUrls',
+          params: { column: 'offerUrl', mostly: 0.95 },
+        },
+      ],
+    },
+    // ...
+  });
+  ```
+
 ## v0.5.0
 
 _2026-02-10_

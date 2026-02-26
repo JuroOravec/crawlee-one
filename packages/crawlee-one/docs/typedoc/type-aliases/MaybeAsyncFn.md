@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / MaybeAsyncFn
 
@@ -20,4 +20,4 @@ Value or (a)sync func that returns thereof
 
 ### Args
 
-`Args` *extends* `any`[]
+`Args` _extends_ `any`[]

@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ActorInputSchema
 
@@ -14,7 +14,7 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 ### TProps
 
-`TProps` *extends* `Record`\<`string`, [`Field`](../type-aliases/Field.md)\> = `Record`\<`string`, [`Field`](../type-aliases/Field.md)\>
+`TProps` _extends_ `Record`\<`string`, [`Field`](../type-aliases/Field.md)\> = `Record`\<`string`, [`Field`](../type-aliases/Field.md)\>
 
 ## Properties
 
@@ -28,7 +28,7 @@ Controls if properties not listed in `properties` are allowed.
 Defaults to `true`. Set to `false` to make requests with extra
 properties fail.
 
-***
+---
 
 ### description?
 
@@ -38,7 +38,7 @@ Defined in: [inputSchema.ts:39](https://github.com/JuroOravec/crawlee-one/blob/m
 
 Help text for the input that will be displayed above the UI fields.
 
-***
+---
 
 ### properties
 
@@ -48,7 +48,7 @@ Defined in: [inputSchema.ts:48](https://github.com/JuroOravec/crawlee-one/blob/m
 
 This is an object mapping each field key to its specification.
 
-***
+---
 
 ### required?
 
@@ -58,7 +58,7 @@ Defined in: [inputSchema.ts:50](https://github.com/JuroOravec/crawlee-one/blob/m
 
 An array of field keys that are required.
 
-***
+---
 
 ### schemaVersion
 
@@ -69,7 +69,7 @@ Defined in: [inputSchema.ts:46](https://github.com/JuroOravec/crawlee-one/blob/m
 The version of the specification against which your schema is written.
 Currently, only version 1 is out.
 
-***
+---
 
 ### title
 
@@ -81,7 +81,7 @@ Any text describing your input schema.
 
 Example: `'Cheerio Crawler input'`
 
-***
+---
 
 ### type
 

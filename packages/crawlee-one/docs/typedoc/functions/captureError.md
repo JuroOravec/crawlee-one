@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / captureError
 
@@ -8,7 +8,7 @@
 
 > **captureError**\<`TIO`\>(`input`, `options`): `Promise`\<`never`\>
 
-Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:33](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L33)
+Defined in: [packages/crawlee-one/src/lib/error/errorHandler.ts:25](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/error/errorHandler.ts#L25)
 
 Error handling for CrawleeOne crawlers.
 
@@ -20,7 +20,7 @@ See https://docs.apify.com/academy/node-js/analyzing-pages-and-fixing-errors#err
 
 ### TIO
 
-`TIO` *extends* [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\> = [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>
+`TIO` _extends_ [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\> = [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>
 
 ## Parameters
 

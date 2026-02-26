@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / browserPortadom
 
@@ -16,7 +16,7 @@ Implementation of Portadom in browser (using Browser API)
 
 ### El
 
-`El` *extends* `Element` = `Element`
+`El` _extends_ `Element` = `Element`
 
 ## Parameters
 

@@ -1,12 +1,12 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / PerfActorInput
 
 # Interface: PerfActorInput
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:73](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L73)
+Defined in: [packages/crawlee-one/src/lib/input.ts:74](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L74)
 
 Common input fields related to performance which are not part of the CrawlerConfig
 
@@ -16,7 +16,7 @@ Common input fields related to performance which are not part of the CrawlerConf
 
 > `optional` **batchSize**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:81](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L81)
+Defined in: [packages/crawlee-one/src/lib/input.ts:82](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L82)
 
 If set, multiple Requests will be handled by a single Actor instance.
 
@@ -24,13 +24,13 @@ See official docs: https://docs.apify.com/platform/actors/development/performanc
 
 Example: If set to 20, then up to 20 requests will be handled in a single "go".
 
-***
+---
 
 ### batchWaitSecs?
 
 > `optional` **batchWaitSecs**: `number`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:89](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L89)
+Defined in: [packages/crawlee-one/src/lib/input.ts:90](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L90)
 
 How long to wait between entries within a single batch.
 

@@ -1,18 +1,18 @@
 import type { Actor } from 'apify';
-import type { CheerioCrawlerOptions } from 'crawlee';
 import {
+  createArrayField,
   createBooleanField,
   createIntegerField,
   createObjectField,
   createStringField,
-  createArrayField,
-  Field,
+  type Field,
 } from 'apify-actor-config';
+import type { CheerioCrawlerOptions } from 'crawlee';
 import { z } from 'zod';
 
-import type { CrawlerUrl } from '../types/index.js';
+import type { CrawlerUrl } from '../types.js';
+import type { CrawleeOneHookFn } from './context/types.js';
 import { LOG_LEVEL, type LogLevel } from './log.js';
-import type { CrawleeOneHookFn } from './actor/types.js';
 
 export type ActorInput = InputActorInput &
   CrawlerConfigActorInput &
@@ -23,7 +23,8 @@ export type ActorInput = InputActorInput &
   PrivacyActorInput &
   RequestActorInput &
   OutputActorInput &
-  MetamorphActorInput;
+  MetamorphActorInput &
+  LlmActorInput;
 
 /** Crawler config fields that can be overriden from the actor input */
 export type CrawlerConfigActorInput = Pick<
@@ -331,6 +332,69 @@ export interface OutputActorInput {
   outputCacheActionOnResult?: 'add' | 'remove' | 'overwrite' | null;
 }
 
+/** Common input fields for LLM-based extraction (e.g. custom page extraction fallback) */
+export interface LlmActorInput {
+  /**
+   * API key for the LLM provider.
+   *
+   * When set, scrapers can use AI to extract data from pages where DOM-based extraction fails.
+   *
+   * Overrides environment variables like `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`.
+   */
+  llmApiKey?: string;
+  /**
+   * LLM provider identifier (e.g. `openai`, `anthropic`, `google`).
+   *
+   * Combined with `llmModel` as `{provider}:{model}` when calling the LLM.
+   *
+   * Custom / unknown providers are supported via OpenAI-compatible APIs.
+   */
+  llmProvider?: string;
+  /**
+   * Model ID for the LLM (e.g. `gpt-4o`, `claude-3-5-sonnet-20241022`).
+   *
+   * To see available models per provider, see:
+   * - OpenAI - https://developers.openai.com/api/docs/models
+   * - Anthropic - https://docs.anthropic.com/en/docs/about-claude/models
+   * - Google - https://cloud.google.com/vertex-ai/generative-ai/docs/models
+   * - DeepSeek - https://api-docs.deepseek.com/quick_start/pricing
+   * - Ollama - https://ollama.com/models
+   */
+  llmModel?: string;
+  /**
+   * Base URL for the LLM API (e.g. custom OpenAI-compatible endpoint, Azure OpenAI).
+   *
+   * When set, overrides the default provider endpoint. Requires a valid URL.
+   */
+  llmBaseUrl?: string;
+  /**
+   * Custom headers to include in LLM API requests (e.g. `X-API-Version`, `OpenAI-Organization`).
+   */
+  llmHeaders?: Record<string, string>;
+  /**
+   * Override the LLM request queue ID. When unset, crawlee-one uses run-scoped ID `llm-{runId}`.
+   */
+  llmRequestQueueId?: string;
+  /**
+   * Override the LLM key-value store ID. When unset, crawlee-one uses run-scoped ID `llm-{runId}`.
+   */
+  llmKeyValueStoreId?: string;
+  /**
+   * After the main crawler finishes, this is how long we wait before
+   * we check if either the main queue or LLM queue have any more requests left.
+   *
+   * You likely don't need to change this.
+   *
+   * When using LLM to extract data, the requsts may ping-pong between the LLM
+   * and the main queue. The default 5s is set to give time for the dust to settle.
+   *
+   * Default: 5000.
+   *
+   * Set to 0 in tests to avoid timeouts.
+   */
+  llmQueueDrainCheckIntervalMs?: number;
+}
+
 /** Common input fields related to actor metamorphing */
 export interface MetamorphActorInput {
   /**
@@ -369,11 +433,12 @@ const datasetIdWithFieldRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*#.+$/;
 
 const newLine = (n: number) => '<br/>'.repeat(n);
 
-const createHookFnExample = (
-  args: Record<string, string>,
-  mainCode: string,
-  includeGuides: boolean
-) => {
+const createHookFnExample = (opts: {
+  args: Record<string, string>;
+  mainCode: string;
+  includeGuides: boolean;
+}) => {
+  const { args, mainCode, includeGuides } = opts;
   const formattedArgs = Object.keys(args).length ? Object.keys(args).join(', ') + ', ' : '';
   const formattedArgDesc = Object.entries(args).length
     ? Object.entries(args).map(([arg, desc]) => ` * \`${arg}\` - ${desc}.`)
@@ -519,8 +584,8 @@ export const inputInput = {
     For example, you can store your actor input in a source control, and import it here.${newLine(1)}
     In case of a conflict (if a field is defined both in Actor input and in imported input) the Actor input overwrites the imported fields.${newLine(1)}
     The function must return an object (the config).`,
-    example: createHookFnExample({}, CODE_EXAMPLES.inputExtendFromFunction, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.inputExtendFromFunction, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.inputExtendFromFunction, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.inputExtendFromFunction, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -711,8 +776,8 @@ export const startUrlsInput = {
     type: 'string',
     description: `Import or generate URLs to scrape using a custom function.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.startUrlsFromFunction, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.startUrlsFromFunction, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.startUrlsFromFunction, includeGuides: true }),
     nullable: true,
     schema: z.union([z.string().min(1), z.function()]).optional(),
   }), // prettier-ignore
@@ -720,7 +785,7 @@ export const startUrlsInput = {
 
 /** Common input fields related to logging setup */
 export const loggingInput = {
-  logLevel: createStringField<LogLevel>({
+  logLevel: createStringField({
     title: 'Log Level',
     type: 'string',
     editor: 'select',
@@ -820,8 +885,8 @@ export const requestInput = {
     description: `Freely transform the request object using a custom function.${newLine(1)}
     If not set, the request will remain as is.`,
     editor: 'javascript',
-    example: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, false),
-    prefill: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestTransform, true),
+    example: createHookFnExample({ args: { request: 'Request holding URL to be scraped' }, mainCode: CODE_EXAMPLES.requestTransform, includeGuides: false }),
+    prefill: createHookFnExample({ args: { request: 'Request holding URL to be scraped' }, mainCode: CODE_EXAMPLES.requestTransform, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -830,8 +895,8 @@ export const requestInput = {
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`requestTransform\`.`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformBefore, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestTransformBefore, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestTransformBefore, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -840,8 +905,8 @@ export const requestInput = {
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`requestTransform\`.`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.requestTransformAfter, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestTransformAfter, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestTransformAfter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -853,8 +918,8 @@ export const requestInput = {
     If not set, all requests will be included.${newLine(1)}
     This is done after \`requestTransform\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestFilter, false),
-    prefill: createHookFnExample({ request: 'Request holding URL to be scraped' }, CODE_EXAMPLES.requestFilter, true),
+    example: createHookFnExample({ args: { request: 'Request holding URL to be scraped' }, mainCode: CODE_EXAMPLES.requestFilter, includeGuides: false }),
+    prefill: createHookFnExample({ args: { request: 'Request holding URL to be scraped' }, mainCode: CODE_EXAMPLES.requestFilter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -863,8 +928,8 @@ export const requestInput = {
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`requestFilter\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.requestFilterBefore, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.requestFilterBefore, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestFilterBefore, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestFilterBefore, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -873,8 +938,8 @@ export const requestInput = {
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`requestFilter\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.requestFilterAfter, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.requestFilterAfter, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestFilterAfter, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.requestFilterAfter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -943,8 +1008,8 @@ export const outputInput = {
     If not set, the data will remain as is.${newLine(1)}
     This is done after \`outputPickFields\` and \`outputRenameFields\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, false),
-    prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputTransform, true),
+    example: createHookFnExample({ args: { entry: 'Scraped entry' }, mainCode: CODE_EXAMPLES.outputTransform, includeGuides: false }),
+    prefill: createHookFnExample({ args: { entry: 'Scraped entry' }, mainCode: CODE_EXAMPLES.outputTransform, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -953,8 +1018,8 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`outputTransform\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformBefore, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputTransformBefore, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputTransformBefore, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -963,8 +1028,8 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`outputTransform\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.outputTransformAfter, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputTransformAfter, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputTransformAfter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -976,8 +1041,8 @@ export const outputInput = {
     If not set, all scraped entries will be included.${newLine(1)}
     This is done after \`outputPickFields\`, \`outputRenameFields\`, and \`outputTransform\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, false),
-    prefill: createHookFnExample({ entry: 'Scraped entry' }, CODE_EXAMPLES.outputFilter, true),
+    example: createHookFnExample({ args: { entry: 'Scraped entry' }, mainCode: CODE_EXAMPLES.outputFilter, includeGuides: false }),
+    prefill: createHookFnExample({ args: { entry: 'Scraped entry' }, mainCode: CODE_EXAMPLES.outputFilter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -986,8 +1051,8 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time initialization code before \`outputFilter\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterBefore, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputFilterBefore, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputFilterBefore, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -996,8 +1061,8 @@ export const outputInput = {
     type: 'string',
     description: `Use this if you need to run one-time teardown code after \`outputFilter\`.${newLine(1)}`,
     editor: 'javascript',
-    example: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, false),
-    prefill: createHookFnExample({}, CODE_EXAMPLES.outputFilterAfter, true),
+    example: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputFilterAfter, includeGuides: false }),
+    prefill: createHookFnExample({ args: {}, mainCode: CODE_EXAMPLES.outputFilterAfter, includeGuides: true }),
     nullable: true,
     schema: z.string().min(1).optional(),
   }), // prettier-ignore
@@ -1089,6 +1154,82 @@ export const metamorphInput = {
   }),
 } satisfies Record<keyof MetamorphActorInput, Field>;
 
+const llmInput = {
+  llmApiKey: createStringField({
+    title: 'LLM API key',
+    type: 'string',
+    description: `API key for the LLM provider. When set, scrapers can use AI to extract data from pages where DOM-based extraction fails. Can override env (e.g. OPENAI_API_KEY, ANTHROPIC_API_KEY).`,
+    editor: 'textfield',
+    isSecret: true,
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+  llmProvider: createStringField({
+    title: 'LLM provider',
+    type: 'string',
+    description: `LLM provider identifier (e.g. openai, anthropic, google). Combined with Model as provider:model when calling the LLM. Custom providers are supported via OpenAI-compatible APIs.`,
+    editor: 'select',
+    enumSuggestedValues: ['openai', 'anthropic', 'google', 'deepseek', 'ollama'],
+    enumTitles: ['OpenAI', 'Anthropic', 'Google', 'DeepSeek', 'Ollama'],
+    example: 'openai',
+    sectionCaption: 'AI extraction (fallback for custom pages)',
+    sectionDescription: `When DOM-based extraction fails on custom-design pages, an LLM can extract structured data. Requires an API key.`,
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+  llmModel: createStringField({
+    title: 'LLM model',
+    type: 'string',
+    description: `Model ID for the LLM (e.g. gpt-4o, claude-3-5-sonnet). See <a href="https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/docs/llm-models.md">supported models</a> per provider.`,
+    editor: 'textfield',
+    example: 'gpt-4o',
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+  llmBaseUrl: createStringField({
+    title: 'LLM base URL',
+    type: 'string',
+    description: `Base URL for the LLM API. Use for custom OpenAI-compatible endpoints (e.g. Azure OpenAI, local inference). When set, overrides the default provider endpoint.`,
+    editor: 'textfield',
+    example: 'https://your-gateway.example.com/v1',
+    nullable: true,
+    schema: z.string().min(1).url().optional(),
+  }),
+  llmHeaders: createObjectField({
+    title: 'LLM headers',
+    type: 'object',
+    description: `Custom headers to include in LLM API requests (e.g. {"X-API-Version": "2024-01-01", "OpenAI-Organization": "org-xxx"}).`,
+    editor: 'json',
+    nullable: true,
+    schema: z.record(z.string(), z.string()).optional(),
+  }),
+  llmRequestQueueId: createStringField({
+    title: 'LLM request queue ID',
+    type: 'string',
+    description: `Override the LLM request queue ID. When unset, crawlee-one uses run-scoped ID llm-{runId}.`,
+    editor: 'textfield',
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+  llmKeyValueStoreId: createStringField({
+    title: 'LLM key-value store ID',
+    type: 'string',
+    description: `Override the LLM key-value store ID. When unset, crawlee-one uses run-scoped ID llm-{runId}.`,
+    editor: 'textfield',
+    nullable: true,
+    schema: z.string().min(1).optional(),
+  }),
+  llmQueueDrainCheckIntervalMs: createIntegerField({
+    title: 'LLM queue drain check interval (ms)',
+    type: 'integer',
+    editor: 'hidden',
+    description: `Interval in ms between queue-drain checks in LLM orchestration. You likely don't need to change this. Default: 5000.`,
+    minimum: 0,
+    nullable: true,
+    schema: z.number().int().min(0).optional(),
+  }),
+} satisfies Record<keyof LlmActorInput, Field>;
+
 export const actorInput = {
   ...inputInput,
   ...startUrlsInput,
@@ -1097,6 +1238,7 @@ export const actorInput = {
   ...requestInput,
   ...outputInput,
   ...crawlerInput,
+  ...llmInput,
   ...perfInput,
   ...loggingInput,
   ...metamorphInput,

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneHookFn
 
@@ -8,13 +8,13 @@
 
 > **CrawleeOneHookFn**\<`TArgs`, `TReturn`, `T`\> = (...`args`) => [`MaybePromise`](MaybePromise.md)\<`TReturn`\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/types.ts:131](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/types.ts#L131)
+Defined in: [packages/crawlee-one/src/lib/context/types.ts:152](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/types.ts#L152)
 
 ## Type Parameters
 
 ### TArgs
 
-`TArgs` *extends* `any`[] = \[\]
+`TArgs` _extends_ `any`[] = \[\]
 
 ### TReturn
 
@@ -22,7 +22,7 @@ Defined in: [packages/crawlee-one/src/lib/actor/types.ts:131](https://github.com
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md) = [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md) = [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ## Parameters
 

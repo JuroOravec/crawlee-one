@@ -1,0 +1,417 @@
+import type { Field } from 'apify-actor-config';
+import type {
+  BasicCrawler,
+  CheerioCrawler,
+  CrawlerRunOptions,
+  CrawlingContext,
+  FinalStatistics,
+  HttpCrawler,
+  InternalHttpCrawlingContext,
+  JSDOMCrawler,
+  Log,
+  PlaywrightCrawler,
+  ProxyConfiguration,
+  PuppeteerCrawler,
+  RouterHandler,
+} from 'crawlee';
+import type { gotScraping } from 'got-scraping';
+import type { z } from 'zod';
+
+import type { CrawlerUrl } from '../../types.js';
+import type { MaybeAsyncFn, MaybePromise, PickPartial } from '../../utils/types.js';
+import type { MetamorphActorInput } from '../input.js';
+import type { CrawleeOneIO } from '../integrations/types.js';
+import type { AddRequestsOptions } from '../io/addRequests.js';
+import type { itemCacheKey, PushDataOptions } from '../io/pushData.js';
+import type {
+  ExtractWithLlmAsyncOptions,
+  ExtractWithLlmSyncOptions,
+  LlmExtractionResult,
+} from '../llmExtract/extractWithLlmScoped.js';
+import type { CrawleeOneRoute, CrawleeOneRouteMiddleware } from '../router/types.js';
+import type { CrawleeOneTelemetry } from '../telemetry/types.js';
+
+/** Extended type of `crawler.run()` function */
+export type RunCrawler = (
+  requests?: CrawlerUrl[],
+  options?: CrawlerRunOptions
+) => Promise<FinalStatistics>;
+
+/** Trigger actor metamorph, using actor's inputs as defaults. */
+export type Metamorph = (overrides?: MetamorphActorInput) => Promise<void>;
+
+/**
+ * Abstract type that holds all variable (generic) types used in CrawleeOne.
+ *
+ * This type is not constructed anywhere. It is simply a shorthand, so we don't
+ * have to pass through many times, but only one that describes them all.
+ */
+export interface CrawleeOneTypes<
+  Ctx extends CrawlingContext<
+    | BasicCrawler
+    | HttpCrawler<InternalHttpCrawlingContext>
+    | JSDOMCrawler
+    | CheerioCrawler
+    | PlaywrightCrawler
+    | PuppeteerCrawler
+  > = CrawlingContext<
+    | BasicCrawler
+    | HttpCrawler<InternalHttpCrawlingContext>
+    | JSDOMCrawler
+    | CheerioCrawler
+    | PlaywrightCrawler
+    | PuppeteerCrawler
+  >,
+  Labels extends string = string,
+  Input extends Record<string, any> = Record<string, any>,
+  TIO extends CrawleeOneIO = CrawleeOneIO,
+  Telem extends CrawleeOneTelemetry<any, any> = CrawleeOneTelemetry<any, any>,
+> {
+  context: Ctx;
+  labels: Labels;
+  input: Input;
+  io: TIO;
+  telemetry: Telem;
+}
+
+/** Context passed from CrawleeOne to route handlers */
+export type CrawleeOneRouteHandlerCtxExtras<T extends CrawleeOneTypes> = {
+  one: CrawleeOneContext<T>;
+  /** Trigger actor metamorph, using actor's inputs as defaults. */
+  metamorph: Metamorph;
+  /** Crawlee's original pushData. Use when you need raw behavior without transforms/privacy. */
+  _pushData: (data: object | object[], datasetIdOrName?: string) => Promise<void>;
+  /** Crawlee's original addRequests. Use when you need raw behavior without transforms/filters. */
+  _addRequests: (requestsLike: (string | object)[], options?: object) => Promise<void>;
+  /**
+   * `Actor.pushData` with extra optional features:
+   *
+   * - Limit the number of entries pushed to the Dataset based on the Actor input
+   * - Transform and filter entries via Actor input.
+   * - Add metadata to entries before they are pushed to Dataset.
+   * - Set which (nested) properties are personal data optionally redact them for privacy compliance.
+   */
+  pushData: <T extends Record<any, any> = Record<any, any>>(
+    oneOrManyItems: T | T[],
+    options: PushDataOptions<T>
+  ) => Promise<any[]>;
+  /**
+   * Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
+   *
+   * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
+   * - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
+   */
+  addRequests: <T extends Exclude<CrawlerUrl, string>>(
+    oneOrManyItems: T | T[],
+    options?: AddRequestsOptions<T>
+  ) => Promise<any[]>;
+  /**
+   * Two-phase LLM extraction:
+   * - First pass defers to LLM queue and reclaims;
+   * - Second pass returns the extracted object from KVS.
+   *
+   * Returns `null` on first pass (caller should return). Returns the result on second pass.
+   */
+  extractWithLLM: <T>(
+    opts: ExtractWithLlmAsyncOptions<T>
+  ) => Promise<LlmExtractionResult<T> | null>;
+  /**
+   * Call LLM directly (no queue/KVS). Blocks until extraction completes.
+   *
+   * Use when deferral is not needed (e.g. few URLs, dev flows).
+   */
+  extractWithLLMSync: <T>(opts: ExtractWithLlmSyncOptions<T>) => Promise<LlmExtractionResult<T>>;
+};
+
+/** Context passed to user-defined functions passed from input */
+export type CrawleeOneHookCtx<T extends CrawleeOneTypes> = Pick<
+  CrawleeOneContext<T>,
+  'input' | 'state'
+> & {
+  /**
+   * Instance of {@link CrawleeOneIO} that manages results (Dataset), Requests (RequestQueue), and cache (KeyValueStore).
+   *
+   * By default this is the Apify Actor class, see https://docs.apify.com/sdk/js/reference/class/Actor.
+   */
+  io: T['io'];
+  /**
+   * A function you can use to get cacheID for current `entry`.
+   * It takes the entry itself, and a list of properties to be used for hashing.
+   *
+   * By default, you should pass `input.cachePrimaryKeys` to it.
+   */
+  itemCacheKey: typeof itemCacheKey;
+  /**
+   * Fetch remote data. Uses 'got-scraping', same as Apify's \`sendRequest\`.
+   *
+   * See https://crawlee.dev/docs/guides/got-scraping
+   */
+  sendRequest: typeof gotScraping;
+};
+
+export type CrawleeOneHookFn<
+  TArgs extends any[] = [],
+  TReturn = void,
+  T extends CrawleeOneTypes = CrawleeOneTypes,
+> = (...args: [...TArgs, CrawleeOneHookCtx<T>]) => MaybePromise<TReturn>;
+
+/** All that's necessary to define a single CrawleeOne actor/crawler. */
+export interface CrawleeOneInternalOptions<T extends CrawleeOneTypes> {
+  /** Client for communicating with cloud/local storage. */
+  io: T['io'];
+
+  // Actor input
+  /**
+   * Supply actor input via this field instead of from `io.getInput()`.
+   *
+   * If `input` is NOT defined, the Actor input is obtained from `io.getInput()`,
+   * which by default corresponds to Apify's `Actor.getInput()`.
+   *
+   * If `input` is defined, then `io.getInput()` is ignored.
+   */
+  input?: MaybeAsyncFn<T['input'], [CrawleeOneInternalOptions<T>]>;
+  /** Default input that may be overriden by `input` and `io.getInput()`. */
+  inputDefaults?: MaybeAsyncFn<T['input'], [CrawleeOneInternalOptions<T>]>;
+  /**
+   * If `mergeInput` is truthy, will merge input settings from `inputDefaults`, `input`,
+   * and `io.getInput()`.
+   *
+   * ```js
+   * { ...inputDefaults, ...io.getInput(), ...input }
+   * ```
+   *
+   * If `mergeInput` is falsy, `io.getInput()` is ignored if `input` is provided. So the input is either:
+   *
+   * ```js
+   * { ...inputDefaults, ...io.getInput() } // If `input` is not defined
+   * ```
+   *
+   * OR
+   *
+   * ```js
+   * { ...inputDefaults, ...input } // If `input` is defined
+   * ```
+   *
+   * Alternatively, you can supply your own function that merges the sources:
+   *
+   * ```js
+   * {
+   *   // `mergeInput` can be also async
+   *   mergeInput: ({ defaults, overrides, env }) => {
+   *     // This is same as `mergeInput: true`
+   *     return { ...defaults, ...env, ...overrides };
+   *   },
+   * }
+   * ```
+   */
+  mergeInput?:
+    | boolean
+    | ((sources: {
+        defaults: Partial<T['input']>;
+        overrides: Partial<T['input']>;
+        env: Partial<T['input']>;
+      }) => MaybePromise<T['input']>);
+  /** Validation for the actor input. Should throw error if validation fails. */
+  validateInput?: (input: T['input'] | null) => MaybePromise<void>;
+  /**
+   * Field objects describing the actor input schema.
+   *
+   * If provided, crawlee-one auto-validates input against
+   * embedded Zod schemas before calling `validateInput`.
+   */
+  inputFields?: Record<string, Field>;
+
+  // Router setup
+  /**
+   * Router instance that redirects the request to handlers.
+   * @example
+   * import { createCheerioRouter } from 'crawlee';
+   *
+   * ({
+   *    ...
+   *   router: createCheerioRouter(),
+   * })
+   */
+  router: MaybeAsyncFn<RouterHandler<T['context']>, [CrawleeOneInternalOptionsWithInput<T>]>;
+  /**
+   * Criteria that un-labelled requests are matched against.
+   *
+   * E.g. If `match` function returns truthy value,
+   * the request is passed to the `action` function for processing.
+   *
+   * @example
+   * ({
+   *   ...
+   *   routes: [{
+   *     // If match returns true, the request is forwarded to handler
+   *     // with label JOB_DETAIL.
+   *     name: 'Job detail',
+   *     label: routeLabels.JOB_DETAIL,
+   *     match: (url) => isUrlJobOffer(url),
+   *   }, {
+   *     // Define custom action function:
+   *     // If match returns true, we replace this request with new one
+   *     // pointing to new domain.
+   *     name: 'Main page',
+   *     label: null,
+   *     match: (url) => url.match(/example\.com\/?(?:[?#~]|$)/i),
+   *     action: async (url, ctx, _, handlers) => {
+   *       ctx.log.info(`Redirecting to https://www.new-domain.com`);
+   *       await ctx.crawler.addRequests(['https://www.new-domain.com'], { forefront: true });
+   *     },
+   *   }],
+   * })
+   */
+  routes: MaybeAsyncFn<
+    Record<T['labels'], CrawleeOneRoute<T>>,
+    [CrawleeOneInternalOptionsWithInput<T>]
+  >;
+  /**
+   * Provides the option to modify or extend all router handlers by wrapping
+   * them in these functions.
+   *
+   * Wrappers are applied from right to left. That means that wrappers `[A, B, C]`
+   * will be applied like so `A( B( C( handler ) ) )`.
+   *
+   * Default `routeHandlerWrappers`:
+   * ```js
+   * {
+   *   ...
+   *   routeHandlerWrappers: ({ input }) => [
+   *     logLevelHandlerWrapper<Ctx, any>(input?.logLevel ?? 'info'),
+   *   ],
+   * }
+   * ```
+   */
+  routeHandlerWrappers?: MaybeAsyncFn<
+    CrawleeOneRouteMiddleware<T>[],
+    [CrawleeOneInternalOptionsWithInput<T>]
+  >; // prettier-ignore
+
+  // Proxy setup
+  proxy?: MaybeAsyncFn<
+    ProxyConfiguration,
+    [CrawleeOneInternalOptionsWithInput<T>]
+  >; // prettier-ignore
+
+  /** Client for telemetry like tracking errors. */
+  telemetry?: MaybeAsyncFn<T['telemetry'], [CrawleeOneInternalOptionsWithInput<T>]>;
+
+  /** When `true`, throw when a URL does not match any route.
+   *
+   * If `false`, log an error and skip the URL.
+   *
+   * Defaults to `false`.
+   */
+  strict?: boolean;
+
+  // Crawler setup
+  createCrawler: (
+    ctx: Omit<CrawleeOneContext<T>, 'crawler' | 'metamorph' | 'startUrls' | 'addRequests'>
+  ) => MaybePromise<T['context']['crawler']>;
+}
+
+/** CrawleeOneInternalOptions object where the input is already resolved */
+export type CrawleeOneInternalOptionsWithInput<T extends CrawleeOneTypes> = Omit<
+  CrawleeOneInternalOptions<T>,
+  'input'
+> & {
+  input: T['input'] | null;
+  state: Record<string, unknown>;
+};
+
+/**
+ * CrawleeOne context — input, state, crawler, IO, and more.
+ *
+ * Available in route handlers as `ctx.one` and in `onReady(context)`.
+ *
+ * @example
+ * ```ts
+ * crawleeOne(config, async (context) => {
+ *   await context.crawler.run([]);
+ * });
+ * ```
+ */
+export interface CrawleeOneContext<T extends CrawleeOneTypes> {
+  /**
+   * The Crawlee crawler instance. Its `run()` method is wrapped with additional
+   * features (metamorph, transform/filter hooks, output cache).
+   *
+   * Call `context.crawler.run(requests?, options?)` to start crawling.
+   */
+  crawler: T['context']['crawler'];
+  /** Trigger actor metamorph, using actor's inputs as defaults. */
+  metamorph: Metamorph;
+  /**
+   * Similar to `Actor.openRequestQueue().addRequests`, but with extra features:
+   *
+   * - Limit the max size of the RequestQueue. No requests are added when RequestQueue is at or above the limit.
+   * - Transform and filter requests. Requests that did not pass the filter are not added to the RequestQueue.
+   */
+  addRequests: <T extends Exclude<CrawlerUrl, string>>(
+    oneOrManyItems: T | T[],
+    options?: AddRequestsOptions<T>
+  ) => Promise<any[]>;
+  /**
+   * `Actor.pushData` with extra optional features:
+   *
+   * - Limit the number of entries pushed to the Dataset based on the Actor input
+   * - Transform and filter entries via Actor input.
+   * - Add metadata to entries before they are pushed to Dataset.
+   * - Set which (nested) properties are personal data optionally redact them for privacy compliance.
+   */
+  /**
+   * A list of resolved Requests to be scraped.
+   *
+   * This list is a combination of 3 Actor inputs:
+   * - `startUrls` - Static list of URLs to scrape.
+   * - `startUrlsFromDataset` - From a specific field from a Dataset (e.g. "dataset123#fieldName" - Dataset: "dataset123", field: "fieldName").
+   * - `startUrlsFromFunction` - A function that is evaulated to generate the Requests.
+   */
+  startUrls: CrawlerUrl[];
+  /* The resolved Crawlee proxy configuration */
+  proxy?: ProxyConfiguration;
+  /* The resolved Crawlee Router */
+  router: RouterHandler<T['context']>;
+  routes: Record<T['labels'], CrawleeOneRoute<T>>;
+  /** Original config from which this CrawleeOne context was created */
+  config: PickPartial<CrawleeOneInternalOptions<T>, 'io'>;
+  /** Read-only inputs passed to the CrawleeOne instance */
+  input: T['input'] | null;
+  /** Mutable state that is shared across setup and teardown hooks */
+  state: Record<string, unknown>;
+  /**
+   * Instance managing communication with databases - storage & retrieval
+   * (Dataset, RequestQueue, KeyValueStore).
+   *
+   * Modelled and similar to Apify's `Actor` static class.
+   */
+  io: T['io'];
+  /** Instance managing telemetry like tracking errors. */
+  telemetry?: T['telemetry'];
+  /** Crawlee Log instance. */
+  log: Log;
+}
+
+/**
+ * Extract the input type from a record of Field objects with embedded Zod schemas.
+ *
+ * @example
+ * ```ts
+ * const fields = {
+ *   createStringField({
+ *     title: 'Target URL',
+ *     type: 'string',
+ *     description: 'URL to scrape',
+ *     editor: 'textfield',
+ *     schema: z.string().url(),
+ *   }),
+ * };
+ * type ActorInput = InputFromFields<typeof fields>;
+ * ```
+ */
+export type InputFromFields<F extends Record<string, Field>> = {
+  [K in keyof F]: NonNullable<F[K]['schema']> extends z.ZodType
+    ? z.infer<NonNullable<F[K]['schema']>>
+    : unknown;
+};

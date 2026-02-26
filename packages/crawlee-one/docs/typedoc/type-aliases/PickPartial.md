@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / PickPartial
 
@@ -8,7 +8,7 @@
 
 > **PickPartial**\<`T`, `Keys`\> = `Omit`\<`T`, `Keys`\> & `Partial`\<`Pick`\<`T`, `Keys`\>\>
 
-Defined in: [packages/crawlee-one/src/utils/types.ts:18](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/utils/types.ts#L18)
+Defined in: [packages/crawlee-one/src/utils/types.ts:12](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/utils/types.ts#L12)
 
 Pick properties that should be optional
 
@@ -16,8 +16,8 @@ Pick properties that should be optional
 
 ### T
 
-`T` *extends* `object`
+`T` _extends_ `object`
 
 ### Keys
 
-`Keys` *extends* keyof `T`
+`Keys` _extends_ keyof `T`

@@ -87,79 +87,10 @@ interface BaseField {
   sectionDescription?: string;
   /** Specifies whether null is an allowed value. */
   nullable?: boolean;
-  /**
-   * Optional validation schema for this field (e.g. a Zod schema).
-   *
-   * This property is NOT part of the Apify input schema spec and is
-   * automatically stripped when generating `actor.json`.
-   */
-  schema?: any;
 }
-
-/**
- * Custom error messages for validation keywords, keyed by the validation
- * keyword name. Each field type supports a different set of keywords.
- *
- * See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/custom-error-messages#supported-validation-keywords
- */
-export interface StringErrorMessage {
-  type?: string;
-  pattern?: string;
-  minLength?: string;
-  maxLength?: string;
-  enum?: string;
-}
-
-/** See {@link StringErrorMessage} */
-export interface NumericErrorMessage {
-  type?: string;
-  minimum?: string;
-  maximum?: string;
-}
-
-/** See {@link StringErrorMessage} */
-export interface BooleanErrorMessage {
-  type?: string;
-}
-
-/** See {@link StringErrorMessage} */
-export interface ArrayErrorMessage {
-  type?: string;
-  minItems?: string;
-  maxItems?: string;
-  uniqueItems?: string;
-  patternKey?: string;
-  patternValue?: string;
-}
-
-/** See {@link StringErrorMessage} */
-export interface ObjectErrorMessage {
-  type?: string;
-  minProperties?: string;
-  maxProperties?: string;
-  patternKey?: string;
-  patternValue?: string;
-}
-
-/**
- * Maps a {@link FieldType} literal to the matching error-message interface.
- *
- * See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/custom-error-messages#supported-validation-keywords
- */
-export type ErrorMessageForFieldType<FT extends FieldType> = FT extends 'string'
-  ? StringErrorMessage
-  : FT extends 'boolean'
-    ? BooleanErrorMessage
-    : FT extends 'integer' | 'number'
-      ? NumericErrorMessage
-      : FT extends 'array'
-        ? ArrayErrorMessage
-        : FT extends 'object'
-          ? ObjectErrorMessage
-          : never;
 
 /** Value of these fields is dependent on the field type */
-interface BaseFieldTypedProps<T, FT extends FieldType = FieldType> {
+interface BaseFieldTypedProps<T, FT extends FieldType, TSchema> {
   /** Default value that will be used when no value is provided. */
   default?: T;
   /**
@@ -178,6 +109,13 @@ interface BaseFieldTypedProps<T, FT extends FieldType = FieldType> {
    * See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/custom-error-messages
    */
   errorMessage?: ErrorMessageForFieldType<FT>;
+  /**
+   * Optional validation schema for this field (e.g. a Zod schema).
+   *
+   * This property is NOT part of the Apify input schema spec and is
+   * automatically stripped when generating `actor.json`.
+   */
+  schema?: TSchema;
 }
 
 /**
@@ -209,14 +147,18 @@ interface BaseFieldTypedProps<T, FT extends FieldType = FieldType> {
  * }
  * ```
  */
-export type StringField<TEnum extends string = string, TEnumTitles extends string = string> =
-  | SelectStringField<TEnum, TEnumTitles>
-  | TextStringField<TEnum>
-  | DatePickerStringField<TEnum>
-  | BaseStringField<TEnum>;
+export type StringField<
+  TEnum extends string = string,
+  TEnumTitles extends string = string,
+  TSchema = any,
+> =
+  | SelectStringField<TEnum, TEnumTitles, TSchema>
+  | TextStringField<TEnum, TSchema>
+  | DatePickerStringField<TEnum, TSchema>
+  | BaseStringField<TEnum, TSchema>;
 
-interface BaseStringField<TEnum extends string = string>
-  extends BaseField, BaseFieldTypedProps<TEnum, 'string'> {
+interface BaseStringField<TEnum extends string = string, TSchema = any>
+  extends BaseField, BaseFieldTypedProps<TEnum, 'string', TSchema> {
   type: 'string';
   /** Visual editor used for the input field. */
   editor: Exclude<StringEditorType, 'select' | 'textfield' | 'textarea' | 'datepicker'>;
@@ -246,8 +188,14 @@ interface BaseStringField<TEnum extends string = string>
   isSecret?: boolean;
 }
 
-interface SelectStringField<TEnum extends string = string, TEnumTitles extends string = string>
-  extends Omit<BaseStringField<TEnum>, 'editor'>, BaseFieldTypedProps<TEnum, 'string'> {
+interface SelectStringField<
+  TEnum extends string = string,
+  TEnumTitles extends string = string,
+  TSchema = any,
+>
+  extends
+    Omit<BaseStringField<TEnum, TSchema>, 'editor'>,
+    BaseFieldTypedProps<TEnum, 'string', TSchema> {
   editor: 'select';
   /**
    * Using this field, you can limit values
@@ -266,8 +214,8 @@ interface SelectStringField<TEnum extends string = string, TEnumTitles extends s
   enumTitles?: TEnumTitles[] | readonly TEnumTitles[];
 }
 
-interface TextStringField<TEnum extends string = string> extends Omit<
-  BaseStringField<TEnum>,
+interface TextStringField<TEnum extends string = string, TSchema = any> extends Omit<
+  BaseStringField<TEnum, TSchema>,
   'editor'
 > {
   editor: 'textfield' | 'textarea';
@@ -283,8 +231,8 @@ interface TextStringField<TEnum extends string = string> extends Omit<
  *
  * See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#date-picker
  */
-interface DatePickerStringField<TEnum extends string = string> extends Omit<
-  BaseStringField<TEnum>,
+interface DatePickerStringField<TEnum extends string = string, TSchema = any> extends Omit<
+  BaseStringField<TEnum, TSchema>,
   'editor'
 > {
   editor: 'datepicker';
@@ -323,8 +271,8 @@ interface DatePickerStringField<TEnum extends string = string> extends Omit<
  * }
  * ```
  */
-export interface BooleanField<T extends boolean = boolean>
-  extends BaseField, BaseFieldTypedProps<T, 'boolean'> {
+export interface BooleanField<T extends boolean = boolean, TSchema = any>
+  extends BaseField, BaseFieldTypedProps<T, 'boolean', TSchema> {
   type: 'boolean';
   /** Visual editor used for the input field. */
   editor?: BooleanEditorType;
@@ -353,8 +301,12 @@ export interface BooleanField<T extends boolean = boolean>
  * }
  * ```
  */
-export interface IntegerField<T extends number = number, TUnit extends string = string>
-  extends BaseField, BaseFieldTypedProps<T, 'integer'> {
+export interface IntegerField<
+  T extends number = number,
+  TUnit extends string = string,
+  TSchema = any,
+>
+  extends BaseField, BaseFieldTypedProps<T, 'integer', TSchema> {
   type: 'integer';
   /** Visual editor used for the input field. */
   editor?: IntegerEditorType;
@@ -386,8 +338,12 @@ export interface IntegerField<T extends number = number, TUnit extends string = 
  * }
  * ```
  */
-export interface NumberField<T extends number = number, TUnit extends string = string>
-  extends BaseField, BaseFieldTypedProps<T, 'number'> {
+export interface NumberField<
+  T extends number = number,
+  TUnit extends string = string,
+  TSchema = any,
+>
+  extends BaseField, BaseFieldTypedProps<T, 'number', TSchema> {
   type: 'number';
   /** Visual editor used for the input field. */
   editor?: NumberEditorType;
@@ -429,8 +385,8 @@ export interface NumberField<T extends number = number, TUnit extends string = s
  * }
  * ```
  */
-export interface ObjectField<T extends object = object>
-  extends BaseField, BaseFieldTypedProps<T, 'object'> {
+export interface ObjectField<T extends object = object, TSchema = any>
+  extends BaseField, BaseFieldTypedProps<T, 'object', TSchema> {
   type: 'object';
   /** Visual editor used for the input field. */
   editor: ObjectEditorType;
@@ -502,13 +458,14 @@ export interface ObjectField<T extends object = object>
  * }
  * ```
  */
-export type ArrayField<T = unknown> =
-  | BaseArrayField<T>
-  | KeyValueArrayField<T>
-  | StringListArrayField<T>
-  | SelectArrayField<T>;
+export type ArrayField<T = unknown, TSchema = any> =
+  | BaseArrayField<T, TSchema>
+  | KeyValueArrayField<T, TSchema>
+  | StringListArrayField<T, TSchema>
+  | SelectArrayField<T, TSchema>;
 
-interface BaseArrayField<T = unknown> extends BaseField, BaseFieldTypedProps<T, 'array'> {
+interface BaseArrayField<T = unknown, TSchema = any>
+  extends BaseField, BaseFieldTypedProps<T, 'array', TSchema> {
   type: 'array';
   /** Visual editor used for the input field. */
   editor: Exclude<ArrayEditorType, 'keyValue' | 'stringList' | 'select'>;
@@ -543,13 +500,13 @@ interface KeyValueOrStringListArrayFieldProps {
   patternValue?: string;
 }
 
-interface StringListArrayField<T = unknown>
-  extends Omit<BaseArrayField<T>, 'editor'>, KeyValueOrStringListArrayFieldProps {
+interface StringListArrayField<T = unknown, TSchema = any>
+  extends Omit<BaseArrayField<T, TSchema>, 'editor'>, KeyValueOrStringListArrayFieldProps {
   editor: 'stringList';
 }
 
-interface KeyValueArrayField<T = unknown>
-  extends Omit<BaseArrayField<T>, 'editor'>, KeyValueOrStringListArrayFieldProps {
+interface KeyValueArrayField<T = unknown, TSchema = any>
+  extends Omit<BaseArrayField<T, TSchema>, 'editor'>, KeyValueOrStringListArrayFieldProps {
   editor: 'keyValue';
   /**
    * Placeholder displayed for key field when no value is specified.
@@ -569,7 +526,10 @@ interface KeyValueArrayField<T = unknown>
  *
  * See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/specification/v1#select-editor-for-arrays
  */
-interface SelectArrayField<T = unknown> extends Omit<BaseArrayField<T>, 'editor'> {
+interface SelectArrayField<T = unknown, TSchema = any> extends Omit<
+  BaseArrayField<T, TSchema>,
+  'editor'
+> {
   editor: 'select';
   /**
    * Specifies format of the items of the array. For multiselect,
@@ -587,12 +547,74 @@ interface SelectArrayField<T = unknown> extends Omit<BaseArrayField<T>, 'editor'
   };
 }
 
+/**
+ * Custom error messages for validation keywords, keyed by the validation
+ * keyword name. Each field type supports a different set of keywords.
+ *
+ * See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/custom-error-messages#supported-validation-keywords
+ */
+export interface StringErrorMessage {
+  type?: string;
+  pattern?: string;
+  minLength?: string;
+  maxLength?: string;
+  enum?: string;
+}
+
+/** See {@link StringErrorMessage} */
+export interface NumericErrorMessage {
+  type?: string;
+  minimum?: string;
+  maximum?: string;
+}
+
+/** See {@link StringErrorMessage} */
+export interface BooleanErrorMessage {
+  type?: string;
+}
+
+/** See {@link StringErrorMessage} */
+export interface ArrayErrorMessage {
+  type?: string;
+  minItems?: string;
+  maxItems?: string;
+  uniqueItems?: string;
+  patternKey?: string;
+  patternValue?: string;
+}
+
+/** See {@link StringErrorMessage} */
+export interface ObjectErrorMessage {
+  type?: string;
+  minProperties?: string;
+  maxProperties?: string;
+  patternKey?: string;
+  patternValue?: string;
+}
+
+/**
+ * Maps a {@link FieldType} literal to the matching error-message interface.
+ *
+ * See https://docs.apify.com/platform/actors/development/actor-definition/input-schema/custom-error-messages#supported-validation-keywords
+ */
+export type ErrorMessageForFieldType<FT extends FieldType> = FT extends 'string'
+  ? StringErrorMessage
+  : FT extends 'boolean'
+    ? BooleanErrorMessage
+    : FT extends 'integer' | 'number'
+      ? NumericErrorMessage
+      : FT extends 'array'
+        ? ArrayErrorMessage
+        : FT extends 'object'
+          ? ObjectErrorMessage
+          : never;
+
 export const createActorInputSchema = <T extends ActorInputSchema<Record<string, Field>>>(
   config: T
 ) => config;
-export const createStringField = <T extends string = string, U extends string = string>(field: StringField<T, U>) => field; // prettier-ignore
-export const createBooleanField = <T extends boolean = boolean>(field: BooleanField<T>) => field; // prettier-ignore
-export const createIntegerField = <T extends number = number, U extends string = string>(field: IntegerField<T, U>) => field; // prettier-ignore
-export const createNumberField = <T extends number = number, U extends string = string>(field: NumberField<T, U>) => field; // prettier-ignore
-export const createObjectField = <T extends object = object>(field: ObjectField<T>) => field; // prettier-ignore
-export const createArrayField = <T = unknown>(field: ArrayField<T>) => field; // prettier-ignore
+export const createStringField = <T extends string = string, U extends string = string, TSchema = any>(field: StringField<T, U, TSchema>) => field; // prettier-ignore
+export const createBooleanField = <T extends boolean = boolean, TSchema = any>(field: BooleanField<T, TSchema>) => field; // prettier-ignore
+export const createIntegerField = <T extends number = number, U extends string = string, TSchema = any>(field: IntegerField<T, U, TSchema>) => field; // prettier-ignore
+export const createNumberField = <T extends number = number, U extends string = string, TSchema = any>(field: NumberField<T, U, TSchema>) => field; // prettier-ignore
+export const createObjectField = <T extends object = object, TSchema = any>(field: ObjectField<T, TSchema>) => field; // prettier-ignore
+export const createArrayField = <T = unknown, TSchema = any>(field: ArrayField<T, TSchema>) => field; // prettier-ignore

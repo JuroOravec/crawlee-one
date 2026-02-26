@@ -64,8 +64,7 @@
   // crawlee-one.config.ts
   import { defineConfig } from 'crawlee-one';
 
-  import actorSpec from './src/readme.js';
-  import actorSpec from './src/actorspec.js';
+  import actorSpec from './src/metadata.js';
   import actorConfig from './src/config.js';
   import { readmeInput, readmeRenderer } from './src/readme.js';
 

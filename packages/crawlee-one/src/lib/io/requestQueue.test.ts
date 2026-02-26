@@ -1,12 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { requestQueueSizeMonitor } from './requestQueue.js';
 import type { CrawleeOneIO, CrawleeOneRequestQueue } from '../integrations/types.js';
+import { requestQueueSizeMonitor } from './requestQueue.js';
 
 const createMockRequestQueue = (
   overrides?: Partial<CrawleeOneRequestQueue>
 ): CrawleeOneRequestQueue => ({
+  addRequest: vi.fn(),
   addRequests: vi.fn(),
+  getRequest: vi.fn().mockResolvedValue(null),
   markRequestHandled: vi.fn(),
   fetchNextRequest: vi.fn().mockResolvedValue(null),
   reclaimRequest: vi.fn(),

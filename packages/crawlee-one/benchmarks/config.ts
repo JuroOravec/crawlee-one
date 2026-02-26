@@ -11,6 +11,7 @@
  */
 
 import path from 'node:path';
+
 import type { BenchConfig } from './run-bench.js';
 
 // ---------------------------------------------------------------------------

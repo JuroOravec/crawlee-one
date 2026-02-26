@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  serialAsyncMap,
+  parallelAsyncFilter,
+  parallelAsyncForEach,
   parallelAsyncMap,
   serialAsyncFilter,
-  parallelAsyncFilter,
   serialAsyncFind,
   serialAsyncForEach,
-  parallelAsyncForEach,
+  serialAsyncMap,
 } from '../async.js';
 
 describe('serialAsyncMap', () => {

@@ -1,12 +1,12 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ArrayErrorMessage
 
 # Interface: ArrayErrorMessage
 
-Defined in: [inputSchema.ts:126](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L126)
+Defined in: [inputSchema.ts:577](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L577)
 
 See [StringErrorMessage](StringErrorMessage.md)
 
@@ -16,44 +16,44 @@ See [StringErrorMessage](StringErrorMessage.md)
 
 > `optional` **maxItems**: `string`
 
-Defined in: [inputSchema.ts:129](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L129)
+Defined in: [inputSchema.ts:580](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L580)
 
-***
+---
 
 ### minItems?
 
 > `optional` **minItems**: `string`
 
-Defined in: [inputSchema.ts:128](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L128)
+Defined in: [inputSchema.ts:579](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L579)
 
-***
+---
 
 ### patternKey?
 
 > `optional` **patternKey**: `string`
 
-Defined in: [inputSchema.ts:131](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L131)
+Defined in: [inputSchema.ts:582](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L582)
 
-***
+---
 
 ### patternValue?
 
 > `optional` **patternValue**: `string`
 
-Defined in: [inputSchema.ts:132](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L132)
+Defined in: [inputSchema.ts:583](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L583)
 
-***
+---
 
 ### type?
 
 > `optional` **type**: `string`
 
-Defined in: [inputSchema.ts:127](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L127)
+Defined in: [inputSchema.ts:578](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L578)
 
-***
+---
 
 ### uniqueItems?
 
 > `optional` **uniqueItems**: `string`
 
-Defined in: [inputSchema.ts:130](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L130)
+Defined in: [inputSchema.ts:581](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L581)

@@ -19,7 +19,7 @@
 #
 # Read more on https://docs.npmjs.com/trusted-publishers
 
-name: "actor-spec: Release"
+name: 'actor-spec: Release'
 
 on:
   release:

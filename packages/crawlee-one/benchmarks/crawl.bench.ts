@@ -6,25 +6,27 @@
  */
 import http from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { describe, beforeAll, afterAll } from 'vitest';
-import { vi } from 'vitest';
 
-import { measurePerf, measureMemory } from './helpers.js';
+import { afterAll, beforeAll, describe, vi } from 'vitest';
 
-import { runCrawleeOne } from '../src/lib/actor/actor.js';
+import { crawleeOne } from '../src/lib/context/context.js';
 import type {
-  CrawleeOneIO,
-  CrawleeOneRequestQueue,
   CrawleeOneDataset,
+  CrawleeOneIO,
   CrawleeOneKeyValueStore,
+  CrawleeOneRequestQueue,
 } from '../src/lib/integrations/types.js';
+import type { CrawlerType } from '../src/types.js';
+import { measureMemory, measurePerf } from './helpers.js';
 
 // ---------------------------------------------------------------------------
-// Mock helpers (same pattern as src/lib/actor/actor.test.ts)
+// Mock helpers (same pattern as src/lib/context/context.test.ts)
 // ---------------------------------------------------------------------------
 
 const createMockRequestQueue = (): CrawleeOneRequestQueue => ({
+  addRequest: vi.fn(),
   addRequests: vi.fn(),
+  getRequest: vi.fn().mockResolvedValue(null),
   markRequestHandled: vi.fn(),
   fetchNextRequest: vi.fn().mockResolvedValue(null),
   reclaimRequest: vi.fn(),
@@ -145,13 +147,13 @@ afterAll(async () => {
 // Helper: run a single crawl cycle
 // ---------------------------------------------------------------------------
 
-const crawlOnce = async (actorType: string, handler: (ctx: any) => void) => {
+const crawlOnce = async (type: CrawlerType, handler: (ctx: any) => void) => {
   const io = createMockIO();
   const id = ++reqCounter;
 
-  await runCrawleeOne({
-    actorType: actorType as any,
-    actorConfig: {
+  await crawleeOne(
+    {
+      type,
       io,
       routes: {
         MAIN: {
@@ -159,15 +161,15 @@ const crawlOnce = async (actorType: string, handler: (ctx: any) => void) => {
           handler: async (ctx: any) => handler(ctx),
         },
       },
+      crawlerConfigOverrides: {
+        maxRequestRetries: 0,
+        maxConcurrency: 1,
+      } as any,
     },
-    crawlerConfigOverrides: {
-      maxRequestRetries: 0,
-      maxConcurrency: 1,
-    } as any,
-    onReady: async (actor) => {
-      await actor.runCrawler([{ url: `http://127.0.0.1:${port}/?bench=${actorType}&id=${id}` }]);
-    },
-  });
+    async (context) => {
+      await context.crawler.run([{ url: `http://127.0.0.1:${port}/?bench=${type}&id=${id}` }]);
+    }
+  );
 };
 
 // ---------------------------------------------------------------------------
@@ -175,10 +177,10 @@ const crawlOnce = async (actorType: string, handler: (ctx: any) => void) => {
 // ---------------------------------------------------------------------------
 
 describe('crawler throughput', () => {
-  measurePerf(
-    'cheerio crawl + parse',
-    'Cheerio crawl + parse',
-    async () => {
+  measurePerf({
+    name: 'cheerio crawl + parse',
+    prettyName: 'Cheerio crawl + parse',
+    fn: async () => {
       await crawlOnce('cheerio', (ctx) => {
         // Exercise the Cheerio API
         ctx.$('title').text();
@@ -186,46 +188,46 @@ describe('crawler throughput', () => {
         ctx.$('.product-list .item').length;
       });
     },
-    { iterations: 5, time: 0 }
-  );
+    options: { iterations: 5, time: 0 },
+  });
 
-  measurePerf(
-    'http crawl',
-    'HTTP crawl',
-    async () => {
+  measurePerf({
+    name: 'http crawl',
+    prettyName: 'HTTP crawl',
+    fn: async () => {
       await crawlOnce('http', (ctx) => {
         // Access raw body
         const body = typeof ctx.body === 'string' ? ctx.body : ctx.body?.toString();
         body?.includes('<title>');
       });
     },
-    { iterations: 5, time: 0 }
-  );
+    options: { iterations: 5, time: 0 },
+  });
 
-  measurePerf(
-    'jsdom crawl + parse',
-    'JSDOM crawl + parse',
-    async () => {
+  measurePerf({
+    name: 'jsdom crawl + parse',
+    prettyName: 'JSDOM crawl + parse',
+    fn: async () => {
       await crawlOnce('jsdom', (ctx) => {
         // Exercise the JSDOM API
         ctx.window?.document?.title;
         ctx.window?.document?.querySelector('h1')?.textContent;
       });
     },
-    { iterations: 5, time: 0 }
-  );
+    options: { iterations: 5, time: 0 },
+  });
 
-  measurePerf(
-    'basic crawl',
-    'Basic crawl',
-    async () => {
+  measurePerf({
+    name: 'basic crawl',
+    prettyName: 'Basic crawl',
+    fn: async () => {
       await crawlOnce('basic', (ctx) => {
         // Access request context
         ctx.request.url;
       });
     },
-    { iterations: 5, time: 0 }
-  );
+    options: { iterations: 5, time: 0 },
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -238,49 +240,49 @@ describe('crawler throughput', () => {
 // ---------------------------------------------------------------------------
 
 describe('crawler memory', () => {
-  measureMemory(
-    'cheerio peak memory',
-    'Cheerio peak memory',
-    async () => {
+  measureMemory({
+    name: 'cheerio peak memory',
+    prettyName: 'Cheerio peak memory',
+    fn: async () => {
       await crawlOnce('cheerio', (ctx) => {
         ctx.$('title').text();
         ctx.$('.product-list .item').length;
       });
     },
-    { iterations: 3, time: 0 }
-  );
+    options: { iterations: 3, time: 0 },
+  });
 
-  measureMemory(
-    'http peak memory',
-    'HTTP peak memory',
-    async () => {
+  measureMemory({
+    name: 'http peak memory',
+    prettyName: 'HTTP peak memory',
+    fn: async () => {
       await crawlOnce('http', (ctx) => {
         const body = typeof ctx.body === 'string' ? ctx.body : ctx.body?.toString();
         body?.includes('<title>');
       });
     },
-    { iterations: 3, time: 0 }
-  );
+    options: { iterations: 3, time: 0 },
+  });
 
-  measureMemory(
-    'jsdom peak memory',
-    'JSDOM peak memory',
-    async () => {
+  measureMemory({
+    name: 'jsdom peak memory',
+    prettyName: 'JSDOM peak memory',
+    fn: async () => {
       await crawlOnce('jsdom', (ctx) => {
         ctx.window?.document?.title;
       });
     },
-    { iterations: 3, time: 0 }
-  );
+    options: { iterations: 3, time: 0 },
+  });
 
-  measureMemory(
-    'basic peak memory',
-    'Basic peak memory',
-    async () => {
+  measureMemory({
+    name: 'basic peak memory',
+    prettyName: 'Basic peak memory',
+    fn: async () => {
       await crawlOnce('basic', (ctx) => {
         ctx.request.url;
       });
     },
-    { iterations: 3, time: 0 }
-  );
+    options: { iterations: 3, time: 0 },
+  });
 });

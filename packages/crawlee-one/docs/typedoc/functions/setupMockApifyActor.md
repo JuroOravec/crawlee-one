@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / setupMockApifyActor
 
@@ -18,7 +18,7 @@ Defined in: [packages/crawlee-one/src/lib/test/actor.ts:12](https://github.com/J
 
 ### TData
 
-`TData` *extends* [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\> = [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\>
+`TData` _extends_ [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\> = [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\>
 
 ## Parameters
 

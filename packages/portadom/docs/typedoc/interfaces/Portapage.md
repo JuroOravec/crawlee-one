@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / Portapage
 
@@ -23,11 +23,11 @@ WARNING: Portapage is experimental.
 
 ### TScroll
 
-`TScroll` *extends* `_AnyInfiScrollTypes`
+`TScroll` _extends_ `_AnyInfiScrollTypes`
 
 ### TCtx
 
-`TCtx` *extends* `object`
+`TCtx` _extends_ `object`
 
 ## Properties
 
@@ -54,6 +54,7 @@ A container, or selector for it, that includes the dynamically loaded items.
 Callback that receives a handle to the new child elements in the DOM
 
 Example:
+
 ```js
 // Get text from all new child elements of the infinite-scroller container
 async (elementsHandle) => {
@@ -70,7 +71,7 @@ async (elementsHandle) => {
 
 `MaybePromise`\<`void`\>
 
-***
+---
 
 ### page
 

@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ViewTransformation
 
@@ -14,7 +14,7 @@ See https://docs.apify.com/platform/actors/development/output-schema#viewtransfo
 
 ### TFields
 
-`TFields` *extends* `string` = `string`
+`TFields` _extends_ `string` = `string`
 
 ## Properties
 
@@ -28,7 +28,7 @@ By default, results are sorted in ascending based
 on the write event into the dataset. `desc: true` param
 will return the newest writes to the dataset first.
 
-***
+---
 
 ### fields
 
@@ -41,7 +41,7 @@ The order of fields matches the order of columns
 in visualization UI. In case the fields value
 is missing, it will be presented as "undefined" in the UI.
 
-***
+---
 
 ### flatten?
 
@@ -62,7 +62,7 @@ is turned into
 
 `{ "foo.bar": "hello" }
 
-***
+---
 
 ### limit?
 
@@ -73,7 +73,7 @@ Defined in: [outputSchema.ts:111](https://github.com/JuroOravec/crawlee-one/blob
 The maximum number of results returned.
 Default is all results.
 
-***
+---
 
 ### omit?
 
@@ -84,7 +84,7 @@ Defined in: [outputSchema.ts:106](https://github.com/JuroOravec/crawlee-one/blob
 Removes the specified fields from the output.
 Nested fields names can be used there as well.
 
-***
+---
 
 ### unwind?
 

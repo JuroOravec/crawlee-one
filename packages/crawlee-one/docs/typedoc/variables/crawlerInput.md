@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / crawlerInput
 
@@ -8,7 +8,7 @@
 
 > `const` **crawlerInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:530](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L530)
+Defined in: [packages/crawlee-one/src/lib/input.ts:594](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L594)
 
 Common input fields related to crawler setup
 
@@ -16,52 +16,52 @@ Common input fields related to crawler setup
 
 ### additionalMimeTypes
 
-> **additionalMimeTypes**: `ArrayField`\<`unknown`\>
+> **additionalMimeTypes**: `ArrayField`\<`unknown`, `ZodOptional`\<`ZodArray`\<`ZodString`, `"many"`\>\>\>
 
 ### forceResponseEncoding
 
-> **forceResponseEncoding**: `StringField`\<`string`, `string`\>
+> **forceResponseEncoding**: `StringField`\<`string`, `string`, `ZodOptional`\<`ZodString`\>\>
 
 ### ignoreSslErrors
 
-> **ignoreSslErrors**: `BooleanField`\<`boolean`\>
+> **ignoreSslErrors**: `BooleanField`\<`boolean`, `ZodOptional`\<`ZodBoolean`\>\>
 
 ### keepAlive
 
-> **keepAlive**: `BooleanField`\<`boolean`\>
+> **keepAlive**: `BooleanField`\<`boolean`, `ZodOptional`\<`ZodBoolean`\>\>
 
 ### maxConcurrency
 
-> **maxConcurrency**: `IntegerField`\<`number`, `string`\>
+> **maxConcurrency**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### maxCrawlDepth
 
-> **maxCrawlDepth**: `IntegerField`\<`number`, `string`\>
+> **maxCrawlDepth**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### maxRequestRetries
 
-> **maxRequestRetries**: `IntegerField`\<`number`, `string`\>
+> **maxRequestRetries**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### maxRequestsPerCrawl
 
-> **maxRequestsPerCrawl**: `IntegerField`\<`number`, `string`\>
+> **maxRequestsPerCrawl**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### maxRequestsPerMinute
 
-> **maxRequestsPerMinute**: `IntegerField`\<`number`, `string`\>
+> **maxRequestsPerMinute**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### minConcurrency
 
-> **minConcurrency**: `IntegerField`\<`number`, `string`\>
+> **minConcurrency**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### navigationTimeoutSecs
 
-> **navigationTimeoutSecs**: `IntegerField`\<`number`, `string`\>
+> **navigationTimeoutSecs**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### requestHandlerTimeoutSecs
 
-> **requestHandlerTimeoutSecs**: `IntegerField`\<`number`, `string`\>
+> **requestHandlerTimeoutSecs**: `IntegerField`\<`number`, `string`, `ZodOptional`\<`ZodNumber`\>\>
 
 ### suggestResponseEncoding
 
-> **suggestResponseEncoding**: `StringField`\<`string`, `string`\>
+> **suggestResponseEncoding**: `StringField`\<`string`, `string`, `ZodOptional`\<`ZodString`\>\>

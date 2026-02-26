@@ -1,9 +1,19 @@
-/** Validate correctness of a URL */
+/**
+ * Validate correctness of a URL and that it is fetchable (http/https with host).
+ * Throws for malformed URLs and for non-fetchable schemes (about:blank, javascript:, etc.).
+ */
 export const validateUrl = (url: string) => {
   try {
-    new URL(url);
+    const u = new URL(url);
+    if ((u.protocol !== 'http:' && u.protocol !== 'https:') || !u.hostname) {
+      throw new Error(
+        `URL has non-fetchable scheme (got ${u.protocol}). Rejects about:blank, javascript:, etc. URL: "${url}"`
+      );
+    }
   } catch (err) {
-    (err as Error).message += `\nURL: "${url}"`;
+    if (err instanceof TypeError || (err as Error).name === 'TypeError') {
+      (err as Error).message += `\nURL: "${url}"`;
+    }
     throw err;
   }
 };

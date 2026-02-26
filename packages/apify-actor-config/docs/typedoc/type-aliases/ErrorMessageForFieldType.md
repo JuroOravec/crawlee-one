@@ -1,14 +1,14 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ErrorMessageForFieldType
 
 # Type Alias: ErrorMessageForFieldType\<FT\>
 
-> **ErrorMessageForFieldType**\<`FT`\> = `FT` *extends* `"string"` ? [`StringErrorMessage`](../interfaces/StringErrorMessage.md) : `FT` *extends* `"boolean"` ? [`BooleanErrorMessage`](../interfaces/BooleanErrorMessage.md) : `FT` *extends* `"integer"` \| `"number"` ? [`NumericErrorMessage`](../interfaces/NumericErrorMessage.md) : `FT` *extends* `"array"` ? [`ArrayErrorMessage`](../interfaces/ArrayErrorMessage.md) : `FT` *extends* `"object"` ? [`ObjectErrorMessage`](../interfaces/ObjectErrorMessage.md) : `never`
+> **ErrorMessageForFieldType**\<`FT`\> = `FT` _extends_ `"string"` ? [`StringErrorMessage`](../interfaces/StringErrorMessage.md) : `FT` _extends_ `"boolean"` ? [`BooleanErrorMessage`](../interfaces/BooleanErrorMessage.md) : `FT` _extends_ `"integer"` \| `"number"` ? [`NumericErrorMessage`](../interfaces/NumericErrorMessage.md) : `FT` _extends_ `"array"` ? [`ArrayErrorMessage`](../interfaces/ArrayErrorMessage.md) : `FT` _extends_ `"object"` ? [`ObjectErrorMessage`](../interfaces/ObjectErrorMessage.md) : `never`
 
-Defined in: [inputSchema.ts:149](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L149)
+Defined in: [inputSchema.ts:600](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L600)
 
 Maps a [FieldType](FieldType.md) literal to the matching error-message interface.
 
@@ -18,4 +18,4 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 ### FT
 
-`FT` *extends* [`FieldType`](FieldType.md)
+`FT` _extends_ [`FieldType`](FieldType.md)

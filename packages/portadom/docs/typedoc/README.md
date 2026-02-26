@@ -1,6 +1,6 @@
 **portadom**
 
-***
+---
 
 # portadom
 
@@ -128,10 +128,10 @@ await portapage.infiniteScroll('#feed', async (newItems, ctx, stop) => {
 
 ## Documentation
 
-| Document                                   | Description                      |
-| ------------------------------------------ | -------------------------------- |
+| Document                           | Description                      |
+| ---------------------------------- | -------------------------------- |
 | [API reference](_media/globals.md) | Full typedoc-generated API docs. |
-| [Changelog](_media/CHANGELOG.md)                | Release history.                 |
+| [Changelog](_media/CHANGELOG.md)   | Release history.                 |
 
 ## License
 

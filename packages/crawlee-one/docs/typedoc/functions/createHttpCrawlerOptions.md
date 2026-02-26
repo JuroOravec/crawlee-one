@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / createHttpCrawlerOptions
 
@@ -8,7 +8,7 @@
 
 > **createHttpCrawlerOptions**\<`T`, `TOpts`\>(`__namedParameters`): `Partial`\<`TOpts`\> & `Dictionary`\<`TOpts`\[`"requestHandler"`\] \| `TOpts`\[`"handleRequestFunction"`\] \| `TOpts`\[`"requestList"`\] \| `TOpts`\[`"requestQueue"`\] \| `TOpts`\[`"requestManager"`\] \| `TOpts`\[`"requestHandlerTimeoutSecs"`\] \| `TOpts`\[`"handleRequestTimeoutSecs"`\] \| `TOpts`\[`"errorHandler"`\] \| `TOpts`\[`"failedRequestHandler"`\] \| `TOpts`\[`"handleFailedRequestFunction"`\] \| `TOpts`\[`"maxRequestRetries"`\] \| `TOpts`\[`"sameDomainDelaySecs"`\] \| `TOpts`\[`"maxSessionRotations"`\] \| `TOpts`\[`"maxRequestsPerCrawl"`\] \| `TOpts`\[`"maxCrawlDepth"`\] \| `TOpts`\[`"autoscaledPoolOptions"`\] \| `TOpts`\[`"minConcurrency"`\] \| `TOpts`\[`"maxConcurrency"`\] \| `TOpts`\[`"maxRequestsPerMinute"`\] \| `TOpts`\[`"keepAlive"`\] \| `TOpts`\[`"useSessionPool"`\] \| `TOpts`\[`"sessionPoolOptions"`\] \| `TOpts`\[`"statusMessageLoggingInterval"`\] \| `TOpts`\[`"statusMessageCallback"`\] \| `TOpts`\[`"retryOnBlocked"`\] \| `TOpts`\[`"respectRobotsTxtFile"`\] \| `TOpts`\[`"onSkippedRequest"`\] \| `TOpts`\[`"log"`\] \| `TOpts`\[`"experiments"`\] \| `TOpts`\[`"statisticsOptions"`\] \| `TOpts`\[`"httpClient"`\]\>
 
-Defined in: [packages/crawlee-one/src/lib/actor/actor.ts:599](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/actor/actor.ts#L599)
+Defined in: [packages/crawlee-one/src/lib/context/context.ts:771](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/context/context.ts#L771)
 
 Given the actor input, create common crawler options.
 
@@ -16,11 +16,11 @@ Given the actor input, create common crawler options.
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`CrawlingContext`\<`JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler` \| `BasicCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\> \| `HttpCrawler`\<`InternalHttpCrawlingContext`\<`any`, `any`, `HttpCrawler`\<`any`\>\>\>, `Dictionary`\>, `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)\<`CrawlingContext`\<`JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler` \| `BasicCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\> \| `HttpCrawler`\<`InternalHttpCrawlingContext`\<`any`, `any`, `HttpCrawler`\<`any`\>\>\>, `Dictionary`\>, `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
 
 ### TOpts
 
-`TOpts` *extends* `BasicCrawlerOptions`\<`T`\[`"context"`\]\>
+`TOpts` _extends_ `BasicCrawlerOptions`\<`T`\[`"context"`\]\>
 
 ## Parameters
 

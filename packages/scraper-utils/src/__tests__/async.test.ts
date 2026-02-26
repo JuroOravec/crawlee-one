@@ -1,11 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
+
 import {
-  wait,
+  deferredPromise,
   retryAsync,
-  serialAsyncMap,
   serialAsyncFilter,
   serialAsyncFind,
-  deferredPromise,
+  serialAsyncMap,
+  wait,
 } from '../async.js';
 
 describe('wait', () => {

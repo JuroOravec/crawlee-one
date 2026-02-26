@@ -1,12 +1,24 @@
 // @ts-check
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
+import tseslint from 'typescript-eslint';
+
+const crawleeOneRoot = path.dirname(fileURLToPath(import.meta.url));
 
 export default tseslint.config(
   {
     ignores: ['**/node_modules/**', '**/dist/**', '**/examples/**'],
+  },
+  {
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: crawleeOneRoot,
+      },
+    },
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
@@ -14,6 +26,7 @@ export default tseslint.config(
   eslintPluginPrettier,
   {
     rules: {
+      'max-params': ['error', 4],
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',

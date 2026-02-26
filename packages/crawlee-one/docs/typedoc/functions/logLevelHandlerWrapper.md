@@ -1,30 +1,33 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / logLevelHandlerWrapper
 
 # Function: logLevelHandlerWrapper()
 
-> **logLevelHandlerWrapper**\<`T`, `RouterCtx`\>(`logLevel`): [`CrawleeOneRouteWrapper`](../type-aliases/CrawleeOneRouteWrapper.md)\<`T`, `RouterCtx`\>
+> **logLevelHandlerWrapper**\<`T`\>(`logLevel`): [`CrawleeOneRouteMiddleware`](../type-aliases/CrawleeOneRouteMiddleware.md)\<`T`\>
 
 Defined in: [packages/crawlee-one/src/lib/log.ts:49](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/log.ts#L49)
 
 Wrapper for Crawlee route handler that configures log level.
 
 Usage with Crawlee's `RouterHandler.addDefaultHandler`
+
 ```ts
-const wrappedHandler = logLevelHandlerWrapper('debug')(handler)
+const wrappedHandler = logLevelHandlerWrapper('debug')(handler);
 await router.addDefaultHandler<Ctx>(wrappedHandler);
 ```
 
 Usage with Crawlee's `RouterHandler.addHandler`
+
 ```ts
-const wrappedHandler = logLevelHandlerWrapper('error')(handler)
+const wrappedHandler = logLevelHandlerWrapper('error')(handler);
 await router.addHandler<Ctx>(wrappedHandler);
 ```
 
 Usage with `createCrawleeOne`
+
 ```ts
 const actor = await createCrawleeOne<CheerioCrawlingContext>({
   validateInput,
@@ -42,11 +45,7 @@ const actor = await createCrawleeOne<CheerioCrawlingContext>({
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)\<`CrawlingContext`\<`JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler` \| `BasicCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\> \| `HttpCrawler`\<`InternalHttpCrawlingContext`\<`any`, `any`, `HttpCrawler`\<`any`\>\>\>, `Dictionary`\>, `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
-
-### RouterCtx
-
-`RouterCtx` *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](../type-aliases/CrawleeOneRouteCtx.md)\<`T`\>
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)\<`CrawlingContext`\<`JSDOMCrawler` \| `CheerioCrawler` \| `PlaywrightCrawler` \| `PuppeteerCrawler` \| `BasicCrawler`\<`BasicCrawlingContext`\<`Dictionary`\>\> \| `HttpCrawler`\<`InternalHttpCrawlingContext`\<`any`, `any`, `HttpCrawler`\<`any`\>\>\>, `Dictionary`\>, `string`, `Record`\<`string`, `any`\>, [`CrawleeOneIO`](../interfaces/CrawleeOneIO.md)\<`object`, `object`, `object`\>, [`CrawleeOneTelemetry`](../interfaces/CrawleeOneTelemetry.md)\<`any`, `any`\>\>
 
 ## Parameters
 
@@ -56,4 +55,4 @@ const actor = await createCrawleeOne<CheerioCrawlingContext>({
 
 ## Returns
 
-[`CrawleeOneRouteWrapper`](../type-aliases/CrawleeOneRouteWrapper.md)\<`T`, `RouterCtx`\>
+[`CrawleeOneRouteMiddleware`](../type-aliases/CrawleeOneRouteMiddleware.md)\<`T`\>

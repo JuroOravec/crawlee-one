@@ -9,7 +9,8 @@
  *   (Dependabot will fail silently on the missing directory).
  */
 
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { readdir, readFile, stat } from 'node:fs/promises';
+
 import { parse } from 'yaml';
 
 /** Directories that contain workspace packages. */

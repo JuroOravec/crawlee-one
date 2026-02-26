@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveUrlPath, formatUrl } from '../url.js';
+import { formatUrl, resolveUrlPath } from '../url.js';
 
 describe('resolveUrlPath', () => {
   it('resolves a relative path against a base URL', () => {

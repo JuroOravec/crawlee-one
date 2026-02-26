@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { getColumnFromDataset, datasetSizeMonitor } from './dataset.js';
 import type {
-  CrawleeOneIO,
   CrawleeOneDataset,
+  CrawleeOneIO,
   CrawleeOneRequestQueue,
 } from '../integrations/types.js';
+import { datasetSizeMonitor, getColumnFromDataset } from './dataset.js';
 
 const createMockDataset = (overrides?: Partial<CrawleeOneDataset>): CrawleeOneDataset => ({
   pushData: vi.fn(),
@@ -65,7 +65,7 @@ describe('getColumnFromDataset', () => {
     });
     const io = createMockIO({ dataset });
 
-    const result = await getColumnFromDataset('ds-1', 'name', { io });
+    const result = await getColumnFromDataset({ datasetId: 'ds-1', field: 'name', io });
     expect(result).toEqual(['Alice', 'Bob', 'Charlie']);
   });
 
@@ -74,7 +74,9 @@ describe('getColumnFromDataset', () => {
     const dataset = createMockDataset({ getItems });
     const io = createMockIO({ dataset });
 
-    await getColumnFromDataset('ds-1', 'url', {
+    await getColumnFromDataset({
+      datasetId: 'ds-1',
+      field: 'url',
       io,
       dataOptions: { limit: 10, offset: 5 },
     });

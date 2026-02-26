@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneKeyValueStore
 
@@ -30,7 +30,7 @@ Removes all entries from the store.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-***
+---
 
 ### drop()
 
@@ -45,7 +45,7 @@ depending on the mode of operation.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`void`\>
 
-***
+---
 
 ### setValue()
 
@@ -60,7 +60,7 @@ If value is null, the record is deleted instead. Note that the setValue() functi
 succeeds regardless whether the record existed or not.
 
 Beware that the key can be at most 256 characters long and only contain the following
-characters: a-zA-Z0-9!-_.'()
+characters: a-zA-Z0-9!-\_.'()
 
 To retrieve a value from the key-value store, use the [CrawleeOneKeyValueStore.getValue](#getvalue)
 function.
@@ -117,7 +117,7 @@ To save or delete a value in the key-value store, use the
 `string`
 
 Unique key of the record. It can be at most 256 characters long and only consist
-  of the following characters: `a`-`z`, `A`-`Z`, `0`-`9` and `!-_.'()`
+of the following characters: `a`-`z`, `A`-`Z`, `0`-`9` and `!-_.'()`
 
 ##### defaultValue
 

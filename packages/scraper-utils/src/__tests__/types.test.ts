@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { enumFromArray } from '../types.js';
 
 describe('enumFromArray', () => {

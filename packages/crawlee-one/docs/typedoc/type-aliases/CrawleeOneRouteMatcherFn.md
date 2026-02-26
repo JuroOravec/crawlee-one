@@ -1,14 +1,14 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneRouteMatcherFn
 
-# Type Alias: CrawleeOneRouteMatcherFn()\<T, RouterCtx\>
+# Type Alias: CrawleeOneRouteMatcherFn()\<T\>
 
-> **CrawleeOneRouteMatcherFn**\<`T`, `RouterCtx`\> = (`url`, `ctx`, `route`, `routes`) => `unknown`
+> **CrawleeOneRouteMatcherFn**\<`T`\> = (`url`, `ctx`, `route`, `routes`) => `unknown`
 
-Defined in: [packages/crawlee-one/src/lib/router/types.ts:68](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L68)
+Defined in: [packages/crawlee-one/src/lib/router/types.ts:112](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/router/types.ts#L112)
 
 Function variant of Matcher. Matcher that checks if the [CrawleeOneRoute](../interfaces/CrawleeOneRoute.md)
 this Matcher belongs to should handle the given request.
@@ -20,11 +20,7 @@ function of the same CrawleeOneRoute.
 
 ### T
 
-`T` *extends* [`CrawleeOneCtx`](../interfaces/CrawleeOneCtx.md)
-
-### RouterCtx
-
-`RouterCtx` *extends* `Record`\<`string`, `any`\> = [`CrawleeOneRouteCtx`](CrawleeOneRouteCtx.md)\<`T`\>
+`T` _extends_ [`CrawleeOneTypes`](../interfaces/CrawleeOneTypes.md)
 
 ## Parameters
 
@@ -34,15 +30,15 @@ function of the same CrawleeOneRoute.
 
 ### ctx
 
-[`CrawleeOneRouteCtx`](CrawleeOneRouteCtx.md)\<`T`, `RouterCtx`\>
+[`CrawleeOneRouteHandlerCtx`](CrawleeOneRouteHandlerCtx.md)\<`T`\>
 
 ### route
 
-[`CrawleeOneRoute`](../interfaces/CrawleeOneRoute.md)\<`T`, `RouterCtx`\>
+[`CrawleeOneRoute`](../interfaces/CrawleeOneRoute.md)\<`T`\>
 
 ### routes
 
-`Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](../interfaces/CrawleeOneRoute.md)\<`T`, `RouterCtx`\>\>
+`Record`\<`T`\[`"labels"`\], [`CrawleeOneRoute`](../interfaces/CrawleeOneRoute.md)\<`T`\>\>
 
 ## Returns
 

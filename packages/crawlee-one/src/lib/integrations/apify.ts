@@ -1,5 +1,5 @@
-import { Actor, ApifyEnv } from 'apify';
-import { CrawlingContext, Request as CrawleeRequest, playwrightUtils } from 'crawlee';
+import { Actor, type ApifyEnv } from 'apify';
+import { type CrawlingContext, playwrightUtils, type Request as CrawleeRequest } from 'crawlee';
 
 import type { CrawleeOneDataset, CrawleeOneIO } from './types.js';
 
@@ -28,6 +28,8 @@ export interface ApifyEntryMetadata {
 
   /** ISO datetime string that indicates the time when the request has been processed. */
   dateHandled: string;
+  /** ISO datetime string when processing of this request started (set by crawlee-one router). */
+  requestStartedAt: string | null;
   numberOfRetries: number;
 }
 
@@ -92,6 +94,9 @@ const generateApifyEntryMetadata = <Ctx extends CrawlingContext>(ctx: Ctx) => {
       : null;
   const handledAt = new Date().toISOString();
 
+  const userData = ctx.request.userData as Record<string, unknown> | undefined;
+  const requestStartedAt = typeof userData?.startedAt === 'string' ? userData.startedAt : null;
+
   const metadata = {
     actorId,
     actorRunId,
@@ -103,6 +108,7 @@ const generateApifyEntryMetadata = <Ctx extends CrawlingContext>(ctx: Ctx) => {
     loadedUrl: ctx.request.loadedUrl ?? null,
 
     dateHandled: ctx.request.handledAt || handledAt,
+    requestStartedAt,
     numberOfRetries: ctx.request.retryCount,
   } satisfies ApifyEntryMetadata;
 
@@ -142,14 +148,18 @@ export const apifyIO: ApifyCrawleeOneIO = {
       } while (req);
     };
 
+    // prettier-ignore
     return {
-      addRequests: (...args) => queue.addRequests(...args),
-      markRequestHandled: (...args) => queue.markRequestHandled(...args),
-      fetchNextRequest: (...args) => queue.fetchNextRequest(...args),
-      reclaimRequest: (...args) => queue.reclaimRequest(...args),
-      isFinished: (...args) => queue.isFinished(...args),
-      handledCount: (...args) => queue.handledCount(...args),
-      drop: (...args) => queue.drop(...args),
+      name: queue.name,
+      addRequest: (...args: Parameters<typeof queue.addRequest>) => queue.addRequest(...args),
+      addRequests: (...args: Parameters<typeof queue.addRequests>) => queue.addRequests(...args),
+      getRequest: (...args: Parameters<typeof queue.getRequest>) => queue.getRequest(...args),
+      markRequestHandled: (...args: Parameters<typeof queue.markRequestHandled>) => queue.markRequestHandled(...args),
+      fetchNextRequest: (...args: Parameters<typeof queue.fetchNextRequest>) => queue.fetchNextRequest(...args),
+      reclaimRequest: (...args: Parameters<typeof queue.reclaimRequest>) => queue.reclaimRequest(...args),
+      isFinished: (...args: Parameters<typeof queue.isFinished>) => queue.isFinished(...args),
+      handledCount: (...args: Parameters<typeof queue.handledCount>) => queue.handledCount(...args),
+      drop: (...args: Parameters<typeof queue.drop>) => queue.drop(...args),
       clear,
     };
   },

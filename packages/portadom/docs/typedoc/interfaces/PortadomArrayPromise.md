@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / PortadomArrayPromise
 
@@ -37,7 +37,7 @@ Wrapper for Array.at that returns the resulting item as [PortadomPromise](Portad
 
 [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-***
+---
 
 ### concat()
 
@@ -59,7 +59,7 @@ NOTE: The concat values are expected to be [Portadom](Portadom.md) instances
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### copyWithin()
 
@@ -79,7 +79,7 @@ Wrapper for Array.copyWithin that returns the resulting array wrapped in Portado
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### entries()
 
@@ -101,7 +101,7 @@ NOTE: Does NOT return an instance of PortadomArrayPromise
 
 `Promise`\<`IterableIterator`\<\[`number`, [`Portadom`](Portadom.md)\<`El`, `El`\>\], `any`, `any`\>\>
 
-***
+---
 
 ### every()
 
@@ -121,7 +121,7 @@ Wrapper for Array.every.
 
 `Promise`\<`boolean`\>
 
-***
+---
 
 ### fill()
 
@@ -151,7 +151,7 @@ NOTE2: Unlike Array.fill, this option doesn't allow to specify `start` and `end`
 
 `Promise`\<`U`[]\>
 
-***
+---
 
 ### filter()
 
@@ -171,7 +171,7 @@ Wrapper for Array.filter that returns the resulting array wrapped in PortadomArr
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### filterAsyncParallel()
 
@@ -193,7 +193,7 @@ Returns the resulting array wrapped in PortadomArrayPromise.
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### filterAsyncSerial()
 
@@ -215,7 +215,7 @@ Returns the resulting array wrapped in PortadomArrayPromise.
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### find()
 
@@ -235,7 +235,7 @@ Wrapper for Array.find that returns the resulting item as [PortadomPromise](Port
 
 [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-***
+---
 
 ### findAsyncSerial()
 
@@ -257,7 +257,7 @@ Returns the resulting item as [PortadomPromise](PortadomPromise.md).
 
 [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-***
+---
 
 ### findIndex()
 
@@ -277,7 +277,7 @@ Wrapper for Array.findIndex.
 
 `Promise`\<`number`\>
 
-***
+---
 
 ### flat()
 
@@ -297,7 +297,7 @@ Wrapper for Array.flat that returns the resulting array wrapped in PortadomArray
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### flatMap()
 
@@ -329,7 +329,7 @@ NOTE: Mapped values can be anything, so result is NOT wrapped in an instance of 
 
 `Promise`\<`U`[]\>
 
-***
+---
 
 ### forEach()
 
@@ -349,7 +349,7 @@ Wrapper for Array.forEach.
 
 `Promise`\<`void`\>
 
-***
+---
 
 ### forEachAsyncParallel()
 
@@ -369,7 +369,7 @@ Similar to Array.forEach, but awaits for Promises. Items are handled all in para
 
 `Promise`\<`void`\>
 
-***
+---
 
 ### forEachAsyncSerial()
 
@@ -389,7 +389,7 @@ Similar to Array.forEach, but awaits for Promises. Items are handled one-by-one.
 
 `Promise`\<`void`\>
 
-***
+---
 
 ### includes()
 
@@ -409,7 +409,7 @@ Wrapper for Array.includes.
 
 `Promise`\<`boolean`\>
 
-***
+---
 
 ### indexOf()
 
@@ -429,7 +429,7 @@ Wrapper for Array.indexOf.
 
 `Promise`\<`number`\>
 
-***
+---
 
 ### join()
 
@@ -449,7 +449,7 @@ Wrapper for Array.join.
 
 `Promise`\<`string`\>
 
-***
+---
 
 ### keys()
 
@@ -469,7 +469,7 @@ Wrapper for Array.keys.
 
 `Promise`\<`IterableIterator`\<`number`, `any`, `any`\>\>
 
-***
+---
 
 ### lastIndexOf()
 
@@ -489,7 +489,7 @@ Wrapper for Array.lastIndexOf.
 
 `Promise`\<`number`\>
 
-***
+---
 
 ### length
 
@@ -499,7 +499,7 @@ Defined in: [dom/types.ts:428](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Wrapper for Array.length.
 
-***
+---
 
 ### map()
 
@@ -527,7 +527,7 @@ NOTE: Mapped values can be anything, so result is NOT wrapped in an instance of 
 
 `Promise`\<`U`[]\>
 
-***
+---
 
 ### mapAsyncParallel()
 
@@ -555,7 +555,7 @@ NOTE: Mapped values can be anything, so result is NOT wrapped in an instance of 
 
 `Promise`\<`Awaited`\<`TVal`\>[]\>
 
-***
+---
 
 ### mapAsyncSerial()
 
@@ -583,7 +583,7 @@ NOTE: Mapped values can be anything, so result is NOT wrapped in an instance of 
 
 `Promise`\<`Awaited`\<`TVal`\>[]\>
 
-***
+---
 
 ### pop()
 
@@ -603,7 +603,7 @@ Wrapper for Array.pop that returns the resulting item as [PortadomPromise](Porta
 
 [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-***
+---
 
 ### promise
 
@@ -613,7 +613,7 @@ Defined in: [dom/types.ts:360](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Wrapped Promise of an array of [Portadom](Portadom.md) instances
 
-***
+---
 
 ### push()
 
@@ -635,7 +635,7 @@ NOTE: The pushed values are expected to be [Portadom](Portadom.md) instances.
 
 `Promise`\<`number`\>
 
-***
+---
 
 ### reverse()
 
@@ -655,7 +655,7 @@ Wrapper for Array.reverse that returns the resulting array wrapped in PortadomAr
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### shift()
 
@@ -675,7 +675,7 @@ Wrapper for Array.shift that returns the resulting item as [PortadomPromise](Por
 
 [`PortadomPromise`](PortadomPromise.md)\<`El`\>
 
-***
+---
 
 ### slice()
 
@@ -695,7 +695,7 @@ Wrapper for Array.slice that returns the resulting array wrapped in PortadomArra
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### some()
 
@@ -715,7 +715,7 @@ Wrapper for Array.some.
 
 `Promise`\<`boolean`\>
 
-***
+---
 
 ### sort()
 
@@ -735,7 +735,7 @@ Wrapper for Array.sort that returns the resulting array wrapped in PortadomArray
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### splice()
 
@@ -755,7 +755,7 @@ Wrapper for Array.splice that returns the resulting array wrapped in PortadomArr
 
 `PortadomArrayPromise`\<`El`\>
 
-***
+---
 
 ### unshift()
 
@@ -777,7 +777,7 @@ NOTE: The added values are expected to be [Portadom](Portadom.md) instances.
 
 `Promise`\<`number`\>
 
-***
+---
 
 ### values()
 
@@ -867,7 +867,7 @@ Defined in: [dom/types.ts:453](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 `Promise`\<`U`\>
 
-***
+---
 
 ### reduceRight()
 

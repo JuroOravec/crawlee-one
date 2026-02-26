@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / inputInput
 
@@ -8,7 +8,7 @@
 
 > `const` **inputInput**: `object`
 
-Defined in: [packages/crawlee-one/src/lib/input.ts:496](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L496)
+Defined in: [packages/crawlee-one/src/lib/input.ts:560](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/input.ts#L560)
 
 Common input fields related to actor input
 
@@ -16,8 +16,8 @@ Common input fields related to actor input
 
 ### inputExtendFromFunction
 
-> **inputExtendFromFunction**: `StringField`\<`string`, `string`\>
+> **inputExtendFromFunction**: `StringField`\<`string`, `string`, `ZodOptional`\<`ZodString`\>\>
 
 ### inputExtendUrl
 
-> **inputExtendUrl**: `StringField`\<`string`, `string`\>
+> **inputExtendUrl**: `StringField`\<`string`, `string`, `ZodOptional`\<`ZodString`\>\>

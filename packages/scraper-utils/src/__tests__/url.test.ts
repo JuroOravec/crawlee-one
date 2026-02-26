@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { validateUrl, resolveUrlPath, sortUrl, equalUrls } from '../url.js';
+
+import { equalUrls, resolveUrlPath, sortUrl, validateUrl } from '../url.js';
 
 describe('validateUrl', () => {
   it('does not throw for a valid URL', () => {
@@ -16,6 +17,23 @@ describe('validateUrl', () => {
 
   it('includes the URL in the error message', () => {
     expect(() => validateUrl('bad')).toThrow(/bad/);
+  });
+
+  it('throws for about:blank', () => {
+    expect(() => validateUrl('about:blank')).toThrow(/non-fetchable scheme/);
+    expect(() => validateUrl('about:blank')).toThrow(/about:blank/);
+  });
+
+  it('throws for javascript: scheme', () => {
+    expect(() => validateUrl('javascript:void(0)')).toThrow(/non-fetchable scheme/);
+  });
+
+  it('throws for mailto: scheme', () => {
+    expect(() => validateUrl('mailto:foo@example.com')).toThrow(/non-fetchable scheme/);
+  });
+
+  it('throws for # fragment-only', () => {
+    expect(() => validateUrl('#')).toThrow();
   });
 });
 

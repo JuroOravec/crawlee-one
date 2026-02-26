@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / splitCheerioSelection
 
@@ -21,7 +21,7 @@ To `[Cheerio[el], Cheerio[el], Cheerio[el], Cheerio[el]]`
 
 ### T
 
-`T` *extends* `AnyNode`
+`T` _extends_ `AnyNode`
 
 ## Parameters
 

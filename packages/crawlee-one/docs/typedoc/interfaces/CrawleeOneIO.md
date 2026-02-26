@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneIO
 
@@ -9,6 +9,7 @@
 Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:23](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/integrations/types.ts#L23)
 
 Interface for storing and retrieving:
+
 - Scraped data
 - Requests (URLs) to scrape
 - Cache data
@@ -20,15 +21,15 @@ drop-in replacement with other integrations.
 
 ### TEnv
 
-`TEnv` *extends* `object` = `object`
+`TEnv` _extends_ `object` = `object`
 
 ### TReport
 
-`TReport` *extends* `object` = `object`
+`TReport` _extends_ `object` = `object`
 
 ### TMetadata
 
-`TMetadata` *extends* `object` = `object`
+`TMetadata` _extends_ `object` = `object`
 
 ## Properties
 
@@ -52,7 +53,7 @@ For more details and code examples, see ProxyConfiguration.
 
 ##### T
 
-`T` *extends* `object`
+`T` _extends_ `object`
 
 #### Parameters
 
@@ -64,7 +65,7 @@ For more details and code examples, see ProxyConfiguration.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`ProxyConfiguration` \| `undefined`\>
 
-***
+---
 
 ### generateEntryMetadata()
 
@@ -78,7 +79,7 @@ Generate object with info on current context, which will be appended to the scra
 
 ##### Ctx
 
-`Ctx` *extends* `CrawlingContext`\<`unknown`, `Dictionary`\>
+`Ctx` _extends_ `CrawlingContext`\<`unknown`, `Dictionary`\>
 
 #### Parameters
 
@@ -90,7 +91,7 @@ Generate object with info on current context, which will be appended to the scra
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`TMetadata`\>
 
-***
+---
 
 ### generateErrorReport()
 
@@ -114,7 +115,7 @@ Generate object with info on current context, which will be send to the error Da
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`TReport`\>
 
-***
+---
 
 ### getInput()
 
@@ -129,13 +130,13 @@ the default KeyValueStore associated with the current actor run.
 
 ##### Input
 
-`Input` *extends* `object`
+`Input` _extends_ `object`
 
 #### Returns
 
 `Promise`\<`Input` \| `null`\>
 
-***
+---
 
 ### isTelemetryEnabled()
 
@@ -147,7 +148,7 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:131](https://git
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`boolean`\>
 
-***
+---
 
 ### openDataset()
 
@@ -171,7 +172,7 @@ the local filesystem or in the cloud.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneDataset`](CrawleeOneDataset.md)\<`object`\>\>
 
-***
+---
 
 ### openKeyValueStore()
 
@@ -195,7 +196,7 @@ either on a local filesystem or in the cloud.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneKeyValueStore`](CrawleeOneKeyValueStore.md)\>
 
-***
+---
 
 ### openRequestQueue()
 
@@ -220,7 +221,7 @@ breadth-first and depth-first crawling orders.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<[`CrawleeOneRequestQueue`](CrawleeOneRequestQueue.md)\>
 
-***
+---
 
 ### runInContext()
 
@@ -270,7 +271,7 @@ The `Actor.main()` function performs the following actions:
 
 `Promise`\<`void`\>
 
-***
+---
 
 ### triggerDownstreamCrawler()
 
@@ -281,12 +282,13 @@ Defined in: [packages/crawlee-one/src/lib/integrations/types.ts:74](https://gith
 Equivalent of Actor.metamorph.
 
 This function should:
+
 1. Start a crawler/actor by its ID,
 2. Pass the given input into downsteam crawler.
 3. Make the same storage available to the downstream crawler. AKA, the downstream crawler
    should use the same "default" storage as is the current "default" storage.
 
-Read more about  Actor.metamorph:
+Read more about Actor.metamorph:
 
 `Actor.metamorph` transforms this actor run to an actor run of a given actor. The system
 stops the current container and starts the new container instead. All the default storages
@@ -297,7 +299,7 @@ default key-value store.
 
 ##### TInput
 
-`TInput` *extends* `object`
+`TInput` _extends_ `object`
 
 #### Parameters
 
