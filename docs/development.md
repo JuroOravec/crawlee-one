@@ -21,31 +21,34 @@ npx playwright install --with-deps chromium
 
 ## Commands
 
-| Command           | What it does                                                    |
-| ----------------- | --------------------------------------------------------------- |
-| `pnpm build`      | Bundle with tsup + emit declarations with tsc                   |
-| `pnpm test`       | Run all tests once (Vitest)                                     |
-| `pnpm coverage`   | Run tests with v8 coverage report                               |
-| `pnpm bench`      | Run benchmarks with table output (interactive)                  |
-| `pnpm bench:gen`  | Run benchmarks and transform into rich archive + dashboard JSON |
-| `pnpm lint`       | Lint `src/` with ESLint                                         |
-| `pnpm lint:fix`   | Lint and auto-fix                                               |
-| `pnpm start:dev`  | Run `src/index.ts` directly via tsx (for local experimentation) |
-| `pnpm start:prod` | Run the built `dist/index.js`                                   |
-| `pnpm validate`   | Run project constraint validation scripts                       |
-| `pnpm docs:gen`   | Regenerate TypeDoc API docs into `docs/typedoc/`                |
+| Command                             | What it does                                                                                                                                        |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npx crawlee-one run <crawler>`     | Run a crawler (uses `input` from config). Use `-c` to specify config path. See [testing.md](../packages/crawlee-one/docs/testing.md).               |
+| `npx crawlee-one dev [crawlers...]` | Run crawler with dev queue (caches responses). Add `--fetch` to pre-populate cache only. See [testing.md](../packages/crawlee-one/docs/testing.md). |
+| `pnpm build`                        | Bundle with tsup + emit declarations with tsc                                                                                                       |
+| `pnpm test`                         | Run all tests once (Vitest)                                                                                                                         |
+| `pnpm coverage`                     | Run tests with v8 coverage report                                                                                                                   |
+| `pnpm bench`                        | Run benchmarks with table output (interactive)                                                                                                      |
+| `pnpm bench:gen`                    | Run benchmarks and transform into rich archive + dashboard JSON                                                                                     |
+| `pnpm lint`                         | Lint `src/` with ESLint                                                                                                                             |
+| `pnpm lint:fix`                     | Lint and auto-fix                                                                                                                                   |
+| `pnpm start:dev`                    | Run `src/index.ts` directly via tsx (for local experimentation)                                                                                     |
+| `pnpm start:prod`                   | Run the built `dist/index.js`                                                                                                                       |
+| `pnpm validate`                     | Run project constraint validation scripts                                                                                                           |
+| `pnpm docs:gen`                     | Regenerate TypeDoc API docs into `docs/typedoc/`                                                                                                    |
+| `pnpm docker:profesia`              | Build profesia Docker image (pack + docker build from monorepo root)                                                                                |
 
 ## Project structure
 
 ```
 src/
 ├── index.ts              # Public API -- re-exports everything consumers import
-├── api.ts                # Top-level crawleeOne() function
+├── lib/context/context.ts # Top-level crawleeOne()
 ├── cli/                  # CLI entry point (npx crawlee-one ...)
 │   └── commands/         #   Subcommands (codegen, config)
 ├── types/                # Shared type definitions and config schema
 ├── lib/
-│   ├── actor/            # Core actor logic
+│   ├── context/          # Core CrawleeOne context logic
 │   ├── router/           # Route matching and handler registration
 │   ├── io/               # Data and request I/O
 │   ├── error/            # Error capture and reporting
@@ -54,7 +57,6 @@ src/
 │   ├── integrations/     # Platform-specific I/O implementations
 │   ├── telemetry/        # Error/performance telemetry
 │   ├── actions/          # High-level scraping patterns
-│   ├── migrate/          # Data migration utilities
 │   └── test/             # Shared test utilities
 └── utils/                # General-purpose utilities
 ```
@@ -91,10 +93,9 @@ The mapping lives in `src/constants.ts` (`actorClassByType`).
 
 ### Core flow
 
-1. **`crawleeOne()`** (in `src/api.ts`) is the main entry point. It calls `runCrawleeOne()`.
-2. **`runCrawleeOne()`** (in `src/lib/actor/actor.ts`) resolves input, creates scoped push/metamorph functions, registers routes, instantiates the correct crawler class, and runs it.
-3. **Route matching** (in `src/lib/router/router.ts`) uses `registerHandlers` to wire named routes to the Crawlee Router. The default handler matches unlabeled requests against route matchers (regex, string, function) and re-enqueues them with the correct label.
-4. **Data I/O** (in `src/lib/io/`) handles pushing data to datasets and requests to queues, with transforms, filters, privacy masking, and size limits applied.
+1. **`crawleeOne()`** (in `src/lib/context/context.ts`) is the main entry point. It resolves input, creates scoped push/metamorph functions, registers routes, instantiates the correct crawler class, and runs it.
+2. **Route matching** (in `src/lib/router/router.ts`) uses `registerHandlers` to wire named routes to the Crawlee Router. The default handler matches unlabeled requests against route matchers (regex, string, function) and re-enqueues them with the correct label.
+3. **Data I/O** (in `src/lib/io/`) handles pushing data to datasets and requests to queues, with transforms, filters, privacy masking, and size limits applied.
 
 ### IO abstraction
 
@@ -335,6 +336,8 @@ When the peer and actual versions are the same (e.g. `vitest`), use `catalog:` f
 
 ## Further reading
 
+- [Crawlee execution flow](../packages/crawlee-one/docs/development/crawlee-execution-flow.md) -- internal flow from `crawler.run()` through `RequestQueue`, HTTP fetch, and caching interception points
+- [LLM extraction flow](../packages/crawlee-one/docs/development/llm-extraction-flow.md) -- two-phase deferred LLM extraction, `extractWithLLM` API, and `crawlee-one llm extract` command
 - [CONTRIBUTING.md](../CONTRIBUTING.md) -- how to submit PRs and report bugs
 - [testing-gotchas.md](../packages/crawlee-one/docs/development/testing-gotchas.md) -- Crawlee-specific testing pitfalls
 - [benchmarks/README.md](../packages/crawlee-one/benchmarks/README.md) -- benchmarking infrastructure deep dive

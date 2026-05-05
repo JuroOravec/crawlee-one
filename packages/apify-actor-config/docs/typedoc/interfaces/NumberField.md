@@ -1,12 +1,12 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / NumberField
 
-# Interface: NumberField\<T, TUnit\>
+# Interface: NumberField\<T, TUnit, TSchema\>
 
-Defined in: [inputSchema.ts:389](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L389)
+Defined in: [inputSchema.ts:341](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L341)
 
 Floating-point number field. Unlike `IntegerField`, this accepts
 both integers and decimal numbers.
@@ -17,29 +17,33 @@ Example:
 
 ```json
 {
-"title": "Temperature",
-"type": "number",
-"description": "Target temperature in Celsius",
-"default": 36.6,
-"minimum": 0,
-"maximum": 100,
-"unit": "°C"
+  "title": "Temperature",
+  "type": "number",
+  "description": "Target temperature in Celsius",
+  "default": 36.6,
+  "minimum": 0,
+  "maximum": 100,
+  "unit": "°C"
 }
 ```
 
 ## Extends
 
-- `BaseField`.`BaseFieldTypedProps`\<`T`, `"number"`\>
+- `BaseField`.`BaseFieldTypedProps`\<`T`, `"number"`, `TSchema`\>
 
 ## Type Parameters
 
 ### T
 
-`T` *extends* `number` = `number`
+`T` _extends_ `number` = `number`
 
 ### TUnit
 
-`TUnit` *extends* `string` = `string`
+`TUnit` _extends_ `string` = `string`
+
+### TSchema
+
+`TSchema` = `any`
 
 ## Properties
 
@@ -47,7 +51,7 @@ Example:
 
 > `optional` **default**: `T`
 
-Defined in: [inputSchema.ts:164](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L164)
+Defined in: [inputSchema.ts:95](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L95)
 
 Default value that will be used when no value is provided.
 
@@ -55,7 +59,7 @@ Default value that will be used when no value is provided.
 
 `BaseFieldTypedProps.default`
 
-***
+---
 
 ### description
 
@@ -69,23 +73,23 @@ Description of the field that will be displayed as help text in Actor input UI.
 
 `BaseField.description`
 
-***
+---
 
 ### editor?
 
 > `optional` **editor**: `"number"` \| `"hidden"`
 
-Defined in: [inputSchema.ts:393](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L393)
+Defined in: [inputSchema.ts:349](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L349)
 
 Visual editor used for the input field.
 
-***
+---
 
 ### errorMessage?
 
 > `optional` **errorMessage**: [`NumericErrorMessage`](NumericErrorMessage.md)
 
-Defined in: [inputSchema.ts:180](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L180)
+Defined in: [inputSchema.ts:111](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L111)
 
 Custom error messages for validation keywords.
 The allowed keys depend on the field's `type`.
@@ -96,13 +100,13 @@ See https://docs.apify.com/platform/actors/development/actor-definition/input-sc
 
 `BaseFieldTypedProps.errorMessage`
 
-***
+---
 
 ### example?
 
 > `optional` **example**: `T`
 
-Defined in: [inputSchema.ts:173](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L173)
+Defined in: [inputSchema.ts:104](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L104)
 
 Sample value of this field for the actor to be displayed when
 actor is published in Apify Store.
@@ -111,27 +115,27 @@ actor is published in Apify Store.
 
 `BaseFieldTypedProps.example`
 
-***
+---
 
 ### maximum?
 
 > `optional` **maximum**: `number`
 
-Defined in: [inputSchema.ts:395](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L395)
+Defined in: [inputSchema.ts:351](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L351)
 
 Maximum allowed value.
 
-***
+---
 
 ### minimum?
 
 > `optional` **minimum**: `number`
 
-Defined in: [inputSchema.ts:397](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L397)
+Defined in: [inputSchema.ts:353](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L353)
 
 Minimum allowed value.
 
-***
+---
 
 ### nullable?
 
@@ -145,13 +149,13 @@ Specifies whether null is an allowed value.
 
 `BaseField.nullable`
 
-***
+---
 
 ### prefill?
 
 > `optional` **prefill**: `T`
 
-Defined in: [inputSchema.ts:168](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L168)
+Defined in: [inputSchema.ts:99](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L99)
 
 Value that will be prefilled in the actor input interface.
 
@@ -159,13 +163,13 @@ Value that will be prefilled in the actor input interface.
 
 `BaseFieldTypedProps.prefill`
 
-***
+---
 
 ### schema?
 
-> `optional` **schema**: `any`
+> `optional` **schema**: `TSchema`
 
-Defined in: [inputSchema.ts:96](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L96)
+Defined in: [inputSchema.ts:118](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L118)
 
 Optional validation schema for this field (e.g. a Zod schema).
 
@@ -174,9 +178,9 @@ automatically stripped when generating `actor.json`.
 
 #### Inherited from
 
-`BaseField.schema`
+`BaseFieldTypedProps.schema`
 
-***
+---
 
 ### sectionCaption?
 
@@ -193,7 +197,7 @@ or the next field which has the sectionCaption property set.
 
 `BaseField.sectionCaption`
 
-***
+---
 
 ### sectionDescription?
 
@@ -209,7 +213,7 @@ visible right under the caption when the section is open.
 
 `BaseField.sectionDescription`
 
-***
+---
 
 ### title
 
@@ -223,13 +227,13 @@ Title of the field in UI.
 
 `BaseField.title`
 
-***
+---
 
 ### type
 
 > **type**: `"number"`
 
-Defined in: [inputSchema.ts:391](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L391)
+Defined in: [inputSchema.ts:347](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L347)
 
 Allowed type for the input value. Cannot be mixed.
 
@@ -237,12 +241,12 @@ Allowed type for the input value. Cannot be mixed.
 
 `BaseField.type`
 
-***
+---
 
 ### unit?
 
 > `optional` **unit**: `TUnit`
 
-Defined in: [inputSchema.ts:399](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L399)
+Defined in: [inputSchema.ts:355](https://github.com/JuroOravec/crawlee-one/blob/main/packages/apify-actor-config/src/types/inputSchema.ts#L355)
 
 Unit displayed next to the field in UI, for example second, MB, etc.

@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / createPlaywrightElementSerializer
 
@@ -23,7 +23,7 @@ cache the IDs outside of Playwright in Sets or Maps.
 
 ### T
 
-`T` *extends* `Page`
+`T` _extends_ `Page`
 
 ## Parameters
 

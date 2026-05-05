@@ -61,7 +61,7 @@ try {
 
 ## Mock IO `runInContext`
 
-The default mock for `io.runInContext` is a no-op (`vi.fn()`). For tests that exercise `runCrawleeOne` end-to-end, it must actually call the callback it receives:
+The default mock for `io.runInContext` is a no-op (`vi.fn()`). For tests that exercise `crawleeOne` end-to-end, it must actually call the callback it receives:
 
 ```typescript
 const mockIO = {

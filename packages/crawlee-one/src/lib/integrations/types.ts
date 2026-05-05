@@ -1,10 +1,10 @@
 import type { ExitOptions } from 'apify';
 import type {
-  Request as CrawleeRequest,
   CrawlingContext,
   DatasetDataOptions,
   Log,
   ProxyConfiguration,
+  Request as CrawleeRequest,
   RequestOptions,
 } from 'crawlee';
 import type { Page } from 'playwright';
@@ -71,6 +71,7 @@ export interface CrawleeOneIO<
    * are preserved and the new input is stored under the INPUT-METAMORPH-1 key in the same
    * default key-value store.
    */
+  /* eslint-disable-next-line max-params -- signature must match Apify Actor.metamorph */
   triggerDownstreamCrawler: <TInput extends object>(
     /** ID of the crawler/actor to which should be triggered. */
     targetActorId: string,
@@ -206,6 +207,7 @@ export interface CrawleeOneKeyValueStore {
    * To retrieve a value from the key-value store, use the {@link CrawleeOneKeyValueStore.getValue}
    * function.
    */
+  /* eslint-disable-next-line max-params -- signature must match Crawlee KeyValueStore.setValue */
   setValue: (
     key: string,
     value: any,
@@ -230,6 +232,18 @@ export interface CrawleeOneKeyValueStore {
  * drop-in replacement with other integrations.
  */
 export interface CrawleeOneRequestQueue {
+  name?: string;
+  /**
+   * Adds a single request to the queue. Returns operation info including wasAlreadyHandled.
+   */
+  addRequest: (
+    requestLike: CrawleeRequest | Record<string, unknown>,
+    options?: { forefront?: boolean }
+  ) => MaybePromise<{ wasAlreadyHandled: boolean; wasAlreadyPresent: boolean; requestId: string }>;
+  /**
+   * Gets a request by ID. Used with reclaimRequest when addRequest returns wasAlreadyHandled.
+   */
+  getRequest: (id: string) => MaybePromise<CrawleeRequest | null>;
   /**
    * Adds requests to the queue.
    *

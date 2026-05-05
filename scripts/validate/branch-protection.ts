@@ -8,8 +8,9 @@
  * failing -- this avoids breaking CI for contributors who lack admin access.
  */
 
-import { readFile } from 'node:fs/promises';
 import { execSync } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
+
 import { parse } from 'yaml';
 
 // ---------------------------------------------------------------------------

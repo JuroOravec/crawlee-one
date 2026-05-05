@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import * as cheerio from 'cheerio';
+import { describe, expect, it } from 'vitest';
 
 import { cheerioPortadom } from '../dom.js';
 import { splitCheerioSelection } from '../domUtils.js';

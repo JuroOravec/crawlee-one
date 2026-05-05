@@ -1,8 +1,8 @@
 import { LogLevel as CrawleeLogLevel } from 'crawlee';
 
 import type { ArrVal } from '../utils/types.js';
-import type { CrawleeOneRouteCtx, CrawleeOneRouteWrapper } from './router/types.js';
-import type { CrawleeOneCtx } from './actor/types.js';
+import type { CrawleeOneTypes } from './context/types.js';
+import type { CrawleeOneRouteMiddleware } from './router/types.js';
 
 export const LOG_LEVEL = ['debug', 'info', 'warn', 'error', 'off'] as const; // prettier-ignore
 export type LogLevel = ArrVal<typeof LOG_LEVEL>;
@@ -46,12 +46,9 @@ export const logLevelToCrawlee: Record<LogLevel, CrawleeLogLevel> = {
  * });
  * ```
  */
-export const logLevelHandlerWrapper = <
-  T extends CrawleeOneCtx,
-  RouterCtx extends Record<string, any> = CrawleeOneRouteCtx<T>,
->(
+export const logLevelHandlerWrapper = <T extends CrawleeOneTypes>(
   logLevel: LogLevel
-): CrawleeOneRouteWrapper<T, RouterCtx> => {
+): CrawleeOneRouteMiddleware<T> => {
   return (handler) => {
     return (ctx, ...args) => {
       ctx.log.info(`Setting log level to ${logLevel}`);

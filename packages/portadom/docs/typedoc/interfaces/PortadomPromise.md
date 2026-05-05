@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / PortadomPromise
 
@@ -18,12 +18,14 @@ const dom = Promise.resolve(browserPortadom({}));
 ```
 
 Instead of:
+
 ```js
 const resA = await (await dom).findOne('..');
 const resB = await (await dom).text();
 ```
 
 You can call:
+
 ```js
 const domP = createPortadomPromise(dom);
 const resA = await domP.findOne('..');
@@ -56,7 +58,7 @@ Get element's attribute
 
 `Promise`\<`string` \| `null`\>
 
-***
+---
 
 ### attrs()
 
@@ -70,7 +72,7 @@ Get element's attributes
 
 ##### Attrs
 
-`Attrs` *extends* `string`
+`Attrs` _extends_ `string`
 
 #### Parameters
 
@@ -82,7 +84,7 @@ Get element's attributes
 
 `Promise`\<`Record`\<`string`, `string` \| `null`\> \| `null`\>
 
-***
+---
 
 ### children()
 
@@ -108,7 +110,7 @@ Get element's children
 
 [`PortadomArrayPromise`](PortadomArrayPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### closest()
 
@@ -134,7 +136,7 @@ Get a single ancestor (or itself) matching the selector
 
 `PortadomPromise`\<`TFindEl`\>
 
-***
+---
 
 ### findMany()
 
@@ -160,7 +162,7 @@ Get all descendants matching the selector
 
 [`PortadomArrayPromise`](PortadomArrayPromise.md)\<`TFindEl`\>
 
-***
+---
 
 ### findOne()
 
@@ -186,7 +188,7 @@ Get a single descendant matching the selector
 
 `PortadomPromise`\<`TFindEl`\>
 
-***
+---
 
 ### getCommonAncestor()
 
@@ -213,7 +215,7 @@ or `null` if none such found.
 
 `PortadomPromise`\<`TFindEl`\>
 
-***
+---
 
 ### getCommonAncestorFromSelector()
 
@@ -241,7 +243,7 @@ or `null` if none such found.
 
 `PortadomPromise`\<`TFindEl`\>
 
-***
+---
 
 ### href()
 
@@ -261,7 +263,7 @@ Get element's href
 
 `Promise`\<`string` \| `null`\>
 
-***
+---
 
 ### map()
 
@@ -287,7 +289,7 @@ Freely modify the underlying DOM node
 
 `Promise`\<`TVal` \| `null`\>
 
-***
+---
 
 ### node
 
@@ -295,7 +297,7 @@ Freely modify the underlying DOM node
 
 Defined in: [dom/types.ts:125](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L125)
 
-***
+---
 
 ### nodeName()
 
@@ -315,7 +317,7 @@ Get element's nodeName
 
 `Promise`\<`string` \| `null`\>
 
-***
+---
 
 ### parent()
 
@@ -341,7 +343,7 @@ Get element's parent
 
 `PortadomPromise`\<`TFindEl`\>
 
-***
+---
 
 ### promise
 
@@ -349,7 +351,7 @@ Get element's parent
 
 Defined in: [dom/types.ts:124](https://github.com/JuroOravec/crawlee-one/blob/main/packages/portadom/src/dom/types.ts#L124)
 
-***
+---
 
 ### prop()
 
@@ -369,7 +371,7 @@ Get element's property
 
 `Promise`\<`any`\>
 
-***
+---
 
 ### props()
 
@@ -389,7 +391,7 @@ Get element's properties
 
 `Promise`\<`any`\>
 
-***
+---
 
 ### remove()
 
@@ -409,7 +411,7 @@ Remove the element
 
 `MaybePromise`\<`void`\>
 
-***
+---
 
 ### root()
 
@@ -435,7 +437,7 @@ Get root element
 
 `PortadomPromise`\<`TFindEl`\>
 
-***
+---
 
 ### src()
 
@@ -455,7 +457,7 @@ Get element's src
 
 `Promise`\<`string` \| `null`\>
 
-***
+---
 
 ### text()
 
@@ -475,7 +477,7 @@ Get element's text (trimmed)
 
 `Promise`\<`string` \| `null`\>
 
-***
+---
 
 ### textAsLower()
 
@@ -495,7 +497,7 @@ Get element's text as lowercase (trimmed)
 
 `Promise`\<`string` \| `null`\>
 
-***
+---
 
 ### textAsNumber()
 
@@ -515,7 +517,7 @@ Get element's text and convert it to number
 
 `Promise`\<`number` \| `null`\>
 
-***
+---
 
 ### textAsUpper()
 
@@ -535,7 +537,7 @@ Get element's text as uppercase (trimmed)
 
 `Promise`\<`string` \| `null`\>
 
-***
+---
 
 ### url()
 

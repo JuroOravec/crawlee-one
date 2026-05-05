@@ -1,6 +1,6 @@
 [**actor-spec**](../README.md)
 
-***
+---
 
 [actor-spec](../globals.md) / DatasetModes
 
@@ -13,6 +13,7 @@ the pricing, performance, or what kind of data is returned, we call
 these the actor "modes".
 
 E.g.
+
 ```
 [
 { name: 'Fast', isDefault: true, shortDesc: 'only data on the entries themselves' },
@@ -30,7 +31,7 @@ Defined in: [actorSpec.ts:251](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Whether this mode is the default when the actor is extracting this dataset with default settings
 
-***
+---
 
 ### name
 
@@ -40,7 +41,7 @@ Defined in: [actorSpec.ts:249](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 Name of the mode
 
-***
+---
 
 ### shortDesc
 

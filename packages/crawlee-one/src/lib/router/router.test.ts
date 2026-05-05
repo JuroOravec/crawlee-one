@@ -1,11 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
 import { Router } from 'crawlee';
+import { describe, expect, it, vi } from 'vitest';
 
-import { registerHandlers, setupDefaultHandlers } from './router.js';
 import type { CrawleeOneIO, CrawleeOneRequestQueue } from '../integrations/types.js';
+import { registerHandlers, setupDefaultHandlers } from './router.js';
 
 // Minimal mock IO
 const createMockRequestQueue = (): CrawleeOneRequestQueue => ({
+  addRequest: vi.fn(),
+  getRequest: vi.fn().mockResolvedValue(null),
   addRequests: vi.fn(),
   markRequestHandled: vi.fn(),
   fetchNextRequest: vi.fn().mockResolvedValue(null),
@@ -52,7 +54,7 @@ describe('registerHandlers', () => {
       ROUTE_B: { match: /route-b/, handler: handlerB },
     } as any;
 
-    await registerHandlers(router as any, routes);
+    await registerHandlers({ router, routes, getRouterContext: () => ({}) });
 
     // Verify handlers were registered (Router.addHandler is called for each route)
     // We can test this by checking the router has the handlers
@@ -86,7 +88,10 @@ describe('registerHandlers', () => {
     } as any;
 
     // Wrappers [A, B] -> A( B( handler ) )
-    await registerHandlers(router as any, routes, {
+    await registerHandlers({
+      router: router as any,
+      routes,
+      getRouterContext: () => ({}),
       handlerWrappers: [wrapperA, wrapperB] as any,
     });
 
@@ -105,7 +110,7 @@ describe('registerHandlers', () => {
     ]);
   });
 
-  it('makes routerContext available to handlers', async () => {
+  it('makes getRouterContext result available to handlers', async () => {
     const router = Router.create();
     const handler = vi.fn(async (_ctx: any) => {});
 
@@ -113,44 +118,13 @@ describe('registerHandlers', () => {
       TEST: { match: /test/, handler },
     } as any;
 
-    const routerContext = { actor: 'test-actor', pushData: vi.fn() };
+    const getRouterContext = () => ({ one: {}, pushData: vi.fn() });
 
-    await registerHandlers(router as any, routes, { routerContext: routerContext as any });
+    await registerHandlers({ router, routes, getRouterContext: getRouterContext as any });
 
     // The handler is wrapped and registered on the router. To verify context merging,
     // we'd need to simulate a crawl. Instead, verify registration succeeded.
     expect(handler).not.toHaveBeenCalled(); // Handler isn't called during registration
-  });
-
-  it('calls onSetCtx during handler execution', async () => {
-    const router = Router.create();
-    const onSetCtx = vi.fn();
-    const handler = vi.fn();
-
-    const routes = {
-      TEST_LABEL: { match: /test/, handler },
-    } as any;
-
-    await registerHandlers(router as any, routes, { onSetCtx: onSetCtx as any });
-
-    // Crawlee's Router internally calls ctx.log.debug, so log needs those methods directly
-    const mockLog: any = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warning: vi.fn() };
-    mockLog.child = vi.fn().mockReturnValue(mockLog);
-
-    const mockCtx = {
-      request: { url: 'https://test.com', label: 'TEST_LABEL' },
-      log: mockLog,
-    } as any;
-
-    await router(mockCtx);
-
-    // onSetCtx should be called with ctx and then null
-    expect(onSetCtx).toHaveBeenCalledTimes(2);
-    expect(onSetCtx).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({ request: mockCtx.request })
-    );
-    expect(onSetCtx).toHaveBeenNthCalledWith(2, null);
   });
 });
 
@@ -171,6 +145,7 @@ describe('setupDefaultHandlers', () => {
       io,
       router: router as any,
       routes,
+      getRouterContext: () => ({}),
     });
 
     expect(addDefaultHandler).toHaveBeenCalledTimes(1);
@@ -198,6 +173,7 @@ describe('setupDefaultHandlers', () => {
       io,
       router: router as any,
       routes,
+      getRouterContext: () => ({}),
       routeHandlerWrappers: [wrapper] as any,
     });
 
@@ -227,7 +203,12 @@ describe('default handler URL matching', () => {
       ROUTE_B: { match: /other\.com/, handler: handlerB },
     } as any;
 
-    await setupDefaultHandlers({ io, router: router as any, routes });
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      getRouterContext: () => ({}),
+    });
 
     const mockCtx = {
       request: { url: 'https://example.com/page', loadedUrl: 'https://example.com/page' },
@@ -250,7 +231,12 @@ describe('default handler URL matching', () => {
       ROUTE_A: { match: 'example\\.com', handler: handlerA },
     } as any;
 
-    await setupDefaultHandlers({ io, router: router as any, routes });
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      getRouterContext: () => ({}),
+    });
 
     const mockCtx = {
       request: { url: 'https://example.com/page', loadedUrl: 'https://example.com/page' },
@@ -273,7 +259,12 @@ describe('default handler URL matching', () => {
       SPECIAL: { match: matchFn, handler },
     } as any;
 
-    await setupDefaultHandlers({ io, router: router as any, routes });
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      getRouterContext: () => ({}),
+    });
 
     const mockCtx = {
       request: { url: 'https://special.com/page', loadedUrl: 'https://special.com/page' },
@@ -296,7 +287,12 @@ describe('default handler URL matching', () => {
       MULTI: { match: [/foo\.com/, /bar\.com/], handler },
     } as any;
 
-    await setupDefaultHandlers({ io, router: router as any, routes });
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      getRouterContext: () => ({}),
+    });
 
     const mockCtx = {
       request: { url: 'https://bar.com/page', loadedUrl: 'https://bar.com/page' },
@@ -316,7 +312,12 @@ describe('default handler URL matching', () => {
       ROUTE_A: { match: /example\.com/, handler: vi.fn() },
     } as any;
 
-    await setupDefaultHandlers({ io, router: router as any, routes });
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      getRouterContext: () => ({}),
+    });
 
     const mockLog = createRouterMockLog();
     const mockCtx = {
@@ -329,6 +330,30 @@ describe('default handler URL matching', () => {
     expect(mockLog.error).toHaveBeenCalledWith(expect.stringContaining('No route matched URL'));
   });
 
+  it('throws when no route matches and crawleeOneOptions.strict is true', async () => {
+    const router = Router.create();
+    const io = createMockIO();
+
+    const routes = {
+      ROUTE_A: { match: /example\.com/, handler: vi.fn() },
+    } as any;
+
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      getRouterContext: () => ({}),
+      strict: true,
+    });
+
+    const mockCtx = {
+      request: { url: 'https://unknown.com', loadedUrl: 'https://unknown.com' },
+      log: createRouterMockLog(),
+    } as any;
+
+    await expect(router(mockCtx)).rejects.toThrow(/No route matched URL/);
+  });
+
   it('logs error when route has no handler', async () => {
     const router = Router.create();
     const io = createMockIO();
@@ -337,7 +362,12 @@ describe('default handler URL matching', () => {
       NO_HANDLER: { match: /example\.com/, handler: null as any },
     } as any;
 
-    await setupDefaultHandlers({ io, router: router as any, routes });
+    await setupDefaultHandlers({
+      io,
+      router: router as any,
+      routes,
+      getRouterContext: () => ({}),
+    });
 
     const mockLog = createRouterMockLog();
     const mockCtx = {
@@ -364,6 +394,7 @@ describe('default handler URL matching', () => {
       io,
       router: router as any,
       routes,
+      getRouterContext: () => ({}),
       input: { batchSize: 5 } as any,
     });
 
@@ -377,35 +408,7 @@ describe('default handler URL matching', () => {
     await expect(router(mockCtx)).rejects.toThrow('Request batching');
   });
 
-  it('calls onSetCtx with context during default handler execution', async () => {
-    const router = Router.create();
-    const io = createMockIO();
-    const onSetCtx = vi.fn();
-
-    const routes = {
-      MAIN: { match: /example\.com/, handler: vi.fn() },
-    } as any;
-
-    await setupDefaultHandlers({
-      io,
-      router: router as any,
-      routes,
-      onSetCtx: onSetCtx as any,
-    });
-
-    const mockCtx = {
-      request: { url: 'https://example.com', loadedUrl: 'https://example.com' },
-      log: createRouterMockLog(),
-    } as any;
-
-    await router(mockCtx);
-
-    // onSetCtx called with ctx then null
-    expect(onSetCtx).toHaveBeenCalledTimes(2);
-    expect(onSetCtx).toHaveBeenNthCalledWith(2, null);
-  });
-
-  it('merges routerContext into handler context', async () => {
+  it('merges getRouterContext result into handler context', async () => {
     const router = Router.create();
     const io = createMockIO();
 
@@ -414,7 +417,7 @@ describe('default handler URL matching', () => {
       capturedCtx = ctx;
     });
 
-    const routerContext = { customField: 'test-value', pushData: vi.fn() };
+    const getRouterContext = () => ({ customField: 'test-value', pushData: vi.fn() });
 
     const routes = {
       MAIN: { match: /example\.com/, handler },
@@ -424,7 +427,7 @@ describe('default handler URL matching', () => {
       io,
       router: router as any,
       routes,
-      routerContext: routerContext as any,
+      getRouterContext: getRouterContext as any,
     });
 
     const mockCtx = {
@@ -453,6 +456,7 @@ describe('default handler URL matching', () => {
       io,
       router: router as any,
       routes,
+      getRouterContext: () => ({}),
       input: { batchSize: 1 } as any,
     });
 

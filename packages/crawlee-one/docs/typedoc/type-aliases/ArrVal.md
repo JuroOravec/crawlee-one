@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / ArrVal
 
@@ -16,4 +16,4 @@ Unwrap Array to its item(s)
 
 ### T
 
-`T` *extends* `any`[] \| readonly `any`[]
+`T` _extends_ `any`[] \| readonly `any`[]

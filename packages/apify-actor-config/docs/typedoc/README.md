@@ -1,6 +1,6 @@
 **apify-actor-config**
 
-***
+---
 
 # apify-actor-config
 
@@ -170,10 +170,10 @@ Generate `actor.json` from a compiled JS config module.
 
 ## Documentation
 
-| Document                                  | Description                         |
-| ----------------------------------------- | ----------------------------------- |
+| Document                          | Description                         |
+| --------------------------------- | ----------------------------------- |
 | [API reference](_media/README.md) | Auto-generated TypeScript API docs. |
-| [Changelog](_media/CHANGELOG.md)               | Release history.                    |
+| [Changelog](_media/CHANGELOG.md)  | Release history.                    |
 
 ## License
 

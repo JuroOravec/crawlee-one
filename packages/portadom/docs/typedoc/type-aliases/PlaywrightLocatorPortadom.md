@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / PlaywrightLocatorPortadom
 
@@ -16,4 +16,4 @@ Implementation of Portadom in Playwright using Locators
 
 ### El
 
-`El` *extends* `Locator` = `Locator`
+`El` _extends_ `Locator` = `Locator`

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / PrivacyMask
 
@@ -25,4 +25,4 @@ If the function returns a Promise, it will be awaited.
 
 ### T
 
-`T` *extends* `object`
+`T` _extends_ `object`

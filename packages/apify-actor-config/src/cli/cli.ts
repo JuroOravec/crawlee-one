@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module';
+
 import { program } from 'commander';
 
 import { generate } from './commands.js';

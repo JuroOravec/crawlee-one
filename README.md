@@ -28,11 +28,11 @@ await crawleeOne({
     mainPage: {
       match: /example\.com\/home/i,
       handler: async (ctx) => {
-        const { $, pushData, pushRequests } = ctx;
+        const { $, pushData, addRequests } = ctx;
         await pushData([{ title: $('h1').text() }], {
           privacyMask: { author: true },
         });
-        await pushRequests([{ url: 'https://example.com/page/2' }]);
+        await addRequests([{ url: 'https://example.com/page/2' }]);
       },
     },
     otherPage: {
@@ -48,6 +48,10 @@ await crawleeOne({
 That's it. No `Actor.main()` boilerplate, no manual router setup, no input wiring. CrawleeOne handles initialization, routing, input resolution, error handling, and teardown.
 
 ## Why CrawleeOne?
+
+### Extract data with AI.
+
+Use LLMs to extract structured data in a single line of code.
 
 ### One function. Full crawler.
 
@@ -86,6 +90,10 @@ Only process entries you haven't seen before. Built-in cache with KeyValueStore 
 
 Failed requests are saved to a dataset automatically. Plug in Sentry with one line, or implement your own telemetry.
 
+### Multi-crawler orchestration.
+
+Run multiple crawlers side-by-side in a single process until all their queues drain. Focus on the business logic while CrawleeOne does the orchestration.
+
 ### Match routes by URL or content.
 
 Regex, functions, or both. CrawleeOne auto-routes unlabeled requests to the right handler.
@@ -110,7 +118,7 @@ await crawleeOne({
           /* ... */
         ];
         await ctx.pushData(data, { privacyMask: { author: true } });
-        await ctx.pushRequests([{ url: 'https://...' }]);
+        await ctx.addRequests([{ url: 'https://...' }]);
       },
     },
   },
@@ -173,16 +181,19 @@ And that's far from everything -- the vanilla version still doesn't include data
 
 CrawleeOne scrapers support these out of the box, all configurable via input:
 
-| Use case                                                                                       | What it does                                                    |
-| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **[Import URLs](./packages/crawlee-one/docs/playbook-01-import-urls.md)**                      | Load URLs from databases, datasets, or custom functions.        |
-| **[Data transforms](./packages/crawlee-one/docs/playbook-03-results-mapping-simple.md)**       | Rename, select, limit, and reshape output without code changes. |
-| **[Request filtering](./packages/crawlee-one/docs/playbook-06-requests-mapping-filtering.md)** | Control what gets scraped to save time and money.               |
-| **[Caching](./packages/crawlee-one/docs/playbook-07-caching.md)**                              | Incremental scraping -- only process new entries.               |
-| **[Privacy compliance](./packages/crawlee-one/docs/playbook-10-privacy-compliance.md)**        | Redact personal data with a single toggle.                      |
-| **[Error capture](./packages/crawlee-one/docs/playbook-11-errors.md)**                         | Centralized error tracking across scrapers.                     |
+| Use case                                                                                                  | What it does                                                                    |
+| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **[LLM extraction](./packages/crawlee-one/docs/llm-extraction-guide.md)**                                 | Extract structured data from custom or inconsistent pages using an LLM.         |
+| **[LLM model comparison](./packages/crawlee-one/docs/llm-compare-guide.md)**                              | Compare models on the same URLs to find the best accuracy/cost/speed trade-off. |
+| **[Import URLs](./packages/crawlee-one/docs/playbook-01-import-urls.md)**                                 | Load URLs from databases, datasets, or custom functions.                        |
+| **[Data transforms](./packages/crawlee-one/docs/playbook-03-results-mapping-simple.md)**                  | Rename, select, limit, and reshape output without code changes.                 |
+| **[Request filtering](./packages/crawlee-one/docs/playbook-06-requests-mapping-filtering.md)**            | Control what gets scraped to save time and money.                               |
+| **[Caching](./packages/crawlee-one/docs/playbook-07-caching.md)**                                         | Incremental scraping -- only process new entries.                               |
+| **[Privacy compliance](./packages/crawlee-one/docs/playbook-11-privacy-compliance.md)**                   | Redact personal data with a single toggle.                                      |
+| **[Error capture](./packages/crawlee-one/docs/playbook-12-errors.md)**                                    | Centralized error tracking across scrapers.                                     |
+| **[Multi-crawler orchestration](./packages/crawlee-one/docs/playbook-09-multi-crawler-orchestration.md)** | Run multiple crawlers side-by-side until all queues drain.                      |
 
-[See all 12 use cases](./packages/crawlee-one/docs/use-cases.md)
+[See all use cases](./packages/crawlee-one/docs/use-cases.md)
 
 ## Getting started
 
@@ -196,7 +207,14 @@ npm install crawlee-one
 
 1. Read the [getting started guide](./packages/crawlee-one/docs/getting-started.md) for a full walkthrough of `crawleeOne()` and its options.
 2. See [example projects](#example-projects) for real-world usage.
-3. Use [`crawlee-one gen`](./packages/crawlee-one/docs/codegen.md) to generate types, actor.json, actorspec.json, and README from a single config file.
+3. [`crawlee-one dev`](./packages/crawlee-one/docs/testing.md) - Run scraper while server requests are cached and reused for offline scraper iteration.
+4. [`crawlee-one export`](./packages/crawlee-one/docs/export.md) - Export datasets to JSON or CSV.
+5. [`crawlee-one preview`](./packages/crawlee-one/docs/preview.md) - Browse datasets in a local web UI.
+6. [`crawlee-one gen`](./packages/crawlee-one/docs/codegen.md) - Generate release artifacts like Apify's `actor.json` or `README.md` from a single config file.
+
+![Preview datasets](./packages/crawlee-one/docs/crawlee-one-preview.png)
+
+![Crawler stats](./packages/crawlee-one/docs/preview-requests-waterfall.png)
 
 ### For end users
 
@@ -208,18 +226,23 @@ Scrapers built with CrawleeOne are configurable by the end users (via Apify plat
 
 ## Documentation
 
-| Document                                                                             | Description                                                    |
-| ------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
-| [Getting started](./packages/crawlee-one/docs/getting-started.md)                    | Developer guide with full `crawleeOne()` options reference.    |
-| [Features](./packages/crawlee-one/docs/features.md)                                  | Complete feature catalog with code examples.                   |
-| [Use cases](./packages/crawlee-one/docs/use-cases.md)                                | All 12 use cases with links to detailed guides.                |
-| [Input reference](./packages/crawlee-one/docs/reference-input.md)                    | All available input fields.                                    |
-| [Deploying to Apify](./packages/crawlee-one/docs/deploying-to-apify.md)              | Step-by-step Apify deployment guide.                           |
-| [Code generation](./packages/crawlee-one/docs/codegen.md)                            | Generate types, actor.json, actorspec, and README from config. |
-| [Integrations](./packages/crawlee-one/docs/integrations.md)                          | Custom telemetry and storage backends.                         |
-| [User guide](./packages/crawlee-one/docs/user-guide.md)                              | Guide for end users of CrawleeOne scrapers.                    |
-| [API reference](./packages/crawlee-one/docs/typedoc/globals.md)                      | Auto-generated TypeScript API docs.                            |
-| [Crawlee & Apify overview](./packages/crawlee-one/docs/scraping-workflow-summary.md) | Background on how Crawlee and Apify work.                      |
+| Document                                                                             | Description                                                       |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| [Getting started](./packages/crawlee-one/docs/getting-started.md)                    | Developer guide with full `crawleeOne()` options reference.       |
+| [Features](./packages/crawlee-one/docs/features.md)                                  | Complete feature catalog with code examples.                      |
+| [LLM extraction](./packages/crawlee-one/docs/llm-extraction-guide.md)                | Configure and run AI-powered extraction when DOM selectors fail.  |
+| [LLM model comparison](./packages/crawlee-one/docs/llm-compare-guide.md)             | Compare models on the same URLs; pick the best for production.    |
+| [Use cases](./packages/crawlee-one/docs/use-cases.md)                                | All 14 use cases with links to detailed guides.                   |
+| [Input reference](./packages/crawlee-one/docs/reference-input.md)                    | All available input fields.                                       |
+| [Deploying to Apify](./packages/crawlee-one/docs/deploying-to-apify.md)              | Step-by-step Apify deployment guide.                              |
+| [Code generation](./packages/crawlee-one/docs/codegen.md)                            | Generate types, actor.json, actorspec, and README from config.    |
+| [Export](./packages/crawlee-one/docs/export.md)                                      | Export datasets to JSON or CSV (local or cloud).                  |
+| [Preview](./packages/crawlee-one/docs/preview.md)                                    | Browse datasets locally in a web UI.                              |
+| [Testing](./packages/crawlee-one/docs/testing.md)                                    | dev, dev --fetch, runCrawlerTest, and crawler testing strategies. |
+| [Integrations](./packages/crawlee-one/docs/integrations.md)                          | Custom telemetry and storage backends.                            |
+| [User guide](./packages/crawlee-one/docs/user-guide.md)                              | Guide for end users of CrawleeOne scrapers.                       |
+| [API reference](./packages/crawlee-one/docs/typedoc/globals.md)                      | Auto-generated TypeScript API docs.                               |
+| [Crawlee & Apify overview](./packages/crawlee-one/docs/scraping-workflow-summary.md) | Background on how Crawlee and Apify work.                         |
 
 ## Example projects
 

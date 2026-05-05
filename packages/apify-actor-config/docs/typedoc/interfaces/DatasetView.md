@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / DatasetView
 
@@ -14,11 +14,11 @@ See https://docs.apify.com/platform/actors/development/output-schema#datasetview
 
 ### TTransform
 
-`TTransform` *extends* [`ViewTransformation`](ViewTransformation.md) = [`ViewTransformation`](ViewTransformation.md)
+`TTransform` _extends_ [`ViewTransformation`](ViewTransformation.md) = [`ViewTransformation`](ViewTransformation.md)
 
 ### TViewDisplay
 
-`TViewDisplay` *extends* [`ViewDisplay`](ViewDisplay.md) = [`ViewDisplay`](ViewDisplay.md)
+`TViewDisplay` _extends_ [`ViewDisplay`](ViewDisplay.md) = [`ViewDisplay`](ViewDisplay.md)
 
 ## Properties
 
@@ -31,7 +31,7 @@ Defined in: [outputSchema.ts:53](https://github.com/JuroOravec/crawlee-one/blob/
 The description is only available in the API response.
 The usage of this field is optional.
 
-***
+---
 
 ### display
 
@@ -41,7 +41,7 @@ Defined in: [outputSchema.ts:60](https://github.com/JuroOravec/crawlee-one/blob/
 
 The definition of Output tab UI visualization.
 
-***
+---
 
 ### title
 
@@ -51,7 +51,7 @@ Defined in: [outputSchema.ts:48](https://github.com/JuroOravec/crawlee-one/blob/
 
 The title is visible in UI in the Output tab as well as in the API.
 
-***
+---
 
 ### transformation
 

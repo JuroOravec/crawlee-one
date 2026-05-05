@@ -68,14 +68,20 @@
     "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "catalog:",
+    "@ai-sdk/openai": "catalog:",
     "actor-spec": "workspace:*",
+    "great-expectations-js": "workspace:*",
+    "ai": "catalog:",
     "commander": "catalog:",
     "cosmiconfig": "catalog:",
     "dotenv": "catalog:",
+    "express": "catalog:",
     "glob": "catalog:",
     "jiti": "catalog:",
     "lodash-es": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "zod-to-json-schema": "catalog:"
   },
   "peerDependencies": {
     "@sentry/node": "catalog:peers",

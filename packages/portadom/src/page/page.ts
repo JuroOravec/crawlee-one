@@ -1,15 +1,15 @@
-import type { Page, Locator, ElementHandle, JSHandle } from 'playwright';
+import type { ElementHandle, JSHandle, Locator, Page } from 'playwright';
 
-import type { MaybePromise } from '../utils/types.js';
-import { logAndRethrow } from '../utils/error.js';
 import { handleIsLocator } from '../dom/domUtils.js';
+import { logAndRethrow } from '../utils/error.js';
+import type { MaybePromise } from '../utils/types.js';
+import { createPlaywrightElementSerializer } from './pageUtils.js';
 import type {
-  InfiniteScrollLoaderOptions,
-  Portapage,
   _AnyInfiScrollTypes,
   _InfiScrollTypes,
+  InfiniteScrollLoaderOptions,
+  Portapage,
 } from './types.js';
-import { createPlaywrightElementSerializer } from './pageUtils.js';
 
 type PlaywrightInfiScrollTypes = _InfiScrollTypes<
   Locator | ElementHandle,

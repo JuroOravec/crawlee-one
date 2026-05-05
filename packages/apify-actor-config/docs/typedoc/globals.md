@@ -1,6 +1,6 @@
 [**apify-actor-config**](README.md)
 
-***
+---
 
 # apify-actor-config
 
@@ -41,15 +41,15 @@
 
 ## Variables
 
-- [ARRAY\_EDITOR\_TYPE](variables/ARRAY_EDITOR_TYPE.md)
-- [BOOLEAN\_EDITOR\_TYPE](variables/BOOLEAN_EDITOR_TYPE.md)
-- [DATE\_TYPE](variables/DATE_TYPE.md)
-- [FIELD\_TYPE](variables/FIELD_TYPE.md)
-- [INTEGER\_EDITOR\_TYPE](variables/INTEGER_EDITOR_TYPE.md)
-- [NUMBER\_EDITOR\_TYPE](variables/NUMBER_EDITOR_TYPE.md)
-- [OBJECT\_EDITOR\_TYPE](variables/OBJECT_EDITOR_TYPE.md)
-- [STRING\_EDITOR\_TYPE](variables/STRING_EDITOR_TYPE.md)
-- [VIEW\_DISPLAY\_PROPERTY\_TYPE](variables/VIEW_DISPLAY_PROPERTY_TYPE.md)
+- [ARRAY_EDITOR_TYPE](variables/ARRAY_EDITOR_TYPE.md)
+- [BOOLEAN_EDITOR_TYPE](variables/BOOLEAN_EDITOR_TYPE.md)
+- [DATE_TYPE](variables/DATE_TYPE.md)
+- [FIELD_TYPE](variables/FIELD_TYPE.md)
+- [INTEGER_EDITOR_TYPE](variables/INTEGER_EDITOR_TYPE.md)
+- [NUMBER_EDITOR_TYPE](variables/NUMBER_EDITOR_TYPE.md)
+- [OBJECT_EDITOR_TYPE](variables/OBJECT_EDITOR_TYPE.md)
+- [STRING_EDITOR_TYPE](variables/STRING_EDITOR_TYPE.md)
+- [VIEW_DISPLAY_PROPERTY_TYPE](variables/VIEW_DISPLAY_PROPERTY_TYPE.md)
 
 ## Functions
 

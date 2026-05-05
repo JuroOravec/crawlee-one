@@ -1,12 +1,12 @@
+import { Actor } from 'apify';
+import { type Dictionary, KeyValueStore, RequestQueue } from 'crawlee';
 import type { vi } from 'vitest';
-import { Actor, RequestQueue } from 'apify';
-import { Dictionary, KeyValueStore } from 'crawlee';
 
 import type { MaybeArray, MaybePromise } from '../../utils/types.js';
 import {
-  OnBatchAddRequests,
   createMockStorageClient,
   createMockStorageDataset,
+  type OnBatchAddRequests,
 } from './mockApifyClient.js';
 
 export const setupMockApifyActor = async <
@@ -28,9 +28,15 @@ export const setupMockApifyActor = async <
   onGetInfo?: (...args: any[]) => MaybePromise<void>;
 }) => {
   const mockStorageClient = createMockStorageClient({ log, onBatchAddRequests });
+  const sharedRequestQueue = new RequestQueue({
+    id: 'test',
+    client: mockStorageClient,
+  });
 
   viInstance.spyOn(Actor, 'main').mockImplementation(async (fn) => fn());
   viInstance.spyOn(Actor, 'getInput').mockImplementation(() => Promise.resolve(actorInput));
+
+  viInstance.spyOn(Actor, 'openRequestQueue').mockImplementation(async () => sharedRequestQueue);
 
   viInstance.spyOn(Actor, 'openDataset').mockImplementation(async (datasetId, options) => {
     console.log('Mock Actor.openDataset: ', datasetId);
@@ -41,13 +47,7 @@ export const setupMockApifyActor = async <
     if (onPushData) await onPushData(data as any);
   });
 
-  viInstance.spyOn(RequestQueue, 'open').mockImplementation(async () => {
-    const reqQueue = new RequestQueue({
-      id: 'test',
-      client: mockStorageClient,
-    });
-    return reqQueue;
-  });
+  viInstance.spyOn(RequestQueue, 'open').mockImplementation(async () => sharedRequestQueue);
 
   viInstance
     .spyOn(KeyValueStore, 'open')
@@ -82,7 +82,7 @@ export const runCrawlerTest = async <TData extends MaybeArray<Dictionary>, TInpu
 
   await setupMockApifyActor<TInput, TData>({
     vi: viInstance,
-    actorInput: { ...input },
+    actorInput: { llmQueueDrainCheckIntervalMs: 0, ...input },
     log,
     onPushData: (data) => onPushData?.(data, done),
     onBatchAddRequests,

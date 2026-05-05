@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / playwrightPortapage
 
@@ -16,7 +16,7 @@ Implementation of Portapage in Playwright
 
 ### T
 
-`T` *extends* `Page` = `Page`
+`T` _extends_ `Page` = `Page`
 
 ## Parameters
 

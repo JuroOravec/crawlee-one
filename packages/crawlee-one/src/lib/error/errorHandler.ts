@@ -1,24 +1,16 @@
-import type {
-  BasicCrawlingContext,
-  CheerioCrawlingContext,
-  ErrorHandler,
-  HttpCrawlingContext,
-  JSDOMCrawlingContext,
-  PlaywrightCrawlingContext,
-  PuppeteerCrawlingContext,
-} from 'crawlee';
+import type { ErrorHandler } from 'crawlee';
 import type { Page } from 'playwright';
 
 import type { MaybePromise, PickRequired } from '../../utils/types.js';
-import type { CrawleeOneRouteHandler, CrawleeOneRouteCtx } from '../router/types.js';
+import type { CrawleeOneTypes } from '../context/types.js';
+import { apifyIO } from '../integrations/apify.js';
 import type {
   CrawleeOneErrorHandlerInput,
   CrawleeOneErrorHandlerOptions,
   CrawleeOneIO,
   ExtractIOReport,
 } from '../integrations/types.js';
-import type { CrawleeOneCtx } from '../actor/types.js';
-import { apifyIO } from '../integrations/apify.js';
+import type { CrawleeOneRouteHandler, CrawleeOneRouteHandlerCtx } from '../router/types.js';
 
 export type CaptureErrorInput = PickRequired<Partial<CrawleeOneErrorHandlerInput>, 'error'>;
 export type CaptureError = (input: CaptureErrorInput) => MaybePromise<void>;
@@ -107,12 +99,14 @@ export const captureErrorWrapper = async <TIO extends CrawleeOneIO = CrawleeOneI
  *  })
  * );
  */
-export const captureErrorRouteHandler = <T extends CrawleeOneCtx>(
-  handler: (ctx: CrawleeOneRouteCtx<T> & { captureError: CaptureError }) => MaybePromise<void>,
+export const captureErrorRouteHandler = <T extends CrawleeOneTypes>(
+  handler: (
+    ctx: CrawleeOneRouteHandlerCtx<T> & { captureError: CaptureError }
+  ) => MaybePromise<void>,
   options: CrawleeOneErrorHandlerOptions<T['io']>
 ) => {
   // Wrap the original handler, so we can additionally pass it the captureError function
-  const wrapperHandler: CrawleeOneRouteHandler<T, CrawleeOneRouteCtx<T>> = (ctx) => {
+  const wrapperHandler: CrawleeOneRouteHandler<T> = (ctx) => {
     return captureErrorWrapper(({ captureError }) => {
       return handler({
         ...(ctx as any),
@@ -130,13 +124,6 @@ export const captureErrorRouteHandler = <T extends CrawleeOneCtx>(
   return wrapperHandler;
 };
 
-export const basicCaptureErrorRouteHandler = <T extends CrawleeOneCtx<BasicCrawlingContext>,>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const httpCaptureErrorRouteHandler = <T extends CrawleeOneCtx<HttpCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const jsdomCaptureErrorRouteHandler = <T extends CrawleeOneCtx<JSDOMCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const cheerioCaptureErrorRouteHandler = <T extends CrawleeOneCtx<CheerioCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const playwrightCaptureErrorRouteHandler = <T extends CrawleeOneCtx<PlaywrightCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-export const puppeteerCaptureErrorRouteHandler = <T extends CrawleeOneCtx<PuppeteerCrawlingContext>>(...args: Parameters<typeof captureErrorRouteHandler<T>>) => captureErrorRouteHandler<T>(...args); // prettier-ignore
-
 /**
  * Create an `ErrorHandler` function that can be assigned to
  * `failedRequestHandler` option of `BasicCrawlerOptions`.
@@ -145,7 +132,7 @@ export const puppeteerCaptureErrorRouteHandler = <T extends CrawleeOneCtx<Puppet
  *
  * By default, error reports are saved to Apify Dataset.
  */
-export const createErrorHandler = <T extends CrawleeOneCtx>(
+export const createErrorHandler = <T extends CrawleeOneTypes>(
   options: CrawleeOneErrorHandlerOptions<T['io']> & {
     sendToTelemetry?: boolean;
     onSendErrorToTelemetry?: T['telemetry']['onSendErrorToTelemetry'];

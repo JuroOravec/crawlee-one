@@ -1,12 +1,12 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneConfigActor
 
 # Interface: CrawleeOneConfigActor
 
-Defined in: [packages/crawlee-one/src/types/config.ts:66](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L66)
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:94](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L94)
 
 ## Properties
 
@@ -14,17 +14,17 @@ Defined in: [packages/crawlee-one/src/types/config.ts:66](https://github.com/Jur
 
 > **config**: `unknown`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:70](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L70)
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:98](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L98)
 
 The `ActorConfig` object to serialize.
 
-***
+---
 
 ### outFile?
 
 > `optional` **outFile**: `string`
 
-Defined in: [packages/crawlee-one/src/types/config.ts:76](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/types/config.ts#L76)
+Defined in: [packages/crawlee-one/src/lib/config/types.ts:104](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/config/types.ts#L104)
 
 Output file path (relative to cwd).
 

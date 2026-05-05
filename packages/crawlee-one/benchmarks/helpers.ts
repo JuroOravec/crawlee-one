@@ -9,7 +9,9 @@
  */
 
 import fs from 'node:fs';
+
 import { bench } from 'vitest';
+
 import { benchConfig } from './config.js';
 
 // ---------------------------------------------------------------------------
@@ -60,31 +62,39 @@ const addMemorySample = (name: string, sample: MemorySample): void => {
 // Public API
 // ---------------------------------------------------------------------------
 
+/** Options for measurePerf */
+export interface MeasurePerfOpts {
+  name: string;
+  prettyName: string;
+  fn: () => Promise<void>;
+  options?: { iterations?: number; time?: number };
+}
+
 /**
  * Throughput benchmark wrapper. Registers metadata in the sidecar, then
  * delegates to vitest's bench().
  */
-export const measurePerf = (
-  name: string,
-  prettyName: string,
-  fn: () => Promise<void>,
-  options?: { iterations?: number; time?: number }
-): void => {
+export const measurePerf = (opts: MeasurePerfOpts): void => {
+  const { name, prettyName, fn, options } = opts;
   registerMeta(name, { type: 'time', unit: 'ms', prettyName });
   bench(name, fn, options);
 };
+
+/** Options for measureMemory */
+export interface MeasureMemoryOpts {
+  name: string;
+  prettyName: string;
+  fn: () => Promise<void>;
+  options?: { iterations?: number; time?: number };
+}
 
 /**
  * Memory benchmark wrapper. Registers metadata in the sidecar, wraps the
  * function to capture peak memory (RSS) delta per iteration, then delegates to vitest's
  * bench().
  */
-export const measureMemory = (
-  name: string,
-  prettyName: string,
-  fn: () => Promise<void>,
-  options?: { iterations?: number; time?: number }
-): void => {
+export const measureMemory = (opts: MeasureMemoryOpts): void => {
+  const { name, prettyName, fn, options } = opts;
   registerMeta(name, { type: 'memory', unit: 'bytes', prettyName, memorySamples: [] });
 
   bench(

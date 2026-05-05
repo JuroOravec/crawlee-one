@@ -1,6 +1,6 @@
 **actor-spec**
 
-***
+---
 
 # actor-spec
 
@@ -22,9 +22,9 @@ Define an actor spec in TypeScript:
 
 ```ts
 // actorspec.ts
-import type { ScraperActorSpec } from 'actor-spec';
+import type { ActorSpec } from 'actor-spec';
 
-const spec: ScraperActorSpec = {
+const spec: ActorSpec = {
   actorspecVersion: 1,
   actor: {
     title: 'Product Scraper',
@@ -108,10 +108,10 @@ The config file must have a default export -- either an `ActorSpec` object or an
 
 ## Documentation
 
-| Document                                  | Description                         |
-| ----------------------------------------- | ----------------------------------- |
+| Document                          | Description                         |
+| --------------------------------- | ----------------------------------- |
 | [API reference](_media/README.md) | Auto-generated TypeScript API docs. |
-| [Changelog](_media/CHANGELOG.md)               | Release history.                    |
+| [Changelog](_media/CHANGELOG.md)  | Release history.                    |
 
 ## License
 

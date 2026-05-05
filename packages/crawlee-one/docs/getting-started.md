@@ -23,7 +23,7 @@ When you call `crawleeOne()`, the following happens:
 2. It processes URLs from the RequestQueue.
 3. For each request, it finds the first route whose `match` passes, and calls that route's `handler`.
 4. The handler scrapes data and saves it with `pushData`.
-5. The handler may discover more URLs and enqueue them with `pushRequests`.
+5. The handler may discover more URLs and enqueue them with `addRequests`.
 6. When the RequestQueue is empty (and `keepAlive` is not set), the crawler stops.
 
 ```ts
@@ -35,11 +35,11 @@ await crawleeOne({
     mainPage: {
       match: /example\.com\/home/i,
       handler: async (ctx) => {
-        const { $, pushData, pushRequests } = ctx;
+        const { $, pushData, addRequests } = ctx;
         await pushData([{ title: $('h1').text() }], {
           privacyMask: { author: true },
         });
-        await pushRequests([{ url: 'https://example.com/page/2' }]);
+        await addRequests([{ url: 'https://example.com/page/2' }]);
       },
     },
   },
@@ -100,11 +100,11 @@ await crawleeOne({
   // --- Crawler config ---
   // Passed directly to the Crawler constructor (e.g. new CheerioCrawler(crawlerConfig)).
   // Use for settings that should not be user-overridable.
-  crawlerConfig: {
+  crawlerConfigOverrides: {
     maxRequestsPerMinute: 120,
     requestHandlerTimeoutSecs: 180,
   },
-  // Same as crawlerConfig, but can be overridden by user input.
+  // Same as crawlerConfigOverrides, but can be overridden by user input.
   crawlerConfigDefaults: {
     // ...
   },
@@ -117,7 +117,7 @@ await crawleeOne({
       // Regex, function, or array of both.
       match: /example\.com\/home/i,
       handler: async (ctx) => {
-        const { $, request, pushData, pushRequests } = ctx;
+        const { $, request, pushData, addRequests } = ctx;
 
         const data = [
           /* scraped items */
@@ -127,19 +127,15 @@ await crawleeOne({
           privacyMask: { author: true },
         });
 
-        // pushRequests applies request filtering and transforms.
+        // addRequests applies request filtering and transforms.
         const reqs = ['https://...'].map((url) => ({ url }));
-        await pushRequests(reqs);
+        await addRequests(reqs);
       },
     },
   },
 
   // --- Hooks ---
   hooks: {
-    // Called after initialization. If provided, you must call actor.runCrawler() yourself.
-    onReady: async (actor) => {
-      await actor.runCrawler(['https://example.com']);
-    },
     // Called before/after each route handler.
     onBeforeHandler: (ctx) => {
       /* ... */
@@ -176,26 +172,29 @@ await crawleeOne({
   // --- Router ---
   // Custom Crawlee Router instance. Optional.
   router: myCustomRouter(),
+}, async (context) => {
+  // Optional: called after initialization. If provided, you must call context.crawler.run() yourself.
+  await context.crawler.run(['https://example.com']);
 });
 ```
 
 For the full TypeScript definitions, see:
 
 - [`crawleeOne`](./typedoc/functions/crawleeOne.md)
-- [`CrawleeOneArgs`](./typedoc/interfaces/CrawleeOneArgs.md)
+- [`CrawleeOneOptions`](./typedoc/interfaces/CrawleeOneOptions.md)
 - [`pushData`](./typedoc/functions/pushData.md)
-- [`pushRequests`](./typedoc/functions/pushRequests.md)
+- [`addRequests`](./typedoc/functions/addRequests.md)
 
 ## Route handler context
 
 Each route handler receives a context object from [Crawlee Router](https://crawlee.dev/api/core/class/Router), extended with CrawleeOne-specific properties:
 
-| Property       | Type                                                                 | Description                                                                  |
-| -------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `actor`        | [`CrawleeOneActorInst`](./typedoc/interfaces/CrawleeOneActorInst.md) | The CrawleeOne instance. Access input, state, IO, and more.                  |
-| `pushData`     | function                                                             | Save scraped items with transforms, filtering, privacy, and caching applied. |
-| `pushRequests` | function                                                             | Enqueue URLs with request filtering and transforms applied.                  |
-| `metamorph`    | function                                                             | Trigger a downstream crawler/actor.                                          |
+| Property      | Type                                                             | Description                                                                  |
+| ------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `one`         | [`CrawleeOneContext`](./typedoc/interfaces/CrawleeOneContext.md) | The CrawleeOne context. Access input, state, IO, crawler, and more.          |
+| `pushData`    | function                                                         | Save scraped items with transforms, filtering, privacy, and caching applied. |
+| `addRequests` | function                                                         | Enqueue URLs with request filtering and transforms applied.                  |
+| `metamorph`   | function                                                         | Trigger a downstream crawler/actor.                                          |
 
 ```ts
 handler: async (ctx) => {
@@ -209,27 +208,28 @@ handler: async (ctx) => {
   await ctx.pushData(items, { privacyMask: { name: true } });
 
   // Enqueue more URLs (applies configured request filters)
-  await ctx.pushRequests([{ url: 'https://...' }]);
+  await ctx.addRequests([{ url: 'https://...' }]);
 
   // Access resolved input
-  if (ctx.actor.input.myCustomField) {
+  if (ctx.one.input.myCustomField) {
     /* ... */
   }
 
   // Access shared state (available in hooks like outputTransform)
-  ctx.actor.state.counter = (ctx.actor.state.counter || 0) + 1;
+  ctx.one.state.counter = (ctx.one.state.counter || 0) + 1;
 
   // Access storage directly
-  const dataset = await ctx.actor.io.openDataset();
-  const store = await ctx.actor.io.openKeyValueStore();
+  const dataset = await ctx.one.io.openDataset();
+  const store = await ctx.one.io.openKeyValueStore();
 };
 ```
 
-The `actor` object is integral to CrawleeOne. [See the full list of properties](./typedoc/interfaces/CrawleeOneActorInst.md).
+The `one` object is integral to CrawleeOne. [See the full list of properties](./typedoc/interfaces/CrawleeOneContext.md).
 
 ## Next steps
 
 - [Features](./features.md) -- full catalog of what CrawleeOne offers.
+- [LLM extraction](./llm-extraction-guide.md) -- extract structured data with AI when DOM selectors fail.
 - [Use cases](./use-cases.md) -- common scraping scenarios with configuration examples.
 - [Input reference](./reference-input.md) -- all available input fields.
 - [Deploying to Apify](./deploying-to-apify.md) -- step-by-step deployment guide.

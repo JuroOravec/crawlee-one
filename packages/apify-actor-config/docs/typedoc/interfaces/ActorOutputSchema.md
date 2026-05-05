@@ -1,6 +1,6 @@
 [**apify-actor-config**](../README.md)
 
-***
+---
 
 [apify-actor-config](../globals.md) / ActorOutputSchema
 
@@ -29,11 +29,11 @@ Example
 
 ### TFields
 
-`TFields` *extends* `object` = `object`
+`TFields` _extends_ `object` = `object`
 
 ### TViews
 
-`TViews` *extends* `Record`\<`string`, [`DatasetView`](DatasetView.md)\> = `Record`\<`string`, [`DatasetView`](DatasetView.md)\>
+`TViews` _extends_ `Record`\<`string`, [`DatasetView`](DatasetView.md)\> = `Record`\<`string`, [`DatasetView`](DatasetView.md)\>
 
 ## Properties
 
@@ -46,7 +46,7 @@ Defined in: [outputSchema.ts:32](https://github.com/JuroOravec/crawlee-one/blob/
 The version of the specification against which your schema is written.
 Currently, only version 1 is out.
 
-***
+---
 
 ### fields
 
@@ -57,7 +57,7 @@ Defined in: [outputSchema.ts:37](https://github.com/JuroOravec/crawlee-one/blob/
 Schema of one dataset object. Use JsonSchema Draft 2020-12
 or other compatible formats.
 
-***
+---
 
 ### views
 

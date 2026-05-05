@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / runCrawlerTest
 
@@ -8,13 +8,13 @@
 
 > **runCrawlerTest**\<`TData`, `TInput`\>(`__namedParameters`): `Promise`\<`void`\>
 
-Defined in: [packages/crawlee-one/src/lib/test/actor.ts:61](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/test/actor.ts#L61)
+Defined in: [packages/crawlee-one/src/lib/test/actor.ts:67](https://github.com/JuroOravec/crawlee-one/blob/main/packages/crawlee-one/src/lib/test/actor.ts#L67)
 
 ## Type Parameters
 
 ### TData
 
-`TData` *extends* [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\>
+`TData` _extends_ [`MaybeArray`](../type-aliases/MaybeArray.md)\<`Dictionary`\>
 
 ### TInput
 

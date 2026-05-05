@@ -11,17 +11,18 @@ Everything is generated from `crawlee-one.config.ts`. Each section is optional.
 
 ## 1. Define the config
 
-Create a `crawlee-one.config.ts` file. Use `defineConfig()` for type hints:
+Create a `crawlee-one.config.ts` file. Use `defineConfig()` and `defineCrawler()` for type hints:
 
 ```ts
 // crawlee-one.config.ts
-import { defineConfig } from 'crawlee-one';
+import { defineConfig, defineCrawler } from 'crawlee-one';
+import type { ActorInput } from './src/config.js';
 
 export default defineConfig({
   version: 1,
   schema: {
     crawlers: {
-      main: {
+      main: defineCrawler<Partial<ActorInput>>({
         // One of:
         // - 'basic'
         // - 'http'
@@ -31,33 +32,35 @@ export default defineConfig({
         // - 'puppeteer'
         type: 'playwright',
         // Routes that your scraper defines
-        routes: [
-          'main',
-          'productList',
-          'product',
-        ],
-      },
+        routes: ['main', 'productList', 'product'],
+        importPath: './dist/index.js',
+        devImportPath: './src/index.ts', // optional; no build for dev/run
+        input: { startUrls: ['https://example.com'] }, // for crawlee-one run
+        devInput: { startUrls: [] }, // for crawlee-one dev
+      }),
     },
   },
-  // Generates TS shims
-  types: {
-    outFile: './src/__generated__/crawler.ts',
-  },
-  // Generates Apify's `actor.json`
-  actor: {
-    config: actorConfig,
-    outFile: '.actor/actor.json',
-  },
-  // Generates crawler metadata `actorspec.json`
-  actorspec: {
-    config: actorSpec,
-    outFile: '.actor/actorspec.json',
-  },
-  // Generates README for the scraper's Apify page
-  readme: {
-    actorSpec,
-    renderer: renderer,
-    input: readmeRenderer,
+  generate: {
+    // Generates TS shims
+    types: {
+      outFile: './src/__generated__/crawler.ts',
+    },
+    // Generates Apify's `actor.json`
+    actor: {
+      config: actorConfig,
+      outFile: '.actor/actor.json',
+    },
+    // Generates crawler metadata `actorspec.json`
+    actorspec: {
+      config: actorSpec,
+      outFile: '.actor/actorspec.json',
+    },
+    // Generates README for the scraper's Apify page
+    readme: {
+      actorSpec,
+      renderer: renderer,
+      input: readmeRenderer,
+    },
   },
 });
 ```
@@ -65,34 +68,43 @@ export default defineConfig({
 For Apify actors, you can also generate `actor.json`, `actorspec.json`, and a README:
 
 ```ts
-import { defineConfig } from 'crawlee-one';
+import { defineConfig, defineCrawler } from 'crawlee-one';
 import { renderApifyReadme } from './src/readme.js';
-import actorSpec from './src/actorspec.js';
+import actorSpec from './src/metadata.js';
 import actorConfig from './src/config.js';
+import type { ActorInput } from './src/config.js';
 
 export default defineConfig({
   version: 1,
   schema: {
     crawlers: {
-      /* ... */
+      myCrawler: defineCrawler<Partial<ActorInput>>({
+        type: 'cheerio',
+        routes: ['main'],
+        importPath: './dist/index.js',
+        input: { startUrls: ['https://example.com'] },
+        devInput: { startUrls: [] },
+      }),
     },
   },
-  types: { outFile: './src/__generated__/crawler.ts' },
-  actor: {
-    config: actorConfig, // ActorConfig object
-    outFile: '.actor/actor.json',
-  },
-  actorspec: {
-    config: actorSpec, // ActorSpec object
-    outFile: '.actor/actorspec.json',
-  },
-  readme: {
-    outFile: '.actor/README.md',
-    actorSpec,
-    renderer: renderApifyReadme,
-    input: {
-      templates: {
-        /* ... renderer-specific templates */
+  generate: {
+    types: { outFile: './src/__generated__/crawler.ts' },
+    actor: {
+      config: actorConfig, // ActorConfig object
+      outFile: '.actor/actor.json',
+    },
+    actorspec: {
+      config: actorSpec, // ActorSpec object
+      outFile: '.actor/actorspec.json',
+    },
+    readme: {
+      outFile: '.actor/README.md',
+      actorSpec,
+      renderer: renderApifyReadme,
+      input: {
+        templates: {
+          /* ... renderer-specific templates */
+        },
       },
     },
   },
@@ -119,7 +131,7 @@ With explicit config path:
 npx crawlee-one gen -c ./path/to/config.ts
 ```
 
-Each section (`types`, `actor`, `actorspec`, `readme`) is optional. Only the configured sections are generated.
+Each section under `generate` (`types`, `actor`, `actorspec`, `readme`) is optional. Only the configured sections are generated.
 
 If `outFile` is omitted, the output defaults to `.actor/` (if the directory exists) or the current directory.
 
@@ -163,7 +175,7 @@ const mainPromise = mainCrawler({
       handler: async (ctx) => {
         ctx.page.locator('...');
         // Send URLs to the Cheerio crawler via a shared queue
-        await ctx.pushRequests([{ url: '...' }], { requestQueueId: 'sharedQueue' });
+        await ctx.addRequests([{ url: '...' }], { requestQueueId: 'sharedQueue' });
       },
     },
     detailPage: {

@@ -1,6 +1,6 @@
 [**crawlee-one**](../README.md)
 
-***
+---
 
 [crawlee-one](../README.md) / CrawleeOneDataset
 
@@ -17,7 +17,7 @@ drop-in replacement with other integrations.
 
 ### T
 
-`T` *extends* `object` = `object`
+`T` _extends_ `object` = `object`
 
 ## Properties
 
@@ -33,7 +33,7 @@ Returns the count of items in the dataset.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`number` \| `null`\>
 
-***
+---
 
 ### getItems()
 
@@ -53,7 +53,7 @@ Returns the items in the dataset based on the provided parameters.
 
 [`MaybePromise`](../type-aliases/MaybePromise.md)\<`T`[]\>
 
-***
+---
 
 ### pushData()
 

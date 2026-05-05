@@ -1,0 +1,66 @@
+{
+  "name": "great-expectations-js",
+  "version": "0.1.0",
+  "type": "module",
+  "private": false,
+  "description": "Data quality expectations for TypeScript/Node.js. Inspired by Great Expectations (Python).",
+  "author": "Juro Oravec <juraj.oravec.josefson@gmail.com>",
+  "homepage": "https://github.com/JuroOravec/crawlee-one/tree/main/packages/great-expectations-js#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuroOravec/crawlee-one.git",
+    "directory": "packages/great-expectations-js"
+  },
+  "bugs": {
+    "url": "https://github.com/JuroOravec/crawlee-one/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "great-expectations",
+    "data-quality",
+    "validation",
+    "expectations",
+    "data-integrity",
+    "scraping"
+  ],
+  "dependencies": {
+    "ajv": "catalog:",
+    "ibantools": "catalog:",
+    "currency-codes": "catalog:",
+    "i18n-iso-countries": "catalog:",
+    "iso-639-1": "catalog:",
+    "jsvat": "catalog:",
+    "libphonenumber-js": "catalog:",
+    "mcc-mnc-list": "catalog:",
+    "states-us": "catalog:",
+    "statuses": "catalog:",
+    "tlds": "catalog:"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "tsx ./src/index.ts",
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "dev": "tsup --watch",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "docs:gen": "typedoc src/index.ts --plugin typedoc-plugin-markdown --tsconfig tsconfig.json --gitRevision main --out ./docs/typedoc"
+  }
+}

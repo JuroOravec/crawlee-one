@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ApifyScraperActorSpec, ApifyReadmeTemplatesOverrides } from '../index.js';
+
+import type { ApifyReadmeTemplatesOverrides, ApifyScraperActorSpec } from '../index.js';
 import { renderApifyReadme } from '../index.js';
 
 /**
@@ -7,7 +8,7 @@ import { renderApifyReadme } from '../index.js';
  * template branches (multiple datasets, modes, filters, perf stats,
  * personal data, features).
  *
- * Modeled after the profesia-sk scraper's actorspec.
+ * Modeled after the profesia-sk scraper's metadata.
  */
 const actorSpec: ApifyScraperActorSpec = {
   actorspecVersion: 1,
@@ -206,7 +207,6 @@ const templates: ApifyReadmeTemplatesOverrides = {
     {
       title: 'Get first 100 items in fast mode',
       inputData: {
-        datasetType: 'items',
         outputMaxEntries: 100,
       },
     },

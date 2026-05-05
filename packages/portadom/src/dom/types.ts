@@ -1,6 +1,3 @@
-import type { StrAsNumOptions } from '../utils/format.js';
-import type { FormatUrlOptions } from '../utils/url.js';
-import type { MaybeArray, MaybePromise } from '../utils/types.js';
 import {
   parallelAsyncFilter,
   parallelAsyncForEach,
@@ -10,6 +7,9 @@ import {
   serialAsyncForEach,
   serialAsyncMap,
 } from '../utils/async.js';
+import type { StrAsNumOptions } from '../utils/format.js';
+import type { MaybeArray, MaybePromise } from '../utils/types.js';
+import type { FormatUrlOptions } from '../utils/url.js';
 
 /**
  * Common interface for working with DOM despite different environments.

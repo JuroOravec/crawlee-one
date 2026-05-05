@@ -1,10 +1,10 @@
-import type { AnyNode } from 'domhandler';
 import type { Cheerio } from 'cheerio';
+import type { AnyNode } from 'domhandler';
 import type { ElementHandle, JSHandle, Locator, Page } from 'playwright';
 
 import { serialAsyncMap } from '../utils/async.js';
-import type { MaybeArray, MaybePromise } from '../utils/types.js';
 import { logAndRethrow } from '../utils/error.js';
+import type { MaybeArray, MaybePromise } from '../utils/types.js';
 
 /**
  * Given a Cheerio selection, split it into an array of Cheerio selections,

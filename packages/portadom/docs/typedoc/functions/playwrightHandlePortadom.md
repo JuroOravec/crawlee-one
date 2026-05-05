@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / playwrightHandlePortadom
 
@@ -16,7 +16,7 @@ Implementation of Portadom in Playwright using Handles
 
 ### El
 
-`El` *extends* `Locator` \| `ElementHandle`\<`Node`\> = `Locator` \| `ElementHandle`\<`Node`\>
+`El` _extends_ `Locator` \| `ElementHandle`\<`Node`\> = `Locator` \| `ElementHandle`\<`Node`\>
 
 ## Parameters
 

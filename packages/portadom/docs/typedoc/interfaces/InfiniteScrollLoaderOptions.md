@@ -1,6 +1,6 @@
 [**portadom**](../README.md)
 
-***
+---
 
 [portadom](../globals.md) / InfiniteScrollLoaderOptions
 
@@ -12,11 +12,11 @@ Defined in: [page/types.ts:54](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 ### T
 
-`T` *extends* `_AnyInfiScrollTypes`
+`T` _extends_ `_AnyInfiScrollTypes`
 
 ### TCtx
 
-`TCtx` *extends* `object` = \{ `container`: `T`\[`"container"`\]; \}
+`TCtx` _extends_ `object` = \{ `container`: `T`\[`"container"`\]; \}
 
 ## Properties
 
@@ -42,7 +42,7 @@ Override how container children are counted. Default uses `el.childElementCount`
 
 `MaybePromise`\<`number`\>
 
-***
+---
 
 ### childrenGetter()?
 
@@ -66,7 +66,7 @@ Override how container children are extraced. Default uses `el.children`
 
 `MaybePromise`\<`T`\[`"children"`\]\>
 
-***
+---
 
 ### retries?
 
@@ -76,7 +76,7 @@ Defined in: [page/types.ts:59](https://github.com/JuroOravec/crawlee-one/blob/ma
 
 How many times to retry the infinite scroll if new items aren't loading
 
-***
+---
 
 ### scrollIntoView()?
 
@@ -100,7 +100,7 @@ Override how container children are scrolled into view. Default uses `el.scrollI
 
 `MaybePromise`\<`void`\>
 
-***
+---
 
 ### waitAfterScroll()?
 

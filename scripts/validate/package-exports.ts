@@ -16,7 +16,7 @@
  * exactly the signal we want.
  */
 
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { readdir, readFile, stat } from 'node:fs/promises';
 
 /** Directories that contain workspace packages. */
 const WORKSPACE_DIRS = ['packages', 'scrapers'];
